@@ -1,7 +1,8 @@
-# basic-react-form
-## The branches of this project are sorted in the order they were coded.
+## Repositorio Leloir Front-End
+En este repositorio se encuentran todos los archivos de los componentes de frontend, sus estilos y estructura de carpetas de los mismos.
 
-[Click me for the YouTube playlist associated with this repo](
-https://www.youtube.com/playlist?list=PLN3n1USn4xllZIJyrGvCu5ihs2GoMtk1Q)
+## Para correr el proyecto hay que seguir los siguientes pasos:
+-Posicionarse en la carpeta ./frontend/ en una consola
+-Ejecutar el comando "npm install" para instalar todas las dependencias que necesita el proyecto.
+-Ejecutar el comando "npm start" para iniciar el servidor de desarrollo y ver el proyecto funcionando
 
-run commanad for run application : `npm start` / `yarn start`
