@@ -15,7 +15,8 @@
     "react-datepicker": "^2.8.0",
     "react-datetime": "^2.16.3",
     "react-day-picker": "^7.3.0",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-popupbox": "^2.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

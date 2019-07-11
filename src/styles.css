@@ -1,23 +1,25 @@
 body {
-  margin: 0;
-  padding: 0;
   font-family: sans-serif;
+  background-color:rgb(116, 157, 196);
 }
 
 .Paciente{
   font-size: 30px;
   color: rgb(255, 253, 254);
-  background-color:rgb(116, 157, 196);
   box-align: center;
   padding: 20px;
 }
 
 .formulario{
-  background-color:rgb(116, 157, 196);
 }
+
 
 .boton{
   background-color: rgb(255, 94, 0); 
-  color: rgb(253, 253, 253);
+  color: rgb(129, 38, 38);
   margin: 10px;
+}
+
+.nombrePaciente{
+  text-align: left;
 }
