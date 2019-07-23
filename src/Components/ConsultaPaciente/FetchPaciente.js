@@ -8,12 +8,10 @@ export default class FetchPaciente extends React.Component{
     }
 
     async componentDidMount(){
-        const url = "https://randomuser.me/api";
-        const api = "http://localhost:8080/pacientes/pacienteid?id=1";
-        
-        const response = await fetch(url);
+        const api = "http://localhost:8080/pacientes/id/1";
+        const response = await fetch(api);
         const data = await response.json();
-        this.setState({paciente:data.results[0], loading: false})
+        this.setState({paciente:data, loading: false})
     }
 
     render(){
@@ -23,8 +21,7 @@ export default class FetchPaciente extends React.Component{
              <CircularProgress size = {50}>  </ CircularProgress >
             ) : (
             <div> 
-               {`${this.state.paciente.name.first} 
-               ${this.state.paciente.name.last} `}
+                {this.state.paciente.nombre}
             </div>
             )}
         </div>

@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import FetchPaciente from './FetchPaciente';
 import './styles.css';
 
 class Form extends Component {
   constructor(props) {
-      const nom = "hola";
-
     super(props);
     this.state = ({
+        loading: true,
+        paciente: null,
+        
         busquedaId: false,
         busquedaDoc: false,
+        isRadioSelected: true,
         valor:'',
-        nombre: nom,
+        isButtonPressed: true,
+
+        nombre: '',
         apellido:'',
         tipoDoc:'',
         nroDoc:'',
@@ -41,6 +44,13 @@ class Form extends Component {
     
   }
 
+  async componentDidMount(){
+    const api = "http://localhost:8080/pacientes/id/1";
+    const response = await fetch(api);
+    const data = await response.json();
+    this.setState({paciente:data, loading: false})
+}
+
   render() {
     return (
       <div>
@@ -51,39 +61,60 @@ class Form extends Component {
             <p><input type="radio" value={this.state.busquedaId} name="radio" onChange={this.cambioBusquedaId} /> Busqueda por Id</p> 
             <p><input type="radio" value={this.state.busquedaDoc} name="radio" onChange={this.cambioBusquedaDoc} /> Busqueda por Documento</p> 
             <br></br>
-            <p>Ingrese busqueda: <input type="int" value={this.state.valor} onChange={this.cambioValor} /></p>
+
+            Ingrese busqueda: <input type="int" value={this.state.valor} disabled={this.state.isRadioSelected} onChange={this.cambioValor} />
+            
+            <button disabled={this.state.isRadioSelected} className="ButtonBuscar" > Buscar Paciente</button >
+            
             <br></br>
-            <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
-            <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    <p>Tipo Documento: <input type="text" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} /></p>    
-            <p>Número Documento: <input type="int" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>    
-            <p>Fecha de nacimiento: <input type="text" value={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} /></p>   
-            <p>Fecha de alta: <input type="text" value={this.state.fechaAlta} onChange={this.cambioFechaAlta} /></p>     
-            <p>Sexo: <input type="text" value={this.state.sexo} onChange={this.cambioSexo} /></p>    
-            <p>Nacionalidad: <input type="text" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} /></p>    
-            <p>Teléfono: <input type="int" value={this.state.telefono} onChange={this.cambioTelefono} /></p>    
-            <p>Mail: <input type="text" value={this.state.mail} onChange={this.cambioMail} /></p>    
-            <p>Obra Social: <input type="text" value={this.state.obraSocial} onChange={this.cambioObraSocial} /></p>    
+            <br></br>
+            <hr></hr>
+            <p>Nombre: <input type="text" value={this.state.nombre} disabled={this.state.isButtonPressed}  /></p>
+            <p>Apellido: <input type="text" value={this.state.apellido} disabled={this.state.isButtonPressed} /></p>    <p>Tipo Documento: <input type="text" value={this.state.tipoDoc} disabled={this.state.isButtonPressed} /></p>    
+            <p>Número Documento: <input type="int" value={this.state.nroDoc} disabled={this.state.isButtonPressed} /></p>    
+            <p>Fecha de nacimiento: <input type="text" value={this.state.fechaNacimiento} disabled={this.state.isButtonPressed} /></p>   
+            <p>Fecha de alta: <input type="text" value={this.state.fechaAlta} disabled={this.state.isButtonPressed} /></p>     
+            <p>Sexo: <input type="text" value={this.state.sexo} disabled={this.state.isButtonPressed} /></p>    
+            <p>Nacionalidad: <input type="text" value={this.state.nacionalidad} disabled={this.state.isButtonPressed}/></p>    
+            <p>Teléfono: <input type="int" value={this.state.telefono} disabled={this.state.isButtonPressed} /></p>    
+            <p>Mail: <input type="text" value={this.state.mail} disabled={this.state.isButtonPressed}/></p>    
+            <p>Obra Social: <input type="text" value={this.state.obraSocial} disabled={this.state.isButtonPressed} /></p>    
 
             <p><input type="submit" /></p>
         </form>  
       </div>
     );
   }
-
+ 
   procesar(e) {
     e.preventDefault();
-    alert('Se encontró al paciente: '+this.state.nombre + ' ' + this.state.apellido);
+    this.setState({
+      isButtonPressed:false,
+      nombre: this.state.paciente.nombre,
+      apellido: this.state.paciente.apellido,
+      tipoDoc: this.state.paciente.tipoDocumento.nombre,
+      nroDoc: this.state.paciente.nroDocumento,
+      fechaNacimiento: this.state.paciente.fechaNacimiento,
+      fechaAlta: this.state.paciente.fechaAlta,
+      sexo: this.state.paciente.sexo,
+      nacionalidad: this.state.paciente.nacionalidad.nombreBonito,
+      telefono: this.state.paciente.telefono,
+      mail: this.state.paciente.mail,
+      obraSocial: this.state.paciente.obraSocial,
+
+    })
+    alert('Se encontró al paciente: '+this.state.paciente.nombre + ' ' + this.state.paciente.apellido);
   }
 
   cambioBusquedaId(e) {
     this.setState( {
-      busquedaId: !this.state.busquedaId
+      isRadioSelected: false
     })
   } 
 
   cambioBusquedaDoc(e) {
     this.setState( {
-      busquedaDoc: !this.state.busquedaDoc
+      isRadioSelected: false
     })
   } 
 
@@ -159,7 +190,6 @@ cambioObraSocial(e){
     })
 }
   
-
 }
 
 export default Form;

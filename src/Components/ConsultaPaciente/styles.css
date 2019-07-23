@@ -9,5 +9,8 @@
 .Form{
     background-color: #9999;
     padding: 8px;    
-    padding-left: 19px;
+}
+
+.ButtonBuscar{
+    margin-left: 13px;
 }
