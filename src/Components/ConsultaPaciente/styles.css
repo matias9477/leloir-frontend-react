@@ -1,0 +1,13 @@
+.Consulta{
+    color: rgb(68, 66, 66);
+    font-size: 20px;
+    background-color: rgba(92, 127, 143, 0.6);
+    padding: 10px;
+    text-align: center;
+}
+
+.Form{
+    background-color: #9999;
+    padding: 8px;    
+    padding-left: 19px;
+}
