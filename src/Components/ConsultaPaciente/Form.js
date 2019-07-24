@@ -10,14 +10,15 @@ class Form extends Component {
         busquedaId: false,
         busquedaDoc: false,
         busquedaNombre: false,
+        
         isRadioSelected: true,
+        valor:true,
+
         isBusquedaId:false,
         isBusquedaDoc:false,
         isBusquedaNombre:false,
-        valor:'',
-        isValorEntered: true,
-        isButtonPressed: true,
 
+        id:'',
         nombre: '',
         apellido:'',
         tipoDoc:'',
@@ -34,8 +35,8 @@ class Form extends Component {
     this.cambioBusquedaId = this.cambioBusquedaId.bind(this);
     this.cambioBusquedaDoc = this.cambioBusquedaDoc.bind(this);
     this.cambioBusquedaNombre = this.cambioBusquedaNombre.bind(this);
-    this.cambioValor = this.cambioValor.bind(this)
-
+    
+    this.cambioId = this.cambioId.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
     this.cambioApellido = this.cambioApellido.bind(this);    
     this.cambioTipoDoc = this.cambioTipoDoc.bind(this);
@@ -58,20 +59,15 @@ class Form extends Component {
 
             <p><input type="radio" value={this.state.busquedaId} name="radio" onChange={this.cambioBusquedaId} /> Busqueda por Id</p> 
             <p><input type="radio" value={this.state.busquedaDoc} name="radio" onChange={this.cambioBusquedaDoc} /> Busqueda por Documento</p> 
-            <p><input type="radio" value={this.state.busquedaNombre} name="radio" onChange={this.cambioBusquedaNombre} /> Busqueda por Nombre</p> 
-            <br></br>
-
-            Ingrese busqueda: <input type="int" value={this.state.valor} disabled={this.state.isRadioSelected} onChange={this.cambioValor} />
-            
-            <button type="submit" disabled={this.state.isValorEntered} onClick={this.fetchPaciente} className="ButtonBuscar"> Buscar Paciente</button >
-            
-            <br></br>
+            <p><input type="radio" value={this.state.busquedaNombre} name="radio" onChange={this.cambioBusquedaNombre} /> Busqueda por Nombre y Apellido</p> 
             <br></br>
             <hr></hr>
-            <p>Nombre: <input type="text" value={this.state.nombre} disabled={true} /></p>
-            <p>Apellido: <input type="text" value={this.state.apellido} disabled={true} /></p>    
+            <br></br>
+            <p>Id: <input type="text" value={this.state.id} disabled={this.state.isRadioSelected || (!this.state.isBusquedaId)}  onChange={this.cambioId} size="43px"/></p>
+            <p>Nombre: <input type="text" value={this.state.nombre} disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre)} onChange={this.cambioNombre} size="43px"/></p>
+            <p>Apellido: <input type="text" value={this.state.apellido} disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre) } onChange={this.cambioApellido} /></p>    
             <p>Tipo Documento: <input type="text" value={this.state.tipoDoc} disabled={true} /></p>    
-            <p>Número Documento: <input type="int" value={this.state.nroDoc} disabled={true} /></p>    
+            <p>Número Documento: <input type="int" value={this.state.nroDoc} disabled={this.state.isRadioSelected || (!this.state.isBusquedaDoc)} onChange={this.cambioNroDoc} /></p>    
             <p>Fecha de nacimiento: <input type="text" value={this.state.fechaNacimiento} disabled={true} /></p> 
             <p>Fecha de alta: <input type="text" value={this.state.fechaAlta} disabled={true} /></p>     
             <p>Sexo: <input type="text" value={this.state.sexo} disabled={true} /></p>    
@@ -79,6 +75,8 @@ class Form extends Component {
             <p>Teléfono: <input type="int" value={this.state.telefono} disabled={true} /></p>    
             <p>Mail: <input type="text" value={this.state.mail} disabled={true}/></p>    
             <p>Obra Social: <input type="text" value={this.state.obraSocial} disabled={true} /></p>    
+               
+            <button type="submit" disabled={this.state.valor} onClick={this.fetchPaciente} className="ButtonBuscar"> Buscar Paciente</button >
         </form>  
       </div>
     );
@@ -89,6 +87,7 @@ handleUpdateClick = (api) => {
       return resolve.json();
   }).then(paciente => {
     this.setState({
+      id: paciente.idPaciente,
       nombre: paciente.nombre,
       apellido: paciente.apellido,
       tipoDoc: paciente.tipoDocumento.nombre,
@@ -102,20 +101,45 @@ handleUpdateClick = (api) => {
       obraSocial: paciente.obraSocial,
     });
   }).catch(function(error) {
-    alert('No se encontró al paciente. Revise la información e intente nuevamente...');
+    alert('No se encontró al paciente. Revise la información e intente nuevamente.');
 });
-
 }
 
+
+handleUpdateClickNombre = (api) => {
+  fetch(api).then ( resolve => {
+    return resolve.json();
+}).then(paciente => {
+  this.setState({
+    id: paciente[0].idPaciente,
+    nombre: paciente[0].nombre,
+    apellido: paciente[0].apellido,
+    tipoDoc: paciente[0].tipoDocumento.nombre,
+    nroDoc: paciente[0].nroDocumento,
+    fechaNacimiento: this.getHumanDate(paciente[0].fechaNacimiento),
+    fechaAlta: this.getHumanDate(paciente[0].fechaAlta),
+    sexo: this.getSexo(paciente[0].sexo),
+    nacionalidad: paciente[0].nacionalidad.nombreBonito,
+    telefono: paciente[0].telefono,
+    mail: paciente[0].mail,
+    obraSocial: paciente[0].obraSocial,
+  });
+}).catch(function(error) {
+  alert('No se encontró al paciente. Revise la información e intente nuevamente.');
+});
+}
 
   fetchPaciente(e){
     e.preventDefault();
     if (this.state.isBusquedaId === true){
-      const api = "http://localhost:8080/pacientes/id/" + this.state.valor ;
+      const api = "http://localhost:8080/pacientes/id/" + this.state.id ;
       this.handleUpdateClick(api);
     } else if (this.state.isBusquedaDoc === true){
-      const api = "http://localhost:8080/pacientes/dni/" + this.state.valor ;
+      const api = "http://localhost:8080/pacientes/dni/" + this.state.nroDoc ;
       this.handleUpdateClick(api);
+    } else {
+      const api = "http://localhost:8080/pacientes/nombre/" + this.state.nombre +"/apellido/"+ this.state.apellido;
+      this.handleUpdateClickNombre(api);
     } 
 
   }
@@ -126,32 +150,8 @@ handleUpdateClick = (api) => {
       isBusquedaId: true,
       isBusquedaDoc: false,
       isBusquedaNombre: false,
-    })
-  } 
-
-  cambioBusquedaDoc(e) {
-    this.setState( {
-      isRadioSelected: false,
-      isBusquedaDoc: true,
-      isBusquedaId: false,
-      isBusquedaNombre:false,
-    })
-  } 
-
-  cambioBusquedaNombre(e){
-    this.setState( {
-      isRadioSelected: false,
-      isBusquedaNombre: true,
-      isBusquedaDoc: false,
-      isBusquedaId: false,
-    })
-  } 
-
-  cambioValor(e) {
-      this.setState( {
-          valor: e.target.value,
-          isValorEntered: false,
-          nombre: '',
+      nombre: '',
+          id:'',
           apellido:'',
           tipoDoc:'',
           nroDoc:'',
@@ -162,7 +162,57 @@ handleUpdateClick = (api) => {
           telefono:'',
           mail:'',
           obraSocial:'',
-      })
+    })
+  } 
+
+  cambioBusquedaDoc(e) {
+    this.setState( {
+      isRadioSelected: false,
+      isBusquedaDoc: true,
+      isBusquedaId: false,
+      isBusquedaNombre:false,
+      id:'',
+      nombre: '',
+          apellido:'',
+          tipoDoc:'',
+          nroDoc:'',
+          fechaNacimiento:'',
+          fechaAlta:'',
+          sexo:'',
+          nacionalidad:'',
+          telefono:'',
+          mail:'',
+          obraSocial:'',
+    })
+  } 
+
+  cambioBusquedaNombre(e){
+    this.setState( {
+      isRadioSelected: false,
+      isBusquedaNombre: true,
+      isBusquedaDoc: false,
+      isBusquedaId: false,
+      id:'',
+      nombre: '',
+          apellido:'',
+          tipoDoc:'',
+          nroDoc:'',
+          fechaNacimiento:'',
+          fechaAlta:'',
+          sexo:'',
+          nacionalidad:'',
+          telefono:'',
+          mail:'',
+          obraSocial:'',
+    })
+  } 
+
+
+  cambioId(e) {
+    this.setState( {
+      id: e.target.value,
+      valor:false,
+    })
   }
 
   cambioNombre(e) {
@@ -173,7 +223,8 @@ handleUpdateClick = (api) => {
 
   cambioApellido(e) {
     this.setState( {
-      apellido: e.target.value
+      apellido: e.target.value,
+      valor:false,
     })
   }  
 
@@ -185,7 +236,8 @@ handleUpdateClick = (api) => {
 
   cambioNroDoc(e) {
       this.setState( {
-        nroDoc: e.target.value
+        nroDoc: e.target.value,
+        valor:false,
       })
   }
 
