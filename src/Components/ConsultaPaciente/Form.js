@@ -93,8 +93,8 @@ handleUpdateClick = (api) => {
       apellido: paciente.apellido,
       tipoDoc: paciente.tipoDocumento.nombre,
       nroDoc: paciente.nroDocumento,
-      fechaNacimiento: paciente.fechaNacimiento,
-      fechaAlta: paciente.fechaAlta,
+      fechaNacimiento: this.getHumanDate(paciente.fechaNacimiento),
+      fechaAlta: this.getHumanDate(paciente.fechaAlta),
       sexo: this.getSexo(paciente.sexo),
       nacionalidad: paciente.nacionalidad.nombreBonito,
       telefono: paciente.telefono,
@@ -241,7 +241,12 @@ getSexo = (sex) => {
 }
 
 getHumanDate = (date) => {
-  
+  date = new Date(date);
+  var d = date.getDate().toString();
+  var dd = (d.length === 2) ? d : "0"+d;
+  var m = (date.getMonth()+1).toString();
+  var mm = (m.length === 2) ? m : "0"+m;     
+  return(dd+"/"+mm+ "/" + (date.getFullYear()).toString());
 }
 
 }
