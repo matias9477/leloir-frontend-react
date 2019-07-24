@@ -89,21 +89,20 @@ handleUpdateClick = (api) => {
       return resolve.json();
   }).then(paciente => {
     this.setState({
-      er: true,
       nombre: paciente.nombre,
       apellido: paciente.apellido,
       tipoDoc: paciente.tipoDocumento.nombre,
       nroDoc: paciente.nroDocumento,
       fechaNacimiento: paciente.fechaNacimiento,
       fechaAlta: paciente.fechaAlta,
-      sexo: paciente.sexo,
+      sexo: this.getSexo(paciente.sexo),
       nacionalidad: paciente.nacionalidad.nombreBonito,
       telefono: paciente.telefono,
       mail: paciente.mail,
       obraSocial: paciente.obraSocial,
     });
   }).catch(function(error) {
-    alert('No se encontró al paciente. Intente nuevamente...');
+    alert('No se encontró al paciente. Revise la información e intente nuevamente...');
 });
 
 }
@@ -232,12 +231,17 @@ cambioObraSocial(e){
     })
 }
   
-getSexo = sex => {
+
+getSexo = (sex) => {
   if (sex === true){
-    sex = "Masculino"
+    return  "Masculino"
   }else {
-    sex = "Femenino"
+    return "Femenino"
   }
+}
+
+getHumanDate = (date) => {
+  
 }
 
 }
