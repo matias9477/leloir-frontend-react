@@ -1,5 +1,5 @@
 .Consulta{
-    color: rgb(68, 66, 66);
+    color: rgb(53, 52, 52);
     font-size: 20px;
     background-color: rgba(92, 127, 143, 0.6);
     padding: 10px;
@@ -7,10 +7,14 @@
 }
 
 .Form{
-    background-color: #9999;
+    background-color: rgba(187, 184, 184, 0.6);
     padding: 8px;    
 }
 
 .ButtonBuscar{
     margin-left: 13px;
+}
+
+.Menu{
+   background-color: rgb(242, 244, 255);
 }
