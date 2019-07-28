@@ -1,154 +1,198 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import './../../styles.css';
+import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-export default class Form extends React.Component {
-  state = {
-    nombre: "",
-    apellido: "",
-    tipoDni: "",
-    dni: "",
-    fechaNacimiento:"",
-    sexo:"",
-    nacionalidad:"",
-    telefono:"",
-    email: "",
-    obraSocial:"",
-  };
+import './styles.css';
+import { addDays } from 'date-fns/esm';
 
-  change = e => {
-    this.props.onChange({ [e.target.name]: e.target.value });
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
-
-  onSubmit = e => {
-   
-    e.preventDefault();
-    // this.props.onSubmit(this.state);
-
-    Form.propTypes = {
-      nombre: PropTypes.string.isRequired,
-      apellido: PropTypes.string.isRequired,
-      dni: PropTypes.number.isRequired,
-      telefono: PropTypes.number.isRequired,
-      email: PropTypes.string.isRequired,
-    }
-
-    this.setState({
-      nombre: "",
-      apellido: "",
-      dni: "",
-      tipoDni: "",
-      fechaNacimiento:"",
-      sexo:"",
-      nacionalidad:"",
-      telefono:"",
-      email: "",
-      obraSocial:"",
-    });
-    this.props.onChange({
-      nombre: "",
-      apellido: "",
-      dni: "",
-      tipoDni: "",
-      fechaNacimiento:"",
-      sexo:"",
-      nacionalidad:"",
-      telefono:"",
-      email: "",
-      obraSocial:"",
-    });
-  };
+class Form extends Component {
+  constructor(props) {
+    super(props);
+    this.state = ({
+        nombre: '',
+        apellido:'',
+        tipoDoc:'',
+        nroDoc:'',
+        fechaNacimiento: new Date(),
+        fechaAlta:'',
+        sexo:'',
+        nacionalidad:'',
+        telefono:'',
+        mail:'',
+        obraSocial:'',
+      })
+    this.fetchPaciente = this.fetchPaciente.bind(this);
+    this.cambioNombre = this.cambioNombre.bind(this);
+    this.cambioApellido = this.cambioApellido.bind(this);    
+    this.cambioTipoDoc = this.cambioTipoDoc.bind(this);
+    this.cambioNroDoc = this.cambioNroDoc.bind(this);
+    this.cambioFechaNacimiento = this.cambioFechaNacimiento.bind(this);
+    this.cambioSexo = this.cambioSexo.bind(this);
+    this.cambioNacionalidad = this.cambioNacionalidad.bind(this);
+    this.cambioTelefono = this.cambioTelefono.bind(this);
+    this.cambioMail = this.cambioMail.bind(this);
+    this.cambioObraSocial = this.cambioObraSocial.bind(this);
+  }
 
   render() {
     return (
-      <form className="formulario">
-        <div className="Paciente"> Nuevo paciente </div>
-        <label className="nombrePaciente"> {"Nombre:   "}</label>  
-          <input 
-            name="nombre"
-            placeholder="Ingrese nombre..."
-            value={this.state.nombre}
-            onChange={e => this.change(e)}
-          /> 
-        <br />
-        <label>{"Apellido:  "}</label>
-          <input
-            name="apellido"
-            placeholder="Ingrese apellido..."
-            value={this.state.apellido}
-            onChange={e => this.change(e)}
-          />
-        <br />
-        <label>{"Tipo Dni: "}</label>
-        <input
-          name="tipoDni"
-          placeholder="Tipo Dni"
-          value={this.state.tipoDni}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <label>{"Dni:  "}</label>
-        <input
-          name="dni"
-          placeholder="Ingrese número Dni..."
-          value={this.state.dni}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <label>{"Fecha de nacimiento: "}</label>
-        <input
-          name="fechaNacimiento"
-          placeholder="Fecha de nacimiento"
-          value={this.state.fechaNacimiento}
-          onChange={e => this.change(e)}
-        />
-        <br /> 
-        <label>{"Sexo: "}</label>
-        <input
-          name="sexo"
-          placeholder="sexo"
-          value={this.state.sexo}
-          onChange={e => this.change(e)}
-        />
-        <br /> 
-        <label>{"Nacionalidad: "}</label>
-        <input
-          name="nacionalidad"
-          placeholder="Ingrese nacionalidad..."
-          value={this.state.nacionalidad}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <label>{"Teléfono: "}</label>
-        <input
-          name="telefono"
-          placeholder="Ingrese teléfono..."
-          value={this.state.telefono}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <label>{"Email: "}</label>
-        <input
-          name="email"
-          placeholder="Ingrese mail..."
-          value={this.state.email}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <label>{"Obra social: "}</label>
-        <input
-          name="obraSocial"
-          placeholder="Ingrese obra social..."
-          value={this.state.obraSocial}
-          onChange={e => this.change(e)}
-        />
-        <br />
-        <button className="boton" onClick={e => this.onSubmit(e)}>Registrar</button>
-      </form>
+      <div>
+        <div className="Registrar">Registrar paciente</div>
+        <form className="Form">
+            <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
+            <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
+            <p>Tipo Documento: <input type="text" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} /></p>    
+            <p>Número Documento: <input type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>         
+            <p>Sexo: <input type="text" value={this.state.sexo} onChange={this.cambioSexo} /></p>    
+            <p>Nacionalidad: <input type="text" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} /></p>    
+
+            Fecha de nacimiento:  <DatePicker 
+            selected={this.state.fechaNacimiento}  onChange={this.cambioFechaNacimiento} 
+            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} placeholderText="Ingrese fecha nac" ></DatePicker> 
+
+            <p>Teléfono: <input type="text" value={this.state.telefono} onChange={this.cambioTelefono} /></p>    
+            <p>Mail: <input type="text" value={this.state.mail} onChange={this.cambioMail}/></p>    
+            <p>Obra Social: <input type="text" value={this.state.obraSocial} onChange={this.cambioObraSocial}/></p>    
+            <br></br>
+            <button type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</button >
+        </form>  
+      </div>
     );
+  }
+  
+handleUpdateClick = (api) => {
+  var url = 'http://localhost:8080/pacientes/add';
+  var data = {
+    "nombre": this.state.nombre,
+    "apellido": this.state.apellido,
+    "nroDocumento": this.state.nroDoc,
+    "tipoDocumento": {
+      "idTipoDocumento": 1,
+      "nombre": "Documento Nacional de Identidad"
+    },
+    "fechaNacimiento": this.getFechaNacimiento(),
+    "fechaAlta": this.getCurrentDate(),
+    "sexo": this.getBooleanSex(this.state.sexo),
+    "nacionalidad": {
+      "idPais": 43,
+      "iso": "CL",
+      "nombre": "CHILE",
+      "nombreBonito": "Chile",
+      "iso3": "CHL",
+      "codigoTelefono": 56
+    },
+    "telefono": this.state.telefono,
+    "mail": this.state.mail,
+    "obraSocial": 1,
+    "historial": null,
+    "bitAlta": true
+};
+
+fetch(url, {
+  method: 'POST', 
+  body: JSON.stringify(data),
+  headers:{
+    'Content-Type': 'application/json'
+  }
+  }).then(res => res.json())
+  .catch(error => console.error('Error:', error))
+  .then(response => console.log('Success:', alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido+ ' con éxito')));
+}
+
+  fetchPaciente(e){
+    e.preventDefault();
+    const api = "localhost:8080/pacientes/add";
+    this.handleUpdateClick(api);
+  }
+ 
+  cambioNombre(e) {
+    this.setState( {
+      nombre: e.target.value
+    })
+  }
+
+  cambioApellido(e) {
+    this.setState( {
+      apellido: e.target.value
+    })
+  }  
+
+  cambioTipoDoc(e){
+    this.setState( {
+        tipoDoc: e.target.value
+    })
+}
+
+  cambioNroDoc(e) {
+      this.setState( {
+        nroDoc: e.target.value
+      })
+  }
+
+  cambioFechaNacimiento(e){
+    this.setState( {
+        fechaNacimiento: e
+    })
+  }
+
+  cambioSexo(e){
+      this.setState( {
+          sexo: e.target.value
+      })
+  }
+
+  cambioNacionalidad(e){
+      this.setState( {
+          nacionalidad: e.target.value
+      })
+  }
+
+  cambioTelefono(e){
+    this.setState( {
+        telefono: e.target.value
+    })
+}
+
+cambioMail(e){
+    this.setState( {
+        mail: e.target.value
+    })
+}
+
+cambioObraSocial(e){
+    this.setState( {
+        obraSocial: e.target.value
+    })
+}
+
+getBooleanSex = (sex) => {
+  if (sex === "Masculino"){
+    return  true
+  } else {
+    return false
   }
 }
 
+getCurrentDate(){
+  var date = new Date().getDate();
+  var month = new Date().getMonth() + 1; 
+  var year = new Date().getFullYear(); 
+  if (month < 10) {
+    month = "0" + month;
+  }
+  return year + '-' + month + '-' + date + 'T00:00:00.000+0000';
+}
+
+getFechaNacimiento(){
+  var año = this.state.fechaNacimiento.getFullYear();
+  var mes = (this.state.fechaNacimiento.getMonth()+1);
+  var dia = this.state.fechaNacimiento.getDate();
+  if (mes < 10){
+    mes = "0" + mes;
+  } 
+  return año + "-" + mes + "-" + dia + "T00:00:00.000+0000";
+}
+
+}
+
+export default Form;
