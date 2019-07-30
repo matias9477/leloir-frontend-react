@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-import './styles.css';
 import { addDays } from 'date-fns/esm';
+import './styles.css';
 
 class Form extends Component {
   constructor(props) {
@@ -33,6 +32,7 @@ class Form extends Component {
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
   }
+  
 
   render() {
     return (
@@ -43,7 +43,12 @@ class Form extends Component {
             <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
             <p>Tipo Documento: <input type="text" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} /></p>    
             <p>Número Documento: <input type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>         
-            <p>Sexo: <input type="text" value={this.state.sexo} onChange={this.cambioSexo} /></p>    
+                        
+            Sexo: <select className="selectSexo" value={this.state.sexo} onChange={this.cambioSexo} >
+              <option value="Masculino"> Masculino </option>
+              <option value="Femenino"> Femenino </option>
+            </select>
+
             <p>Nacionalidad: <input type="text" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} /></p>    
 
             Fecha de nacimiento:  <DatePicker 
@@ -55,6 +60,7 @@ class Form extends Component {
             <p>Obra Social: <input type="text" value={this.state.obraSocial} onChange={this.cambioObraSocial}/></p>    
             <br></br>
             <button type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</button >
+            <br></br>          
         </form>  
       </div>
     );
@@ -103,6 +109,7 @@ fetch(url, {
     e.preventDefault();
     const api = "localhost:8080/pacientes/add";
     this.handleUpdateClick(api);
+    console.log(this.state.sexo)
   }
  
   cambioNombre(e) {
