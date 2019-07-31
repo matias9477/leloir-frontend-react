@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.2.1",
     "react": "^16.8.6",
+    "react-datepicker": "^2.8.0",
     "react-dom": "^16.8.6",
     "react-flexbox-grid": "^2.1.2",
     "react-scripts": "3.0.1"

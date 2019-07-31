@@ -12,7 +12,7 @@ function ConsultaPaciente() {
       <Row>
         <AppBar position='sticky' >
           <Toolbar>
-            <Typography variant='title' color='inherit'>
+            <Typography variant='inherit' color='inherit'>
               LELOIR
             </Typography>
           </Toolbar>

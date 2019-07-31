@@ -12,9 +12,16 @@
 }
 
 .ButtonBuscar{
-    margin-left: 13px;
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .Menu{
    background-color: rgb(242, 244, 255);
+}
+
+.combos{
+    width: 160px;
+    height: 22px;
+    background-color: rgb(235, 235, 228);
 }
