@@ -60,6 +60,7 @@ class Form extends Component {
   componentDidMount(){
     const urlDocs = "http://localhost:8080/tipos_documento/all";
     const urlObrasSoc = "http://localhost:8080/obras_sociales/all";
+    const urlPaises = "http://localhost:8080/paises/all";
 
     fetch(urlDocs).then ( resolve => {
       if(resolve.ok) { 
@@ -84,6 +85,19 @@ class Form extends Component {
         obrasSociales: obrasSoc,
       })
   })
+
+  fetch(urlPaises).then ( resolve => {
+    if(resolve.ok) { 
+      return resolve.json();
+    } else {
+      throw Error(resolve.statusText);
+    }
+}).then(paises => {
+    this.setState({
+      paises: paises,
+    })
+})
+
   }
 
   render() {
@@ -118,9 +132,9 @@ class Form extends Component {
             </select>
             <p></p>
             Nacionalidad: <select disabled={true} className="combos" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
-            <option value={null}>  </option>
-              <option value="Argentina"> Argentina </option>
-              <option value="Chile"> Chile </option>
+                <option value={null}>  </option>
+                {this.state.paises.map(item => (
+                <option key={item.idPais}>{item.nombreBonito}</option>))}
             </select>    
             <p></p>
             
@@ -168,7 +182,7 @@ class Form extends Component {
         telefono: paciente.telefono,
         mail: paciente.mail,
         obraSocial: paciente.obraSocial,
-      }, function(){console.log("json id paciente: " + paciente.idPaciente + " nombre: " + paciente.nombre)})
+      }, function() {console.log(this.state.nombre)})
     }).catch(function(error) {
       alert('No se encontró al paciente. Revise la información e intente nuevamente.'); 
   }, this.vaciadoCampos());
@@ -217,6 +231,7 @@ class Form extends Component {
     console.log("id " + this.state.id + " nombre " + this.state.nombre + " apellido " + this.state.apellido + " nroDoc " + this.state.nroDoc);
     console.log("fechaNacimiento " + this.state.fechaNacimiento + " fechaAlta " + this.state.fechaAlta + " sexo "+ this.state.sexo + " nacionalidad " + this.state.nacionalidad);
     console.log(this.state.paciente);
+    console.log(this.state.paises)
   }
   
   vaciadoCampos(){
