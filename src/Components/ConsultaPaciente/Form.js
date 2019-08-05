@@ -6,9 +6,7 @@ import './styles.css';
 class Form extends Component {
   constructor(props) {
     super(props);
-    this.state = ({
-        paciente: [],
-        
+    this.state = ({        
         busquedaId: false,
         busquedaDoc: false,
         busquedaNombre: false,
@@ -32,7 +30,7 @@ class Form extends Component {
         telefono:'',
         mail:'',
         obraSocial:'',
-
+      
         documentos:[],
         paises: [],
         obrasSociales:[],
@@ -149,7 +147,7 @@ class Form extends Component {
             Obras Sociales: <select disabled={true} className="combos" value={this.state.obraSocial || ''} onChange={this.cambioObraSocial} >
                 <option value={null}>  </option>
                 {this.state.obrasSociales.map(item => (
-                <option key={item.idObraSocial}>{item.idObraSocial}</option>))}
+                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
             </select> 
    
             <p></p>
@@ -169,7 +167,6 @@ class Form extends Component {
       }
     }).then(paciente => {
       this.setState({
-        paciente,
         id: paciente.idPaciente,
         nombre: paciente.nombre,
         apellido: paciente.apellido,
@@ -181,8 +178,8 @@ class Form extends Component {
         nacionalidad: paciente.nacionalidad.nombreBonito,
         telefono: paciente.telefono,
         mail: paciente.mail,
-        obraSocial: paciente.obraSocial,
-      }, function() {console.log(this.state.nombre)})
+        obraSocial: this.verificarExistenciaObraSocial(paciente.obraSocial),
+      })
     }).catch(function(error) {
       alert('No se encontró al paciente. Revise la información e intente nuevamente.'); 
   }, this.vaciadoCampos());
@@ -204,7 +201,7 @@ class Form extends Component {
       nacionalidad: paciente[0].nacionalidad.nombreBonito,
       telefono: paciente[0].telefono,
       mail: paciente[0].mail,
-      obraSocial: paciente[0].obraSocial,
+      obraSocial: this.verificarExistenciaObraSocial(paciente[0].obraSocial),
     });
   }).catch(function(error) {
     alert('No se encontró al paciente. Revise la información e intente nuevamente.')
@@ -223,15 +220,7 @@ class Form extends Component {
       const api = "http://localhost:8080/pacientes/nombre/" + this.state.nombre +"/apellido/"+ this.state.apellido;
       this.handleUpdateClickNombre(api);
     } 
-    console.log(this.state.documentos);
-    console.log("largo del array ant: " + this.state.documentos.length);
-    console.log("state tipo doc: " + this.state.tipoDoc);
-    console.log("nombre de la posicion 0 del array docs: " + this.state.documentos[0].nombre);
-    console.log("funcion q saca el id del doc: " + this.getIdTipoDoc());
-    console.log("id " + this.state.id + " nombre " + this.state.nombre + " apellido " + this.state.apellido + " nroDoc " + this.state.nroDoc);
-    console.log("fechaNacimiento " + this.state.fechaNacimiento + " fechaAlta " + this.state.fechaAlta + " sexo "+ this.state.sexo + " nacionalidad " + this.state.nacionalidad);
-    console.log(this.state.paciente);
-    console.log(this.state.paises)
+    
   }
   
   vaciadoCampos(){
@@ -248,6 +237,7 @@ class Form extends Component {
       telefono:'',
       mail:'',
       obraSocial:'',
+      paciente: [],
     })
   }
 
@@ -373,10 +363,11 @@ class Form extends Component {
     return((date.getFullYear()) + '/' + mm + '/' + dd.toString());
   }
 
-  getIdTipoDoc = () => {
-    for(let i=0; i < this.state.documentos.length; i++){
-      if (this.state.tipoDoc === this.state.documentos[i].nombre)
-        return this.state.documentos[i].idTipoDocumento;
+  verificarExistenciaObraSocial (os){
+    if (os === null){
+      return os;
+    } else{
+      return os.razonSocial;
     }
   }
 
