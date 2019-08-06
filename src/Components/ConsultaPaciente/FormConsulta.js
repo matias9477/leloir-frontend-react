@@ -365,7 +365,7 @@ class Form extends Component {
 
   verificarExistenciaObraSocial (os){
     if (os === null){
-      return os;
+      return null;
     } else{
       return os.razonSocial;
     }

@@ -87,7 +87,7 @@ class Form extends Component {
         <form onSubmit={this.fetchPaciente} className="Form">
             <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
             <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
-            Tipo Documento: <select className="combos" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+            Tipo Documento: <select className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
                 <option value={null}>  </option>
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
@@ -95,13 +95,13 @@ class Form extends Component {
   
             <p>Número Documento: <input type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>         
                         
-            Sexo: <select className="combos" value={this.state.sexo} onChange={this.cambioSexo} >
+            Sexo: <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
               <option value={null}>  </option>
               <option value="Femenino"> Femenino </option>
               <option value="Masculino"> Masculino </option>
             </select>
             <p></p>
-            Nacionalidad: <select className="combos" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+            Nacionalidad: <select className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
                 <option value={null}>  </option>
                 {this.state.paises.map(item => (
                 <option key={item.idPais}>{item.nombreBonito}</option>))}
@@ -113,7 +113,7 @@ class Form extends Component {
 
             <p>Teléfono: <input type="text" value={this.state.telefono} onChange={this.cambioTelefono} /></p>    
             <p>Mail: <input type="text" value={this.state.mail} onChange={this.cambioMail}/></p>    
-            Obra Social: <select className="combos" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+            Obra Social: <select className="combosAlta" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
                 <option key={null}>  </option>
                 {this.state.obrasSociales.map(item => (
                 <option key={item.idObraSocial}>{item.razonSocial}</option>))}
@@ -385,6 +385,8 @@ class Form extends Component {
   emptyToNull = (v) => {
     if (v === ''){
       return v=null;
+    } else {
+      return v;
     }
   }
 

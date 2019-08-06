@@ -4,10 +4,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Grid, Col, Row } from 'react-flexbox-grid';
-import './styles.css';
-import Form from './Form';
+import FormConsulta from './ConsultaPaciente/FormConsulta';
+import FormAlta from './AltaPaciente/FormAlta';
 
-function AltaPaciente() {
+function ConsultaPaciente() {
   return (
     <Grid>
       <Row>
@@ -29,7 +29,7 @@ function AltaPaciente() {
           </Col>
           <Col xs={9} md={9}>
             <Paper elevation={4}>
-             <Form></Form>
+             <FormAlta/>
             </Paper>
           </Col>
         </Row>
@@ -37,4 +37,4 @@ function AltaPaciente() {
   );
 }
 
-export default AltaPaciente;
+export default ConsultaPaciente;
