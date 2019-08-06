@@ -18,7 +18,11 @@ class Form extends Component {
         nacionalidad:'',
         telefono:'',
         mail:'',
-        obraSocial:'',
+        obraSocial: '',
+
+        documentos:[],
+        paises: [],
+        obrasSociales:[],
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -33,6 +37,49 @@ class Form extends Component {
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
   }
   
+  componentDidMount(){
+    const urlDocs = "http://localhost:8080/tipos_documento/all";
+    const urlObrasSoc = "http://localhost:8080/obras_sociales/all";
+    const urlPaises = "http://localhost:8080/paises/all";
+
+    fetch(urlDocs).then ( resolve => {
+      if(resolve.ok) { 
+        return resolve.json();
+      } else {
+        throw Error(resolve.statusText);
+      }
+  }).then(tipos => {
+      this.setState({
+        documentos: tipos,
+      })
+  })
+
+    fetch(urlObrasSoc).then ( resolve => {
+      if(resolve.ok) { 
+        return resolve.json();
+      } else {
+        throw Error(resolve.statusText);
+      }
+  }).then(obrasSoc => {
+      this.setState({
+        obrasSociales: obrasSoc,
+      })
+  })
+
+  fetch(urlPaises).then ( resolve => {
+    if(resolve.ok) { 
+      return resolve.json();
+    } else {
+      throw Error(resolve.statusText);
+    }
+}).then(paises => {
+    this.setState({
+      paises: paises,
+    })
+})
+
+  }
+
   render() {
     return (
       <div>
@@ -41,10 +88,11 @@ class Form extends Component {
             <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
             <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
             Tipo Documento: <select className="combos" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
-              <option value={null}>  </option>
-              <option value="Documento Nacional de Identidad"> Documento Nacional de Identidad </option>
-              <option value="Pasaporte" > Pasaporte </option>
-            </select>     
+                <option value={null}>  </option>
+                {this.state.documentos.map(item => (
+                <option key={item.idTipoDocumento}>{item.nombre}</option>))}
+            </select> 
+  
             <p>Número Documento: <input type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>         
                         
             Sexo: <select className="combos" value={this.state.sexo} onChange={this.cambioSexo} >
@@ -54,9 +102,9 @@ class Form extends Component {
             </select>
             <p></p>
             Nacionalidad: <select className="combos" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
-            <option value={null}>  </option>
-              <option value="Argentina"> Argentina </option>
-              <option value="Chile"> Chile </option>
+                <option value={null}>  </option>
+                {this.state.paises.map(item => (
+                <option key={item.idPais}>{item.nombreBonito}</option>))}
             </select>    
             <p></p>
             Fecha de nacimiento:  <DatePicker
@@ -66,11 +114,10 @@ class Form extends Component {
             <p>Teléfono: <input type="text" value={this.state.telefono} onChange={this.cambioTelefono} /></p>    
             <p>Mail: <input type="text" value={this.state.mail} onChange={this.cambioMail}/></p>    
             Obra Social: <select className="combos" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
-              <option value="">  </option>
-              <option value=" "> No posee </option>
-              <option value="1"> Medife </option>
-              <option value="2"> Osde </option>
-            </select>
+                <option key={null}>  </option>
+                {this.state.obrasSociales.map(item => (
+                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
+            </select> 
             <br></br>
             <button type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</button >       
         </form>  
@@ -78,48 +125,89 @@ class Form extends Component {
     );
   }
   
-handleUpdateClick = (api) => {
-  var url = 'http://localhost:8080/pacientes/add';
-  var data = {
-    "nombre": this.state.nombre,
-    "apellido": this.state.apellido,
-    "nroDocumento": this.state.nroDoc,
-    "tipoDocumento": {
-      "idTipoDocumento": 1,
-      "nombre": this.state.tipoDoc
-    },
-    "fechaNacimiento": this.getFechaNacimiento(),
-    "fechaAlta": this.getCurrentDate(),
-    "sexo": this.getBooleanSex(this.state.sexo),
-    "nacionalidad": {
-      "idPais": 10,
-      "iso": "AR",
-      "nombre": "ARGENTINA",
-      "nombreBonito": this.state.nacionalidad,
-      "iso3": "ARG",
-      "codigoTelefono": 54
-    },
-    "telefono": this.state.telefono,
-    "mail": this.state.mail,
-    "obraSocial": this.state.obraSocial,
-    "historial": null,
-    "bitAlta": true
-};
+  handleUpdateClick = (api) => {
+    var data;
+    if (this.state.obraSocial === null || this.state.obraSocial === ''){
+      data = {
+        "nombre": this.state.nombre,
+        "apellido": this.state.apellido,
+        "nroDocumento": this.state.nroDoc,
+        "tipoDocumento": {
+          "idTipoDocumento": this.getIdTipoDoc(),
+          "nombre": this.state.tipoDoc
+        },
+        "fechaNacimiento": this.getFechaNacimiento(),
+        "fechaAlta": this.getCurrentDate(),
+        "sexo": this.getBooleanSex(this.state.sexo),
+        "nacionalidad": {
+          "idPais": this.getIdPais(),
+          "iso": this.getIso(),
+          "nombre": this.getNombrePais(),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": this.getIso3(),
+          "codigoTelefono": this.getCodigoTelefono(),
+        },
+        "telefono": this.emptyToNull(this.state.telefono),
+        "mail": this.emptyToNull(this.state.mail),
+        "obraSocial": null,
+        "historial": null,
+        "bitAlta": true
+    };
+    } else {
+      data = {
+        "nombre": this.state.nombre,
+        "apellido": this.state.apellido,
+        "nroDocumento": this.state.nroDoc,
+        "tipoDocumento": {
+          "idTipoDocumento": this.getIdTipoDoc(),
+          "nombre": this.state.tipoDoc
+        },
+        "fechaNacimiento": this.getFechaNacimiento(),
+        "fechaAlta": this.getCurrentDate(),
+        "sexo": this.getBooleanSex(this.state.sexo),
+        "nacionalidad": {
+          "idPais": this.getIdPais(),
+          "iso": this.getIso(),
+          "nombre": this.getNombrePais(),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": this.getIso3(),
+          "codigoTelefono": this.getCodigoTelefono(),
+        },
+        "telefono": this.emptyToNull(this.state.telefono),
+        "mail": this.emptyToNull(this.state.mail),
+        "obraSocial": {
+          "idObraSocial": this.getIdObraSocial(),
+          "razonSocial": this.state.obraSocial,
+          "cuit": this.getCuitObraSocial(),
+          "domicilio": this.getDomicilioObraSocial(),
+          "telefono": this.getTelefonoObraSocial(),
+          "email": this.getEmailObraSocial(),
+        },
+        "historial": null,
+        "bitAlta": true
+    };
+    }
 
-fetch(url, {
-  method: 'POST', 
-  body: JSON.stringify(data),
-  headers:{
-    'Content-Type': 'application/json'
+    fetch(api, {
+      method: 'POST', 
+      body: JSON.stringify(data),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+      }).then(response => {
+        if (response.ok) {
+          alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido + ' con éxito.');
+          return response.text();
+        } else {
+          alert('No se ha podido registrar el paciente.');
+          return Promise.reject({status: response.status, statusText: response.statusText});
+        }
+      });
   }
-  }).then(response => response.text())
-  .catch(error => console.error('Error:', error))
-  .then(response => console.log('Success:', data, alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido + ' con éxito')));
-}
 
   fetchPaciente(e){
     e.preventDefault();
-    const api = "localhost:8080/pacientes/add";
+    const api = 'http://localhost:8080/pacientes/add';
     this.handleUpdateClick(api);
   }
  
@@ -139,7 +227,7 @@ fetch(url, {
     this.setState( {
         tipoDoc: e.target.value
     })
-}
+  } 
 
   cambioNroDoc(e) {
       this.setState( {
@@ -169,53 +257,136 @@ fetch(url, {
     this.setState( {
         telefono: e.target.value
     })
-}
+  }
 
-cambioMail(e){
+  cambioMail(e){
     this.setState( {
         mail: e.target.value
     })
-}
-
-cambioObraSocial(e){
-    this.setState( {
-        obraSocial: e.target.value
-    })
-}
-
-getBooleanSex = (sex) => {
-  if (sex === "Masculino"){
-    return  true
-  } else {
-    return false
   }
-}
 
-getCurrentDate(){
-  var date = new Date().getDate();
-  var month = new Date().getMonth() + 1; 
-  var year = new Date().getFullYear(); 
-  if (month < 10) {
-    month = "0" + month;
+  cambioObraSocial(e){
+      this.setState( {
+          obraSocial: e.target.value
+      })
   }
-  if (date < 10){
-    date = "0" + date;
-  } 
-  return year + '-' + month + '-' + date + 'T00:00:00.000+0000';
-}
 
-getFechaNacimiento(){
-  var año = this.state.fechaNacimiento.getFullYear();
-  var mes = (this.state.fechaNacimiento.getMonth()+1);
-  var dia = this.state.fechaNacimiento.getDate();
-  if (mes < 10){
-    mes = "0" + mes;
-  } 
-  if (dia < 10){
-    dia = "0" + dia;
-  } 
-  return año + "-" + mes + "-" + dia + "T00:00:00.000+0000";
-}
+  getBooleanSex = (sex) => {
+    if (sex === "Masculino"){
+      return  true
+    } else {
+      return false
+    }
+  }
+
+  getCurrentDate(){
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1; 
+    var year = new Date().getFullYear(); 
+    if (month < 10) {
+      month = "0" + month;
+    }
+    if (date < 10){
+      date = "0" + date;
+    } 
+    return year + '-' + month + '-' + date + 'T00:00:00.000+0000';
+  }
+
+  getFechaNacimiento(){
+    var año = this.state.fechaNacimiento.getFullYear();
+    var mes = (this.state.fechaNacimiento.getMonth()+1);
+    var dia = this.state.fechaNacimiento.getDate();
+    if (mes < 10){
+      mes = "0" + mes;
+    } 
+    if (dia < 10){
+      dia = "0" + dia;
+    } 
+    return año + "-" + mes + "-" + dia + "T00:00:00.000+0000";
+  }
+
+  getIdTipoDoc = () => {
+    for(let i=0; i < this.state.documentos.length; i++){
+      if (this.state.tipoDoc === this.state.documentos[i].nombre)
+        return this.state.documentos[i].idTipoDocumento;
+    }
+  }
+
+  getIdPais = () => {
+    for(let i=0; i < this.state.paises.length; i++){
+      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
+        return this.state.paises[i].idPais;
+    }
+  }
+
+  getIso = () => {
+    for(let i=0; i < this.state.paises.length; i++){
+      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
+        return this.state.paises[i].iso;
+    }
+  }
+
+  getIso3 = () => {
+    for(let i=0; i < this.state.paises.length; i++){
+      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
+        return this.state.paises[i].iso3;
+    }
+  }
+
+  getNombrePais = () => {
+    for(let i=0; i < this.state.paises.length; i++){
+      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
+        return this.state.paises[i].nombre;
+    }
+  }
+
+  getCodigoTelefono = () => {
+    for(let i=0; i < this.state.paises.length; i++){
+      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
+        return this.state.paises[i].codigoTelefono;
+    }
+  }
+
+  getIdObraSocial = () => {
+    for(let i=0; i < this.state.obrasSociales.length; i++){
+      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
+        return this.state.obrasSociales[i].idObraSocial;
+    }
+  }
+
+  getCuitObraSocial = () => {
+    for(let i=0; i < this.state.obrasSociales.length; i++){
+      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
+        return this.state.obrasSociales[i].cuit;
+    }
+  }
+
+  getDomicilioObraSocial = () => {
+    for(let i=0; i < this.state.obrasSociales.length; i++){
+      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
+        return this.state.obrasSociales[i].domicilio;
+    }
+  }
+
+  getTelefonoObraSocial = () => {
+    for(let i=0; i < this.state.obrasSociales.length; i++){
+      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
+        return this.state.obrasSociales[i].telefono;
+    }
+  }
+
+  getEmailObraSocial = () => {
+    for(let i=0; i < this.state.obrasSociales.length; i++){
+      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
+        return this.state.obrasSociales[i].email;
+    }
+  }
+
+  emptyToNull = (v) => {
+    if (v === ''){
+      return v=null;
+    }
+  }
 
 }
 
