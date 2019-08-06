@@ -29,7 +29,7 @@ function ConsultaPaciente() {
           </Col>
           <Col xs={9} md={9}>
             <Paper elevation={4}>
-             <FormAlta/>
+             <FormConsulta/>
             </Paper>
           </Col>
         </Row>
