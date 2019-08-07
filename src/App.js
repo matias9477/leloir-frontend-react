@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import "./App.css";
-import Alta from './Components/AltaPaciente/Alta';
+
+import Background from './Components/Background';
 
 function App(){
   return(
     <div className="App">
-      <Alta />
+      <Background />
     </div>
   );
 }
