@@ -38,9 +38,9 @@ class Form extends Component {
   }
   
   componentDidMount(){
-    const urlDocs = "http://localhost:8080/tipos_documento/all";
-    const urlObrasSoc = "http://localhost:8080/obras_sociales/all";
-    const urlPaises = "http://localhost:8080/paises/all";
+    const urlDocs = "/tipos_documento/all";
+    const urlObrasSoc = "/obras_sociales/all";
+    const urlPaises = "/paises/all";
 
     fetch(urlDocs).then ( resolve => {
       if(resolve.ok) { 
@@ -207,7 +207,7 @@ class Form extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const api = 'http://localhost:8080/pacientes/add';
+    const api = '/pacientes/add';
     this.handleUpdateClick(api);
   }
  
