@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Grid, Col, Row } from 'react-flexbox-grid';
 import FormConsulta from './ConsultaPaciente/FormConsulta';
-import FormAlta from './AltaPaciente/FormAlta';
+//import FormAlta from './AltaPaciente/FormAlta';
 
 function ConsultaPaciente() {
   return (

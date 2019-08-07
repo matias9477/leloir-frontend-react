@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
+import { Button } from 'semantic-ui-react'
 
 class Form extends Component {
   constructor(props) {
@@ -151,7 +152,8 @@ class Form extends Component {
             </select> 
    
             <p></p>
-            <button type="submit" disabled={this.state.valor} className="ButtonBuscar"> Buscar Paciente</button >        
+            <Button primary type="submit" disabled={this.state.valor}>Buscar Paciente</Button>
+                   
           
         </form>  
       </div>
