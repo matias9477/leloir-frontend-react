@@ -1,16 +1,20 @@
 import React from "react";
 import "./App.css";
 import 'semantic-ui-css/semantic.min.css';
-
-import Background from './Components/Background';
+import Navigator from './Components/Navigator/Navigator';
 
 function App(){
   return(
+
     <div className="App">
-      <Background />
-      
+
+        <Navigator />
+
     </div>
+
   );
 }
+
+
 
 export default App;

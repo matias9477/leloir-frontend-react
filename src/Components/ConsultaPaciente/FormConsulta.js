@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 import { Button } from 'semantic-ui-react'
 
-class Form extends Component {
+class FormConsulta extends Component {
   constructor(props) {
     super(props);
     this.state = ({        
@@ -375,4 +375,4 @@ class Form extends Component {
 
 }
 
-export default Form;
+export default FormConsulta;
