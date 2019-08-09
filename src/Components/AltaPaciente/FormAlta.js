@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import { Button, Header, Form } from 'semantic-ui-react'
 import './styles.css';
 
 class FormAlta extends Component {
@@ -83,7 +84,7 @@ class FormAlta extends Component {
   render() {
     return (
       <div>
-        <div className="Registrar">Registrar paciente</div>
+        <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <form onSubmit={this.fetchPaciente} className="Form">
             <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
             <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
@@ -119,7 +120,7 @@ class FormAlta extends Component {
                 <option key={item.idObraSocial}>{item.razonSocial}</option>))}
             </select> 
             <br></br>
-            <button type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</button >       
+            <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
         </form>  
       </div>
     );

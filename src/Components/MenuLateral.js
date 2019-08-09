@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
+import '../App.css';
 
 
 export default class MenuLateral extends Component {
+
+
     state = { activeItem: 'home' }
   
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -13,30 +16,41 @@ export default class MenuLateral extends Component {
   
       return (
         <nav>
-        <Menu inverted vertical>
+        <Menu pointing vertical>
+          <Link to="/">
+            <Menu.Item >
+              <img className="MenuImg" src="http://i67.tinypic.com/s1uetl_th.png"/>
+            </Menu.Item>
+          </Link>
+
+
           <Link to="/alta">
           <Menu.Item name='Registrar Paciente' 
           active={activeItem === 'Registrar Paciente'} 
           onClick={this.handleItemClick} 
           /></Link>
+
           <Link to="/consulta">
           <Menu.Item
             name='Buscar Paciente'
             active={activeItem === 'Buscar Paciente'}
             onClick={this.handleItemClick}
           /></Link>
+
           <Link to="/">
           <Menu.Item
             name='Modificar Paciente'
             active={activeItem === 'Modificar Paciente'}
             onClick={this.handleItemClick}
           /></Link>
+
           <Link to="/">
           <Menu.Item
             name='Eliminar Paciente'
             active={activeItem === 'Eliminar Paciente'}
             onClick={this.handleItemClick}
             /></Link>
+
         </Menu>
         </nav>
       )
