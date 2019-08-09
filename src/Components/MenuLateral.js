@@ -18,8 +18,10 @@ export default class MenuLateral extends Component {
         <nav>
         <Menu pointing vertical>
           <Link to="/">
-            <Menu.Item >
-              <img className="MenuImg" src="http://i67.tinypic.com/s1uetl_th.png"/>
+            <Menu.Item name='home'
+            active={activeItem==='home'}
+            onClick={this.handleItemClick}
+            ><img className="MenuImg" src="http://i67.tinypic.com/s1uetl_th.png"/>  
             </Menu.Item>
           </Link>
 
