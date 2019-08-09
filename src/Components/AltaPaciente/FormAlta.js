@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import { Button, Header, Form } from 'semantic-ui-react'
+import { Button, Header, Form, Dropdown } from 'semantic-ui-react'
 import './styles.css';
 
 class FormAlta extends Component {
@@ -55,6 +55,7 @@ class FormAlta extends Component {
       })
   })
 
+
     fetch(urlObrasSoc).then ( resolve => {
       if(resolve.ok) { 
         return resolve.json();
@@ -83,45 +84,86 @@ class FormAlta extends Component {
 
   render() {
     return (
-      <div>
+      <div className='FormularioAlta'>
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
-        <form onSubmit={this.fetchPaciente} className="Form">
-            <p>Nombre: <input type="text" value={this.state.nombre} onChange={this.cambioNombre} /></p>
-            <p>Apellido: <input type="text" value={this.state.apellido} onChange={this.cambioApellido} /></p>    
-            Tipo Documento: <select className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+        <Form onSubmit={this.fetchPaciente}>
+            
+            <Form.Field>
+               <label>Nombre</label>
+               <input placeholder='Nombre' type="text" value={this.state.nombre} onChange={this.cambioNombre} />
+            </Form.Field>
+
+            <Form.Field>
+              <label>Apellido</label>
+              <input placeholder='Apellido' type="text" value={this.state.apellido} onChange={this.cambioApellido}/>
+            </Form.Field>
+
+
+          <Form.Field>
+            <label>Tipo de Documento</label>
+            <select  className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
                 <option value={null}>  </option>
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
             </select> 
+          </Form.Field>
+
+
+            <Form.Field>
+              <label>Número de Documento</label>
+              <input placeholder='Número de documento' type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} />
+            </Form.Field>
   
-            <p>Número Documento: <input type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} /></p>         
-                        
-            Sexo: <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
+                
+            <Form.Field>
+              <label>Sexo</label>
+              <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
               <option value={null}>  </option>
               <option value="Femenino"> Femenino </option>
               <option value="Masculino"> Masculino </option>
             </select>
-            <p></p>
-            Nacionalidad: <select className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+            </Form.Field>
+
+            <Form.Field>
+              <label>Nacionalidad</label>
+              <select placeholder='Nacionalidad' className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
                 <option value={null}>  </option>
                 {this.state.paises.map(item => (
                 <option key={item.idPais}>{item.nombreBonito}</option>))}
-            </select>    
-            <p></p>
-            Fecha de nacimiento:  <DatePicker
-            selected={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} 
-            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd"></DatePicker> 
+            </select>
+            </Form.Field>
 
-            <p>Teléfono: <input type="text" value={this.state.telefono} onChange={this.cambioTelefono} /></p>    
-            <p>Mail: <input type="text" value={this.state.mail} onChange={this.cambioMail}/></p>    
-            Obra Social: <select className="combosAlta" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+            <Form.Field>
+              <label>Fecha de Nacimiento</label>
+              <DatePicker
+            selected={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} 
+            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
+              </DatePicker> 
+            </Form.Field>
+
+            <Form.Field>
+              <label>Teléfono</label>
+              <input placeholder='Teléfono' type="text" value={this.state.telefono} onChange={this.cambioTelefono} />
+            </Form.Field> 
+
+            <Form.Field>
+              <label>E-Mail</label>
+              <input placeholder='E-Mail' type="text" value={this.state.mail} onChange={this.cambioMail}/>
+            </Form.Field>        
+
+            <Form.Field>
+                  <label>Obra Social</label>
+                  <select className="combosAlta" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
                 <option key={null}>  </option>
                 {this.state.obrasSociales.map(item => (
                 <option key={item.idObraSocial}>{item.razonSocial}</option>))}
             </select> 
-            <br></br>
+            </Form.Field>      
+           
+
             <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
-        </form>  
+
+        </Form>  
       </div>
     );
   }
