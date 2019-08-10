@@ -1,7 +1,10 @@
 import React from "react";
-import MenuLateral from '../MenuLateral';
 import FormAlta from '../AltaPaciente/FormAlta';
 import FormConsulta from '../ConsultaPaciente/FormConsulta';
+import Login from '../Login/Login';
+import MenuLateral from '../MenuLateral';
+import AuthenticatedRoute from '../Navigator/AuthenticatedRoute';
+
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 function Navigator(){
@@ -11,8 +14,9 @@ function Navigator(){
         <MenuLateral/>
         <Switch>
         <Route path="/" exact component={Home}/>
-        <Route path="/alta" component={FormAlta}/>
-        <Route path="/consulta" component={FormConsulta}/>
+        <Route path="/login" component={Login}/>
+        <AuthenticatedRoute path="/alta" component={FormAlta}/>
+        <AuthenticatedRoute path="/consulta" component={FormConsulta}/>
         </Switch>
       </div>
       </Router>
@@ -22,6 +26,7 @@ function Navigator(){
   const Home = () =>(
     <div>
       <h1>Landing Page</h1>
+      <Login/>
     </div>
   );
   

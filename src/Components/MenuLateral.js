@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu , Image} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import '../App.css';
 
@@ -20,8 +20,10 @@ export default class MenuLateral extends Component {
           <Link to="/">
             <Menu.Item name='home'
             active={activeItem==='home'}
-            onClick={this.handleItemClick}
-            ><img className="MenuImg" src="http://i67.tinypic.com/s1uetl_th.png"/>  
+            onClick={this.handleItemClick}>
+              <Image src="http://i67.tinypic.com/s1uetl_th.png" size='tiny' centered/>
+
+              
             </Menu.Item>
           </Link>
 
