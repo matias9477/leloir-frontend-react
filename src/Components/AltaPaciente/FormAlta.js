@@ -88,20 +88,19 @@ class FormAlta extends Component {
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
             
-            <Form.Field>
-               <label>Nombre</label>
-               <input placeholder='Nombre' type="text" value={this.state.nombre} onChange={this.cambioNombre} />
-            </Form.Field>
+            <Form.Field required fluid label='Nombre' control='input' 
+            placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
+           
 
-            <Form.Field>
-              <label>Apellido</label>
-              <input placeholder='Apellido' type="text" value={this.state.apellido} onChange={this.cambioApellido}/>
-            </Form.Field>
+
+            <Form.Field required fluid label='Apellido' control='input'
+            placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
+
 
 
           <Form.Field>
             <label>Tipo de Documento</label>
-            <select  className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+            <select className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc}>
                 <option value={null}>  </option>
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
@@ -109,13 +108,13 @@ class FormAlta extends Component {
           </Form.Field>
 
 
-            <Form.Field>
+            <Form.Field required>
               <label>Número de Documento</label>
               <input placeholder='Número de documento' type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} />
             </Form.Field>
   
                 
-            <Form.Field>
+            <Form.Field required>
               <label>Sexo</label>
               <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
               <option value={null}>  </option>
@@ -124,7 +123,7 @@ class FormAlta extends Component {
             </select>
             </Form.Field>
 
-            <Form.Field>
+            <Form.Field required>
               <label>Nacionalidad</label>
               <select placeholder='Nacionalidad' className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
                 <option value={null}>  </option>
@@ -135,7 +134,7 @@ class FormAlta extends Component {
 
             <Form.Field>
               <label>Fecha de Nacimiento</label>
-              <DatePicker
+              <DatePicker placeholderText="Fecha de Nacimiento"
             selected={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} 
             peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
               </DatePicker> 
