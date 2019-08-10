@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import { Button, Header, Form, Dropdown } from 'semantic-ui-react'
+import { Button, Header, Form } from 'semantic-ui-react'
 import './styles.css';
 
 class FormAlta extends Component {
@@ -88,79 +88,51 @@ class FormAlta extends Component {
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
             
-            <Form.Field required fluid label='Nombre' control='input' 
-            placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
-           
+          <Form.Field required fluid label='Nombre' control='input' 
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
+          
+          <Form.Field required fluid label='Apellido' control='input'
+          placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
 
-
-            <Form.Field required fluid label='Apellido' control='input'
-            placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
-
-
-
-          <Form.Field>
-            <label>Tipo de Documento</label>
-            <select className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc}>
-                <option value={null}>  </option>
-                {this.state.documentos.map(item => (
-                <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-            </select> 
+          <Form.Field required fluid label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+              <option value={null}> </option>
+              {this.state.documentos.map(item => (
+              <option key={item.idTipoDocumento}>{item.nombre}</option>))}
           </Form.Field>
 
+          <Form.Field required fluid label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc}>
+          </Form.Field>
 
-            <Form.Field required>
-              <label>Número de Documento</label>
-              <input placeholder='Número de documento' type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} />
-            </Form.Field>
-  
-                
-            <Form.Field required>
-              <label>Sexo</label>
-              <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
-              <option value={null}>  </option>
-              <option value="Femenino"> Femenino </option>
-              <option value="Masculino"> Masculino </option>
-            </select>
-            </Form.Field>
+          <Form.Field required fluid label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} >
+            <option value={null}>  </option>
+            <option value="Femenino"> Femenino </option>
+            <option value="Masculino"> Masculino </option>
+          </Form.Field>
 
-            <Form.Field required>
-              <label>Nacionalidad</label>
-              <select placeholder='Nacionalidad' className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
-                <option value={null}>  </option>
-                {this.state.paises.map(item => (
-                <option key={item.idPais}>{item.nombreBonito}</option>))}
-            </select>
-            </Form.Field>
+          <Form.Field required fluid label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+            <option value={null}>  </option>
+              {this.state.paises.map(item => (
+            <option key={item.idPais}>{item.nombreBonito}</option>))}
+          </Form.Field>
 
-            <Form.Field>
-              <label>Fecha de Nacimiento</label>
-              <DatePicker placeholderText="Fecha de Nacimiento"
-            selected={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} 
-            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
+          <Form.Field required>
+            <label>Fecha de Nacimiento</label>
+              <DatePicker className="dat" placeholderText="Fecha de Nacimiento"
+              selected={this.state.fechaNacimiento} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
               </DatePicker> 
             </Form.Field>
 
-            <Form.Field>
-              <label>Teléfono</label>
-              <input placeholder='Teléfono' type="text" value={this.state.telefono} onChange={this.cambioTelefono} />
-            </Form.Field> 
+          <Form.Field fluid label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
-            <Form.Field>
-              <label>E-Mail</label>
-              <input placeholder='E-Mail' type="text" value={this.state.mail} onChange={this.cambioMail}/>
-            </Form.Field>        
+          <Form.Field fluid label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
 
-            <Form.Field>
-                  <label>Obra Social</label>
-                  <select className="combosAlta" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
-                <option key={null}>  </option>
-                {this.state.obrasSociales.map(item => (
-                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-            </select> 
-            </Form.Field>      
-           
-
-            <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
+          <Form.Field required fluid label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+            <option key={null}>  </option>
+              {this.state.obrasSociales.map(item => (
+            <option key={item.idObraSocial}>{item.razonSocial}</option>))}
+          </Form.Field>    
+          
+          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
 
         </Form>  
       </div>
