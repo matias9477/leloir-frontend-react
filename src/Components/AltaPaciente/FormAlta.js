@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Header, Form } from 'semantic-ui-react'
+import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial} from './../../Services/MetodosPaciente';
 import './styles.css';
 
 class FormAlta extends Component {
@@ -24,6 +26,7 @@ class FormAlta extends Component {
         documentos:[],
         paises: [],
         obrasSociales:[],
+        sexos:[],
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -39,46 +42,12 @@ class FormAlta extends Component {
   }
   
   componentDidMount(){
-    const urlDocs = "/tipos_documento/all";
-    const urlObrasSoc = "/obras_sociales/all";
-    const urlPaises = "/paises/all";
-
-    fetch(urlDocs).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(tipos => {
-      this.setState({
-        documentos: tipos,
-      })
-  })
-
-
-    fetch(urlObrasSoc).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(obrasSoc => {
-      this.setState({
-        obrasSociales: obrasSoc,
-      })
-  })
-
-  fetch(urlPaises).then ( resolve => {
-    if(resolve.ok) { 
-      return resolve.json();
-    } else {
-      throw Error(resolve.statusText);
-    }
-}).then(paises => {
     this.setState({
-      paises: paises,
+      documentos: fetchDocumentos(),
+      obrasSociales: fetchObrasSociales(),
+      paises: fetchPaises(),
+      sexos: fetchSexos(),
     })
-})
 
   }
 
@@ -88,28 +57,28 @@ class FormAlta extends Component {
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
             
-          <Form.Field required fluid label='Nombre' control='input' 
+          <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
           
-          <Form.Field required fluid label='Apellido' control='input'
+          <Form.Field required label='Apellido' control='input'
           placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
 
-          <Form.Field required fluid label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+          <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
               <option value={null}> </option>
               {this.state.documentos.map(item => (
               <option key={item.idTipoDocumento}>{item.nombre}</option>))}
           </Form.Field>
 
-          <Form.Field required fluid label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc}>
+          <Form.Field required label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc}>
           </Form.Field>
 
-          <Form.Field required fluid label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} >
+          <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} >
             <option value={null}>  </option>
-            <option value="Femenino"> Femenino </option>
-            <option value="Masculino"> Masculino </option>
+            {this.state.sexos.map(item => (
+            <option key={item.sexoId}>{item.nombre}</option>))}
           </Form.Field>
 
-          <Form.Field required fluid label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+          <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
             <option value={null}>  </option>
               {this.state.paises.map(item => (
             <option key={item.idPais}>{item.nombreBonito}</option>))}
@@ -122,11 +91,11 @@ class FormAlta extends Component {
               </DatePicker> 
             </Form.Field>
 
-          <Form.Field fluid label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
+          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
-          <Form.Field fluid label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+          <Form.Field  label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
 
-          <Form.Field required fluid label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+          <Form.Field required  label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
               {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
@@ -147,22 +116,25 @@ class FormAlta extends Component {
         "apellido": this.state.apellido,
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": this.getIdTipoDoc(),
+          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
           "nombre": this.state.tipoDoc
         },
-        "fechaNacimiento": this.getFechaNacimiento(),
-        "fechaAlta": this.getCurrentDate(),
-        "sexo": this.getBooleanSex(this.state.sexo),
-        "nacionalidad": {
-          "idPais": this.getIdPais(),
-          "iso": this.getIso(),
-          "nombre": this.getNombrePais(),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": this.getIso3(),
-          "codigoTelefono": this.getCodigoTelefono(),
+        "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
+        "fechaAlta": getCurrentDate(),
+        "sexo": {
+          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
+          "nombre": this.state.sexo,
         },
-        "telefono": this.emptyToNull(this.state.telefono),
-        "mail": this.emptyToNull(this.state.mail),
+        "nacionalidad": {
+          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
+          "iso": getIso(this.state.nacionalidad, this.state.paises),
+          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
+          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+        },
+        "telefono": emptyToNull(this.state.telefono),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": null,
         "historial": null,
         "bitAlta": true
@@ -173,29 +145,32 @@ class FormAlta extends Component {
         "apellido": this.state.apellido,
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": this.getIdTipoDoc(),
+          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
           "nombre": this.state.tipoDoc
         },
-        "fechaNacimiento": this.getFechaNacimiento(),
-        "fechaAlta": this.getCurrentDate(),
-        "sexo": this.getBooleanSex(this.state.sexo),
-        "nacionalidad": {
-          "idPais": this.getIdPais(),
-          "iso": this.getIso(),
-          "nombre": this.getNombrePais(),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": this.getIso3(),
-          "codigoTelefono": this.getCodigoTelefono(),
+        "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
+        "fechaAlta": getCurrentDate(),
+        "sexo": {
+          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
+          "nombre": this.state.sexo,
         },
-        "telefono": this.emptyToNull(this.state.telefono),
-        "mail": this.emptyToNull(this.state.mail),
+        "nacionalidad": {
+          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
+          "iso": getIso(this.state.nacionalidad, this.state.paises),
+          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
+          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+        },
+        "telefono": emptyToNull(this.state.telefono),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": {
-          "idObraSocial": this.getIdObraSocial(),
+          "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "razonSocial": this.state.obraSocial,
-          "cuit": this.getCuitObraSocial(),
-          "domicilio": this.getDomicilioObraSocial(),
-          "telefono": this.getTelefonoObraSocial(),
-          "email": this.getEmailObraSocial(),
+          "cuit": getCuitObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "domicilio": getDomicilioObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
         },
         "historial": null,
         "bitAlta": true
@@ -283,125 +258,6 @@ class FormAlta extends Component {
       this.setState( {
           obraSocial: e.target.value
       })
-  }
-
-  getBooleanSex = (sex) => {
-    if (sex === "Masculino"){
-      return  true
-    } else {
-      return false
-    }
-  }
-
-  getCurrentDate(){
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1; 
-    var year = new Date().getFullYear(); 
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (date < 10){
-      date = "0" + date;
-    } 
-    return year + '-' + month + '-' + date + 'T00:00:00.000+0000';
-  }
-
-  getFechaNacimiento(){
-    var año = this.state.fechaNacimiento.getFullYear();
-    var mes = (this.state.fechaNacimiento.getMonth()+1);
-    var dia = this.state.fechaNacimiento.getDate();
-    if (mes < 10){
-      mes = "0" + mes;
-    } 
-    if (dia < 10){
-      dia = "0" + dia;
-    } 
-    return año + "-" + mes + "-" + dia + "T00:00:00.000+0000";
-  }
-
-  getIdTipoDoc = () => {
-    for(let i=0; i < this.state.documentos.length; i++){
-      if (this.state.tipoDoc === this.state.documentos[i].nombre)
-        return this.state.documentos[i].idTipoDocumento;
-    }
-  }
-
-  getIdPais = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].idPais;
-    }
-  }
-
-  getIso = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].iso;
-    }
-  }
-
-  getIso3 = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].iso3;
-    }
-  }
-
-  getNombrePais = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].nombre;
-    }
-  }
-
-  getCodigoTelefono = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].codigoTelefono;
-    }
-  }
-
-  getIdObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].idObraSocial;
-    }
-  }
-
-  getCuitObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].cuit;
-    }
-  }
-
-  getDomicilioObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].domicilio;
-    }
-  }
-
-  getTelefonoObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].telefono;
-    }
-  }
-
-  getEmailObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].email;
-    }
-  }
-
-  emptyToNull = (v) => {
-    if (v === ''){
-      return v=null;
-    } else {
-      return v;
-    }
   }
 
 }

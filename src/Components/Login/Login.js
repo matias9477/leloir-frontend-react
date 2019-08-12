@@ -1,30 +1,35 @@
 import React, { Component } from 'react'
 import AuthenticationService from '../../Services/AuthenticationService';
-import {Button, Input} from 'semantic-ui-react';
+import {Button, Form} from 'semantic-ui-react';
+import './styles.css';
 
 class LoginComponent extends Component {
 
     constructor(props) {
         super(props)
-
         this.state = {
             username: '',
             password: '',
             hasLoginFailed: false,
-            showSuccessMessage: false
+            showSuccessMessage: false,
+            open: false,
         }
 
-        this.handleChange = this.handleChange.bind(this)
-        this.loginClicked = this.loginClicked.bind(this)
+        this.cambioUsuario = this.cambioUsuario.bind(this);
+        this.cambioPass = this.cambioPass.bind(this);
+        this.loginClicked = this.loginClicked.bind(this);
     }
 
-    handleChange(event) {
-        this.setState(
-            {
-                [event.target.name]
-                    : event.target.value
-            }
-        )
+    cambioUsuario(e){
+        this.setState({
+            username: e.target.value
+        })
+    }
+
+    cambioPass(e){
+        this.setState({
+            password: e.target.value
+        })
     }
 
     loginClicked() {
@@ -43,12 +48,11 @@ class LoginComponent extends Component {
         AuthenticationService
             .executeBasicAuthenticationService(this.state.username, this.state.password)
             .then(() => {
-                AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password)
-                this.setState({ showSuccessMessage: true})
+                AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password);
+                this.setState({ showSuccessMessage: true, hasLoginFailed: false})
                 //this.props.history.push(`/alta`)
             }).catch(() => {
-                this.setState({ showSuccessMessage: false })
-                this.setState({ hasLoginFailed: true })
+                this.setState({ showSuccessMessage: false, hasLoginFailed: true })
             })
 
         // AuthenticationService
@@ -60,25 +64,23 @@ class LoginComponent extends Component {
         //         this.setState({ showSuccessMessage: false })
         //         this.setState({ hasLoginFailed: true })
         //     })
-
     }
-
+    
     render() {
         return (
-            <div>
-                <h1>Login</h1>
-                <div className="container">
-                    {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
-                    {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+            <Form className='login'>
+                <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario' onChange={this.cambioUsuario}/>         
+                <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' placeholder='Contraseña'  onChange={this.cambioPass}/>  
+                <Button content='Iniciar Sesión' primary onClick={this.loginClicked}/>              
+                 
+                {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
+                {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+ 
+                {this.state.showSuccessMessage && <div>Login Sucessful</div>}
+                {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
 
-                    
-                    {this.state.showSuccessMessage && <div>Login Sucessful</div>}
-                    {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
-                    User Name <Input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-                    Password <Input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-                    <Button onClick={this.loginClicked}>Login</Button>
-                </div>
-            </div>
+            </Form>
+            
         )
     }
 }
