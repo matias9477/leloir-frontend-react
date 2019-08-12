@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import AuthenticationService from '../../Services/AuthenticationService';
-import {Button, Input} from 'semantic-ui-react';
+import {Button, Form} from 'semantic-ui-react';
+import './styles.css';
 
 class LoginComponent extends Component {
 
     constructor(props) {
         super(props)
-
         this.state = {
             username: '',
             password: '',
             hasLoginFailed: false,
-            showSuccessMessage: false
+            showSuccessMessage: false,
+            open: false,
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -60,25 +61,28 @@ class LoginComponent extends Component {
         //         this.setState({ showSuccessMessage: false })
         //         this.setState({ hasLoginFailed: true })
         //     })
-
+        this.alert();
     }
+    
+    alert(){
+        if (this.state.showSuccessMessage){
+            return alert("Logeo exitoso.");
+        } else{
+            return alert("Usted ha ingresado un Usuario o Contraseña Inválida. Intente nuevamente.");
+        }
+    }
+
 
     render() {
         return (
-            <div>
-                <h1>Login</h1>
-                <div className="container">
-                    {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
-                    {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+            <Form className='login'>
+                <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario' onChange={this.handleChange}/>         
+                <Form.Input icon='lock' iconPosition='left' label='Contraseña' placeholder='Contraseña'  onChange={this.handleChange}/>  
+                <Button content='Iniciar Sesión' primary onClick={this.loginClicked}/>
 
-                    
-                    {this.state.showSuccessMessage && <div>Login Sucessful</div>}
-                    {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
-                    User Name <Input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-                    Password <Input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-                    <Button onClick={this.loginClicked}>Login</Button>
-                </div>
-            </div>
+            </Form>      
+            
+            
         )
     }
 }

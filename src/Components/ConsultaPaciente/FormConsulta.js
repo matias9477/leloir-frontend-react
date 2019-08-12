@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import './styles.css';
-import { Button, Header, Form, Radio } from 'semantic-ui-react'
+import { Button, Header, Form } from 'semantic-ui-react'
 
 class FormConsulta extends Component {
   constructor(props) {
