@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Header, Form } from 'semantic-ui-react'
-import './styles.css';
+import './../styles.css';
 import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
 import { getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate } from './../../Services/MetodosPaciente';
 
@@ -72,7 +72,7 @@ class FormConsulta extends Component {
 
   render() {
     return (
-      <div className='FormularioConsulta'>
+      <div className='Formularios'>
       <Header as='h3' dividing>Buscar paciente</Header>
       <Form onSubmit={this.fetchPaciente}>
         
@@ -90,13 +90,15 @@ class FormConsulta extends Component {
 
           <Form.Field  label='Apellido' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre)} value={this.state.apellido} onChange={this.cambioApellido}/>
           
-          <Form.Field  label='Tipo documento' control='select' disabled={true}  value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
-            <option value={null}> </option>
-            {this.state.documentos.map(item => (
-            <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-          </Form.Field>
+          <Form.Group widths='equal'>
+            <Form.Field  label='Tipo documento' control='select' disabled={true}  value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+              <option value={null}> </option>
+              {this.state.documentos.map(item => (
+              <option key={item.idTipoDocumento}>{item.nombre}</option>))}
+            </Form.Field>
 
-          <Form.Field  label='Número de documento' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaDoc)} value={this.state.nroDoc} onChange={this.cambioNroDoc}/>
+            <Form.Field  label='Número de documento' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaDoc)} value={this.state.nroDoc} onChange={this.cambioNroDoc}/>
+          </Form.Group>
 
           <Form.Field  label='Fecha alta' control='input' disabled={true} value={this.state.fechaAlta} onChange={this.cambioFechaAlta}/>
 
@@ -128,7 +130,7 @@ class FormConsulta extends Component {
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
           </Form.Field> 
           
-          <Button primary type="submit" disabled={this.state.valor}>Buscar Paciente</Button>
+          <Button className='boton' primary type="submit" disabled={this.state.valor}>Buscar Paciente</Button>
                    
       </Form>  
     </div>

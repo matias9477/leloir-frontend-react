@@ -1,0 +1,25 @@
+.Formularios{
+    width: 40%;
+    margin-left: 100px;
+    margin-top: 35px;
+}
+
+.login{
+    width: 30%;
+    align-self: center;
+}
+
+.boton{
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.Navigator{
+    display:flex; 
+    flex-direction:row;
+}
+
+.error{
+    border-color: red;
+}
+  

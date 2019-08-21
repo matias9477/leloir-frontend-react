@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import AuthenticationService from '../../Services/AuthenticationService';
 import {Button, Form} from 'semantic-ui-react';
-import './styles.css';
+import './../styles.css';
 
 class LoginComponent extends Component {
 
@@ -32,7 +32,9 @@ class LoginComponent extends Component {
         })
     }
 
-    loginClicked() {
+
+    loginClicked(e) {
+        e.preventDefault();
         //in28minutes,dummy
         // if(this.state.username==='in28minutes' && this.state.password==='dummy'){
         //     AuthenticationService.registerSuccessfulLogin(this.state.username,this.state.password)
@@ -51,6 +53,7 @@ class LoginComponent extends Component {
                 AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password);
                 this.setState({ showSuccessMessage: true, hasLoginFailed: false})
                 //this.props.history.push(`/alta`)
+                
             }).catch(() => {
                 this.setState({ showSuccessMessage: false, hasLoginFailed: true })
             })
@@ -64,6 +67,7 @@ class LoginComponent extends Component {
         //         this.setState({ showSuccessMessage: false })
         //         this.setState({ hasLoginFailed: true })
         //     })
+        
     }
     
     render() {
@@ -78,6 +82,7 @@ class LoginComponent extends Component {
  
                 {this.state.showSuccessMessage && <div>Login Sucessful</div>}
                 {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
+                
 
             </Form>
             

@@ -1,15 +1,64 @@
 
-export const getCurrentDate = () =>{
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1; 
-    var year = new Date().getFullYear(); 
-    if (month < 10) {
-      month = "0" + month;
+  export function validateName(nom){
+    if (nom.length === 0 || nom === ''){
+      return false
     }
-    if (date < 10){
-      date = "0" + date;
-    } 
-    return year + '-' + month + '-' + date + "T00:00:00";
+    return true
+  }
+
+  export function validateApellido(ap){
+    if (ap.length === 0 || ap === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validateTipoDoc(tdoc){
+    if (tdoc.length === 0 || tdoc === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validateNroDoc(ndoc){
+    if (ndoc.length === 0 || ndoc === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validateSexo(sex){
+    if (sex.length === 0 || sex === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validateNacionalidad(nac){
+    if (nac.length === 0 || nac === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validateNacimiento(fnac){
+    if (fnac.length === 0 || fnac === ''){
+      return false
+    }
+    return true
+  }
+
+  export const getCurrentDate = () =>{
+      var date = new Date().getDate();
+      var month = new Date().getMonth() + 1; 
+      var year = new Date().getFullYear(); 
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (date < 10){
+        date = "0" + date;
+      } 
+      return year + '-' + month + '-' + date + "T00:00:00";
   }
 
   export const getFechaNacimiento = (fechaNacimiento) => {

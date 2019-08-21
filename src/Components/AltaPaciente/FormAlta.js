@@ -4,8 +4,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Header, Form } from 'semantic-ui-react'
 import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial} from './../../Services/MetodosPaciente';
-import './styles.css';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
+import './../styles.css';
 
 class FormAlta extends Component {
   constructor(props) {
@@ -27,6 +27,14 @@ class FormAlta extends Component {
         paises: [],
         obrasSociales:[],
         sexos:[],
+
+        errorNombre: true,
+        errorApellido: true,
+        errorTipoDoc: true,
+        errorNroDoc: true,
+        errorSexo: true,
+        errorNac: true,
+        errorFechaNac: true,
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -53,53 +61,54 @@ class FormAlta extends Component {
 
   render() {
     return (
-      <div className='FormularioAlta'>
+      <div className='Formularios'>
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
-            
           <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
           
           <Form.Field required label='Apellido' control='input'
-          placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
+          placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido} className= {this.state.errorApellido ? null : 'error' } />
 
-          <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
-              <option value={null}> </option>
-              {this.state.documentos.map(item => (
-              <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-          </Form.Field>
+          <Form.Group widths='equal'>
+            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} className= {this.state.errorTipoDoc ? null : 'error' }>
+                <option value={null}> </option>
+                {this.state.documentos.map(item => (
+                <option key={item.idTipoDocumento}>{item.nombre}</option>))}
+            </Form.Field>
 
-          <Form.Field required label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc}>
-          </Form.Field>
+            <Form.Field required label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc} className= {this.state.errorNroDoc ? null : 'error' }>
+            </Form.Field>
+          </Form.Group>
 
-          <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} >
+          <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} className= {this.state.errorSexo ? null : 'error' }>
             <option value={null}>  </option>
             {this.state.sexos.map(item => (
             <option key={item.sexoId}>{item.nombre}</option>))}
           </Form.Field>
 
-          <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+          <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} className= {this.state.errorNac ? null : 'error' }>
             <option value={null}>  </option>
               {this.state.paises.map(item => (
             <option key={item.idPais}>{item.nombreBonito}</option>))}
           </Form.Field>
 
-          <Form.Field required>
+          <Form.Field required className= {this.state.errorFechaNac ? null : 'error' }>
             <label>Fecha de Nacimiento</label>
-              <DatePicker className="dat" placeholderText="Fecha de Nacimiento"
+              <DatePicker placeholderText="Fecha de Nacimiento"
               selected={this.state.fechaNacimiento} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
               </DatePicker> 
             </Form.Field>
 
           <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
-          <Form.Field  label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
 
-          <Form.Field required  label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+          <Form.Field label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
               {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-          </Form.Field>    
+          </Form.Field>  
           
           <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
 
@@ -196,8 +205,24 @@ class FormAlta extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const api = '/pacientes/add';
-    this.handleUpdateClick(api);
+    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad } = this.state;
+    const errorNombre = validateName(nombre);
+    const errorApellido = validateApellido(apellido);
+    const errorTipoDoc = validateTipoDoc(tipoDoc);
+    const errorNroDoc = validateNroDoc(nroDoc);
+    const errorFechaNac = validateNacimiento(fechaNacimiento);
+    const errorSexo = validateSexo(sexo);
+    const errorNac = validateNacionalidad(nacionalidad);
+
+    if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac ) {
+      const api = '/pacientes/add';
+      this.handleUpdateClick(api);
+      
+    } else {
+      this.setState ({ 
+        errorNombre,  errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac,
+      })
+    }    
   }
  
   cambioNombre(e) {

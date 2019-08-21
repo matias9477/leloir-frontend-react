@@ -3,9 +3,7 @@ import { Menu , Image} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import '../App.css';
 
-
 export default class MenuLateral extends Component {
-
 
     state = { activeItem: 'home' }
   
