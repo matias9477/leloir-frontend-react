@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AuthenticationService from '../../Services/AuthenticationService';
 import {Button, Form} from 'semantic-ui-react';
 import './../styles.css';
+import {Link} from 'react-router-dom';
 
 class LoginComponent extends Component {
 

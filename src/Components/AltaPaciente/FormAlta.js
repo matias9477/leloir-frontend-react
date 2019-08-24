@@ -6,6 +6,8 @@ import { Button, Header, Form } from 'semantic-ui-react'
 import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
 import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
 import './../styles.css';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 class FormAlta extends Component {
   constructor(props) {
@@ -35,6 +37,8 @@ class FormAlta extends Component {
         errorSexo: true,
         errorNac: true,
         errorFechaNac: true,
+
+        loading:true,
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -49,26 +53,55 @@ class FormAlta extends Component {
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
   }
   
-  componentDidMount(){
+  fillCombos = () =>{
+    this.setState({
+      documentos: fetchDocumentos(),
+      obrasSociales: fetchObrasSociales(),
+      paises: fetchPaises(),
+      sexos: fetchSexos(),
+      loading: false,
+    })
+
+
+  }  
+
+  
+  componentWillMount() {
     this.setState({
       documentos: fetchDocumentos(),
       obrasSociales: fetchObrasSociales(),
       paises: fetchPaises(),
       sexos: fetchSexos(),
     })
+  }
+  
 
+  componentDidMount(){
+    this.fillCombos();
   }
 
-  render() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.loading!==true){
+    this.fillCombos();
+    }
+}
+  
+
+
+  renderForm(){
     return (
       <div className='Formularios'>
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
+
+
           <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
           
+
           <Form.Field required label='Apellido' control='input'
           placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido} className= {this.state.errorApellido ? null : 'error' } />
+
 
           <Form.Group widths='equal'>
             <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} className= {this.state.errorTipoDoc ? null : 'error' }>
@@ -76,10 +109,10 @@ class FormAlta extends Component {
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
             </Form.Field>
-
             <Form.Field required label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc} className= {this.state.errorNroDoc ? null : 'error' }>
             </Form.Field>
-          </Form.Group>
+           </Form.Group>
+
 
           <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} className= {this.state.errorSexo ? null : 'error' }>
             <option value={null}>  </option>
@@ -87,11 +120,13 @@ class FormAlta extends Component {
             <option key={item.sexoId}>{item.nombre}</option>))}
           </Form.Field>
 
+
           <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} className= {this.state.errorNac ? null : 'error' }>
             <option value={null}>  </option>
               {this.state.paises.map(item => (
             <option key={item.idPais}>{item.nombreBonito}</option>))}
           </Form.Field>
+
 
           <Form.Field required className= {this.state.errorFechaNac ? null : 'error' }>
             <label>Fecha de Nacimiento</label>
@@ -100,9 +135,12 @@ class FormAlta extends Component {
               </DatePicker> 
             </Form.Field>
 
+
           <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
+
           <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+
 
           <Form.Field label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
@@ -114,8 +152,17 @@ class FormAlta extends Component {
 
         </Form>  
       </div>
+
     );
   }
+
+  renderProgress(){
+    return <CircularProgress size={50}/>;
+  }
+
+
+
+
   
   handleUpdateClick = (api) => {
     var data;
@@ -285,6 +332,17 @@ class FormAlta extends Component {
       })
   }
 
+
+  render() {
+
+    return (
+      <div>
+      {this.renderForm()}
+      </div>
+    );
+  }
+
 }
+
 
 export default FormAlta;

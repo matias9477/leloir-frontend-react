@@ -1,11 +1,11 @@
 .Formularios{
-    width: 40%;
+    width: 100%;
     margin-left: 100px;
     margin-top: 35px;
 }
 
 .login{
-    width: 30%;
+    width: 100%;
     align-self: center;
 }
 

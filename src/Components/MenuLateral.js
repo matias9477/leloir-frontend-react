@@ -13,45 +13,51 @@ export default class MenuLateral extends Component {
       const { activeItem } = this.state
   
       return (
-        <nav>
+        
+        
         <Menu pointing vertical>
-          <Link to="/">
             <Menu.Item name='home'
+              as= {Link} to='/'
               active={activeItem==='home'}
-              onClick={this.handleItemClick}>
+              onClick={this.handleItemClick}
+              >
               <Image src="http://i67.tinypic.com/s1uetl_th.png" size='tiny' centered/>              
             </Menu.Item>
-          </Link>
+       
 
-          <Link to="/alta">
-            <Menu.Item name='Registrar Paciente' 
-            active={activeItem === 'Registrar Paciente'} 
+       
+            <Menu.Item name='Pacientes' 
+            as= {Link} to='/alta'
+            active={activeItem === 'Pacientes'} 
             onClick={this.handleItemClick} 
-          /></Link>
+          />
 
-          <Link to="/consulta">
+        
             <Menu.Item
-              name='Buscar Paciente'
-              active={activeItem === 'Buscar Paciente'}
+              name='Analisis'
+              as= {Link} to='/404'
+              active={activeItem === 'Analisis'}
               onClick={this.handleItemClick}
-          /></Link>
+          />
 
-          <Link to="/">
+       
             <Menu.Item
-              name='Modificar Paciente'
-              active={activeItem === 'Modificar Paciente'}
+              name='Muestras'
+              as= {Link} to='/404'
+              active={activeItem === 'Muestras'}
               onClick={this.handleItemClick}
-          /></Link>
+          />
 
-          <Link to="/">
+         
             <Menu.Item
-              name='Eliminar Paciente'
-              active={activeItem === 'Eliminar Paciente'}
+              name='Obras Sociales'
+              as= {Link} to='/404'
+              active={activeItem === 'Obras Sociales'}
               onClick={this.handleItemClick}
-            /></Link>
+            />
 
         </Menu>
-        </nav>
+        
       )
     }
   }
