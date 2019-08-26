@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import './styles.css';
-import { Button } from 'semantic-ui-react'
+import { addDays } from 'date-fns';
+import { Button, Header, Form } from 'semantic-ui-react'
+import './../styles.css';
+import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
+import { getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate } from './../../Services/MetodosPaciente';
 
 class FormConsulta extends Component {
   constructor(props) {
@@ -35,6 +38,7 @@ class FormConsulta extends Component {
         documentos:[],
         paises: [],
         obrasSociales:[],
+        sexos:[],
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioBusquedaId = this.cambioBusquedaId.bind(this);
@@ -55,108 +59,81 @@ class FormConsulta extends Component {
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
     
   }
-    
+
   componentDidMount(){
-    const urlDocs = "/tipos_documento/all";
-    const urlObrasSoc = "/obras_sociales/all";
-    const urlPaises = "/paises/all";
-
-    fetch(urlDocs).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(tipos => {
-      this.setState({
-        documentos: tipos,
-      })
-  })
-
-    fetch(urlObrasSoc).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(obrasSoc => {
-      this.setState({
-        obrasSociales: obrasSoc,
-      })
-  })
-
-  fetch(urlPaises).then ( resolve => {
-    if(resolve.ok) { 
-      return resolve.json();
-    } else {
-      throw Error(resolve.statusText);
-    }
-}).then(paises => {
     this.setState({
-      paises: paises,
+      documentos: fetchDocumentos(),
+      obrasSociales: fetchObrasSociales(),
+      paises: fetchPaises(),
+      sexos: fetchSexos(),
     })
-})
 
   }
 
   render() {
     return (
-      <div>
-        <div className="Consulta">Consulta paciente</div>
-        <form className="Form" onSubmit={this.fetchPaciente}>
-            <p><input type="radio" value={this.state.busquedaId} name="radio" onChange={this.cambioBusquedaId} /> Busqueda por Número de paciente</p> 
-            <p><input type="radio" value={this.state.busquedaDoc} name="radio" onChange={this.cambioBusquedaDoc} /> Busqueda por Documento</p> 
-            <p><input type="radio" value={this.state.busquedaNombre} name="radio" onChange={this.cambioBusquedaNombre} /> Busqueda por Nombre y Apellido</p> 
-            <br></br>
-            <hr></hr>
-            <br></br>
+      <div className='Formularios'>
+      <Header as='h3' dividing>Buscar paciente</Header>
+      <Form onSubmit={this.fetchPaciente}>
+        
+          <Form.Field control='input' type='radio' label='Búsqueda por Número de Paciente' name='busqueda' value={this.state.busquedaId}             onChange={this.cambioBusquedaId}/>
 
-            <p>Número de paciente: <input type="text" value={this.state.id} disabled={this.state.isRadioSelected || (!this.state.isBusquedaId)}  onChange={this.cambioId}/></p>
-            <p>Nombre: <input type="text" value={this.state.nombre} disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre)} onChange={this.cambioNombre}/></p>
-            <p>Apellido: <input type="text" value={this.state.apellido} disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre) } onChange={this.cambioApellido} /></p> 
+          <Form.Field control='input' type='radio' label='Búsqueda por Número de Documento' name='busqueda' value={this.state.busquedaDoc} onChange={this.cambioBusquedaDoc}/>
+        
+          <Form.Radio control='input' type='radio' label='Búsqueda por Nombre y Apellido' name='busqueda' value={this.state.busquedaNombre} onChange={this.cambioBusquedaNombre}/>
+             
+          <br></br>
+           
+          <Form.Field  label='Número de Paciente' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaId)} value={this.state.id} onChange={this.cambioId}/>
 
-            Tipo Documento: <select disabled={true} className="combos" value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
-                <option value={null}>  </option>
-                {this.state.documentos.map(item => (
-                <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-            </select> 
+          <Form.Field  label='Nombre' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre)} value={this.state.nombre} onChange={this.cambioNombre}/>
 
-            <p>Número Documento: <input type="text" value={this.state.nroDoc} disabled={this.state.isRadioSelected || (!this.state.isBusquedaDoc)} onChange={this.cambioNroDoc} /></p>    
-            <p>Fecha de alta: <input type="text" value={this.state.fechaAlta} disabled={true} onChange={this.cambioFechaAlta}/></p>
-
-            Sexo: <select disabled={true}className="combos" value={this.state.sexo} onChange={this.cambioSexo} >
-              <option value={null}>  </option>
-              <option value="Femenino"> Femenino </option>
-              <option value="Masculino"> Masculino </option>
-            </select>
-            <p></p>
-            Nacionalidad: <select disabled={true} className="combos" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
-                <option value={null}>  </option>
-                {this.state.paises.map(item => (
-                <option key={item.idPais}>{item.nombreBonito}</option>))}
-            </select>    
-            <p></p>
-            
-            Fecha de nacimiento:  <DatePicker disabled={true} openToDate={new Date(this.state.fechaNacimiento)}
-            value={this.state.fechaNacimiento}
-            onChange={this.cambioFechaNacimiento} 
-            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" dateFormat="yyyy-MM-dd"></DatePicker> 
-
-            <p>Teléfono: <input type="text" value={this.state.telefono || ''} disabled={true} onChange={this.cambioTelefono} /></p>    
-            <p>Mail: <input type="text" value={this.state.mail || ''} disabled={true} onChange={this.cambioMail}/></p>    
-            
-            Obras Sociales: <select disabled={true} className="combos" value={this.state.obraSocial || ''} onChange={this.cambioObraSocial} >
-                <option value={null}>  </option>
-                {this.state.obrasSociales.map(item => (
-                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-            </select> 
-   
-            <p></p>
-            <Button primary type="submit" disabled={this.state.valor}>Buscar Paciente</Button>
-                   
+          <Form.Field  label='Apellido' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaNombre)} value={this.state.apellido} onChange={this.cambioApellido}/>
           
-        </form>  
-      </div>
+          <Form.Group widths='equal'>
+            <Form.Field  label='Tipo documento' control='select' disabled={true}  value={this.state.tipoDoc} onChange={this.cambioTipoDoc} >
+              <option value={null}> </option>
+              {this.state.documentos.map(item => (
+              <option key={item.idTipoDocumento}>{item.nombre}</option>))}
+            </Form.Field>
+
+            <Form.Field  label='Número de documento' control='input' disabled={this.state.isRadioSelected || (!this.state.isBusquedaDoc)} value={this.state.nroDoc} onChange={this.cambioNroDoc}/>
+          </Form.Group>
+
+          <Form.Field  label='Fecha alta' control='input' disabled={true} value={this.state.fechaAlta} onChange={this.cambioFechaAlta}/>
+
+          <Form.Field  label='Sexo' control='select' disabled={true} value={this.state.sexo} onChange={this.cambioSexo} >
+            <option value={null}>  </option>
+            {this.state.sexos.map(item => (
+            <option key={item.sexoId}>{item.nombre}</option>))}
+          </Form.Field>
+
+          <Form.Field  label='Nacionalidad' control='select' disabled={true} value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
+            <option value={null}>  </option>
+            {this.state.paises.map(item => (
+            <option key={item.idPais}>{item.nombreBonito}</option>))}
+          </Form.Field> 
+          
+          <Form.Field disabled={true}>
+            <label>Fecha de Nacimiento</label>
+              <DatePicker selected={Date.parse(this.state.fechaNacimiento)} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
+              </DatePicker> 
+          </Form.Field>
+
+          <Form.Field  label='Telefono' control='input' disabled={true} value={this.state.telefono || ''} onChange={this.cambioTelefono}/>
+
+          <Form.Field  label='Mail' control='input' disabled={true} value={this.state.mail || ''} onChange={this.cambioMail}/>
+
+          <Form.Field  label='Obra Social' control='select' disabled={true} value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+            <option value={null}>  </option>
+            {this.state.obrasSociales.map(item => (
+            <option key={item.idObraSocial}>{item.razonSocial}</option>))}
+          </Form.Field> 
+          
+          <Button className='boton' primary type="submit" disabled={this.state.valor}>Buscar Paciente</Button>
+                   
+      </Form>  
+    </div>
     );
   }
     
@@ -174,13 +151,13 @@ class FormConsulta extends Component {
         apellido: paciente.apellido,
         tipoDoc: paciente.tipoDocumento.nombre,
         nroDoc: paciente.nroDocumento,
-        fechaNacimiento: this.getHumanDate(paciente.fechaNacimiento),
-        fechaAlta: this.getHumanDate(paciente.fechaAlta),
-        sexo: this.getSexo(paciente.sexo),
+        fechaNacimiento: getFechaNacimientoConsulta(paciente.fechaNacimiento),
+        fechaAlta: getHumanDate(paciente.fechaAlta),
+        sexo: paciente.sexo.nombre,
         nacionalidad: paciente.nacionalidad.nombreBonito,
         telefono: paciente.telefono,
         mail: paciente.mail,
-        obraSocial: this.verificarExistenciaObraSocial(paciente.obraSocial),
+        obraSocial: verificarExistenciaObraSocial(paciente.obraSocial),
       })
     }).catch(function(error) {
       alert('No se encontró al paciente. Revise la información e intente nuevamente.'); 
@@ -197,13 +174,13 @@ class FormConsulta extends Component {
       apellido: paciente[0].apellido,
       tipoDoc: paciente[0].tipoDocumento.nombre,
       nroDoc: paciente[0].nroDocumento,
-      fechaNacimiento: this.getHumanDate(paciente[0].fechaNacimiento),
-      fechaAlta: this.getHumanDate(paciente[0].fechaAlta),
-      sexo: this.getSexo(paciente[0].sexo),
+      fechaNacimiento: getFechaNacimientoConsulta(paciente[0].fechaNacimiento),
+      fechaAlta: getHumanDate(paciente[0].fechaAlta),
+      sexo: paciente[0].sexo.nombre,
       nacionalidad: paciente[0].nacionalidad.nombreBonito,
       telefono: paciente[0].telefono,
       mail: paciente[0].mail,
-      obraSocial: this.verificarExistenciaObraSocial(paciente[0].obraSocial),
+      obraSocial: verificarExistenciaObraSocial(paciente[0].obraSocial),
     });
   }).catch(function(error) {
     alert('No se encontró al paciente. Revise la información e intente nuevamente.')
@@ -221,8 +198,7 @@ class FormConsulta extends Component {
     } else {
       const api = "/pacientes/nombre/" + this.state.nombre +"/apellido/"+ this.state.apellido;
       this.handleUpdateClickNombre(api);
-    } 
-    
+    }     
   }
   
   vaciadoCampos(){
@@ -348,13 +324,6 @@ class FormConsulta extends Component {
       })
   }
     
-  getSexo = (sex) => {
-    if (sex === true){
-      return  "Masculino"
-    }else {
-      return "Femenino"
-    }
-  }
 
   getHumanDate = (date) => {
     date = new Date(date);
@@ -362,7 +331,16 @@ class FormConsulta extends Component {
     var dd = (d.length === 2) ? d : "0"+d;
     var m = (date.getMonth()+1).toString();
     var mm = (m.length === 2) ? m : "0"+m;     
-    return((date.getFullYear()) + '/' + mm + '/' + dd.toString());
+    return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
+  }
+
+  getFechaNacimientoConsulta = (date) => {
+    date = new Date(date);
+    var d = (date.getDate()+1).toString();
+    var dd = (d.length === 2) ? d : "0"+d;
+    var m = (date.getMonth()+1).toString();
+    var mm = (m.length === 2) ? m : "0"+m;     
+    return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
   }
 
   verificarExistenciaObraSocial (os){

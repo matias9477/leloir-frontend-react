@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import { Button, Header, Form, Dropdown } from 'semantic-ui-react'
-import './styles.css';
+import { Button, Header, Form } from 'semantic-ui-react'
+import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
+import './../styles.css';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 class FormAlta extends Component {
   constructor(props) {
@@ -24,6 +28,17 @@ class FormAlta extends Component {
         documentos:[],
         paises: [],
         obrasSociales:[],
+        sexos:[],
+
+        errorNombre: true,
+        errorApellido: true,
+        errorTipoDoc: true,
+        errorNroDoc: true,
+        errorSexo: true,
+        errorNac: true,
+        errorFechaNac: true,
+
+        loading:true,
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -38,134 +53,116 @@ class FormAlta extends Component {
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
   }
   
-  componentDidMount(){
-    const urlDocs = "/tipos_documento/all";
-    const urlObrasSoc = "/obras_sociales/all";
-    const urlPaises = "/paises/all";
-
-    fetch(urlDocs).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(tipos => {
-      this.setState({
-        documentos: tipos,
-      })
-  })
-
-
-    fetch(urlObrasSoc).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-  }).then(obrasSoc => {
-      this.setState({
-        obrasSociales: obrasSoc,
-      })
-  })
-
-  fetch(urlPaises).then ( resolve => {
-    if(resolve.ok) { 
-      return resolve.json();
-    } else {
-      throw Error(resolve.statusText);
-    }
-}).then(paises => {
+  fillCombos = () =>{
     this.setState({
-      paises: paises,
+      documentos: fetchDocumentos(),
+      obrasSociales: fetchObrasSociales(),
+      paises: fetchPaises(),
+      sexos: fetchSexos(),
+      loading: false,
     })
-})
 
+
+  }  
+
+  
+  componentWillMount() {
+    this.setState({
+      documentos: fetchDocumentos(),
+      obrasSociales: fetchObrasSociales(),
+      paises: fetchPaises(),
+      sexos: fetchSexos(),
+    })
+  }
+  
+
+  componentDidMount(){
+    this.fillCombos();
   }
 
-  render() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.loading!==true){
+    this.fillCombos();
+    }
+}
+  
+
+
+  renderForm(){
     return (
-      <div className='FormularioAlta'>
+      <div className='Formularios'>
         <Header as='h3' dividing>Registrar nuevo paciente</Header>
         <Form onSubmit={this.fetchPaciente}>
-            
-            <Form.Field required fluid label='Nombre' control='input' 
-            placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre}/>
-           
 
 
-            <Form.Field required fluid label='Apellido' control='input'
-            placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido}/>
+          <Form.Field required label='Nombre' control='input' 
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
+          
+
+          <Form.Field required label='Apellido' control='input'
+          placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido} className= {this.state.errorApellido ? null : 'error' } />
 
 
-
-          <Form.Field>
-            <label>Tipo de Documento</label>
-            <select className="combosAlta" value={this.state.tipoDoc} onChange={this.cambioTipoDoc}>
-                <option value={null}>  </option>
+          <Form.Group widths='equal'>
+            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} className= {this.state.errorTipoDoc ? null : 'error' }>
+                <option value={null}> </option>
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-            </select> 
+            </Form.Field>
+            <Form.Field required label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc} className= {this.state.errorNroDoc ? null : 'error' }>
+            </Form.Field>
+           </Form.Group>
+
+
+          <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} className= {this.state.errorSexo ? null : 'error' }>
+            <option value={null}>  </option>
+            {this.state.sexos.map(item => (
+            <option key={item.sexoId}>{item.nombre}</option>))}
           </Form.Field>
 
 
-            <Form.Field required>
-              <label>Número de Documento</label>
-              <input placeholder='Número de documento' type="text" value={this.state.nroDoc} onChange={this.cambioNroDoc} />
-            </Form.Field>
-  
-                
-            <Form.Field required>
-              <label>Sexo</label>
-              <select className="combosAlta" value={this.state.sexo} onChange={this.cambioSexo} >
-              <option value={null}>  </option>
-              <option value="Femenino"> Femenino </option>
-              <option value="Masculino"> Masculino </option>
-            </select>
-            </Form.Field>
+          <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} className= {this.state.errorNac ? null : 'error' }>
+            <option value={null}>  </option>
+              {this.state.paises.map(item => (
+            <option key={item.idPais}>{item.nombreBonito}</option>))}
+          </Form.Field>
 
-            <Form.Field required>
-              <label>Nacionalidad</label>
-              <select placeholder='Nacionalidad' className="combosAlta" value={this.state.nacionalidad} onChange={this.cambioNacionalidad} >
-                <option value={null}>  </option>
-                {this.state.paises.map(item => (
-                <option key={item.idPais}>{item.nombreBonito}</option>))}
-            </select>
-            </Form.Field>
 
-            <Form.Field>
-              <label>Fecha de Nacimiento</label>
+          <Form.Field required className= {this.state.errorFechaNac ? null : 'error' }>
+            <label>Fecha de Nacimiento</label>
               <DatePicker placeholderText="Fecha de Nacimiento"
-            selected={this.state.fechaNacimiento} onChange={this.cambioFechaNacimiento} 
-            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
+              selected={this.state.fechaNacimiento} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
               </DatePicker> 
             </Form.Field>
 
-            <Form.Field>
-              <label>Teléfono</label>
-              <input placeholder='Teléfono' type="text" value={this.state.telefono} onChange={this.cambioTelefono} />
-            </Form.Field> 
 
-            <Form.Field>
-              <label>E-Mail</label>
-              <input placeholder='E-Mail' type="text" value={this.state.mail} onChange={this.cambioMail}/>
-            </Form.Field>        
+          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
-            <Form.Field>
-                  <label>Obra Social</label>
-                  <select className="combosAlta" value={this.state.obraSocial} onChange={this.cambioObraSocial} >
-                <option key={null}>  </option>
-                {this.state.obrasSociales.map(item => (
-                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-            </select> 
-            </Form.Field>      
-           
 
-            <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+
+
+          <Form.Field label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+            <option key={null}>  </option>
+              {this.state.obrasSociales.map(item => (
+            <option key={item.idObraSocial}>{item.razonSocial}</option>))}
+          </Form.Field>  
+          
+          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
 
         </Form>  
       </div>
+
     );
   }
+
+  renderProgress(){
+    return <CircularProgress size={50}/>;
+  }
+
+
+
+
   
   handleUpdateClick = (api) => {
     var data;
@@ -175,22 +172,25 @@ class FormAlta extends Component {
         "apellido": this.state.apellido,
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": this.getIdTipoDoc(),
+          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
           "nombre": this.state.tipoDoc
         },
-        "fechaNacimiento": this.getFechaNacimiento(),
-        "fechaAlta": this.getCurrentDate(),
-        "sexo": this.getBooleanSex(this.state.sexo),
-        "nacionalidad": {
-          "idPais": this.getIdPais(),
-          "iso": this.getIso(),
-          "nombre": this.getNombrePais(),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": this.getIso3(),
-          "codigoTelefono": this.getCodigoTelefono(),
+        "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
+        "fechaAlta": getCurrentDate(),
+        "sexo": {
+          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
+          "nombre": this.state.sexo,
         },
-        "telefono": this.emptyToNull(this.state.telefono),
-        "mail": this.emptyToNull(this.state.mail),
+        "nacionalidad": {
+          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
+          "iso": getIso(this.state.nacionalidad, this.state.paises),
+          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
+          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+        },
+        "telefono": emptyToNull(this.state.telefono),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": null,
         "historial": null,
         "bitAlta": true
@@ -201,29 +201,32 @@ class FormAlta extends Component {
         "apellido": this.state.apellido,
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": this.getIdTipoDoc(),
+          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
           "nombre": this.state.tipoDoc
         },
-        "fechaNacimiento": this.getFechaNacimiento(),
-        "fechaAlta": this.getCurrentDate(),
-        "sexo": this.getBooleanSex(this.state.sexo),
-        "nacionalidad": {
-          "idPais": this.getIdPais(),
-          "iso": this.getIso(),
-          "nombre": this.getNombrePais(),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": this.getIso3(),
-          "codigoTelefono": this.getCodigoTelefono(),
+        "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
+        "fechaAlta": getCurrentDate(),
+        "sexo": {
+          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
+          "nombre": this.state.sexo,
         },
-        "telefono": this.emptyToNull(this.state.telefono),
-        "mail": this.emptyToNull(this.state.mail),
+        "nacionalidad": {
+          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
+          "iso": getIso(this.state.nacionalidad, this.state.paises),
+          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
+          "nombreBonito": this.state.nacionalidad,
+          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
+          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+        },
+        "telefono": emptyToNull(this.state.telefono),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": {
-          "idObraSocial": this.getIdObraSocial(),
+          "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "razonSocial": this.state.obraSocial,
-          "cuit": this.getCuitObraSocial(),
-          "domicilio": this.getDomicilioObraSocial(),
-          "telefono": this.getTelefonoObraSocial(),
-          "email": this.getEmailObraSocial(),
+          "cuit": getCuitObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "domicilio": getDomicilioObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
         },
         "historial": null,
         "bitAlta": true
@@ -249,8 +252,24 @@ class FormAlta extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const api = '/pacientes/add';
-    this.handleUpdateClick(api);
+    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad } = this.state;
+    const errorNombre = validateName(nombre);
+    const errorApellido = validateApellido(apellido);
+    const errorTipoDoc = validateTipoDoc(tipoDoc);
+    const errorNroDoc = validateNroDoc(nroDoc);
+    const errorFechaNac = validateNacimiento(fechaNacimiento);
+    const errorSexo = validateSexo(sexo);
+    const errorNac = validateNacionalidad(nacionalidad);
+
+    if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac ) {
+      const api = '/pacientes/add';
+      this.handleUpdateClick(api);
+      
+    } else {
+      this.setState ({ 
+        errorNombre,  errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac,
+      })
+    }    
   }
  
   cambioNombre(e) {
@@ -313,125 +332,17 @@ class FormAlta extends Component {
       })
   }
 
-  getBooleanSex = (sex) => {
-    if (sex === "Masculino"){
-      return  true
-    } else {
-      return false
-    }
-  }
 
-  getCurrentDate(){
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1; 
-    var year = new Date().getFullYear(); 
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (date < 10){
-      date = "0" + date;
-    } 
-    return year + '-' + month + '-' + date + 'T00:00:00.000+0000';
-  }
+  render() {
 
-  getFechaNacimiento(){
-    var año = this.state.fechaNacimiento.getFullYear();
-    var mes = (this.state.fechaNacimiento.getMonth()+1);
-    var dia = this.state.fechaNacimiento.getDate();
-    if (mes < 10){
-      mes = "0" + mes;
-    } 
-    if (dia < 10){
-      dia = "0" + dia;
-    } 
-    return año + "-" + mes + "-" + dia + "T00:00:00.000+0000";
-  }
-
-  getIdTipoDoc = () => {
-    for(let i=0; i < this.state.documentos.length; i++){
-      if (this.state.tipoDoc === this.state.documentos[i].nombre)
-        return this.state.documentos[i].idTipoDocumento;
-    }
-  }
-
-  getIdPais = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].idPais;
-    }
-  }
-
-  getIso = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].iso;
-    }
-  }
-
-  getIso3 = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].iso3;
-    }
-  }
-
-  getNombrePais = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].nombre;
-    }
-  }
-
-  getCodigoTelefono = () => {
-    for(let i=0; i < this.state.paises.length; i++){
-      if (this.state.nacionalidad === this.state.paises[i].nombreBonito)
-        return this.state.paises[i].codigoTelefono;
-    }
-  }
-
-  getIdObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].idObraSocial;
-    }
-  }
-
-  getCuitObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].cuit;
-    }
-  }
-
-  getDomicilioObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].domicilio;
-    }
-  }
-
-  getTelefonoObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].telefono;
-    }
-  }
-
-  getEmailObraSocial = () => {
-    for(let i=0; i < this.state.obrasSociales.length; i++){
-      if (this.state.obraSocial === this.state.obrasSociales[i].razonSocial)
-        return this.state.obrasSociales[i].email;
-    }
-  }
-
-  emptyToNull = (v) => {
-    if (v === ''){
-      return v=null;
-    } else {
-      return v;
-    }
+    return (
+      <div>
+      {this.renderForm()}
+      </div>
+    );
   }
 
 }
+
 
 export default FormAlta;

@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu , Image} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import '../App.css';
 
-
 export default class MenuLateral extends Component {
-
 
     state = { activeItem: 'home' }
   
@@ -15,46 +13,51 @@ export default class MenuLateral extends Component {
       const { activeItem } = this.state
   
       return (
-        <nav>
+        
+        
         <Menu pointing vertical>
-          <Link to="/">
             <Menu.Item name='home'
-            active={activeItem==='home'}
-            onClick={this.handleItemClick}
-            ><img className="MenuImg" src="http://i67.tinypic.com/s1uetl_th.png"/>  
+              as= {Link} to='/'
+              active={activeItem==='home'}
+              onClick={this.handleItemClick}
+              >
+              <Image src="http://i67.tinypic.com/s1uetl_th.png" size='tiny' centered/>              
             </Menu.Item>
-          </Link>
+       
 
+       
+            <Menu.Item name='Pacientes' 
+            as= {Link} to='/alta'
+            active={activeItem === 'Pacientes'} 
+            onClick={this.handleItemClick} 
+          />
 
-          <Link to="/alta">
-          <Menu.Item name='Registrar Paciente' 
-          active={activeItem === 'Registrar Paciente'} 
-          onClick={this.handleItemClick} 
-          /></Link>
+        
+            <Menu.Item
+              name='Analisis'
+              as= {Link} to='/404'
+              active={activeItem === 'Analisis'}
+              onClick={this.handleItemClick}
+          />
 
-          <Link to="/consulta">
-          <Menu.Item
-            name='Buscar Paciente'
-            active={activeItem === 'Buscar Paciente'}
-            onClick={this.handleItemClick}
-          /></Link>
+       
+            <Menu.Item
+              name='Muestras'
+              as= {Link} to='/404'
+              active={activeItem === 'Muestras'}
+              onClick={this.handleItemClick}
+          />
 
-          <Link to="/">
-          <Menu.Item
-            name='Modificar Paciente'
-            active={activeItem === 'Modificar Paciente'}
-            onClick={this.handleItemClick}
-          /></Link>
-
-          <Link to="/">
-          <Menu.Item
-            name='Eliminar Paciente'
-            active={activeItem === 'Eliminar Paciente'}
-            onClick={this.handleItemClick}
-            /></Link>
+         
+            <Menu.Item
+              name='Obras Sociales'
+              as= {Link} to='/404'
+              active={activeItem === 'Obras Sociales'}
+              onClick={this.handleItemClick}
+            />
 
         </Menu>
-        </nav>
+        
       )
     }
   }
