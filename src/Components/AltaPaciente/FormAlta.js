@@ -51,6 +51,7 @@ class FormAlta extends Component {
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
+
   }
   
   fillCombos = () =>{
@@ -61,8 +62,6 @@ class FormAlta extends Component {
       sexos: fetchSexos(),
       loading: false,
     })
-
-
   }  
 
   
