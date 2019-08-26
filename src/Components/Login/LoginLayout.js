@@ -11,13 +11,10 @@ const LoginForm = () => (
       <Form size='large'>
         <Segment stacked>
 
-
         <LoginComponent/>
-
 
         </Segment>
       </Form>
-
     </Grid.Column>
   </Grid>
 )

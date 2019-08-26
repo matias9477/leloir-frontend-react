@@ -14,7 +14,7 @@ function Navigator(){
       <div>
         <Switch>
           <Route path="/login" component={LoginForm}/>
-          <AuthenticatedRoute path="/home" exact component={Home}/>
+          <AuthenticatedRoute path="/" exact component={Home}/>
           <AuthenticatedRoute path="/alta" component={FormAlta}/>
           <AuthenticatedRoute path="/consulta" component={FormConsulta}/>
           <AuthenticatedRoute path="/404" component={FeatureInProgress}/>
@@ -33,6 +33,7 @@ function Navigator(){
 
   const FeatureInProgress = () =>(
     <div>
+      <MenuLateral/>
       <Image
       src="https://bitmovin.com/wp-content/uploads/2018/07/9-missing-main6.jpg"
       centered
