@@ -27,7 +27,7 @@ export default class MenuLateral extends Component {
 
        
             <Menu.Item name='Pacientes' 
-            as= {Link} to='/alta'
+            as= {Link} to='/pacientes'
             active={activeItem === 'Pacientes'} 
             onClick={this.handleItemClick} 
           />
