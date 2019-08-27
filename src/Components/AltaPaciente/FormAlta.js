@@ -3,11 +3,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Header, Form } from 'semantic-ui-react'
-import { fetchDocumentos, fetchObrasSociales, fetchPaises, fetchSexos } from './../../Services/FetchsPacientes';
+import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
 import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
 import './../styles.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import MenuLateral from '../MenuLateral';
 
 class FormAlta extends Component {
   constructor(props) {
@@ -55,33 +55,81 @@ class FormAlta extends Component {
   }
   
   fillCombos = () =>{
-    this.setState({
-      documentos: fetchDocumentos(),
-      obrasSociales: fetchObrasSociales(),
-      paises: fetchPaises(),
-      sexos: fetchSexos(),
-      loading: false,
-    })
+    this.comboObrasSociales();
+    this.comboTiposDocs();
+    this.comboSexos();
+    this.comboPaises();
   }  
 
-  
-  componentWillMount() {
-    this.setState({
-      documentos: fetchDocumentos(),
-      obrasSociales: fetchObrasSociales(),
-      paises: fetchPaises(),
-      sexos: fetchSexos(),
+  comboSexos = () =>{
+    fetch(urlSexos).then ( resolve => {
+        if(resolve.ok) { 
+            return resolve.json();
+        } else {
+            throw Error(resolve.statusText);
+        }
+    }).then(sexo => {
+       this.setState({sexos:sexo}) 
     })
+}
+
+  comboPaises = () =>{
+    fetch(urlPaises).then ( resolve => {
+        if(resolve.ok) { 
+            return resolve.json();
+        } else {
+            throw Error(resolve.statusText);
+        }
+    }).then(pais => {
+        this.setState({paises:pais})
+    })    
+}
+
+  comboObrasSociales = () =>{
+  fetch(urlObrasSoc).then ( resolve => {
+      if(resolve.ok) { 
+          return resolve.json();
+      } else {
+          throw Error(resolve.statusText);
+      }
+  }).then(obrasSoc => {
+      this.setState({obrasSociales:obrasSoc});
+  })
+}
+
+  comboTiposDocs = () =>{
+  fetch(urlDocs).then ( resolve => {
+      if(resolve.ok) { 
+          return resolve.json();
+      } else {
+          throw Error(resolve.statusText);
+      }
+  }).then(tipos => {
+      this.setState({documentos:tipos})
+  })
+
+}
+
+
+  
+
+
+
+  componentWillMount() {
+    console.log("component will mount")
+    this.fillCombos();
+
   }
   
 
   componentDidMount(){
-    this.fillCombos();
+    console.log("Comp did mount")
+    // this.fillCombos();
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.loading!==true){
-    this.fillCombos();
+    // this.fillCombos();
     }
 }
   
@@ -333,10 +381,13 @@ class FormAlta extends Component {
 
 
   render() {
-
+    console.log("render");
+    
     return (
       <div>
+        <MenuLateral/>
       {this.renderForm()}
+      
       </div>
     );
   }

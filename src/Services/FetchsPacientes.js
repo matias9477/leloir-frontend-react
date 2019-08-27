@@ -8,6 +8,7 @@
     var paises = [];
     var sexos = [];
 
+
     export const fetchDocumentos = () =>{
         fetch(urlDocs).then ( resolve => {
             if(resolve.ok) { 
