@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import { Button, Header, Form } from 'semantic-ui-react'
+import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import MenuLateral from '../MenuLateral';
+import {Link} from 'react-router-dom';
+
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
 import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
 import './../styles.css';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuLateral from '../MenuLateral';
 
 class FormAlta extends Component {
   constructor(props) {
@@ -111,10 +113,6 @@ class FormAlta extends Component {
 }
 
 
-  
-
-
-
   componentWillMount() {
     console.log("component will mount")
     this.fillCombos();
@@ -134,13 +132,18 @@ class FormAlta extends Component {
 }
   
 
-
   renderForm(){
     return (
       <div className='Formularios'>
-        <Header as='h3' dividing>Registrar nuevo paciente</Header>
-        <Form onSubmit={this.fetchPaciente}>
+        <Container className='btnHeader'>
+          <Button className='boton' as= {Link} to='/pacientes' exact floated='left' icon labelPosition='left' primary size='small'>
+            <Icon name='arrow alternate circle left' /> Volver
+          </Button>
 
+          <Header as='h3' dividing>Registrar nuevo paciente</Header>
+        </Container>
+
+        <Form onSubmit={this.fetchPaciente}>
 
           <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
@@ -206,10 +209,6 @@ class FormAlta extends Component {
   renderProgress(){
     return <CircularProgress size={50}/>;
   }
-
-
-
-
   
   handleUpdateClick = (api) => {
     var data;
@@ -288,7 +287,8 @@ class FormAlta extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido + ' con éxito.');
+          alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido + ' con éxito.'); 
+          this.vaciadoCampos();
           return response.text();
         } else {
           alert('No se ha podido registrar el paciente.');
@@ -317,6 +317,31 @@ class FormAlta extends Component {
         errorNombre,  errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac,
       })
     }    
+  }
+
+  vaciadoCampos(){
+    this.setState( {
+      id: '',
+      nombre: '',
+      apellido:'',
+      tipoDoc:'',
+      nroDoc:'',
+      fechaNacimiento:'',
+      fechaAlta:'',
+      sexo:'',
+      nacionalidad:'',
+      telefono:'',
+      mail:'',
+      obraSocial:'',
+      paciente: [],
+      errorNombre: true,
+      errorApellido: true,
+      errorTipoDoc: true,
+      errorNroDoc: true,
+      errorSexo: true,
+      errorNac: true,
+      errorFechaNac: true,
+    })
   }
  
   cambioNombre(e) {
@@ -384,10 +409,10 @@ class FormAlta extends Component {
     console.log("render");
     
     return (
-      <div>
+      <div className='union'>
         <MenuLateral/>
         <div className="FormAlta">
-        {this.renderForm()}
+          {this.renderForm()}
         </div>
       
       

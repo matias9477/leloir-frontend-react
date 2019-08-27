@@ -4,6 +4,11 @@
     margin: 25px;
 }
 
+.union{
+  display:flex; 
+  flex-direction:row;
+}
+
 .headeryboton{
     margin: 15px;
 }

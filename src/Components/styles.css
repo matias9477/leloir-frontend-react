@@ -7,6 +7,7 @@
 .FormAlta{
     width: 50%;
 }
+
 .login{
     width: 100%;
     align-self: center;
@@ -24,5 +25,14 @@
 
 .error{
     border-color: red;
+}
+
+.union{
+    display:flex; 
+    flex-direction:row;
+}
+
+.btnHeader{
+    margin-bottom: 30px;
 }
   
