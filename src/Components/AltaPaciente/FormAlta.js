@@ -386,7 +386,10 @@ class FormAlta extends Component {
     return (
       <div>
         <MenuLateral/>
-      {this.renderForm()}
+        <div className="FormAlta">
+        {this.renderForm()}
+        </div>
+      
       
       </div>
     );
