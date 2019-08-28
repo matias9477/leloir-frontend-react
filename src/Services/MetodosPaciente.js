@@ -1,3 +1,22 @@
+  export function getbitAlta(bitAlta){
+    if (bitAlta === true){
+      return  "En alta"
+    }else {
+      return "Baja"
+    }
+  }
+  
+  export function booleanBitAlta(bitAlta){
+    if (bitAlta === "En alta"){
+      return  true
+    }else {
+      return false
+    }
+  }
+
+  export function fechaAltaDateStamp(alta){
+    return alta + "T00:00:00";
+  }
 
   export function validateName(nom){
     if (nom.length === 0 || nom === ''){
@@ -42,7 +61,7 @@
   }
 
   export function validateNacimiento(fnac){
-    if (fnac.length === 0 || fnac === ''){
+    if (fnac === null || fnac.length === 0 || fnac === ''){
       return false
     }
     return true

@@ -63,6 +63,8 @@ export default class TablaPacientes extends React.Component {
         // hideSizePerPage: true // > You can hide the dropdown for sizePerPage
         alwaysShowAllBtns: true, // Always show next and previous button
         // withFirstAndLast: false > Hide the going to First and Last page button
+        sortName: 'id',
+        sortOrder: 'desc',
 
         sortIndicator: false,
        // onRowClick: function(row){
@@ -74,15 +76,12 @@ export default class TablaPacientes extends React.Component {
     }
 
     alta = (row, cell) => {
-        return (<Button onClick={this.func}
+        return (<Button onClick={null}
             icon={row === true ? 'trash' : 'undo'}
             className={row ? "ui red button" : 'twitter'} />
         )
     }
 
-    func(){
-        return alert("me has tocao")
-    }
 
     consulta = (cell) => {
         console.log(cell)
@@ -92,32 +91,35 @@ export default class TablaPacientes extends React.Component {
         )
     }
 
-    logicDelete = cell => {
-        console.log(cell)
-        fetch(`/pacientes/dar-de-baja/${cell.id}`, {
-            method: 'PUT', 
-            headers:{
-            'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                alert(`Se ha eliminado el paciente ${cell.nombre} ${cell.apellido} con éxito.`);
-                return response.text();
-            } else {
-                alert('No se ha podido eliminar el paciente.');
-                return Promise.reject({status: response.status, statusText: response.statusText});
-            }
-            })
+    // logicDelete = id => {
+    //     console.log(id)
+    //     fetch(`/pacientes/dar-de-baja/${id}`, {
+    //         method: 'PUT', 
+    //         headers:{
+    //         'Content-Type': 'application/json'
+    //         }
+    //     }).then(response => {
+    //         if (response.ok) {
+    //             alert(`Se ha eliminado el paciente con éxito.`);
+    //             return response.text();
+    //         } else {
+    //             alert('No se ha podido eliminar el paciente.');
+    //             return Promise.reject({status: response.status, statusText: response.statusText});
+    //         }
+    //         })
         
-    }      
-
-        
+    // }      
+  
     render(){
         return(
             <div className='union'>
                 <MenuLateral/>
            
             <div className='tablaPacientes'>
+
+                <Button className='boton'  as= {Link} to='/pacientes/consulta' floated='right' primary size='small' > Búsqueda avanzada
+                </Button>
+
                 <div className='headeryboton'>
                 <Header as='h2'>Pacientes</Header>
                 
@@ -126,6 +128,8 @@ export default class TablaPacientes extends React.Component {
                 </Button>
                 
                 </div>
+
+              
                 
                 <BootstrapTable
                     data={this.state.pacientes}
@@ -136,13 +140,12 @@ export default class TablaPacientes extends React.Component {
                     searchPlaceholder='Ingrese búsqueda de paciente'
                     
                 >
-                    <TableHeaderColumn dataField='id' isKey dataSort filter={ { type: 'TextFilter', delay: 10 } } dataAlign="center">Número de Paciente</TableHeaderColumn>
+                    <TableHeaderColumn dataField='id' isKey dataSort dataAlign="center">Número de Paciente</TableHeaderColumn>
                     <TableHeaderColumn dataField='nombre' dataSort dataAlign="center">Nombre</TableHeaderColumn>
                     <TableHeaderColumn dataField='apellido' dataSort dataAlign="center">Apellido</TableHeaderColumn>
                     <TableHeaderColumn dataField='nroDocumento' dataSort dataAlign="center">Número de Documento</TableHeaderColumn>
-                    <TableHeaderColumn dataField='bitAlta' dataAlign="center" dataSort dataFormat={ this.alta }>Operaciones</TableHeaderColumn>
-                    <TableHeaderColumn dataField='bitAlta' dataAlign="center" >Consulta</TableHeaderColumn>
                 </BootstrapTable>
+
             </div>
             </div>
         )
