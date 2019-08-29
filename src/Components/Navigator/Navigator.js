@@ -4,7 +4,7 @@ import FormAlta from '../AltaPaciente/FormAlta';
 import FormConsulta from '../ConsultaPaciente/FormConsulta';
 import LoginForm from '../Login/LoginLayout';
 import MenuLateral from '../MenuLateral';
-import TablaPacientes from '../TablaPaciente/TablaPacientes';
+import Tabla2 from '../TablaPaciente/Tabla2';
 import './../styles.css';
 import AuthenticatedRoute from '../Navigator/AuthenticatedRoute';
 import {Image} from 'semantic-ui-react';
@@ -15,7 +15,7 @@ function Navigator(){
       <div>
         <Switch>
           <Route path="/login" component={LoginForm}/>
-          <AuthenticatedRoute path="/pacientes" exact component={TablaPacientes}/>
+          <AuthenticatedRoute path="/pacientes" exact component={Tabla2}/>
           <AuthenticatedRoute path="/" exact component={Home}/>
           <AuthenticatedRoute path="/pacientes/add" exact component={FormAlta}/>
           <AuthenticatedRoute path="/pacientes/consulta" component={FormConsulta}/>

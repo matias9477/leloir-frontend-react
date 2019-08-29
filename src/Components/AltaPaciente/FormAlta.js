@@ -114,17 +114,10 @@ class FormAlta extends Component {
 
 
   componentWillMount() {
-    console.log("component will mount")
     this.fillCombos();
 
   }
   
-
-  componentDidMount(){
-    console.log("Comp did mount")
-    // this.fillCombos();
-  }
-
   componentWillReceiveProps(nextProps) {
     if(nextProps.loading!==true){
     // this.fillCombos();
@@ -136,7 +129,7 @@ class FormAlta extends Component {
     return (
       <div className='Formularios'>
         <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to='/pacientes' exact floated='left' icon labelPosition='left' primary size='small'>
+          <Button className='boton' as= {Link} to='/pacientes' exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
           </Button>
 
@@ -406,7 +399,6 @@ class FormAlta extends Component {
 
 
   render() {
-    console.log("render");
     
     return (
       <div className='union'>
