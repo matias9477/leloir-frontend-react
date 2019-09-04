@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Header, Pagination, Icon } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
+import { orderBy } from "lodash";
 import MenuLateral from '../MenuLateral';
 import './../styles.css'
 
@@ -10,11 +11,12 @@ export default class Tabla2 extends React.Component {
         super(props);
         this.state = {
           pacientes: [],
-          pacientesData: [],
           limit: 25,
           activePage: 1,
           totalCount: 0,
-          borrado: false,
+          sortParams:{
+              direction: undefined
+          }
         }
         this.cambioLimite = this.cambioLimite.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
@@ -36,6 +38,12 @@ export default class Tabla2 extends React.Component {
             this.setState({
                 pacientes: Object.values(pac).flat(),
                 totalCount: (Object.values(pac).flat()).length,
+            })
+            
+            var newArr = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+              ], ["desc", "desc"]);
+            this.setState({
+                pacientes: newArr
             })
         })
     }
@@ -113,7 +121,24 @@ export default class Tabla2 extends React.Component {
             return (this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
         }        
     };
-
+    
+    handleColumnHeaderClick(sortKey) {
+        const {  
+          pacientes,  
+          sortParams: { direction }  
+        } = this.state;
+  
+        const sortDirection = direction === "desc" ? "asc" : "desc";
+        const sortedCollection = orderBy(pacientes, [sortKey], [sortDirection]);
+  
+        this.setState({  
+          pacientes: sortedCollection,  
+          sortParams: {  
+            direction: sortDirection  
+          }  
+        });  
+    }  
+  
 
     render(){
         return(
@@ -140,11 +165,11 @@ export default class Tabla2 extends React.Component {
                     <table className="ui celled table">
                     <thead>
                         <tr>
-                            <th>Número Paciente</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Tipo Documento</th>
-                            <th>Operaciones</th>
+                            <th onClick={() => this.handleColumnHeaderClick("id")}  >Número Paciente</th>
+                            <th onClick={() => this.handleColumnHeaderClick("nombre")} >Nombre</th>
+                            <th onClick={() => this.handleColumnHeaderClick("apellido")} >Apellido</th>
+                            <th onClick={() => this.handleColumnHeaderClick("nroDocumento")} >Número de Documento</th>
+                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")} >Operaciones </th>
                         </tr>
                     </thead>
                     
