@@ -41,18 +41,19 @@ export default class Tabla2 extends React.Component {
     }
 
     bitInverse = paciente => {
-        fetch(`/pacientes/dar-de-baja/${paciente.id}`, {
+        fetch(`/pacientes/switch-alta/${paciente.id}`, {
           method: 'PUT', 
           headers:{
           'Content-Type': 'application/json'
           }
       }).then(response => {
           if (response.ok) {
-              if(paciente.bitAlta) { 
-              alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`)
-              this.fetchPacientesAll()
+            if(paciente.bitAlta) { 
+                alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`)
+                this.fetchPacientesAll()
             } else {
                 alert(`Se ha dado de alta al paciente ${paciente.nombre} ${paciente.apellido} con éxito.`)
+                this.fetchPacientesAll()
             }
               return response.text();
           } else {
@@ -79,7 +80,7 @@ export default class Tabla2 extends React.Component {
         return ( 
         <div className='rightAlign'>
             Cantidad de pacientes por página: &nbsp;&nbsp; 
-            <select id='int' onChange={this.cambioLimite} value={this.state.limit}>
+            <select id='int' onChange={this.cambioLimite} value={this.state.limit} className='selectCantidad'>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
