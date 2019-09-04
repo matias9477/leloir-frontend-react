@@ -8,7 +8,7 @@ import MenuLateral from '../MenuLateral';
 import {Link} from 'react-router-dom';
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento} from './../../Services/MetodosPaciente';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from './../../Services/MetodosPaciente';
 import './../styles.css';
 
 class FormAlta extends Component {
@@ -73,7 +73,7 @@ class FormAlta extends Component {
     }).then(sexo => {
        this.setState({sexos:sexo}) 
     })
-}
+  }
 
   comboPaises = () =>{
     fetch(urlPaises).then ( resolve => {
@@ -85,19 +85,19 @@ class FormAlta extends Component {
     }).then(pais => {
         this.setState({paises:pais})
     })    
-}
+  }
 
   comboObrasSociales = () =>{
-  fetch(urlObrasSoc).then ( resolve => {
-      if(resolve.ok) { 
-          return resolve.json();
-      } else {
-          throw Error(resolve.statusText);
-      }
-  }).then(obrasSoc => {
-      this.setState({obrasSociales:obrasSoc});
-  })
-}
+    fetch(urlObrasSoc).then ( resolve => {
+        if(resolve.ok) { 
+            return resolve.json();
+        } else {
+            throw Error(resolve.statusText);
+        }
+    }).then(obrasSoc => {
+        this.setState({obrasSociales:obrasSoc});
+    })
+  }
 
   comboTiposDocs = () =>{
   fetch(urlDocs).then ( resolve => {
@@ -122,7 +122,7 @@ class FormAlta extends Component {
     if(nextProps.loading!==true){
     // this.fillCombos();
     }
-}
+  }
   
 
   renderForm(){
@@ -207,8 +207,8 @@ class FormAlta extends Component {
     var data;
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
-        "nombre": this.state.nombre,
-        "apellido": this.state.apellido,
+        "nombre": convertStyleString(this.state.nombre),
+        "apellido": convertStyleString(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -229,15 +229,15 @@ class FormAlta extends Component {
           "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
         },
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail),
+        "mail": emptyToNull(this.state.mail.toLowerCase()),
         "obraSocial": null,
         "historial": null,
         "bitAlta": true
     };
     } else {
       data = {
-        "nombre": this.state.nombre,
-        "apellido": this.state.apellido,
+        "nombre": convertStyleString(this.state.nombre),
+        "apellido": convertStyleString(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -258,7 +258,7 @@ class FormAlta extends Component {
           "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
         },
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail),
+        "mail": emptyToNull(this.state.mail.toLowerCase()),
         "obraSocial": {
           "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "razonSocial": this.state.obraSocial,
@@ -280,7 +280,7 @@ class FormAlta extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + this.state.nombre +' ' + this.state.apellido + ' con éxito.'); 
+          alert('Se registro el paciente ' + convertStyleString(this.state.nombre) +' ' + convertStyleString(this.state.apellido) + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {

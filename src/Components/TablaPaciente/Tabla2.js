@@ -3,7 +3,7 @@ import { Button, Header, Pagination, Icon } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import { orderBy } from "lodash";
 import MenuLateral from '../MenuLateral';
-import './../styles.css'
+import './../styles.css';
 
 
 export default class Tabla2 extends React.Component {

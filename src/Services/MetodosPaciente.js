@@ -1,3 +1,8 @@
+  export function convertStyleString(palabra){
+    const cuerpo = palabra.slice(1);
+    return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
+  }
+  
   export function getbitAlta(bitAlta){
     if (bitAlta === true){
       return  "En alta"
