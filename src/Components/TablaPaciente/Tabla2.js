@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
-import { orderBy } from "lodash";
+import { orderBy } from 'lodash';
 import MenuLateral from '../MenuLateral';
+import { convertStyleString } from './../../Services/MetodosPaciente';
 import './../styles.css';
-
 
 export default class Tabla2 extends React.Component {
     constructor(props){
@@ -16,8 +16,9 @@ export default class Tabla2 extends React.Component {
           totalCount: 0,
           sortParams:{
               direction: undefined
-          },
-          filtered: [],
+          },  
+          filtro: '',
+          pacientesFiltrados: [],
         }
         this.cambioLimite = this.cambioLimite.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
@@ -39,15 +40,20 @@ export default class Tabla2 extends React.Component {
         }).then(pac => {
             this.setState({
                 pacientes: Object.values(pac).flat(),
+                pacientesFiltrados: Object.values(pac).flat(),
                 totalCount: (Object.values(pac).flat()).length,
-                filtered: pac,
             })
             
-            var newArr = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+            var filtro = orderBy(this.state.pacientesFiltrados, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
               ], ["desc", "desc"]);
+            var pacientes = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+              ], ["desc", "desc"]);
+
             this.setState({
-                pacientes: newArr
+                pacientesFiltrados: filtro,
+                pacientes: pacientes,
             })
+
         })
     }
 
@@ -111,7 +117,7 @@ export default class Tabla2 extends React.Component {
     }
 
     loadData(from, to){
-        return (this.state.pacientes.slice(from, to))
+        return (this.state.pacientesFiltrados.slice(from, to))
     }
 
     onChangePage = (e, {activePage}) => {
@@ -127,44 +133,21 @@ export default class Tabla2 extends React.Component {
     
     handleColumnHeaderClick(sortKey) {
         const {  
-          pacientes,  
+          pacientesFiltrados,  
           sortParams: { direction }  
         } = this.state;
   
         const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(pacientes, [sortKey], [sortDirection]);
+        const sortedCollection = orderBy(pacientesFiltrados, [sortKey], [sortDirection]);
   
         this.setState({  
-          pacientes: sortedCollection,  
+          pacientesFiltrados: sortedCollection,  
           sortParams: {  
             direction: sortDirection  
           }  
         });  
     } 
-    
-    handleSearch(e){
-        console.log(e.target.value)
-        
-        // var filtrado = this.state.pacientes.filter(function(filtro){
-        //     console.log(filtro === e);
-        // })
 
-
-        // this.state.pacientes.map(function(filtro){
-        //     if(filtro.filter(e)){
-        //         console.log("Si")
-        //     }
-        //     console.log(filtro.id)
-        // })
-
-        let newArray = this.state.pacientes.filter(
-            this.state.pacientes.id === e || this.state.pacientes.nombre === e || this.state.pacientes.apellido === e || this.state.pacientes.nroDocumento === e
-        )
-
-        console.log(newArray)
-
-    }
-  
     estado(bitAlta){
         if(bitAlta){
             return "Dar de baja"
@@ -173,6 +156,25 @@ export default class Tabla2 extends React.Component {
             return "Dar de alta"
         }
     }
+
+    handleSearch(valor){
+        this.setState({
+            filtro: valor.target.value,
+        })
+        
+        var pac = this.state.pacientes.filter(function (paciente) {
+            return (paciente.nombre.includes(convertStyleString(valor.target.value)) || paciente.apellido.includes(convertStyleString(valor.target.value)) || 
+            paciente.id.toString().includes(valor.target.value) ||
+            paciente.nroDocumento.toString().includes(valor.target.value));
+          });
+
+        this.setState({
+            pacientesFiltrados: pac,
+            totalCount: pac.length,
+        })
+
+    }
+
 
     render(){
         return(
@@ -193,8 +195,10 @@ export default class Tabla2 extends React.Component {
                    
                     <div className='union'>
                         <div className="ui icon input">
-                            <Input type='text' onChange={this.handleSearch} placeholder='Ingrese búsqueda...' />
-                            <i aria-hidden="true" className="search icon"></i>
+
+
+                            <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{ name: 'search' }}/>
+                            
                         </div>
                         {this.cantidadPorPagina()}
                     </div> 
@@ -237,19 +241,6 @@ export default class Tabla2 extends React.Component {
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-
-
-
-
-                                {/* <Button onClick={() => window.confirm(this.mensajeConfirmacion(paciente)) ? this.bitInverse(paciente): null} 
-                                    className={paciente.bitAlta ? "ui red button" : 'twitter'}
-                                    icon={paciente.bitAlta ? 'trash' : 'undo'}>
-                                </Button> */}
-
-                                {/* <Button onClick={() => window.confirm(`¿Quiere ver más datos del paciente ${paciente.nombre} ${paciente.apellido}?`) ? (alert("Acceso")): null} 
-                                    className="ui pink button" 
-                                    icon='user' >
-                                </Button> */}
                                 
                             </td>
                         </tr>
