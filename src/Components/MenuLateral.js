@@ -21,7 +21,7 @@ export default class MenuLateral extends Component {
               active={activeItem==='home'}
               onClick={this.handleItemClick}
               >
-              <Image src="http://i67.tinypic.com/s1uetl_th.png" size='tiny' centered/>              
+              <Image src="/android-chrome-192x192.png" size='tiny' centered/>              
             </Menu.Item>
        
 
