@@ -14,7 +14,7 @@ export default class MenuLateral extends Component {
   
       return (
         
-        <Router>
+        //<Router>
         <Menu pointing vertical>
             <Menu.Item name='home'
               as= {Link} to='/'
@@ -57,7 +57,7 @@ export default class MenuLateral extends Component {
             />
 
         </Menu>
-        </Router>
+        //</Router>
         
       )
     }
