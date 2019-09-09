@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Menu , Image} from 'semantic-ui-react'
-import {Link} from 'react-router-dom';
+import {BrowserRouter as Router, Link} from 'react-router-dom';
 import '../App.css';
 
 export default class MenuLateral extends Component {
@@ -14,14 +14,14 @@ export default class MenuLateral extends Component {
   
       return (
         
-        
+        //<Router>
         <Menu pointing vertical>
             <Menu.Item name='home'
               as= {Link} to='/'
               active={activeItem==='home'}
               onClick={this.handleItemClick}
               >
-              <Image src="http://i67.tinypic.com/s1uetl_th.png" size='tiny' centered/>              
+              <Image src="/android-chrome-192x192.png" size='tiny' centered/>              
             </Menu.Item>
        
 
@@ -57,6 +57,7 @@ export default class MenuLateral extends Component {
             />
 
         </Menu>
+        //</Router>
         
       )
     }
