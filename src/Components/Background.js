@@ -4,7 +4,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Grid, Col, Row } from 'react-flexbox-grid';
-import Form from './Form';
+import FormConsulta from './ConsultaPaciente/FormConsulta';
+import MenuLateral from './MenuLateral';
+//import FormAlta from './AltaPaciente/FormAlta';
 
 function ConsultaPaciente() {
   return (
@@ -20,15 +22,12 @@ function ConsultaPaciente() {
 
       </Row>
         <Row>
-          <Col xs = {3} md={3} className="Menu">
-            <div><br></br>Menú de opciones</div>
-            <br></br>
-            <div>1. Registrar Paciente</div>
-            <div>2. Consultar Paciente</div>
+          <Col xs = {2} md={3} className="Menu">
+            <MenuLateral/>
           </Col>
           <Col xs={9} md={9}>
             <Paper elevation={4}>
-             <Form></Form>
+             <FormConsulta/>
             </Paper>
           </Col>
         </Row>

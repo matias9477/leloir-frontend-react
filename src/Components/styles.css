@@ -1,0 +1,63 @@
+body{
+    background-color: rgb(255, 255, 255);
+}
+
+.Formularios{
+    width: 100%;
+    margin-left: 100px;
+    margin-top: 35px;
+}
+
+.FormAlta{
+    width: 50%;
+}
+
+.login{
+    width: 100%;
+    align-self: center;
+}
+
+.boton{
+    margin: 30px;
+}
+
+.Navigator{
+    display:flex; 
+    flex-direction:row;
+}
+
+.error{
+    border-color: red;
+}
+
+.union{
+    display:flex; 
+    flex-direction:row;
+}
+
+.btnHeader{
+    margin-bottom: 30px;
+}
+  
+.pacienteBaja{
+    color: rgb(196, 195, 193);
+}
+
+.tablaPacientes{
+    width: 78%;
+    margin: 25px;
+}
+
+.rightAlign{
+    position: absolute;
+    right: 35px;
+}
+
+.selectCantidad{
+    border: none;
+}
+
+.centerAlignment{
+    text-align: center;
+}
+
