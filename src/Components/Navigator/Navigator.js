@@ -18,7 +18,7 @@ function Navigator(){
           <AuthenticatedRoute path="/pacientes" exact component={Tabla2}/>
           <AuthenticatedRoute path="/" exact component={Home}/>
           <AuthenticatedRoute path="/pacientes/add" exact component={FormAlta}/>
-          <AuthenticatedRoute path="/pacientes/consulta" component={FormConsulta}/>
+          <AuthenticatedRoute path="/pacientes/consulta/:id" component={FormConsulta}/>
           <AuthenticatedRoute path="/404" component={FeatureInProgress}/>
         </Switch>
       </div>

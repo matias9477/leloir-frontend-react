@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Header, Pagination, Icon } from 'semantic-ui-react'
+import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import { orderBy } from "lodash";
 import MenuLateral from '../MenuLateral';
@@ -16,10 +16,12 @@ export default class Tabla2 extends React.Component {
           totalCount: 0,
           sortParams:{
               direction: undefined
-          }
+          },
+          filtered: [],
         }
         this.cambioLimite = this.cambioLimite.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
       }
 
     componentWillMount(){
@@ -38,6 +40,7 @@ export default class Tabla2 extends React.Component {
             this.setState({
                 pacientes: Object.values(pac).flat(),
                 totalCount: (Object.values(pac).flat()).length,
+                filtered: pac,
             })
             
             var newArr = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
@@ -137,8 +140,39 @@ export default class Tabla2 extends React.Component {
             direction: sortDirection  
           }  
         });  
-    }  
+    } 
+    
+    handleSearch(e){
+        console.log(e.target.value)
+        
+        // var filtrado = this.state.pacientes.filter(function(filtro){
+        //     console.log(filtro === e);
+        // })
+
+
+        // this.state.pacientes.map(function(filtro){
+        //     if(filtro.filter(e)){
+        //         console.log("Si")
+        //     }
+        //     console.log(filtro.id)
+        // })
+
+        let newArray = this.state.pacientes.filter(
+            this.state.pacientes.id === e || this.state.pacientes.nombre === e || this.state.pacientes.apellido === e || this.state.pacientes.nroDocumento === e
+        )
+
+        console.log(newArray)
+
+    }
   
+    estado(bitAlta){
+        if(bitAlta){
+            return "Dar de baja"
+        }
+        else {
+            return "Dar de alta"
+        }
+    }
 
     render(){
         return(
@@ -158,22 +192,25 @@ export default class Tabla2 extends React.Component {
                     <br></br>
                    
                     <div className='union'>
-                        Búsqueda
+                        <div className="ui icon input">
+                            <Input type='text' onChange={this.handleSearch} placeholder='Ingrese búsqueda...' />
+                            <i aria-hidden="true" className="search icon"></i>
+                        </div>
                         {this.cantidadPorPagina()}
                     </div> 
 
-                    <table className="ui celled table">
-                    <thead>
+                    <table className="ui single line table" >
+                    <thead className='centerAlignment'>
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("id")}  >Número Paciente</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")} >Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("apellido")} >Apellido</th>
                             <th onClick={() => this.handleColumnHeaderClick("nroDocumento")} >Número de Documento</th>
-                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")} >Operaciones </th>
+                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")} >Opciones </th>
                         </tr>
                     </thead>
                     
-                    <tbody>
+                    <tbody className='centerAlignment'>
                     
                         {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (paciente, index) => (
                         <tr key={index} paciente={paciente} className={ paciente.bitAlta ? null : "pacienteBaja"} > 
@@ -190,15 +227,29 @@ export default class Tabla2 extends React.Component {
                                 {paciente.nroDocumento}
                             </td>
                             <td>
-                                <Button onClick={() => window.confirm(this.mensajeConfirmacion(paciente)) ? this.bitInverse(paciente): null} 
+                                <Dropdown item icon='ellipsis horizontal' simple>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item onClick={() => window.confirm(this.mensajeConfirmacion(paciente)) ? this.bitInverse(paciente): null} >
+                                            {this.estado(paciente.bitAlta)}
+                                        </Dropdown.Item>
+                                        <Dropdown.Item as= {Link} to={`/pacientes/consulta/${paciente.id}`} exact='true'>
+                                            Ver/Modificar
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
+
+
+
+                                {/* <Button onClick={() => window.confirm(this.mensajeConfirmacion(paciente)) ? this.bitInverse(paciente): null} 
                                     className={paciente.bitAlta ? "ui red button" : 'twitter'}
                                     icon={paciente.bitAlta ? 'trash' : 'undo'}>
-                                </Button>
+                                </Button> */}
 
-                                <Button onClick={() => window.confirm(`¿Quiere ver más datos del paciente ${paciente.nombre} ${paciente.apellido}?`) ? (alert("Acceso")): null} 
+                                {/* <Button onClick={() => window.confirm(`¿Quiere ver más datos del paciente ${paciente.nombre} ${paciente.apellido}?`) ? (alert("Acceso")): null} 
                                     className="ui pink button" 
                                     icon='user' >
-                                </Button>
+                                </Button> */}
                                 
                             </td>
                         </tr>

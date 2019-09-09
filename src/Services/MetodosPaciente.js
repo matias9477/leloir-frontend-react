@@ -2,22 +2,6 @@
     const cuerpo = palabra.slice(1);
     return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
   }
-  
-  export function getbitAlta(bitAlta){
-    if (bitAlta === true){
-      return  "En alta"
-    }else {
-      return "Baja"
-    }
-  }
-  
-  export function booleanBitAlta(bitAlta){
-    if (bitAlta === "En alta"){
-      return  true
-    }else {
-      return false
-    }
-  }
 
   export function fechaAltaDateStamp(alta){
     return alta + "T00:00:00";
