@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MenuLateral from './../MenuLateral';
+import MenuLateral from '../../MenuLateral';
 
 class LPSecretaria extends Component {
     constructor(props) {
