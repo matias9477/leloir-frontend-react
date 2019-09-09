@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import { orderBy } from "lodash";
@@ -30,7 +31,7 @@ export default class Tabla2 extends React.Component {
 
     fetchPacientesAll = () => {
         const urlPacientes = '/pacientes/all';
-        fetch(urlPacientes).then ( resolve => {
+        axios.get(urlPacientes).then ( resolve => {
             if(resolve.ok) { 
                 return resolve.json();
             } else {
