@@ -13,7 +13,7 @@ ReactDOM.render(
     //aca va a ir el provider del store de redux, envolviendo el siguiente Router
     <Router>
         <Switch>
-        <Route exact path="/" component={App}/>
+        <AuthenticatedRoute exact path="/" component={App}/>
         <Route path="/login" component={LoginForm}/>
         <AuthenticatedRoute exact path="/pacientes" component={Tabla2}/>
         </Switch>
