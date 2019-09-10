@@ -31,24 +31,24 @@ export default class Tabla2 extends React.Component {
 
     fetchPacientesAll = () => {
         const urlPacientes = '/pacientes/all';
-        axios.get(urlPacientes).then ( resolve => {
-            if(resolve.ok) { 
-                return resolve.json();
-            } else {
-                throw Error(resolve.statusText);
-            }
-        }).then(pac => {
-            this.setState({
-                pacientes: Object.values(pac).flat(),
-                totalCount: (Object.values(pac).flat()).length,
-                filtered: pac,
-            })
-            
-            var newArr = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
-              ], ["desc", "desc"]);
-            this.setState({
-                pacientes: newArr
-            })
+        axios.get(urlPacientes).then ( (response) => {
+                console.log(response);
+
+                this.setState({
+                    pacientes: Object.values(response.data).flat(),
+                    totalCount: (Object.values(response.data).flat()).length,
+                   filtered: response.data,
+                })
+                
+                var newArr = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+                  ], ["desc", "desc"]);
+                this.setState({
+                    pacientes: newArr
+                })
+
+            }, (error) => {
+                throw Error(error);
+       
         })
     }
 
