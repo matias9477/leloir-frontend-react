@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Menu , Image} from 'semantic-ui-react'
-import {Link} from 'react-router-dom';
+//import {BrowserRouter as Router, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom'
 import '../App.css';
 
 export default class MenuLateral extends Component {
@@ -14,7 +15,7 @@ export default class MenuLateral extends Component {
   
       return (
         
-        
+        //<Router>
         <Menu pointing vertical>
             <Menu.Item name='home'
               as= {Link} to='/'
@@ -35,7 +36,7 @@ export default class MenuLateral extends Component {
         
             <Menu.Item
               name='Analisis'
-              as= {Link} to='/404'
+              as= {Link} to='/'
               active={activeItem === 'Analisis'}
               onClick={this.handleItemClick}
           />
@@ -43,7 +44,7 @@ export default class MenuLateral extends Component {
        
             <Menu.Item
               name='Muestras'
-              as= {Link} to='/404'
+              as= {Link} to='/'
               active={activeItem === 'Muestras'}
               onClick={this.handleItemClick}
           />
@@ -51,12 +52,13 @@ export default class MenuLateral extends Component {
          
             <Menu.Item
               name='Obras Sociales'
-              as= {Link} to='/404'
+              as= {Link} to='/'
               active={activeItem === 'Obras Sociales'}
               onClick={this.handleItemClick}
             />
 
         </Menu>
+        //</Router>
         
       )
     }
