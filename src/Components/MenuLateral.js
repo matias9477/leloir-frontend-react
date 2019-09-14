@@ -57,6 +57,13 @@ export default class MenuLateral extends Component {
               onClick={this.handleItemClick}
             />
 
+            <Menu.Item
+                name='Determinaciones'
+                as= {Link} to='/determinaciones'
+                active={activeItem === 'Determinaciones'}
+                onClick={this.handleItemClick}
+            />
+
         </Menu>
         //</Router>
         

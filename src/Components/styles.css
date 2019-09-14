@@ -49,6 +49,11 @@ body{
     margin: 25px;
 }
 
+.tablaDeterminaciones{
+    width: 78%;
+    margin: 25px;
+}
+
 .rightAlign{
     position: absolute;
     right: 35px;
