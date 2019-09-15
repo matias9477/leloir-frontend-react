@@ -1,30 +1,59 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import MenuLateral from "../MenuLateral";
-import {Button, Header, Pagination, Icon, Input} from "semantic-ui-react";
+import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import './../styles.css';
+import {convertStyleString} from './../../Services/MetodosPaciente';
 import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
+import {arrayOf, number, oneOf, shape, string} from "prop-types";
+import {determinacionType} from "../../types";
+
+
+const nroPorPagina = [
+    {
+        key: 10,
+        text: '10',
+        value: 10,
+    },
+    {
+        key: 25,
+        text: '25',
+        value: 25,
+    },
+    {
+        key: 50,
+        text: '50',
+        value: 50,
+    },
+    {
+        key: 100,
+        text: '100',
+        value: 100,
+    }
+];
 
 class Determinaciones extends Component {
     constructor(props) {
         super(props);
         this.state = {
             determinaciones: [],
-            limit: 25,
+            limit: nroPorPagina[0].value,
             activePage: 1,
             totalCount: 0,
             sortParams: {
                 direction: undefined
-            }
+            },
+            filtro: '',
+            determinacionesFiltrados: []
         };
         this.cambioLimite = this.cambioLimite.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
-        // this.handleSearch = this.handleSearch.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getAllDeterminaciones()
     }
 
@@ -32,25 +61,27 @@ class Determinaciones extends Component {
         axios.get(urlDeterminaciones).then((response) => {
             this.setState({
                 determinaciones: Object.values(response.data).flat(),
+                determinacionesFiltrados: Object.values(response.data).flat(),
                 totalCount: (Object.values(response.data).flat()).length,
             });
 
-
+            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.determinacionId], ["asc"]);
             let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.determinacionId], ["asc"]);
 
             this.setState({
-                determinaciones: determinaciones,
+                determinacionesFiltrados: filtro,
+                determinaciones: determinaciones
             })
         }, (error) => {
             console.log('Error', error.message);
         })
     };
 
-    cantdeterminacionIdadPorPagina() {
+    cantidadPorPagina() {
         return (
             <div className='rightAlign'>
-                CantdeterminacionIdad de determinaciones por página: &nbsp;&nbsp;
-                <select determinacionId='int' onChange={this.cambioLimite} value={this.state.limit}
+                Cantidad de determinaciones por página: &nbsp;&nbsp;
+                <select id='int' onChange={this.cambioLimite} value={this.state.limit}
                         className='selectCantdeterminacionIdad'>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -60,18 +91,36 @@ class Determinaciones extends Component {
             </div>
 
         )
-    }
+    };
 
-    cambioLimite(e) {
+    cantidadPorPagina1() {
+        return (
+            <div className='rightAlign'>
+                <span>
+                    Cantidad de determinaciones por página{' '}
+                    <Dropdown
+                        inline
+                        options={nroPorPagina}
+                        defaultValue={nroPorPagina[0].value}
+                        onChange={this.cambioLimite} value = {this.state.limit}
+                    />
+                </span>
+            </div>
+
+        )
+    };
+
+
+    cambioLimite(e, data) {
         this.setState({
-            limit: e.target.value,
+            limit: data.value,
             activePage: 1,
         });
         return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
 
     loadData(from, to) {
-        return (this.state.determinaciones.slice(from, to))
+        return (this.state.determinacionesFiltrados.slice(from, to))
     }
 
     onChangePage = (e, {activePage}) => {
@@ -87,46 +136,38 @@ class Determinaciones extends Component {
 
     handleColumnHeaderClick(sortKey) {
         const {
-            determinaciones,
+            determinacionesFiltrados,
             sortParams: {direction}
         } = this.state;
 
         const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(determinaciones, [sortKey], [sortDirection]);
+        const sortedCollection = orderBy(determinacionesFiltrados, [sortKey], [sortDirection]);
 
         this.setState({
-            determinaciones: sortedCollection,
+            determinacionesFiltrados: sortedCollection,
             sortParams: {
                 direction: sortDirection
             }
         });
     }
 
-    // estado(bitAlta) {
-    //     if (bitAlta) {
-    //         return "Dar de baja"
-    //     } else {
-    //         return "Dar de alta"
-    //     }
-    // }
+    handleSearch(valor) {
+        this.setState({
+            filtro: valor.target.value,
+        });
 
-    // handleSearch(valor) {
-    //     this.setState({
-    //         filtro: valor.target.value,
-    //     });
-    //
-    //     var pac = this.state.determinaciones.filter(function (determinacion) {
-    //         return (determinacion.nombre.includes(valor.target.value) ||
-    //             determinacion.determinacionId.toString().includes(valor.target.value) ||
-    //             determinacion.metodologia.toString().includes(valor.target.value));
-    //     });
-    //
-    //     this.setState({
-    //         determinaciones: pac,
-    //         totalCount: pac.length,
-    //     })
-    //
-    // }
+        let det = this.state.determinaciones.filter(function (determinacion) {
+            return (determinacion.nombre.includes(convertStyleString(valor.target.value)) ||
+                determinacion.determinacionId.toString().includes(valor.target.value) ||
+                determinacion.metodologia.toString().includes(convertStyleString(valor.target.value)));
+        });
+
+        this.setState({
+            determinacionesFiltrados: det,
+            totalCount: det.length,
+        })
+
+    }
 
 
     render() {
@@ -139,12 +180,12 @@ class Determinaciones extends Component {
 
                     <Button as={Link} to='/' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
-                        <Icon name='user'/> Nueva Determinacion
+                        <Icon name='user'/> Nueva Determinación
                     </Button>
 
-                    <br></br>
-                    <br></br>
-                    <br></br>
+                    <br/>
+                    <br/>
+                    <br/>
 
                     <div className='union'>
                         <div className="ui icon input">
@@ -154,7 +195,7 @@ class Determinaciones extends Component {
                                    placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
 
                         </div>
-                        {this.cantdeterminacionIdadPorPagina()}
+                        {this.cantidadPorPagina1()}
                     </div>
 
                     <table className="ui single line table">
@@ -162,8 +203,8 @@ class Determinaciones extends Component {
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("determinacionId")}>Id</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
-                            <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodologia</th>
-                            <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripcion</th>
+                            <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
+                            <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
                         </tr>
                         </thead>
 
@@ -176,10 +217,10 @@ class Determinaciones extends Component {
                                 <td data-label="Nombre">
                                     {determinacion.nombre}
                                 </td>
-                                <td data-label="Metodologia">
+                                <td data-label="Metodología">
                                     {determinacion.metodologia}
                                 </td>
-                                <td data-label="Descripcion">
+                                <td data-label="Descripción">
                                     {determinacion.descripcion}
                                 </td>
                             </tr>
@@ -201,6 +242,17 @@ class Determinaciones extends Component {
     }
 }
 
-Determinaciones.propTypes = {};
+Determinaciones.propTypes = {
+    determinacion: determinacionType,
+    determinaciones: arrayOf(determinacionType),
+    determinacionesFiltrados: arrayOf(determinacionType),
+    limit: number,
+    activePage: number,
+    totalCount: number,
+    filtro: string,
+    sortParams: shape({
+        direction: oneOf(['asc', 'desc'])
+    })
+};
 
 export default Determinaciones;
