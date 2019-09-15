@@ -3,12 +3,11 @@ import { Menu , Image} from 'semantic-ui-react'
 //import {BrowserRouter as Router, Link} from 'react-router-dom';
 import {Link} from 'react-router-dom'
 import '../App.css';
-
 export default class MenuLateral extends Component {
 
-    state = { activeItem: 'home' }
+    state = { activeItem: '' }
   
-    handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+    handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   
     render() {
       const { activeItem } = this.state
@@ -16,13 +15,15 @@ export default class MenuLateral extends Component {
       return (
         
         //<Router>
-        <Menu pointing vertical>
+        <div className="Menu">
+        <Menu inverted >
             <Menu.Item name='home'
               as= {Link} to='/'
               active={activeItem==='home'}
               onClick={this.handleItemClick}
+              
               >
-              <Image src="/android-chrome-192x192.png" size='tiny' centered/>              
+              <Image src="/android-chrome-192x192.png" size='mini' centered/>              
             </Menu.Item>
        
 
@@ -58,7 +59,9 @@ export default class MenuLateral extends Component {
             />
 
         </Menu>
-        //</Router>
+        
+        </div>
+        // </Router>
         
       )
     }
