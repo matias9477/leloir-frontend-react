@@ -1,5 +1,5 @@
 // ./src/Types/index.js
-import {shape, number, string, oneOf as PropTypes} from 'prop-types';
+import {number, shape, string} from 'prop-types';
 
 
 export const determinacionType = shape({
@@ -10,4 +10,3 @@ export const determinacionType = shape({
     resultado: number,
     protocoloId: number
 });
-

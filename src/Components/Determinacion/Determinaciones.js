@@ -8,7 +8,7 @@ import {convertStyleString} from './../../Services/MetodosPaciente';
 import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
 import {arrayOf, number, oneOf, shape, string} from "prop-types";
-import {determinacionType} from "../../types";
+import {determinacionType} from "../../Types";
 
 
 const nroPorPagina = [
@@ -78,22 +78,6 @@ class Determinaciones extends Component {
     };
 
     cantidadPorPagina() {
-        return (
-            <div className='rightAlign'>
-                Cantidad de determinaciones por página: &nbsp;&nbsp;
-                <select id='int' onChange={this.cambioLimite} value={this.state.limit}
-                        className='selectCantdeterminacionIdad'>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
-
-        )
-    };
-
-    cantidadPorPagina1() {
         return (
             <div className='rightAlign'>
                 <span>
@@ -195,7 +179,7 @@ class Determinaciones extends Component {
                                    placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
 
                         </div>
-                        {this.cantidadPorPagina1()}
+                        {this.cantidadPorPagina()}
                     </div>
 
                     <table className="ui single line table">
