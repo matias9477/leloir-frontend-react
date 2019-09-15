@@ -8,7 +8,7 @@ import MenuLateral from '../MenuLateral';
 import {Link} from 'react-router-dom';
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from './../../Services/MetodosPaciente';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from '../../Services/MetodosPaciente';
 import './../styles.css';
 
 class FormAlta extends Component {

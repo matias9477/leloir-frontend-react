@@ -3,10 +3,10 @@ import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-r
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
 import MenuLateral from '../MenuLateral';
-import { convertStyleString } from './../../Services/MetodosPaciente';
+import { convertStyleString } from '../../Services/MetodosPaciente';
 import './../styles.css';
 
-export default class Tabla2 extends React.Component {
+export default class TablaPaciente extends React.Component {
     constructor(props){
         super(props);
         this.state = {

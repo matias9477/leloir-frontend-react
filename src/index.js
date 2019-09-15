@@ -6,9 +6,9 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import AuthenticatedRoute from './Services/AuthenticatedRoute';
 import LoginForm from './Components/Login/LoginLayout';
-import Tabla2 from './Components/TablaPaciente/Tabla2';
-import FormAlta from './Components/AltaPaciente/FormAlta';
-import FormConsulta from './Components/ConsultaPaciente/FormConsulta';
+import TablaPaciente from './Components/Paciente/TablaPaciente';
+import FormAlta from './Components/Paciente/FormAlta';
+import FormConsulta from './Components/Paciente/FormConsulta';
 
 
 ReactDOM.render(
@@ -17,7 +17,7 @@ ReactDOM.render(
         <Switch>
         <AuthenticatedRoute exact path="/" component={App}/>
         <Route path="/login" component={LoginForm}/>
-        <AuthenticatedRoute exact path="/pacientes" component={Tabla2}/>
+        <AuthenticatedRoute exact path="/pacientes" component={TablaPaciente}/>
         <AuthenticatedRoute exact path="/pacientes/add" component={FormAlta}/>
         <AuthenticatedRoute exact path="/pacientes/consulta/:id" component={FormConsulta}/>
         </Switch>
