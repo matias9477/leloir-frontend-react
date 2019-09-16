@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import MenuLateral from '../MenuLateral';
+import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
-import { validateRazonSocial, validateCuit, emptyToNull} from './../../Services/MetodosPaciente';
+import { validateRazonSocial, validateCuit, emptyToNull} from './../../Services/MetodosObraSocial';
 import './../styles.css';
 
 class AltaObraSocial extends Component {
@@ -141,7 +141,7 @@ class AltaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuLateral/>
+        <MenuOpciones/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>

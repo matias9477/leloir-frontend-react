@@ -14,20 +14,6 @@
     return true
   }
 
-  export function validateRazonSocial(nom){
-    if (nom.length === 0 || nom === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateCuit(nom){
-    if (nom.length === 0 || nom === ''){
-      return false
-    }
-    return true
-  }
-
   export function validateApellido(ap){
     if (ap.length === 0 || ap === ''){
       return false

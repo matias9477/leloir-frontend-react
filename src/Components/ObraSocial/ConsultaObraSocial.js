@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import './../styles.css';
-import MenuLateral from '../MenuLateral';
-import { validateRazonSocial  } from '../../Services/MetodosPaciente';
+import MenuOpciones from '../MenuOpciones';
+import { validateRazonSocial, validateCuit  } from '../../Services/MetodosObraSocial';
 import {Link} from 'react-router-dom';
 
 
@@ -24,6 +24,7 @@ class ConsultaObraSocial extends Component {
         cuit:'',
         
         errorNombre: true,
+        errorCuit: true,
         
       })
     this.cambioId = this.cambioId.bind(this);
@@ -55,7 +56,7 @@ class ConsultaObraSocial extends Component {
 
           <Form.Field required label='Razon Social' control='input' disabled={this.state.modificacion}  value={this.state.razonSocial} onChange={this.cambioRazonSocial} className= {this.state.errorNombre ? null : 'error'}/>
 
-          <Form.Field required label='Cuit' control='input' disabled={this.state.modificacion}  value={this.state.cuit} onChange={this.cambioCuit}/>
+          <Form.Field required label='Cuit' control='input' disabled={this.state.modificacion}  value={this.state.cuit} onChange={this.cambioCuit} className= {this.state.errorCuit ? null : 'error'}/>
         
           <Form.Field  label='Telefono' control='input' disabled={this.state.modificacion} value={this.state.telefono || ''} onChange={this.cambioTelefono}/>
 
@@ -116,6 +117,7 @@ class ConsultaObraSocial extends Component {
       modificacion: true,
       cambios: false,
       errorNombre: true,
+      errorCuit: true,
     })
     if (this.state.cambios){
       const api = "/obras_sociales/id/" + this.props.match.params.id ;
@@ -134,10 +136,11 @@ class ConsultaObraSocial extends Component {
   modificarObraSocial = (e) => {
     e.preventDefault();
     var data;
-    const { razonSocial } = this.state;
+    const { razonSocial, cuit } = this.state;
     const errorNombre = validateRazonSocial(razonSocial);
+    const errorCuit = validateCuit(cuit);
 
-    if ( errorNombre ) {
+    if ( errorNombre && errorCuit ) {
         data = {
           "razonSocial": this.state.razonSocial,
           "idObraSocial": this.state.id,
@@ -172,12 +175,14 @@ class ConsultaObraSocial extends Component {
           cancelar: true,
           cambios: false,
           errorNombre: true,
+          errorCuit: true,
         })
       
     } else {
       alert("Revise los datos ingresados.")
       this.setState ({ 
-        errorNombre
+        errorNombre,
+        errorCuit
       })
     }    
 
@@ -246,7 +251,7 @@ class ConsultaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuLateral/>
+        <MenuOpciones/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>

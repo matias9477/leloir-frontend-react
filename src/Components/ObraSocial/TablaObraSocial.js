@@ -2,8 +2,7 @@ import React from 'react';
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
-import MenuLateral from '../MenuLateral';
-import { convertStyleString } from './../../Services/MetodosPaciente';
+import MenuOpciones from '../MenuOpciones';
 import { urlObrasSoc } from './../../Constants/URLs';
 import './../styles.css';
 
@@ -179,9 +178,9 @@ export default class TablaObraSocial extends React.Component {
     render(){
         return(
             <div className='union'>
-                <MenuLateral/>
+                <MenuOpciones/>
 
-                <div className='tablaPacientes'>
+                <div className='tablaListadoHistorico'>
 
                     <Header as='h2'>Obras Sociales</Header>
                     
