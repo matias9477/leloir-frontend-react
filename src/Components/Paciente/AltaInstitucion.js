@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuLateral from '../MenuLateral';
-import {Link} from 'react-router-dom';
-
-import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from '../../Services/MetodosPaciente';
+import { Button, Header, Form } from 'semantic-ui-react'
+import { getCurrentDate, emptyToNull, validateName, convertStyleString} from '../../Services/MetodosPaciente';
 import './../styles.css';
 
 class AltaInstitucion extends Component {
@@ -16,11 +9,11 @@ class AltaInstitucion extends Component {
     super(props);
     this.state = ({
         nombre: '',
-        fechaAlta:'',
         telefono:'',
         mail:'',
-        direccion: '',
         fax: '',
+
+        direccion: '',
         historial: [],
         
         errorNombre: true,
@@ -33,40 +26,6 @@ class AltaInstitucion extends Component {
     this.cambioFax = this.cambioFax.bind(this);
 
   }
-  
-  renderForm(){
-    return (
-      <div className='Formularios'>
-        <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to='/pacientes' exact='true' floated='left' icon labelPosition='left' primary size='small'>
-            <Icon name='arrow alternate circle left' /> Volver
-          </Button>
-
-          <Header as='h3' dividing>Registrar nueva Institución</Header>
-        </Container>
-
-        <Form onSubmit={this.fetchPaciente}>
-
-          <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
-          
-
-          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
-
-
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>   
-
-          <Form.Field required label='Fax' control='input' 
-          placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} />    
-          
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Institución</Button >       
-
-        </Form>  
-      </div>
-
-    );
-  }
-
   
   handleUpdateClick = (api) => {
     var data = {
@@ -122,7 +81,6 @@ class AltaInstitucion extends Component {
       telefono:'',
       mail:'',
       fax: '',
-      paciente: [],
       errorNombre: true,
     })
   }
@@ -151,20 +109,34 @@ class AltaInstitucion extends Component {
     })
   }
 
-
-  render() {
-    
+   
+  render(){
     return (
-      <div className='union'>
-        <MenuLateral/>
-        <div className="FormAlta">
-          {this.renderForm()}
-        </div>
-      
-      
+      <div className='altasPaciente'>
+        <Header as='h3' dividing>Registrar nueva Institución</Header>
+       
+        <Form onSubmit={this.fetchPaciente}>
+
+          <Form.Field required label='Nombre' control='input' 
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
+          
+          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
+
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>   
+
+          <Form.Field label='Fax' control='input' 
+          placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} />    
+          
+          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Institución</Button >       
+
+        </Form>  
       </div>
+
     );
   }
+
+
+
 
 }
 

@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuLateral from '../MenuLateral';
-import {Link} from 'react-router-dom';
-import { getCurrentDate, emptyToNull,  validateName, convertStyleString} from '../../Services/MetodosPaciente';
+import { Button, Header, Form } from 'semantic-ui-react'
+import { getCurrentDate, emptyToNull,  validateName, validateTipoAnimal, validatePropietario, convertStyleString} from '../../Services/MetodosPaciente';
+import { urlTiposAnimales } from './../../Constants/URLs';
 import './../styles.css';
 
 class AltaAnimal extends Component {
@@ -14,14 +10,17 @@ class AltaAnimal extends Component {
     super(props);
     this.state = ({
         nombre: '',
-        fechaAlta:'',
         telefono:'',
         mail:'',
         propietario: '',
         tipo: '',
         idTipo: '',
 
+        tipos:[],
+
         errorNombre: true,
+        errorTipo: true,
+        errorPropietario: true,
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -31,39 +30,21 @@ class AltaAnimal extends Component {
     this.cambioMail = this.cambioMail.bind(this);
   } 
 
+  comboTipos = () =>{
+    // fetch(urlTiposAnimales).then ( resolve => {
+    //     if(resolve.ok) { 
+    //         return resolve.json();
+    //     } else {
+    //         throw Error(resolve.statusText);
+    //     }
+    // }).then(tiposAnimales => {
+    //    this.setState({tipos:tiposAnimales}) 
+    // })
+  }
 
-  renderForm(){
-    return (
-      <div className='Formularios'>
-        <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to='/pacientes' exact='true' floated='left' icon labelPosition='left' primary size='small'>
-            <Icon name='arrow alternate circle left' /> Volver
-          </Button>
+  componentWillMount() {
+    //this.comboTipos();
 
-          <Header as='h3' dividing>Registrar nuevo animal</Header>
-        </Container>
-
-        <Form onSubmit={this.fetchPaciente}>
-
-          <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
-        
-          <Form.Field required label='Tipo Animal' control='input'
-          placeholder='Tipo Animal' value={this.state.tipo} onChange={this.cambioTipo} />
-
-          <Form.Field required label='Propietario' control='input' placeholder='Propietario' value={this.state.propietario} onChange={this.cambioPropietario}>
-          </Form.Field>
-
-          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
-
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
-          
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
-
-        </Form>  
-      </div>
-
-    );
   }
 
   handleUpdateClick = (api) => {
@@ -103,16 +84,20 @@ class AltaAnimal extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const { nombre } = this.state;
+    const { nombre, tipo, propietario } = this.state;
     const errorNombre = validateName(nombre);
+    const errorTipo = validateTipoAnimal(tipo);
+    const errorPropietario = validatePropietario(propietario);
 
-    if ( errorNombre ) {
+    if ( errorNombre && errorTipo && errorPropietario ) {
       const api = '/pacientes/add';
       this.handleUpdateClick(api);
       
     } else {
       this.setState ({ 
-        errorNombre
+        errorNombre,
+        errorTipo,
+        errorPropietario,
       })
     }    
   }
@@ -125,8 +110,9 @@ class AltaAnimal extends Component {
       propietario: '',
       telefono:'',
       mail:'',
-      paciente: [],
       errorNombre: true,
+      errorTipo: true,
+      errorPropietario: true,
     })
   }
  
@@ -160,20 +146,39 @@ class AltaAnimal extends Component {
     })
   }
 
+  
 
-  render() {
-    
+  render(){
     return (
-      <div className='union'>
-        <MenuLateral/>
-        <div className="FormAlta">
-          {this.renderForm()}
-        </div>
-      
-      
+      <div className='altasPaciente'>
+        <Header as='h3' dividing>Registrar nuevo Animal</Header>
+
+        <Form onSubmit={this.fetchPaciente}>
+
+          <Form.Field required label='Nombre' control='input' 
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
+        
+          <Form.Field required label='Tipo Animal' control='select' placeholder = 'Tipo animal' value={this.state.tipo} onChange={this.cambioTipo} className= {this.state.errorTipo ? null : 'error' }>
+            <option value={null}>  </option>
+            {this.state.tipos.map(item => (
+            <option key={item.Id}>{item.nombre}</option>))}
+          </Form.Field>
+
+          <Form.Field required label='Propietario' control='input' placeholder='Propietario' value={this.state.propietario} onChange={this.cambioPropietario} className= {this.state.errorPropietario ? null : 'error' }>
+          </Form.Field>
+
+          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
+
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+          
+          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Animal</Button >       
+
+        </Form>  
       </div>
+
     );
   }
+
 
 }
 

@@ -7,6 +7,20 @@
     return alta + "T00:00:00";
   }
 
+  export function validateTipoAnimal(tipo){
+    if (tipo.length === 0 || tipo === ''){
+      return false
+    }
+    return true
+  }
+
+  export function validatePropietario(nombre){
+    if (nombre.length === 0 || nombre === ''){
+      return false
+    }
+    return true
+  }
+
   export function validateName(nom){
     if (nom.length === 0 || nom === ''){
       return false
