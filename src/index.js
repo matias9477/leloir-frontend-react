@@ -20,6 +20,7 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/pacientes" component={Tabla2}/>
         <AuthenticatedRoute exact path="/pacientes/add" component={FormAlta}/>
         <AuthenticatedRoute exact path="/pacientes/consulta/:id" component={FormConsulta}/>
+        <AuthenticatedRoute exact path="/determinaciones" component={Determinaciones}/>
         <AuthenticatedRoute exact path="/determinaciones" component={DeterminacionesContainer}/>
         </Switch>
     </Router>
