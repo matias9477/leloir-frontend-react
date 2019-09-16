@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Grid, Col, Row } from 'react-flexbox-grid';
 import FormConsulta from './ConsultaPaciente/FormConsulta';
-import MenuLateral from './MenuLateral';
+import MenuOpciones from './MenuOpciones';
 //import FormAlta from './AltaPaciente/FormAlta';
 
 function ConsultaPaciente() {
@@ -23,7 +23,7 @@ function ConsultaPaciente() {
       </Row>
         <Row>
           <Col xs = {2} md={3} className="Menu">
-            <MenuLateral/>
+            <MenuOpciones/>
           </Col>
           <Col xs={9} md={9}>
             <Paper elevation={4}>
