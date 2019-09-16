@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import MenuLateral from "../MenuLateral";
+import MenuLateral from "../MenuOpciones";
 import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import './../styles.css';
@@ -158,7 +158,7 @@ class Determinaciones extends Component {
         return (
             <div className='union'>
                 <MenuLateral/>
-                <div className='tablaDeterminaciones'>
+                <div className='tablaListadoHistorico'>
 
                     <Header as='h2'>Determinaciones</Header>
 

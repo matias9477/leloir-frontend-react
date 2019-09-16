@@ -47,10 +47,7 @@ body{
 
 .tablaListadoHistorico{
     width: 100%;
-    margin-left: 25px;
-    margin-right: 25px;
-    margin-bottom: 25px;
-    margin-top: 90px;
+    margin: 90px 25px 25px;
 }
 
 .tablaDeterminaciones{

@@ -2,7 +2,7 @@
   "name": "react-form",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://leloir-be-dev.us-east-2.elasticbeanstalk.com",
   "devDependencies": {
     "react-scripts": "3.0.1"
   },
