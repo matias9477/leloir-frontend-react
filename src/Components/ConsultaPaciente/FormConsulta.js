@@ -5,7 +5,7 @@ import { addDays } from 'date-fns';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import './../styles.css';
 import { getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate } from './../../Services/MetodosPaciente';
-import MenuLateral from '../MenuLateral';
+import MenuOpciones from '../MenuOpciones';
 import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
 import {Link} from 'react-router-dom';
 
@@ -516,7 +516,7 @@ class FormConsulta extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuLateral/>
+        <MenuOpciones/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>
