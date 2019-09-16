@@ -4,9 +4,10 @@ body{
 }
 
 .Formularios{
-    width: 100%;
-    margin-left: 100px;
-    margin-top: 35px;
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 100px;
 }
 
 .altasPaciente{ 
@@ -16,7 +17,7 @@ body{
 }
 
 .FormAlta{
-    width: 50%;
+    width: 100%;
 }
 
 .login{
@@ -50,9 +51,12 @@ body{
     color: rgb(196, 195, 193);
 }
 
-.tablaPacientes{
-    width: 78%;
-    margin: 25px;
+.tablaListadoHistorico{
+    width: 100%;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    margin-top: 90px;
 }
 
 .rightAlign{

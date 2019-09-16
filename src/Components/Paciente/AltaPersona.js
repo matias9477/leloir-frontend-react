@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import MenuOpciones from '../MenuOpciones';
+import {Link} from 'react-router-dom';
+
 import { Button, Form, Header } from 'semantic-ui-react'
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
 import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from '../../Services/MetodosPaciente';
@@ -111,12 +116,12 @@ class AltaPersona extends Component {
     this.fillCombos();
 
   }
-  
+
   handleUpdateClick = (api) => {
     var data;
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
-        "type": "com.leloir.backend.domain.Persona",	
+        "type": "com.leloir.backend.domain.Persona",
         "nombre": convertStyleString(this.state.nombre),
         "apellido": convertStyleString(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
@@ -146,7 +151,7 @@ class AltaPersona extends Component {
     };
     } else {
       data = {
-        "type": "com.leloir.backend.domain.Persona",	
+        "type": "com.leloir.backend.domain.Persona",
         "nombre": convertStyleString(this.state.nombre),
         "apellido": convertStyleString(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
@@ -307,7 +312,7 @@ class AltaPersona extends Component {
       })
   }
 
-  
+
   render(){
     return (
       <div className='altasPaciente'>
@@ -315,7 +320,7 @@ class AltaPersona extends Component {
 
         <Form onSubmit={this.fetchPaciente}>
 
-          <Form.Field required label='Nombre' control='input' 
+          <Form.Field required label='Nombre' control='input'
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
 
           <Form.Field required label='Apellido' control='input'
@@ -347,22 +352,22 @@ class AltaPersona extends Component {
             <label>Fecha de Nacimiento</label>
               <DatePicker placeholderText="Fecha de Nacimiento"
               selected={this.state.fechaNacimiento} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
-              </DatePicker> 
+              </DatePicker>
           </Form.Field>
 
           <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
 
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>      
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>
 
           <Form.Field label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
               {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-          </Form.Field>  
-          
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >       
+          </Form.Field>
 
-        </Form>  
+          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >
+
+        </Form>
       </div>
 
     );
