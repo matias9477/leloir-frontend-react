@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MenuLateral from '../../MenuLateral';
+import Afluencia from './Afluencia';
 
 class LPSecretaria extends Component {
     constructor(props) {
@@ -40,6 +41,7 @@ class LPSecretaria extends Component {
         return (
             <div>
                 <MenuLateral/>
+                <Afluencia/>
             </div>
         );
     }
