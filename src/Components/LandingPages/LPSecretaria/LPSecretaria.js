@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MenuLateral from '../../MenuLateral';
+import MenuOpciones from '../../MenuOpciones';
 import Afluencia from './Afluencia';
 
 class LPSecretaria extends Component {
@@ -40,7 +40,6 @@ class LPSecretaria extends Component {
     render() {
         return (
             <div>
-                <MenuLateral/>
                 <Afluencia/>
             </div>
         );
