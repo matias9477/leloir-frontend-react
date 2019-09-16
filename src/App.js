@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
 import 'semantic-ui-css/semantic.min.css';
-//import LoginForm from './Components/Login/LoginLayout';
-import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria';
+import MenuOpciones from './Components/MenuOpciones';
+
 
 function App(){
   return(
     <div className="App">
-      <LPSecretaria/>
+      <MenuOpciones></MenuOpciones>
     </div>
   );
 }
