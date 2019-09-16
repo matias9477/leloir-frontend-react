@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuLateral from '../MenuLateral';
+import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
 
 import { validateName, validateDescripcion, validateMetodologia, validateValor, validateProtocoloId, convertStyleString} from './../../Services/MetodosDeterminacion';
@@ -177,7 +177,7 @@ class FormAlta extends Component {
     
     return (
       <div className='union'>
-        <MenuLateral/>
+        <MenuOpciones/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>
