@@ -65,8 +65,8 @@ class Determinaciones extends Component {
                 totalCount: (Object.values(response.data).flat()).length,
             });
 
-            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.determinacionId], ["asc"]);
-            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.determinacionId], ["asc"]);
+            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.id], ["asc"]);
+            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.id], ["asc"]);
 
             this.setState({
                 determinacionesFiltrados: filtro,
@@ -142,7 +142,7 @@ class Determinaciones extends Component {
 
         let det = this.state.determinaciones.filter(function (determinacion) {
             return (determinacion.nombre.includes(convertStyleString(valor.target.value)) ||
-                determinacion.determinacionId.toString().includes(valor.target.value) ||
+                determinacion.id.toString().includes(valor.target.value) ||
                 determinacion.metodologia.toString().includes(convertStyleString(valor.target.value)));
         });
 
@@ -185,7 +185,7 @@ class Determinaciones extends Component {
                     <table className="ui single line table">
                         <thead className='centerAlignment'>
                         <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("determinacionId")}>Id</th>
+                            <th onClick={() => this.handleColumnHeaderClick("id")}>Id</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
                             <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
@@ -196,7 +196,7 @@ class Determinaciones extends Component {
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((determinacion, index) => (
                             <tr key={index} determinacion={determinacion}>
                                 <td data-label="Número determinacion">
-                                    {determinacion.determinacionId}
+                                    {determinacion.id}
                                 </td>
                                 <td data-label="Nombre">
                                     {determinacion.nombre}
@@ -219,7 +219,6 @@ class Determinaciones extends Component {
                         onPageChange={this.onChangePage}
                     />
                 </div>
-
 
             </div>
         );
