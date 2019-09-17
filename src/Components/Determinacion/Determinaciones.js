@@ -85,7 +85,6 @@ class Determinaciones extends Component {
                     <Dropdown
                         inline
                         options={nroPorPagina}
-                        defaultValue={nroPorPagina[0].value}
                         onChange={this.cambioLimite} value = {this.state.limit}
                     />
                 </span>
@@ -164,7 +163,7 @@ class Determinaciones extends Component {
 
                     <Button as={Link} to='/' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
-                        <Icon name='user'/> Nueva Determinación
+                        <Icon name='lab'/> Nueva Determinación
                     </Button>
 
                     <br/>
