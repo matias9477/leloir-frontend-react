@@ -16,7 +16,10 @@ class AltaInstitucion extends Component {
         direccion: '',
         historial: [],
         
-        errorNombre: true,
+        errorNombre: '',
+        errorTelefono: '',
+        errorMail: '',
+        errorFax: '',
         
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
@@ -24,6 +27,11 @@ class AltaInstitucion extends Component {
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioFax = this.cambioFax.bind(this);
+
+    this.handleBlurNombre = this.handleBlurNombre.bind(this);
+    this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
+    this.handleBlurMail =  this.handleBlurMail.bind(this);
+    this.handleBlurFax = this.handleBlurFax.bind(this);
 
   }
   
@@ -61,17 +69,18 @@ class AltaInstitucion extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const { nombre } = this.state;
-    const errorNombre = validateName(nombre);
+    const { errorNombre, errorMail, errorTelefono, errorFax } = this.state;
 
-    if ( errorNombre ) {
+    this.handleBlurNombre()
+    this.handleBlurMail()
+    this.handleBlurTelefono()
+    this.handleBlurFax()
+
+    if ( errorNombre && errorMail && errorTelefono && errorFax ) {
       const api = '/pacientes/add';
       this.handleUpdateClick(api);
-      
     } else {
-      this.setState ({ 
-        errorNombre
-      })
+      alert("Verifique los datos ingresados.")
     }    
   }
 
@@ -81,7 +90,10 @@ class AltaInstitucion extends Component {
       telefono:'',
       mail:'',
       fax: '',
-      errorNombre: true,
+      errorNombre: '',
+      errorTelefono: '',
+      errorMail: '',
+      errorFax: '',
     })
   }
  
@@ -109,6 +121,60 @@ class AltaInstitucion extends Component {
     })
   }
 
+  hasNumbers(t){
+    return /\d/.test(t);
+  }
+
+  handleBlurNombre = () => {
+    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  this.hasNumbers(this.state.nombre)){
+      this.setState({ errorNombre: false })
+    } else {
+      this.setState({errorNombre: true})
+    }
+  }
+
+  handleBlurTelefono = () => {
+    if (this.state.telefono === ''){
+      this.setState({ errorTelefono: true })
+    } else if (isFinite(String(this.state.telefono))){
+      this.setState({ errorTelefono: true })
+    } else {
+      this.setState({
+        errorTelefono: false
+      })
+    }
+  }
+
+  handleBlurMail = () => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if(this.state.mail === ''){
+      this.setState({
+        errorMail: true,
+      })
+    } else if ( re.test(this.state.mail) ) {
+        this.setState({
+          errorMail: true,
+        })
+    } else {
+      this.setState({
+        errorMail: false,
+      })
+    } 
+  }
+
+  handleBlurFax = () => {
+    if (this.state.fax === ''){
+      this.setState({ errorFax: true })
+    } else if (isFinite(String(this.state.fax))){
+      this.setState({ errorFax: true })
+    } else {
+      this.setState({
+        errorFax: false
+      })
+    }
+  }
+
    
   render(){
     return (
@@ -118,14 +184,14 @@ class AltaInstitucion extends Component {
         <Form onSubmit={this.fetchPaciente}>
 
           <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {this.state.errorNombre ? null : 'error'} />
+          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
           
-          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono}/>
+          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error'} onBlur={this.handleBlurTelefono}/>
 
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail}/>   
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail === '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>   
 
           <Form.Field label='Fax' control='input' 
-          placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} />    
+          placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} className= {(this.state.errorFax=== '' || this.state.errorFax === true) ? null : 'error'} onBlur={this.handleBlurFax}/>    
           
           <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Institución</Button >       
 

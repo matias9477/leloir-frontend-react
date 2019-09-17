@@ -107,15 +107,15 @@ class AltaPersona extends Component {
   }
 
   comboTiposDocs = () =>{
-  fetch(urlDocs).then ( resolve => {
-      if(resolve.ok) { 
-          return resolve.json();
-      } else {
-          throw Error(resolve.statusText);
-      }
-  }).then(tipos => {
-      this.setState({documentos:tipos})
-  })
+    fetch(urlDocs).then ( resolve => {
+        if(resolve.ok) { 
+            return resolve.json();
+        } else {
+            throw Error(resolve.statusText);
+        }
+    }).then(tipos => {
+        this.setState({documentos:tipos})
+    })
 
   }
 
@@ -228,21 +228,9 @@ class AltaPersona extends Component {
     this.handleBlurMail()
     this.handleBlurTelefono()
 
-    console.log(`Error nombre: ${errorNombre}`)
-    console.log(`Error apellido: ${errorApellido}`)
-    console.log(`Error tipo doc: ${errorTipoDoc}`)
-    console.log(`Error nro doc: ${errorNroDoc}`)
-    console.log(`Error fecha nacimiento: ${errorFechaNac}`)
-    console.log(`Error sexo: ${errorSexo}`)
-    console.log(`Error nacionalidad: ${errorNac}`)
-    console.log(`Error mail: ${errorMail}`)
-    console.log(`Error telefono: ${errorTelefono}`)
-    console.log('---------------------')
-
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       const api = '/pacientes/add';
       this.handleUpdateClick(api);
-      
     } else {
       alert('Verifique los datos ingresados.');
     }    
@@ -262,14 +250,14 @@ class AltaPersona extends Component {
       telefono:'',
       mail:'',
       obraSocial:'',
-      errorNombre: true,
-      errorApellido: true,
-      errorTipoDoc: true,
-      errorNroDoc: true,
-      errorSexo: true,
-      errorNac: true,
-      errorFechaNac: true,
-      errorMail: true,
+      errorNombre: '',
+      errorApellido: '',
+      errorTipoDoc: '',
+      errorNroDoc: '',
+      errorSexo: '',
+      errorNac: '',
+      errorFechaNac: '',
+      errorMail: '',
     })
   }
  
