@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form, Icon, Container } from 'semantic-ui-react'
-import MenuLateral from '../MenuLateral';
+import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
 import AltaPersona from './AltaPersona';
 import AltaAnimal from './AltaAnimal';
@@ -53,10 +53,10 @@ class FormAlta extends Component {
             {this.state.opciones.map(item => (
             <option key={item.key}>{item.value}</option>))}
           </Form.Field>
-
-          {this.getForm()}
-          
         </Form>  
+
+        {this.getForm()}
+        
       </div>
 
     );
@@ -73,7 +73,7 @@ class FormAlta extends Component {
     
     return (
       <div className='union'>
-        <MenuLateral/>
+        <MenuOpciones/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>      

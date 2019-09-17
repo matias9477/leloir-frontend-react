@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react'
 import { getCurrentDate, emptyToNull,  validateName, validateTipoAnimal, validatePropietario, convertStyleString} from '../../Services/MetodosPaciente';
-import { urlTiposAnimales } from './../../Constants/URLs';
 import './../styles.css';
 
 class AltaAnimal extends Component {

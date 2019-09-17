@@ -3,7 +3,7 @@ import axios from 'axios'
 import {Button, Dropdown, Header, Icon, Input, Pagination} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import {orderBy} from 'lodash';
-import MenuLateral from '../MenuLateral';
+import MenuOpciones from '../MenuOpciones';
 import {convertStyleString} from '../../Services/MetodosPaciente';
 import './../styles.css';
 import {animalType, institucionType, pacientesArrayType, personaType} from "../../Types";
@@ -176,9 +176,9 @@ export default class TablaPaciente extends React.Component {
     render() {
         return (
             <div className='union'>
-                <MenuLateral/>
+                <MenuOpciones/>
 
-                <div className='tablaPacientes'>
+                <div className='tablaListadoHistorico'>
 
                     <Header as='h2'>Pacientes</Header>
 
@@ -202,12 +202,11 @@ export default class TablaPaciente extends React.Component {
                         {this.cantidadPorPagina()}
                     </div>
 
-                    <table className="ui single line table">
+                    <table className="ui single line striped table">
                         <thead className='centerAlignment'>
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("id")}>Número Paciente</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
-                            <th onClick={() => this.handleColumnHeaderClick("apellido")}>Apellido</th>
                             <th onClick={() => this.handleColumnHeaderClick("nroDocumento")}>Número de Documento</th>
                             <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
                         </tr>
@@ -221,10 +220,7 @@ export default class TablaPaciente extends React.Component {
                                     {paciente.id}
                                 </td>
                                 <td data-label="Nombre">
-                                    {paciente.nombre}
-                                </td>
-                                <td data-label="Apellido">
-                                    {paciente.apellido}
+                                    {paciente.nombre}&nbsp;&nbsp;{paciente.apellido}
                                 </td>
                                 <td data-label="Número de Documento">
                                     {paciente.nroDocumento}
