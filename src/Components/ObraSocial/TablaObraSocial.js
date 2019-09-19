@@ -57,7 +57,7 @@ export default class TablaObraSocial extends React.Component {
     }
 
     bitInverse = obraSocial => {
-        fetch(`/obrasSociales/switch-alta/${obraSocial.id}`, {
+        fetch(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`, {
           method: 'PUT', 
           headers:{
           'Content-Type': 'application/json'
