@@ -9,30 +9,7 @@ import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
 import {arrayOf, number, oneOf, shape, string} from "prop-types";
 import {determinacionType} from "../../Types";
-
-
-const nroPorPagina = [
-    {
-        key: 10,
-        text: '10',
-        value: 10,
-    },
-    {
-        key: 25,
-        text: '25',
-        value: 25,
-    },
-    {
-        key: 50,
-        text: '50',
-        value: 50,
-    },
-    {
-        key: 100,
-        text: '100',
-        value: 100,
-    }
-];
+import {nroPorPagina} from "../../Constants/utils";
 
 class Determinaciones extends Component {
     constructor(props) {
