@@ -69,7 +69,7 @@ class AltaObraSocial extends Component {
         "razonSocial": titleCase(this.state.razonSocial),
         "cuit": this.state.cuit,
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail.toLowerCase()),
+        "email": emptyToNull(this.state.mail.toLowerCase()),
         "bitActivo": true
     };
 
@@ -81,7 +81,7 @@ class AltaObraSocial extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro la obra social ' + (this.state.razonSocial) + ' con éxito.'); 
+          alert('Se registro la obra social ' + titleCase(this.state.razonSocial) + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {
@@ -99,7 +99,6 @@ class AltaObraSocial extends Component {
     this.handleBlurCuit()
     this.handleBlurMail()
     this.handleBlurTelefono()
-    console.log('ra: '+ errorRazonSocial + ' cu: ' + errorCuit + ' tel: ' + errorTelefono + ' mail: ' + errorMail)
 
     if ( errorRazonSocial && errorCuit && errorMail && errorTelefono  ) {
       const api = '/obras_sociales/add';
