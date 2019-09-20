@@ -6,7 +6,6 @@ export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
 class AuthenticationService {
 
     executeJwtAuthenticationService(usernameOrEmail, password) {
-        console.log(usernameOrEmail);
         return axios.post(urlSignIn, {
             usernameOrEmail,
             password
@@ -19,6 +18,7 @@ class AuthenticationService {
     }
 
     createJWTToken(token) {
+        console.log('Bearer ' + token);
         return 'Bearer ' + token
     }
 
