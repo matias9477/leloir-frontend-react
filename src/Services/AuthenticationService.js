@@ -1,13 +1,14 @@
 import axios from 'axios'
+import {urlSignIn} from "../Constants/URLs";
 
 export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
 
 class AuthenticationService {
 
-    executeJwtAuthenticationService(username, password) {
-        console.log(username);
-        return axios.post('/authenticate', {
-            username,
+    executeJwtAuthenticationService(usernameOrEmail, password) {
+        console.log(usernameOrEmail);
+        return axios.post(urlSignIn, {
+            usernameOrEmail,
             password
         })
     }
