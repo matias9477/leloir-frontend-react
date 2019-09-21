@@ -119,7 +119,7 @@ class Determinaciones extends Component {
         let det = this.state.determinaciones.filter(function (determinacion) {
             return (determinacion.nombre.includes(convertStyleString(valor.target.value)) ||
                 determinacion.id.toString().includes(valor.target.value) ||
-                determinacion.metodologia.toString().includes(convertStyleString(valor.target.value)));
+                ( determinacion.metodologia !== null && determinacion.metodologia.toString().includes(convertStyleString(valor.target.value))));
         });
 
         this.setState({
