@@ -1,21 +1,3 @@
-  export function titleCase(str) {
-    var splitStr = str.toLowerCase().split(' ');
-    for (var i = 0; i < splitStr.length; i++) {
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
-    }
-    return splitStr.join(' '); 
-  }
-
-  export const validMail = /\S+@\S+\.\S+/;
-
-  export function hasNumbers(t){
-    return /\d/.test(t);
-  }
-
-  export function convertStyleString(palabra){
-    const cuerpo = palabra.slice(1);
-    return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
-  }
 
   export function fechaAltaDateStamp(alta){
     return alta + "T00:00:00";
@@ -204,13 +186,5 @@
     for(let i=0; i < sexos.length; i++){
       if (sexo === sexos[i].nombre)
         return sexos[i].sexoId;
-    }
-  }
-
-  export const emptyToNull = (v) => {
-    if (v === ''){
-      return v=null;
-    } else {
-      return v;
     }
   }

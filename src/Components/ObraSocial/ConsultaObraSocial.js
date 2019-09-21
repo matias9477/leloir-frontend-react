@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import './../styles.css';
 import MenuOpciones from '../MenuOpciones';
-import { titleCase, hasNumbers, validMail, emptyToNull  } from '../../Services/MetodosObraSocial';
+import { titleCase, hasNumbers, validMail, emptyToNull  } from '../../Services/MetodosDeValidacion';
 import {Link} from 'react-router-dom';
 
 
@@ -70,25 +70,17 @@ class ConsultaObraSocial extends Component {
     } else if (isFinite(String(this.state.telefono))){
       this.setState({ errorTelefono: true })
     } else {
-      this.setState({
-        errorTelefono: false
-      })
+      this.setState({errorTelefono: false })
     }
   }
 
   handleBlurMail = ( ) => {
     if(this.state.mail === '' || this.state.mail === null){
-      this.setState({
-        errorMail: true,
-      })
+      this.setState({errorMail: true})
     } else if ( validMail.test(this.state.mail) ) {
-        this.setState({
-          errorMail: true,
-        })
+        this.setState({ errorMail: true })
     } else {
-      this.setState({
-        errorMail: false,
-      })
+      this.setState({errorMail: false })
     } 
   }
 
@@ -133,7 +125,9 @@ class ConsultaObraSocial extends Component {
           </Button> : null}           
 
           {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => { 
-            this.cancelar(e)} }> X </Button> : null }     
+            this.cancelar(e)}}>
+              <Icon name={'cancel'} color='red'/>
+          </Button>: null }     
                    
       </Form>  
     </div>
@@ -191,21 +185,20 @@ class ConsultaObraSocial extends Component {
   
   modificarObraSocial = (e) => {
     e.preventDefault();
-    var data;
-    const { errorRazonSocial, errorCuit, errorMail, errorTelefono  } = this.state;
-    
+
     this.handleBlurRazonSocial()
     this.handleBlurCuit()
     this.handleBlurMail()
     this.handleBlurTelefono()
-    console.log(errorMail)
-    console.log(this.state.mail)
+    
+    const { errorRazonSocial, errorCuit, errorMail, errorTelefono  } = this.state;
 
+    var data;
     if ( errorRazonSocial && errorCuit && errorMail && errorTelefono ) {
         data = {
           "razonSocial": titleCase(this.state.razonSocial),
           "idObraSocial": this.state.id,
-          "email": emptyToNull(this.state.mail.toLowerCase()),
+          "email": emptyToNull(this.state.mail),
           "telefono": emptyToNull(this.state.telefono),
           "cuit": this.state.cuit,
           "bitActivo": true,
@@ -260,6 +253,10 @@ class ConsultaObraSocial extends Component {
         cuit: obraSocial.cuit,    
         isbottonPressed: false,
         estado: obraSocial.bitActivo,
+        errorRazonSocial: true,
+        errorCuit: true,
+        errorTelefono: true,
+        errorMail: true,
       })
     }).catch(function(error) {
       alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 

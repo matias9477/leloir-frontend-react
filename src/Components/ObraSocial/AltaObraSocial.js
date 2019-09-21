@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
-import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosObraSocial';
+import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaObraSocial extends Component {
