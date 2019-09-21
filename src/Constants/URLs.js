@@ -3,4 +3,4 @@
    export const urlObrasSoc = "/obras_sociales/all";
    export const urlPaises = "/paises/all";
    export const urlSexos = "/sexo/all";
-   export const urlTiposAnimales = "/"
+   export const urlTiposAnimales = "/tipos-animales/all"

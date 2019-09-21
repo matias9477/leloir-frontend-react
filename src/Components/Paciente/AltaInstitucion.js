@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react'
-import { getCurrentDate, emptyToNull, validateName, convertStyleString} from '../../Services/MetodosPaciente';
+import { getCurrentDate } from '../../Services/MetodosPaciente';
+import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaInstitucion extends Component {
@@ -17,9 +18,9 @@ class AltaInstitucion extends Component {
         historial: [],
         
         errorNombre: '',
-        errorTelefono: '',
-        errorMail: '',
-        errorFax: '',
+        errorTelefono: true,
+        errorMail: true,
+        errorFax: true,
         
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
@@ -40,10 +41,10 @@ class AltaInstitucion extends Component {
         "type": "com.leloir.backend.domain.Institucion",
         "fechaAlta": getCurrentDate(),
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail.toLowerCase()),
+        "mail": emptyToNull(this.state.mail),
         "historial": null,
         "bitAlta": true,
-        "nombre": convertStyleString(this.state.nombre),
+        "nombre": titleCase(this.state.nombre),
         "direccion": null,
         "fax": null
     };
@@ -57,7 +58,7 @@ class AltaInstitucion extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + convertStyleString(this.state.nombre) + ' con éxito.'); 
+          alert('Se registro el paciente ' + titleCase(this.state.nombre) + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {
@@ -69,12 +70,13 @@ class AltaInstitucion extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const { errorNombre, errorMail, errorTelefono, errorFax } = this.state;
-
+    
     this.handleBlurNombre()
     this.handleBlurMail()
     this.handleBlurTelefono()
     this.handleBlurFax()
+
+    const { errorNombre, errorMail, errorTelefono, errorFax } = this.state;
 
     if ( errorNombre && errorMail && errorTelefono && errorFax ) {
       const api = '/pacientes/add';
@@ -91,9 +93,9 @@ class AltaInstitucion extends Component {
       mail:'',
       fax: '',
       errorNombre: '',
-      errorTelefono: '',
-      errorMail: '',
-      errorFax: '',
+      errorTelefono: true,
+      errorMail: true,
+      errorFax: true,
     })
   }
  
@@ -121,12 +123,8 @@ class AltaInstitucion extends Component {
     })
   }
 
-  hasNumbers(t){
-    return /\d/.test(t);
-  }
-
   handleBlurNombre = () => {
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  this.hasNumbers(this.state.nombre)){
+    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
       this.setState({ errorNombre: false })
     } else {
       this.setState({errorNombre: true})
@@ -146,13 +144,11 @@ class AltaInstitucion extends Component {
   }
 
   handleBlurMail = () => {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if(this.state.mail === ''){
       this.setState({
         errorMail: true,
       })
-    } else if ( re.test(this.state.mail) ) {
+    } else if ( validMail.test(this.state.mail) ) {
         this.setState({
           errorMail: true,
         })

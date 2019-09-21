@@ -1,13 +1,13 @@
 import React from 'react';
 import axios from 'axios'
-import {Button, Dropdown, Header, Icon, Input, Pagination} from 'semantic-ui-react'
-import {Link} from 'react-router-dom';
-import {orderBy} from 'lodash';
+import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react'
+import { Link } from 'react-router-dom';
+import { orderBy } from 'lodash';
 import MenuOpciones from '../MenuOpciones';
-import {convertStyleString} from '../../Services/MetodosPaciente';
+import { titleCase, nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
-import {animalType, institucionType, pacientesArrayType, personaType} from "../../Types";
-import {oneOfType} from "prop-types";
+import { animalType, institucionType, pacientesArrayType, personaType } from "../../Types";
+import { oneOfType } from "prop-types";
 
 export default class TablaPaciente extends React.Component {
     constructor(props) {
@@ -160,7 +160,7 @@ export default class TablaPaciente extends React.Component {
         });
 
         const pac = this.state.pacientes.filter(function (paciente) {
-            return (paciente.nombre.includes(convertStyleString(valor.target.value)) || paciente.apellido.includes(convertStyleString(valor.target.value)) ||
+            return (paciente.nombre.includes(titleCase(valor.target.value)) || paciente.apellido.includes(titleCase(valor.target.value)) ||
                 paciente.id.toString().includes(valor.target.value) ||
                 paciente.nroDocumento.toString().includes(valor.target.value));
         });
@@ -193,8 +193,6 @@ export default class TablaPaciente extends React.Component {
 
                     <div className='union'>
                         <div className="ui icon input">
-
-
                             <Input value={this.state.filtro} onChange={this.handleSearch}
                                    placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
 
@@ -206,6 +204,7 @@ export default class TablaPaciente extends React.Component {
                         <thead className='centerAlignment'>
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("id")}>Número Paciente</th>
+                            <th >Tipo</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("nroDocumento")}>Número de Documento</th>
                             <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
@@ -219,11 +218,14 @@ export default class TablaPaciente extends React.Component {
                                 <td data-label="Número Paciente">
                                     {paciente.id}
                                 </td>
+                                <td data-label="Tipo">
+                                    {'tipo'}
+                                </td>
                                 <td data-label="Nombre">
                                     {paciente.nombre}&nbsp;&nbsp;{paciente.apellido}
                                 </td>
                                 <td data-label="Número de Documento">
-                                    {paciente.nroDocumento}
+                                    {nullTo(paciente.nroDocumento)}
                                 </td>
                                 <td>
                                     <Dropdown item icon='ellipsis horizontal' simple>

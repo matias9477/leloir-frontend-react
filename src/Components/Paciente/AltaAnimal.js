@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react'
-import { getCurrentDate, emptyToNull, convertStyleString} from '../../Services/MetodosPaciente';
+import { getCurrentDate } from '../../Services/MetodosPaciente';
+import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
+import { urlTiposAnimales } from './../../Constants/URLs';
 import './../styles.css';
 
 class AltaAnimal extends Component {
@@ -13,15 +15,14 @@ class AltaAnimal extends Component {
         mail:'',
         propietario: '',
         tipo: '',
-        idTipo: '',
 
         tipos:[],
 
         errorNombre: '',
-        errorTelefono: '',
-        errorTipo: '',
-        errorPropietario: '',
-        errorMail: '',
+        errorTelefono: true,
+        errorTipo: true,
+        errorPropietario: true,
+        errorMail: true,
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -38,19 +39,19 @@ class AltaAnimal extends Component {
   } 
 
   comboTipos = () =>{
-    // fetch(urlTiposAnimales).then ( resolve => {
-    //     if(resolve.ok) { 
-    //         return resolve.json();
-    //     } else {
-    //         throw Error(resolve.statusText);
-    //     }
-    // }).then(tiposAnimales => {
-    //    this.setState({tipos:tiposAnimales}) 
-    // })
+    fetch(urlTiposAnimales).then ( resolve => {
+        if(resolve.ok) { 
+            return resolve.json();
+        } else {
+            throw Error(resolve.statusText);
+        }
+    }).then(tiposAnimales => {
+       this.setState({tipos:tiposAnimales}) 
+    })
   }
 
   componentWillMount() {
-    //this.comboTipos();
+    this.comboTipos();
 
   }
 
@@ -60,9 +61,9 @@ class AltaAnimal extends Component {
         "bitAlta": true,
         "fechaAlta": getCurrentDate(),
         "historial": null,
-        "mail": emptyToNull(this.state.mail.toLowerCase()),
-        "nombre": convertStyleString(this.state.nombre),
-        "propietario": convertStyleString(this.state.propietario),
+        "mail": emptyToNull(this.state.mail),
+        "nombre": titleCase(this.state.nombre),
+        "propietario": titleCase(this.state.propietario),
         "telefono": emptyToNull(this.state.telefono),
         "tipoAnimal": {
             "nombre": this.state.tipo,
@@ -79,7 +80,7 @@ class AltaAnimal extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + convertStyleString(this.state.nombre)  + ' con éxito.'); 
+          alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {
@@ -91,13 +92,14 @@ class AltaAnimal extends Component {
 
   fetchPaciente(e){
     e.preventDefault();
-    const { errorNombre, errorTipo, errorPropietario, errorMail, errorTelefono } = this.state;
 
     this.handleBlurNombre()
     this.handleBlurMail()
     this.handleBlurPropietario()
     this.handleBlurTelefono()
     this.handleBlurTipos()
+    
+    const { errorNombre, errorTipo, errorPropietario, errorMail, errorTelefono } = this.state;
 
     if ( errorNombre && errorTipo && errorPropietario && errorMail && errorTelefono ) {
       const api = '/pacientes/add';
@@ -115,9 +117,11 @@ class AltaAnimal extends Component {
       propietario: '',
       telefono:'',
       mail:'',
-      errorNombre: true,
-      errorTipo: true,
+      errorNombre: '',
+      errorTipo: '',
       errorPropietario: true,
+      errorTelefono: true,
+      errorMail: true,
     })
   }
  
@@ -151,12 +155,8 @@ class AltaAnimal extends Component {
     })
   }
 
-  hasNumbers(t){
-    return /\d/.test(t);
-  }
-
   handleBlurNombre(){
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  this.hasNumbers(this.state.nombre)){
+    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
       this.setState({ errorNombre: false })
     } else {
       this.setState({errorNombre: true})
@@ -172,13 +172,11 @@ class AltaAnimal extends Component {
   }
 
   handleBlurMail = ( ) => {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if(this.state.mail === ''){
       this.setState({
         errorMail: true,
       })
-    } else if ( re.test(this.state.mail) ) {
+    } else if ( validMail.test(this.state.mail) ) {
         this.setState({
           errorMail: true,
         })
@@ -201,11 +199,11 @@ class AltaAnimal extends Component {
     }
   }
 
-  handleBlurPropietario = () => {
-    if (this.state.propietario === ''  || this.state.propietario.length === 0 ||  this.hasNumbers(this.state.propietario)){
+  handleBlurPropietario(){
+    if (this.state.propietario === ''  || this.state.propietario.length === 0 ||  hasNumbers(this.state.propietario)){
       this.setState({ errorPropietario: false })
     } else {
-      this.setState({errorPropietario: true})
+      this.setState({ errorPropietario: true })
     }
   }
   
@@ -220,10 +218,10 @@ class AltaAnimal extends Component {
           <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
         
-          <Form.Field required label='Tipo Animal' control='select' placeholder = 'Tipo animal' value={this.state.tipo} onChange={this.cambioTipo} className= {(this.state.errorTipo=== '' || this.state.errorTipo === true) ? null : 'error'} onBlur={this.handleBlurTipo}>
+          <Form.Field required label='Tipo Animal' control='select' placeholder = 'Tipo animal' value={this.state.tipo} onChange={this.cambioTipo} className= {(this.state.errorTipo=== '' || this.state.errorTipo === true) ? null : 'error'} onBlur={this.handleBlurTipos}>
             <option value={null}>  </option>
             {this.state.tipos.map(item => (
-            <option key={item.Id}>{item.nombre}</option>))}
+            <option key={item.tipoAnimalId}>{item.nombre}</option>))}
           </Form.Field>
 
           <Form.Field required label='Propietario' control='input' placeholder='Propietario' value={this.state.propietario} onChange={this.cambioPropietario} className= {(this.state.errorPropietario === '' || this.state.errorPropietario === true) ? null : 'error'} onBlur={this.handleBlurPropietario}>

@@ -4,7 +4,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Form, Header } from 'semantic-ui-react'
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial,  convertStyleString} from '../../Services/MetodosPaciente';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
+import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaPersona extends Component {
@@ -35,8 +36,8 @@ class AltaPersona extends Component {
         errorSexo: '',
         errorNac: '',
         errorFechaNac: '',
-        errorMail: '',
-        errorTelefono: '',
+        errorMail: true,
+        errorTelefono: true,
 
       })
     this.fetchPaciente = this.fetchPaciente.bind(this);
@@ -129,8 +130,8 @@ class AltaPersona extends Component {
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
         "type": "com.leloir.backend.domain.Persona",
-        "nombre": convertStyleString(this.state.nombre),
-        "apellido": convertStyleString(this.state.apellido),
+        "nombre": titleCase(this.state.nombre),
+        "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -151,7 +152,7 @@ class AltaPersona extends Component {
           "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
         },
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail.toLowerCase()),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": null,
         "historial": null,
         "bitAlta": true
@@ -159,8 +160,8 @@ class AltaPersona extends Component {
     } else {
       data = {
         "type": "com.leloir.backend.domain.Persona",
-        "nombre": convertStyleString(this.state.nombre),
-        "apellido": convertStyleString(this.state.apellido),
+        "nombre": titleCase(this.state.nombre),
+        "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -181,7 +182,7 @@ class AltaPersona extends Component {
           "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
         },
         "telefono": emptyToNull(this.state.telefono),
-        "mail": emptyToNull(this.state.mail.toLowerCase()),
+        "mail": emptyToNull(this.state.mail),
         "obraSocial": {
           "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "razonSocial": this.state.obraSocial,
@@ -203,7 +204,7 @@ class AltaPersona extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + convertStyleString(this.state.nombre) +' ' + convertStyleString(this.state.apellido) + ' con éxito.'); 
+          alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {
@@ -216,8 +217,6 @@ class AltaPersona extends Component {
   fetchPaciente(e){
     e.preventDefault();
 
-    const { errorNombre, errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac, errorMail, errorTelefono } = this.state;
-
     this.handleBlurNombre()
     this.handleBlurApellido()
     this.handleBlurTipoDoc()
@@ -227,6 +226,8 @@ class AltaPersona extends Component {
     this.handleBlurNacionalidad()
     this.handleBlurMail()
     this.handleBlurTelefono()
+    
+    const { errorNombre, errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac, errorMail, errorTelefono } = this.state;
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       const api = '/pacientes/add';
@@ -256,8 +257,8 @@ class AltaPersona extends Component {
       errorNroDoc: '',
       errorSexo: '',
       errorNac: '',
-      errorFechaNac: '',
-      errorMail: '',
+      errorFechaNac: true,
+      errorMail: true,
     })
   }
  
@@ -320,13 +321,9 @@ class AltaPersona extends Component {
           obraSocial: e.target.value
       })
   }
-  
-  hasNumbers(t){
-      return /\d/.test(t);
-  }
 
   handleBlurNombre(){
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  this.hasNumbers(this.state.nombre)){
+    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
       this.setState({ errorNombre: false })
     } else {
       this.setState({errorNombre: true})
@@ -334,7 +331,7 @@ class AltaPersona extends Component {
   }
 
   handleBlurApellido(){
-    if (this.state.apellido === '' || this.state.apellido.length === 0 ||  this.hasNumbers(this.state.apellido)){
+    if (this.state.apellido === '' || this.state.apellido.length === 0 || hasNumbers(this.state.apellido)){
       this.setState({errorApellido: false})
     } else {
       this.setState({errorApellido: true})
@@ -356,7 +353,7 @@ class AltaPersona extends Component {
       this.setState({errorNroDoc: true})
     } else if (this.state.tipoDoc === 'Documento Nacional de Identidad' && !isFinite(String(this.state.nroDoc))){
       this.setState({errorNroDoc: false})
-    } else if (this.state.tipoDoc === 'Pasaporte' && this.hasNumbers(this.state.nroDoc)){
+    } else if (this.state.tipoDoc === 'Pasaporte' && hasNumbers(this.state.nroDoc)){
       this.setState({errorNroDoc: true})
     }
   }
@@ -386,13 +383,11 @@ class AltaPersona extends Component {
   }
 
   handleBlurMail = ( ) => {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if(this.state.mail === ''){
       this.setState({
         errorMail: true,
       })
-    } else if ( re.test(this.state.mail) ) {
+    } else if ( validMail.test(this.state.mail) ) {
         this.setState({
           errorMail: true,
         })
