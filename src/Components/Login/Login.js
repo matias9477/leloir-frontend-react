@@ -9,7 +9,7 @@ class LoginComponent extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            username: '',
+            usernameOrEmail: '',
             password: '',
             hasLoginFailed: false,
             showSuccessMessage: false,
@@ -23,7 +23,7 @@ class LoginComponent extends Component {
 
     cambioUsuario(e){
         this.setState({
-            username: e.target.value
+            usernameOrEmail: e.target.value
         })
     }
 
@@ -41,15 +41,13 @@ class LoginComponent extends Component {
     loginClicked(e) {
         e.preventDefault();
         AuthenticationService
-            .executeBasicAuthenticationService(this.state.username, this.state.password)
-            .then(() => {
-                AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password);
-                this.setState({ showSuccessMessage: true, hasLoginFailed: false})
-                this.redirectLoginSuccessful();
-
-                
+            .executeJwtAuthenticationService(this.state.usernameOrEmail, this.state.password)
+            .then((response) => {
+                AuthenticationService.registerSuccessfulLoginForJwt(this.state.usernameOrEmail, response.data.accessToken)
+                this.props.history.push(`/`)
             }).catch(() => {
-                this.setState({ showSuccessMessage: false, hasLoginFailed: true })
+                this.setState({ showSuccessMessage: false })
+                this.setState({ hasLoginFailed: true })
             })
     }
     
