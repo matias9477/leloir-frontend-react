@@ -138,7 +138,7 @@ class Determinaciones extends Component {
 
                     <Header as='h2'>Determinaciones</Header>
 
-                    <Button as={Link} to='/' exact='true' floated='right' icon labelPosition='left' primary
+                    <Button as={Link} to='/determinaciones/add' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                         <Icon name='lab'/> Nueva Determinación
                     </Button>
