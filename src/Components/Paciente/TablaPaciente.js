@@ -57,12 +57,33 @@ export default class TablaPaciente extends React.Component {
     };
 
     bitInverse = paciente => {
-        fetch(`/pacientes/switch-alta/${paciente.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
+        // fetch(`/pacientes/switch-alta/${paciente.id}`, {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }).then(response => {
+        //     if (response.ok) {
+        //         if (paciente.bitAlta) {
+        //             alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
+        //             this.getAllPacientes()
+        //         } else {
+        //             alert(`Se ha dado de alta al paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
+        //             this.getAllPacientes()
+        //         }
+        //         return response.text();
+        //     } else {
+        //         if (paciente.bitAlta) {
+        //             alert(`No se ha podido eliminar el paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
+        //         } else {
+        //             alert(`No se ha podido dar de alta al paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
+        //         }
+        //         return Promise.reject({status: response.status, statusText: response.statusText});
+        //     }
+        // });
+
+        const urlPacientes = `/pacientes/switch-alta/${paciente.id}`;
+        axios.put(urlPacientes).then(response => {
             if (response.ok) {
                 if (paciente.bitAlta) {
                     alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
@@ -80,7 +101,11 @@ export default class TablaPaciente extends React.Component {
                 }
                 return Promise.reject({status: response.status, statusText: response.statusText});
             }
-        });
+
+        }, (error) => {
+            alert('No se ha podido efectuar la acción. Intente nuevamente.')
+        })
+
     };
 
     mensajeConfirmacion(paciente) {
