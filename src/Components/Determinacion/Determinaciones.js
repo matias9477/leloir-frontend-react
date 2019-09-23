@@ -42,8 +42,8 @@ class Determinaciones extends Component {
                 totalCount: (Object.values(response.data).flat()).length,
             });
 
-            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.id], ["asc"]);
-            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.id], ["asc"]);
+            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.codigoPractica], ["asc"]);
+            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.codigoPractica], ["asc"]);
 
             this.setState({
                 determinacionesFiltrados: filtro,
@@ -128,9 +128,39 @@ class Determinaciones extends Component {
         })
 
     }
+    bitInverse = determinacion => {
+        axios.put(`/determinaciones/switch-alta/${determinacion.codigoPractica}`).then(response => {
+            if (determinacion.bitAlta) {
+                alert(`Se ha dado de baja la determinacion ${determinacion.descripcionPractica} con éxito.`);
+                this.getAllDeterminaciones()
+            } else {
+                alert(`Se ha dado de alta la determinacion ${determinacion.descripcionPractica} con éxito.`);
+                this.getAllDeterminaciones()
+            }
+            return response.data;
+        }, (error) => {
+            if (determinacion.bitAlta) {
+                alert(`No se ha podido dar de baja ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
+            } else {
+                alert(`No se ha podido dar de alta ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
+            }
+            return Promise.reject({status: error.status, statusText: error.statusText});
+        });
+    };
 
     mensajeConfirmacion(determinacion) {
-            return (`¿Esta seguro que quiere eliminar la determinación ${determinacion.descripcionPractica}?`);
+        if (determinacion.bitAlta) {
+            return (`¿Esta seguro que quiere dar de baja la determinación ${determinacion.descripcionPractica}?`)
+        } else {
+            return (`¿Esta seguro que quiere dar de alta la determinación ${determinacion.descripcionPractica} ?`)
+        }
+    }
+    estado(bitAlta) {
+        if (bitAlta) {
+            return "Dar de baja"
+        } else {
+            return "Dar de alta"
+        }
     }
     render() {
         return (
@@ -163,7 +193,7 @@ class Determinaciones extends Component {
                     <table className="ui single line table">
                         <thead className='centerAlignment'>
                         <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("id")}>Id</th>
+                            <th onClick={() => this.handleColumnHeaderClick("codigoPractica")}>Código Práctica</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
                             <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
@@ -174,8 +204,8 @@ class Determinaciones extends Component {
                         <tbody className='centerAlignment'>
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((determinacion, index) => (
                             <tr key={index} determinacion={determinacion}>
-                                <td data-label="Número determinacion">
-                                    {determinacion.id}
+                                <td data-label="Código Práctica">
+                                    {determinacion.codigoPractica}
                                 </td>
                                 <td data-label="Nombre">
                                     {determinacion.nombre}
@@ -190,9 +220,10 @@ class Determinaciones extends Component {
                                     <Dropdown item icon='ellipsis horizontal' simple>
                                         <Dropdown.Menu>
                                             <Dropdown.Item
-                                                onClick={() => window.confirm(this.mensajeConfirmacion(determinacion))}>
+                                                onClick={() => window.confirm(this.mensajeConfirmacion(determinacion)) ? this.bitInverse(determinacion) : null}>
+                                                {this.estado(determinacion.bitAlta)}
                                             </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to={`/determinaciones/id/${determinacion.codigoPractica}`}
+                                            <Dropdown.Item as={Link} to={`/determinaciones/consulta/${determinacion.codigoPractica}`}
                                                            exact='true'>
                                                 Ver/Modificar
                                             </Dropdown.Item>

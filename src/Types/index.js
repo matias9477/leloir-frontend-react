@@ -1,12 +1,11 @@
 // ./src/Types/index.js
-import {number, shape, string} from 'prop-types';
+import {number, shape, string,bool} from 'prop-types';
 
 
 export const determinacionType = shape({
-    id: number.isRequired,
-    nombre: string.isRequired,
-    metodologia: string,
-    descripcion: string,
-    resultado: number,
-    protocolo: number
+    codigoPráctica: number.isRequired,
+    descripcionPractica: string.isRequired,
+    unidadBioquimica: number,
+    unidadMedida: string,
+    bitAlta: bool
 });
