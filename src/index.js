@@ -10,7 +10,7 @@ import Tabla2 from './Components/TablaPaciente/Tabla2';
 import FormAlta from './Components/AltaPaciente/FormAlta';
 import FormConsulta from './Components/ConsultaPaciente/FormConsulta';
 import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
-import FormAltaDeterminacion from './Components/AltaDeterminacion/FormAlta';
+import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
 
 
 ReactDOM.render(

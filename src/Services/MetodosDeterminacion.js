@@ -7,37 +7,30 @@ export function convertStyleString(palabra){
     return alta + "T00:00:00";
   }
 
-  export function validateName(nom){
-    if (nom.length === 0 || nom === ''){
+  export function validateDescripcionPractica(des){
+    if (des.length === 0 || des === ''){
       return false
     }
     return true
   }
 
-  export function validateMetodologia(ap){
-    if (ap.length === 0 || ap === ''){
+  export function validateUnidadBioquimica(uniB){
+    if (uniB.length === 0 || uniB=== ''){
       return false
     }
     return true
   }
 
 
-  export function validateValor(ndoc){
-    if (ndoc.length === 0 || ndoc === ''){
+  export function validateUnidadMedida(uniM){
+    if (uniM.length === 0 || uniM === ''){
       return false
     }
     return true
   }
 
-  export function validateProtocoloId(sex){
-    if (sex.length === 0 || sex === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateDescripcion(nac){
-    if (nac.length === 0 || nac === ''){
+  export function validateCodigoPractica(cod){
+    if (cod.length === 0 || cod === ''){
       return false
     }
     return true

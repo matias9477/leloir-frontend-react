@@ -3,10 +3,8 @@ import {number, shape, string} from 'prop-types';
 
 
 export const determinacionType = shape({
-    id: number.isRequired,
-    nombre: string.isRequired,
-    metodologia: string,
-    descripcion: string,
-    resultado: number,
-    protocolo: number
+    codigoPractica: number.isRequired,
+    descripcionPractica: string.isRequired,
+    unidadBioquimica: number,
+    unidadMedida: string,
 });
