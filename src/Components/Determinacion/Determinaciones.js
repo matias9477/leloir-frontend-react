@@ -129,7 +129,9 @@ class Determinaciones extends Component {
 
     }
 
-
+    mensajeConfirmacion(determinacion) {
+            return (`¿Esta seguro que quiere eliminar la determinación ${determinacion.descripcionPractica}?`);
+    }
     render() {
         return (
             <div className='union'>
@@ -165,6 +167,7 @@ class Determinaciones extends Component {
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
                             <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
+                            <th onClick={() => this.handleColumnHeaderClick("opcion")}>Opciones</th>
                         </tr>
                         </thead>
 
@@ -182,6 +185,20 @@ class Determinaciones extends Component {
                                 </td>
                                 <td data-label="Descripción">
                                     {determinacion.descripcion}
+                                </td>
+                                <td>
+                                    <Dropdown item icon='ellipsis horizontal' simple>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                onClick={() => window.confirm(this.mensajeConfirmacion(determinacion))}>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item as={Link} to={`/determinaciones/id/${determinacion.codigoPractica}`}
+                                                           exact='true'>
+                                                Ver/Modificar
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+
                                 </td>
                             </tr>
                         ))}
