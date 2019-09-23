@@ -90,22 +90,6 @@ class FormConsulta extends Component {
         );
     }
 
-    alta(e){
-        axios.put(`/determinaciones/switch-alta/${this.props.match.params.codigoPractica}`,e)
-            .then((response) => {
-            if (response.status === 200) {
-                alert('Se ha dado de alta la determinación con éxito.');
-                this.setState({estado: true});
-                const api = "/pacientes/id/" + this.props.match.params.id ;
-                this.handleUpdateClick(api);
-                return response.statusText;
-            } else {
-                alert('No se ha podido dar de alta la determinación.');
-                return Promise.reject({status: response.status, statusText: response.statusText});
-            }
-        });
-    }
-
     cancelar(e){
         e.preventDefault();
         this.setState({
