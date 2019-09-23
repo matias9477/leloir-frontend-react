@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {urlSignIn} from "../Constants/URLs";
 
-export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
+export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser';
+export const USER_NAME_SESSION_ATTRIBUTE_TOKEN = 'authenticatedUserToken';
 
 class AuthenticationService {
 
@@ -12,14 +13,15 @@ class AuthenticationService {
         })
     }
 
-    registerSuccessfulLoginForJwt(username, token) {
+    registerSuccessfulLoginForJwt(username, tokenType, accesstoken) {
         sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username);
-        this.setupAxiosInterceptors(this.createJWTToken(token))
+        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN, this.createJWTToken(tokenType, accesstoken));
+        this.setupAxiosInterceptors()
     }
 
-    createJWTToken(token) {
-        console.log('Bearer ' + token);
-        return 'Bearer ' + token
+    createJWTToken(tokenType, accesstoken) {
+        console.log(tokenType + ' ' +  accesstoken);
+        return tokenType + ' ' +  accesstoken
     }
 
 
@@ -39,11 +41,11 @@ class AuthenticationService {
         return user
     }
 
-    setupAxiosInterceptors(token) {
+    setupAxiosInterceptors() {
         axios.interceptors.request.use(
             (config) => {
                 if (this.isUserLoggedIn()) {
-                    config.headers.authorization = token
+                    config.headers.authorization = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN)
                 }
                 return config
             }
