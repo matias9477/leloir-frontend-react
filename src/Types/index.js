@@ -1,6 +1,8 @@
 // ./src/Types/index.js
 import {arrayOf, bool, number, oneOfType, string} from 'prop-types';
 import {any} from "expect";
+import {number, shape, string} from 'prop-types';
+
 
 export const personaType = {
     id: number,
@@ -50,3 +52,13 @@ export const pacientesArrayType = {
         institucionType
     ]))
 };
+
+export const determinacionType = shape({
+    id: number.isRequired,
+    nombre: string.isRequired,
+    metodologia: string,
+    descripcion: string,
+    resultado: number,
+    protocolo: number
+});
+
