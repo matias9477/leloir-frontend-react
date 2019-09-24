@@ -1,7 +1,3 @@
-  export function convertStyleString(palabra){
-    const cuerpo = palabra.slice(1);
-    return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
-  }
 
   export function fechaAltaDateStamp(alta){
     return alta + "T00:00:00";
@@ -190,13 +186,5 @@
     for(let i=0; i < sexos.length; i++){
       if (sexo === sexos[i].nombre)
         return sexos[i].sexoId;
-    }
-  }
-
-  export const emptyToNull = (v) => {
-    if (v === ''){
-      return v=null;
-    } else {
-      return v;
     }
   }

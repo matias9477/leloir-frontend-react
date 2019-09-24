@@ -4,7 +4,7 @@ import MenuLateral from "../MenuOpciones";
 import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import './../styles.css';
-import {convertStyleString} from './../../Services/MetodosPaciente';
+import {titleCase} from './../../Services/MetodosDeValidacion';
 import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
 import {arrayOf, number, oneOf, shape, string} from "prop-types";
@@ -117,7 +117,7 @@ class Determinaciones extends Component {
         });
 
         let det = this.state.determinaciones.filter(function (determinacion) {
-            return ((determinacion.descripcionPractica.includes(convertStyleString(valor.target.value)))||
+            return ((titleCase(determinacion.descripcionPractica).includes(titleCase(valor.target.value)))||
                 determinacion.codigoPractica.toString().includes(valor.target.value));
         });
 

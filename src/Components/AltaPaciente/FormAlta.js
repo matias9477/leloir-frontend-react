@@ -8,7 +8,8 @@ import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, emptyToNull, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento, convertStyleString} from './../../Services/MetodosPaciente';
+import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, validateName, validateApellido, validateTipoDoc, validateNroDoc, validateSexo, validateNacionalidad, validateNacimiento } from './../../Services/MetodosPaciente';
+import {emptyToNull, titleCase} from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class FormAlta extends Component {
@@ -207,8 +208,8 @@ class FormAlta extends Component {
     var data;
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
-        "nombre": convertStyleString(this.state.nombre),
-        "apellido": convertStyleString(this.state.apellido),
+        "nombre": titleCase(this.state.nombre),
+        "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -236,8 +237,8 @@ class FormAlta extends Component {
     };
     } else {
       data = {
-        "nombre": convertStyleString(this.state.nombre),
-        "apellido": convertStyleString(this.state.apellido),
+        "nombre": titleCase(this.state.nombre),
+        "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
           "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
@@ -280,7 +281,7 @@ class FormAlta extends Component {
       }
       }).then(response => {
         if (response.ok) {
-          alert('Se registro el paciente ' + convertStyleString(this.state.nombre) +' ' + convertStyleString(this.state.apellido) + ' con éxito.'); 
+          alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
           this.vaciadoCampos();
           return response.text();
         } else {
