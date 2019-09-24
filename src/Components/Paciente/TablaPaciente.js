@@ -3,18 +3,19 @@ import axios from 'axios'
 import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import { orderBy } from 'lodash';
+import { oneOfType } from "prop-types";
 import MenuOpciones from '../MenuOpciones';
 import { titleCase, nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 import { animalType, institucionType, pacientesArrayType, personaType } from "../../Types";
-import { oneOfType } from "prop-types";
+import {nroPorPagina} from "../../Constants/utils";
 
 export default class TablaPaciente extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             pacientes: [],
-            limit: 25,
+            limit: nroPorPagina[1].value,
             activePage: 1,
             totalCount: 0,
             sortParams: {
@@ -57,83 +58,63 @@ export default class TablaPaciente extends React.Component {
     };
 
     bitInverse = paciente => {
-        // fetch(`/pacientes/switch-alta/${paciente.id}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).then(response => {
-        //     if (response.ok) {
-        //         if (paciente.bitAlta) {
-        //             alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
-        //             this.getAllPacientes()
-        //         } else {
-        //             alert(`Se ha dado de alta al paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
-        //             this.getAllPacientes()
-        //         }
-        //         return response.text();
-        //     } else {
-        //         if (paciente.bitAlta) {
-        //             alert(`No se ha podido eliminar el paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
-        //         } else {
-        //             alert(`No se ha podido dar de alta al paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
-        //         }
-        //         return Promise.reject({status: response.status, statusText: response.statusText});
-        //     }
-        // });
-
         const urlPacientes = `/pacientes/switch-alta/${paciente.id}`;
+        
         axios.put(urlPacientes).then(response => {
-            if (response.ok) {
                 if (paciente.bitAlta) {
-                    alert(`Se ha eliminado el paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
+                    alert(`Se ha eliminado el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)} con éxito.`);
                     this.getAllPacientes()
                 } else {
-                    alert(`Se ha dado de alta al paciente ${paciente.nombre} ${paciente.apellido} con éxito.`);
+                    alert(`Se ha dado de alta al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)} con éxito.`);
                     this.getAllPacientes()
-                }
-                return response.text();
-            } else {
-                if (paciente.bitAlta) {
-                    alert(`No se ha podido eliminar el paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
-                } else {
-                    alert(`No se ha podido dar de alta al paciente ${paciente.nombre} ${paciente.apellido}. Intentelo nuevamente.`)
-                }
-                return Promise.reject({status: response.status, statusText: response.statusText});
-            }
-
+                }    
         }, (error) => {
-            alert('No se ha podido efectuar la acción. Intente nuevamente.')
+            if (paciente.bitAlta) {
+                alert(`No se ha podido eliminar el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}. Intentelo nuevamente.`)
+            } else {
+                alert(`No se ha podido dar de alta al paciente. ${paciente.nombre} ${this.checkApellido(paciente.apellido)} Intentelo nuevamente.`)
+            }
         })
 
     };
 
+    checkApellido(apellido){
+        if(apellido !== undefined){
+            return apellido
+        } 
+        else{
+            return ''
+        }
+    }
+
     mensajeConfirmacion(paciente) {
         if (paciente.bitAlta) {
-            return (`¿Esta seguro que quiere eliminar al paciente ${paciente.nombre} ${paciente.apellido}?`)
+            return (`¿Esta seguro que quiere eliminar al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`)
         } else {
-            return (`¿Esta seguro que quiere dar de alta al paciente ${paciente.nombre} ${paciente.apellido}?`)
+            return (`¿Esta seguro que quiere dar de alta al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`)
         }
     }
 
     cantidadPorPagina() {
         return (
             <div className='rightAlign'>
-                Cantidad de pacientes por página: &nbsp;&nbsp;
-                <select id='int' onChange={this.cambioLimite} value={this.state.limit} className='selectCantidad'>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
+                <span>
+                    Cantidad de pacientes por página{' '}
+                    <Dropdown
+                        inline
+                        options={nroPorPagina}
+                        value = {this.state.limit}
+                        onChange={this.cambioLimite} 
+                    />
+                </span>
             </div>
 
         )
-    }
+    };
 
-    cambioLimite(e) {
+    cambioLimite(e, data) {
         this.setState({
-            limit: e.target.value,
+            limit: data.value,
             activePage: 1,
         });
         return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
@@ -178,23 +159,33 @@ export default class TablaPaciente extends React.Component {
             return "Dar de alta"
         }
     }
-
+    
     handleSearch(valor) {
         this.setState({
             filtro: valor.target.value,
         });
 
         const pac = this.state.pacientes.filter(function (paciente) {
-            return (paciente.nombre.includes(titleCase(valor.target.value)) || paciente.apellido.includes(titleCase(valor.target.value)) ||
-                paciente.id.toString().includes(valor.target.value) ||
-                paciente.nroDocumento.toString().includes(valor.target.value));
+            return ((paciente.nombre === undefined ? null : paciente.nombre.includes(titleCase(valor.target.value))) || 
+                (paciente.apellido === undefined ? null : paciente.apellido.includes(titleCase(valor.target.value))) ||
+                (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
+                ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(valor.target.value)));
         });
 
         this.setState({
             pacientesFiltrados: pac,
             totalCount: pac.length,
         })
+    }
 
+    getIconTipo(tipo){
+        if (tipo === 'ANIMAL'){
+            return 'paw'
+        } else if(tipo === 'PERSONA'){
+            return 'user'
+        } else if(tipo === 'INSTITUCION'){
+            return 'building'
+        }
     }
 
 
@@ -229,7 +220,7 @@ export default class TablaPaciente extends React.Component {
                         <thead className='centerAlignment'>
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("id")}>Número Paciente</th>
-                            <th >Tipo</th>
+                            <th onClick={() => this.handleColumnHeaderClick("tipoPaciente")}>Tipo</th>
                             <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
                             <th onClick={() => this.handleColumnHeaderClick("nroDocumento")}>Número de Documento</th>
                             <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
@@ -244,7 +235,7 @@ export default class TablaPaciente extends React.Component {
                                     {paciente.id}
                                 </td>
                                 <td data-label="Tipo">
-                                    {'tipo'}
+                                    <Icon name={this.getIconTipo(paciente.tipoPaciente)}/>
                                 </td>
                                 <td data-label="Nombre">
                                     {paciente.nombre}&nbsp;&nbsp;{paciente.apellido}

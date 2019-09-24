@@ -1,7 +1,6 @@
 // ./src/Types/index.js
-import {arrayOf, bool, number, oneOfType, string} from 'prop-types';
+import {arrayOf, bool, number, oneOfType, string, shape} from 'prop-types';
 import {any} from "expect";
-import {number, shape, string} from 'prop-types';
 
 
 export const personaType = {

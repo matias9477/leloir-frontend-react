@@ -4,11 +4,11 @@ import MenuLateral from "../MenuOpciones";
 import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import './../styles.css';
-import {convertStyleString} from './../../Services/MetodosPaciente';
+import { titleCase } from './../../Services/MetodosDeValidacion';
 import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
 import {arrayOf, number, oneOf, shape, string} from "prop-types";
-import {determinacionType} from "../../Types";
+import { determinacionType } from "./../../Types/index";
 import {nroPorPagina} from "../../Constants/utils";
 
 class Determinaciones extends Component {
@@ -117,9 +117,9 @@ class Determinaciones extends Component {
         });
 
         let det = this.state.determinaciones.filter(function (determinacion) {
-            return (determinacion.nombre.includes(convertStyleString(valor.target.value)) ||
+            return (determinacion.nombre.includes(titleCase(valor.target.value)) ||
                 determinacion.id.toString().includes(valor.target.value) ||
-                ( determinacion.metodologia !== null && determinacion.metodologia.toString().includes(convertStyleString(valor.target.value))));
+                ( determinacion.metodologia !== null && determinacion.metodologia.toString().includes(titleCase(valor.target.value))));
         });
 
         this.setState({
