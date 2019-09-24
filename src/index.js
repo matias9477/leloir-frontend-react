@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -11,6 +11,7 @@ import FormAlta from './Components/AltaPaciente/FormAlta';
 import FormConsulta from './Components/ConsultaPaciente/FormConsulta';
 import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
 import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
+
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
 
 

@@ -117,9 +117,8 @@ class Determinaciones extends Component {
         });
 
         let det = this.state.determinaciones.filter(function (determinacion) {
-            return (determinacion.nombre.includes(convertStyleString(valor.target.value)) ||
-                determinacion.id.toString().includes(valor.target.value) ||
-                ( determinacion.metodologia !== null && determinacion.metodologia.toString().includes(convertStyleString(valor.target.value))));
+            return ((determinacion.descripcionPractica.includes(convertStyleString(valor.target.value)))||
+                determinacion.codigoPractica.toString().includes(valor.target.value));
         });
 
         this.setState({
@@ -170,7 +169,7 @@ class Determinaciones extends Component {
 
                     <Header as='h2'>Determinaciones</Header>
 
-                    <Button as={Link} to='/' exact='true' floated='right' icon labelPosition='left' primary
+                    <Button as={Link} to='/determinaciones/add' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                         <Icon name='lab'/> Nueva Determinación
                     </Button>
@@ -194,9 +193,9 @@ class Determinaciones extends Component {
                         <thead className='centerAlignment'>
                         <tr>
                             <th onClick={() => this.handleColumnHeaderClick("codigoPractica")}>Código Práctica</th>
-                            <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
-                            <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
-                            <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
+                            <th onClick={() => this.handleColumnHeaderClick("descripcionPractica")}>Descripción Práctica</th>
+                            <th onClick={() => this.handleColumnHeaderClick("unidadBioquimica")}>Unidad Bioquímica</th>
+                            <th onClick={() => this.handleColumnHeaderClick("unidadMedida")}>Unidad Medida</th>
                             <th onClick={() => this.handleColumnHeaderClick("opcion")}>Opciones</th>
                         </tr>
                         </thead>
@@ -207,14 +206,14 @@ class Determinaciones extends Component {
                                 <td data-label="Código Práctica">
                                     {determinacion.codigoPractica}
                                 </td>
-                                <td data-label="Nombre">
-                                    {determinacion.nombre}
+                                <td data-label="Descripción Práctica">
+                                    {determinacion.descripcionPractica}
                                 </td>
-                                <td data-label="Metodología">
-                                    {determinacion.metodologia}
+                                <td data-label="Unidad Bioquimica">
+                                    {determinacion.unidadBioquimica}
                                 </td>
-                                <td data-label="Descripción">
-                                    {determinacion.descripcion}
+                                <td data-label="Unidad Medida">
+                                    {determinacion.unidadMedida}
                                 </td>
                                 <td>
                                     <Dropdown item icon='ellipsis horizontal' simple>

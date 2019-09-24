@@ -133,16 +133,14 @@ class FormConsulta extends Component {
             const api = '/determinaciones/modificar/' + this.props.match.params.codigoPractica;
             axios.put(api,data)
                 .then((response) => {
-                    if (response.status === 200) {
                         alert('Se ha modificado la determinación con éxito.');
                         this.setState({estado: true});
                         const api = "/determinaciones/id/" + this.props.match.params.codigoPractica ;
                         this.handleUpdateClick(api);
                         return response.statusText;
-                    } else {
-                        alert('No se ha podido modificar la determinación.');
-                        return Promise.reject({status: response.status, statusText: response.statusText});
-                    }
+                }, (error)=> {
+                    alert('No se ha podido modificar la determinación.');
+                    return Promise.reject({status: error.status, statusText: error.statusText});
                 });
             this.setState({
                 modificacion: true,
@@ -166,12 +164,10 @@ class FormConsulta extends Component {
     handleUpdateClick = (api) => {
         axios.get(api).then(
             (response) => {
-                if(response.status === 200){
                     return response.data;
-                } else {
-                    Error(response.statusText);
-                    alert('No se encontró la determinacion. Revise la información e intente nuevamente.');
-                }
+            }, (error) => {
+                Error(error.statusText);
+                alert('No se encontró la determinacion. Revise la información e intente nuevamente.');
             }
         ).then(determinacion => {
             this.setState({
