@@ -44,7 +44,7 @@ class FormConsulta extends Component {
         this.cambioBitAlta = this.cambioBitAlta.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const api = "/determinaciones/id/" + this.props.match.params.codigoPractica;
         this.handleUpdateClick(api);
     }
