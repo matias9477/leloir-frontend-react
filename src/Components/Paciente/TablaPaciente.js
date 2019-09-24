@@ -4,6 +4,7 @@ import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-r
 import { Link } from 'react-router-dom';
 import { orderBy } from 'lodash';
 import { oneOfType } from "prop-types";
+
 import MenuOpciones from '../MenuOpciones';
 import { titleCase, nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
@@ -262,14 +263,16 @@ export default class TablaPaciente extends React.Component {
                         ))}
 
                         </tbody>
-
+                    
                     </table>
+                    
                     <Pagination
                         activePage={this.state.activePage}
                         totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
-                </div>
+                        
+                </div>      
             </div>
         )
     }

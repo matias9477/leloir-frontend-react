@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios'
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react'
 import { getCurrentDate } from '../../Services/MetodosPaciente';
@@ -39,15 +40,12 @@ class AltaAnimal extends Component {
   } 
 
   comboTipos = () =>{
-    fetch(urlTiposAnimales).then ( resolve => {
-        if(resolve.ok) { 
-            return resolve.json();
-        } else {
-            throw Error(resolve.statusText);
-        }
-    }).then(tiposAnimales => {
-       this.setState({tipos:tiposAnimales}) 
+    axios.get(urlTiposAnimales).then(tiposAnimales => {
+      this.setState({tipos:tiposAnimales}) 
+    }, (error) => {
+        console.log('Error combo animales: ', error.message);
     })
+
   }
 
   componentWillMount() {

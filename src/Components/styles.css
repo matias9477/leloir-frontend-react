@@ -7,7 +7,7 @@ body{
     width: 70%;
     margin-left: 150px;
     margin-right: 25px;
-    margin-top: 100px;
+    margin-top: 40px;
 }
 
 .altasPaciente{ 
@@ -44,7 +44,10 @@ body{
 }
 
 .btnHeader{
-    margin-bottom: 30px;
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 100px;
 }
   
 .pacienteBaja{
