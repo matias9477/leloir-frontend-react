@@ -10,6 +10,8 @@ import Tabla2 from './Components/TablaPaciente/Tabla2';
 import FormAlta from './Components/AltaPaciente/FormAlta';
 import FormConsulta from './Components/ConsultaPaciente/FormConsulta';
 import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
+import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
+
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
 
 
@@ -24,9 +26,12 @@ ReactDOM.render(
             <AuthenticatedRoute exact path="/pacientes/consulta/:id" component={FormConsulta}/>
             <AuthenticatedRoute exact path="/determinaciones" component={DeterminacionesContainer}/>
             <AuthenticatedRoute exact path="/determinaciones/add" component={FormAltaDeterminacion}/>
+            <AuthenticatedRoute exact path="/determinaciones/consulta/:codigoPractica" component={FormConsultaDeterminacion}/>
         </Switch>
     </Router>
 
 
-    , document.getElementById('root'));
+
+
+,document.getElementById('root'));
 registerServiceWorker();

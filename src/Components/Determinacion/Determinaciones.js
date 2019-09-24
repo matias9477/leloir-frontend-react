@@ -34,7 +34,6 @@ class Determinaciones extends Component {
         this.getAllDeterminaciones()
     }
 
-
     getAllDeterminaciones = () => {
         axios.get(urlDeterminaciones).then((response) => {
             this.setState({
@@ -128,8 +127,40 @@ class Determinaciones extends Component {
         })
 
     }
+    bitInverse = determinacion => {
+        axios.put(`/determinaciones/switch-alta/${determinacion.codigoPractica}`).then(response => {
+            if (determinacion.bitAlta) {
+                alert(`Se ha dado de baja la determinacion ${determinacion.descripcionPractica} con éxito.`);
+                this.getAllDeterminaciones()
+            } else {
+                alert(`Se ha dado de alta la determinacion ${determinacion.descripcionPractica} con éxito.`);
+                this.getAllDeterminaciones()
+            }
+            return response.data;
+        }, (error) => {
+            if (determinacion.bitAlta) {
+                alert(`No se ha podido dar de baja ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
+            } else {
+                alert(`No se ha podido dar de alta ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
+            }
+            return Promise.reject({status: error.status, statusText: error.statusText});
+        });
+    };
 
-
+    mensajeConfirmacion(determinacion) {
+        if (determinacion.bitAlta) {
+            return (`¿Esta seguro que quiere dar de baja la determinación ${determinacion.descripcionPractica}?`)
+        } else {
+            return (`¿Esta seguro que quiere dar de alta la determinación ${determinacion.descripcionPractica} ?`)
+        }
+    }
+    estado(bitAlta) {
+        if (bitAlta) {
+            return "Dar de baja"
+        } else {
+            return "Dar de alta"
+        }
+    }
     render() {
         return (
             <div className='union'>
@@ -165,13 +196,14 @@ class Determinaciones extends Component {
                             <th onClick={() => this.handleColumnHeaderClick("descripcionPractica")}>Descripción Práctica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadBioquimica")}>Unidad Bioquímica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadMedida")}>Unidad Medida</th>
+                            <th onClick={() => this.handleColumnHeaderClick("opcion")}>Opciones</th>
                         </tr>
                         </thead>
 
                         <tbody className='centerAlignment'>
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((determinacion, index) => (
                             <tr key={index} determinacion={determinacion}>
-                                <td data-label="Código determinacion">
+                                <td data-label="Código Práctica">
                                     {determinacion.codigoPractica}
                                 </td>
                                 <td data-label="Descripción Práctica">
@@ -182,6 +214,21 @@ class Determinaciones extends Component {
                                 </td>
                                 <td data-label="Unidad Medida">
                                     {determinacion.unidadMedida}
+                                </td>
+                                <td>
+                                    <Dropdown item icon='ellipsis horizontal' simple>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                onClick={() => window.confirm(this.mensajeConfirmacion(determinacion)) ? this.bitInverse(determinacion) : null}>
+                                                {this.estado(determinacion.bitAlta)}
+                                            </Dropdown.Item>
+                                            <Dropdown.Item as={Link} to={`/determinaciones/consulta/${determinacion.codigoPractica}`}
+                                                           exact='true'>
+                                                Ver/Modificar
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+
                                 </td>
                             </tr>
                         ))}
