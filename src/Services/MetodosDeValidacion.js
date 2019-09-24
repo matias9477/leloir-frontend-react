@@ -14,11 +14,6 @@ export function hasNumbers(t){
   
 export const validMail = /\S+@\S+\.\S+/;
 
-export function convertStyleString(palabra){
-    const cuerpo = palabra.slice(1);
-    return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
-}
-
 export function titleCase(str) {
     var splitStr = str.toLowerCase().split(' ');
     for (var i = 0; i < splitStr.length; i++) {

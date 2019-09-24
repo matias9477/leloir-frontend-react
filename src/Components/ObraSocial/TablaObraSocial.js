@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
@@ -25,62 +26,49 @@ export default class TablaObraSocial extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
       }
 
-    componentWillMount(){
+    componentDidMount(){
         this.fetchobrasSocialesAll();
     }
 
     fetchobrasSocialesAll = () => {
-        fetch(urlObrasSoc).then ( resolve => {
-            if(resolve.ok) { 
-                return resolve.json();
-            } else {
-                throw Error(resolve.statusText);
-            }
-        }).then(obrasSociales => {
+        axios.get(urlObrasSoc).then(resolve => {
             this.setState({
-                obrasSociales: Object.values(obrasSociales).flat(),
-                obrasSocialesFiltrados: Object.values(obrasSociales).flat(),
-                totalCount: Object.values(obrasSociales).flat().length,
-            })
-            
+                obrasSociales: Object.values(resolve.data).flat(),
+                obrasSocialesFiltrados: Object.values(resolve.data).flat(),
+                totalCount: (Object.values(resolve.data).flat()).length,
+            });
+
             var filtro = orderBy(this.state.obrasSocialesFiltrados, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
-              ], ["desc", "desc"]);
+            ], ["desc", "desc"]);
             var arr = orderBy(this.state.obrasSociales, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
-              ], ["desc", "desc"]);
+                ], ["desc", "desc"]);
 
             this.setState({
                 obrasSocialesFiltrados: filtro,
                 obrasSociales: arr,
             })
 
-        })
+            }, (error) => {
+                console.log('Error', error.message);
+            })
     }
 
     bitInverse = obraSocial => {
-        fetch(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`, {
-          method: 'PUT', 
-          headers:{
-          'Content-Type': 'application/json'
-          }
-      }).then(response => {
-          if (response.ok) {
-            if(obraSocial.bitActivo) { 
-                alert(`Se ha eliminado la obra social ${obraSocial.razonSocial} con éxito.`)
+        axios.put(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`).then(response => {
+            if (obraSocial.bitActivo) {
+                alert(`Se ha eliminado la obra social ${obraSocial.razonSocial} con éxito.`);
                 this.fetchobrasSocialesAll()
             } else {
-                alert(`Se ha dado de alta la obra social ${obraSocial.razonSocial} con éxito.`)
+                alert(`Se ha dado de alta la obra social ${obraSocial.razonSocial} con éxito.`);
                 this.fetchobrasSocialesAll()
-            }
-              return response.text();
-          } else {
-            if(obraSocial.bitActivo) { 
-                alert(`No se ha podido eliminar la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
-              } else {
-                alert(`No se ha podido dar de alta la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
-              }
-              return Promise.reject({status: response.status, statusText: response.statusText});
-          }
-          });
+            }    
+            }, (error) => {
+                if (obraSocial.bitActivo) {
+                    alert(`No se ha podido eliminar la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
+                } else {
+                    alert(`No se ha podido dar de alta la obra social. ${obraSocial.razonSocial} Intentelo nuevamente.`)
+                }
+            })
     }
 
     mensajeConfirmacion(obraSocial){

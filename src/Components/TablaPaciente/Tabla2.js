@@ -3,7 +3,7 @@ import {Button, Dropdown, Header, Icon, Input, Pagination} from 'semantic-ui-rea
 import {Link} from 'react-router-dom';
 import {orderBy} from 'lodash';
 import MenuOpciones from '../MenuOpciones';
-import {convertStyleString} from './../../Services/MetodosPaciente';
+import { titleCase } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 import axios from 'axios'
 
@@ -156,7 +156,7 @@ export default class Tabla2 extends React.Component {
         });
 
         var pac = this.state.pacientes.filter(function (paciente) {
-            return (paciente.nombre.includes(convertStyleString(valor.target.value)) || paciente.apellido.includes(convertStyleString(valor.target.value)) ||
+            return (paciente.nombre.includes(titleCase(valor.target.value)) || paciente.apellido.includes(titleCase(valor.target.value)) ||
                 paciente.id.toString().includes(valor.target.value) ||
                 paciente.nroDocumento.toString().includes(valor.target.value));
         });

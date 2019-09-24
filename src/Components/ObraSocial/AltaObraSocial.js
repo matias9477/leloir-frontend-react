@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import axios from 'axios'
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import MenuOpciones from '../MenuOpciones';
 import {Link} from 'react-router-dom';
+
+import MenuOpciones from '../MenuOpciones';
 import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
@@ -65,30 +67,32 @@ class AltaObraSocial extends Component {
   }
   
   handleUpdateClick = (api) => {
-    var data = {
+    this.handleBlurRazonSocial(); 
+    this.handleBlurCuit(); 
+    this.handleBlurTelefono(); 
+    this.handleBlurMail(); 
+
+    const { errorRazonSocial, errorCuit, errorTelefono, errorMail } = this.state;
+
+    if( errorRazonSocial && errorCuit && errorTelefono && errorMail) {
+      var data = {
         "razonSocial": titleCase(this.state.razonSocial),
         "cuit": this.state.cuit,
         "telefono": emptyToNull(this.state.telefono),
         "email": emptyToNull(this.state.mail.toLowerCase()),
         "bitActivo": true
-    };
+      };
 
-    fetch(api, {
-      method: 'POST', 
-      body: JSON.stringify(data),
-      headers:{
-        'Content-Type': 'application/json'
-      }
-      }).then(response => {
-        if (response.ok) {
-          alert('Se registro la obra social ' + titleCase(this.state.razonSocial) + ' con éxito.'); 
-          this.vaciadoCampos();
-          return response.text();
-        } else {
+    axios.post(api, data).then((response) => {
+        alert('Se registro la obra social ' + titleCase(this.state.razonSocial) + ' con éxito.'); 
+        this.vaciadoCampos();
+      }, (error) => {
           alert('No se ha podido registrar la obra social.');
-          return Promise.reject({status: response.status, statusText: response.statusText});
-        }
-      });
+        })
+    } else{
+      alert ('Revise los datos ingresados.')
+    }
+    
   }
 
   nuevaObraSocial(e){

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import './../styles.css';
 import MenuOpciones from '../MenuOpciones';
@@ -41,8 +42,8 @@ class ConsultaObraSocial extends Component {
     this.handleBlurMail = this.handleBlurMail.bind(this);
   }
 
-  componentWillMount() {
-    const api = "/obras_sociales/id/" + this.props.match.params.id ;
+  componentDidMount() {
+    const api = "/obras_sociales/id/" + this.props.match.params.id;
     this.handleUpdateClick(api);
   }
 
@@ -135,27 +136,17 @@ class ConsultaObraSocial extends Component {
   }
 
   alta(e){
-    fetch(`/obras_sociales/switch-alta/${this.props.match.params.id}`, {
-        method: 'PUT', 
-        headers:{
-        'Content-Type': 'application/json'
-        }
-    }).then(response => {
-        if (response.ok) {
-          alert("Se ha dado de alta la obra social con éxito.");
-          this.setState({estado: true})
-         
-          const api = "/obras_sociales/id/" + this.props.match.params.id ;
-          this.handleUpdateClick(api);
-          
-          return response.text();
-        } else {
-          if(this.state.estado) {
+    axios.put(`/obras_sociales/switch-alta/${this.props.match.params.id}`).then(response => {
+      alert("Se ha dado de alta la orbra social con éxito.");
+        this.setState({estado: true})
+        
+        const api = "/obras_sociales/id/" + this.props.match.params.id ;
+        this.handleUpdateClick(api);
+      }, (error) => {
+          if(this.state.bitAlta) {
               alert(`No se ha podido dar de alta la obra social ${this.state.razonSocial}. Intentelo nuevamente.`)
             }
-            return Promise.reject({status: response.status, statusText: response.statusText});
-        }
-        });
+      })
   
   }
 
@@ -186,10 +177,10 @@ class ConsultaObraSocial extends Component {
   modificarObraSocial = (e) => {
     e.preventDefault();
 
-    this.handleBlurRazonSocial()
-    this.handleBlurCuit()
-    this.handleBlurMail()
-    this.handleBlurTelefono()
+    this.handleBlurRazonSocial();
+    this.handleBlurCuit();
+    this.handleBlurMail();
+    this.handleBlurTelefono();
     
     const { errorRazonSocial, errorCuit, errorMail, errorTelefono  } = this.state;
 
@@ -206,29 +197,19 @@ class ConsultaObraSocial extends Component {
       
       const urlModificar = "/obras_sociales/modificar/" + this.state.id;
      
-      fetch(urlModificar, {
-        method: 'PUT', 
-        body: JSON.stringify(data),
-        headers:{
-          'Content-Type': 'application/json'
-        }
-        }).then(response => {
-          if (response.ok) {
-            alert('Se ha modificado la obra social con éxito.');
-            return response.text();
-          } else {
-            alert('No se ha podido modificar la obra social.');
-            const api = "/obras_sociales/id/" + this.props.match.params.id ;
-            this.handleUpdateClick(api);
-            return Promise.reject({status: response.status, statusText: response.statusText});
-          }
-        });
+      axios.put(urlModificar, data).then(response => {
+        alert('Se ha modificado la obra social con éxito.');
+      }, (error) => {
+          alert('No se ha podido modificar la obra social.');
+          const api = "/obras_sociales/id/" + this.props.match.params.id ;
+          this.handleUpdateClick(api);
+      })
   
-        this.setState({
-          modificacion: true,
-          cancelar: true,
-          cambios: false,
-        })
+      this.setState({
+        modificacion: true,
+        cancelar: true,
+        cambios: false,
+      })
       
     } else {
       alert("Revise los datos ingresados.")
@@ -238,29 +219,25 @@ class ConsultaObraSocial extends Component {
   
     
   handleUpdateClick = (api) => {
-    fetch(api).then ( resolve => {
-      if(resolve.ok) { 
-        return resolve.json();
-      } else {
-        throw Error(resolve.statusText);
-      }
-    }).then(obraSocial => {
+    axios.get(api).then(obraSocial => {
       this.setState({
-        id: obraSocial.idObraSocial,
-        razonSocial: obraSocial.razonSocial,
-        telefono: obraSocial.telefono,
-        mail: obraSocial.email,
-        cuit: obraSocial.cuit,    
+        id: obraSocial.data.idObraSocial,
+        razonSocial: obraSocial.data.razonSocial,
+        telefono: obraSocial.data.telefono,
+        mail: obraSocial.data.email,
+        cuit: obraSocial.data.cuit,    
         isbottonPressed: false,
-        estado: obraSocial.bitActivo,
+        estado: obraSocial.data.bitActivo,
         errorRazonSocial: true,
         errorCuit: true,
         errorTelefono: true,
         errorMail: true,
-      })
-    }).catch(function(error) {
-      alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 
-  });
+      });
+    }, (error) => {
+        alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 
+        console.log('Error fetch obra social: ', error.message);
+    })
+
   }
   
   cambioId(e) {
