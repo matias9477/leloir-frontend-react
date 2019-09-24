@@ -8,7 +8,7 @@ import { titleCase } from './../../Services/MetodosDeValidacion';
 import {urlDeterminaciones} from "../../Constants/URLs"
 import {orderBy} from "lodash";
 import {arrayOf, number, oneOf, shape, string} from "prop-types";
-import { determinacionType } from "./../../Types/index";
+import {determinacionType} from "../../Types";
 import {nroPorPagina} from "../../Constants/utils";
 
 class Determinaciones extends Component {
@@ -42,8 +42,8 @@ class Determinaciones extends Component {
                 totalCount: (Object.values(response.data).flat()).length,
             });
 
-            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.id], ["asc"]);
-            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.id], ["asc"]);
+            let filtro = orderBy(this.state.determinacionesFiltrados, [(determinacion) => determinacion.codigoPractica], ["asc"]);
+            let determinaciones = orderBy(this.state.determinaciones, [(determinacion) => determinacion.codigoPractica], ["asc"]);
 
             this.setState({
                 determinacionesFiltrados: filtro,
@@ -138,7 +138,7 @@ class Determinaciones extends Component {
 
                     <Header as='h2'>Determinaciones</Header>
 
-                    <Button as={Link} to='/' exact='true' floated='right' icon labelPosition='left' primary
+                    <Button as={Link} to='/determinaciones/add' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                         <Icon name='lab'/> Nueva Determinación
                     </Button>
@@ -161,27 +161,27 @@ class Determinaciones extends Component {
                     <table className="ui single line table">
                         <thead className='centerAlignment'>
                         <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("id")}>Id</th>
-                            <th onClick={() => this.handleColumnHeaderClick("nombre")}>Nombre</th>
-                            <th onClick={() => this.handleColumnHeaderClick("metodologia")}>Metodología</th>
-                            <th onClick={() => this.handleColumnHeaderClick("descripcion")}>Descripción</th>
+                            <th onClick={() => this.handleColumnHeaderClick("codigoPractica")}>Código Práctica</th>
+                            <th onClick={() => this.handleColumnHeaderClick("descripcionPractica")}>Descripción Práctica</th>
+                            <th onClick={() => this.handleColumnHeaderClick("unidadBioquimica")}>Unidad Bioquímica</th>
+                            <th onClick={() => this.handleColumnHeaderClick("unidadMedida")}>Unidad Medida</th>
                         </tr>
                         </thead>
 
                         <tbody className='centerAlignment'>
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((determinacion, index) => (
                             <tr key={index} determinacion={determinacion}>
-                                <td data-label="Número determinacion">
-                                    {determinacion.id}
+                                <td data-label="Código determinacion">
+                                    {determinacion.codigoPractica}
                                 </td>
-                                <td data-label="Nombre">
-                                    {determinacion.nombre}
+                                <td data-label="Descripción Práctica">
+                                    {determinacion.descripcionPractica}
                                 </td>
-                                <td data-label="Metodología">
-                                    {determinacion.metodologia}
+                                <td data-label="Unidad Bioquimica">
+                                    {determinacion.unidadBioquimica}
                                 </td>
-                                <td data-label="Descripción">
-                                    {determinacion.descripcion}
+                                <td data-label="Unidad Medida">
+                                    {determinacion.unidadMedida}
                                 </td>
                             </tr>
                         ))}
