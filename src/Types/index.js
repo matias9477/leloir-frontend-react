@@ -53,9 +53,10 @@ export const pacientesArrayType = {
 };
 
 export const determinacionType = shape({
-    codigoPractica: number.isRequired,
+    codigoPráctica: number.isRequired,
     descripcionPractica: string.isRequired,
     unidadBioquimica: number,
     unidadMedida: string,
+    bitAlta: bool
 });
 

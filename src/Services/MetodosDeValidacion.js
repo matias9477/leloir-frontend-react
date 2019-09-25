@@ -14,20 +14,15 @@ export function hasNumbers(t){
   
 export const validMail = /\S+@\S+\.\S+/;
 
-export function convertStyleString(palabra){
-    const cuerpo = palabra.slice(1);
-    return palabra.charAt(0).toUpperCase() + cuerpo.toLowerCase();
-}
-
 export function titleCase(str) {
     var splitStr = str.toLowerCase().split(' ');
     for (var i = 0; i < splitStr.length; i++) {
         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
     }
-    return splitStr.join(' '); 
+    return splitStr.join(' ');
   }
 
-  export function nullTo(nro){
+export function nullTo(nro){
     if (nro != null){
         return nro
     }

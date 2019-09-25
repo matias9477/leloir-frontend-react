@@ -1,4 +1,5 @@
   
+
   export function fechaAltaDateStamp(alta){
     return alta + "T00:00:00";
   }

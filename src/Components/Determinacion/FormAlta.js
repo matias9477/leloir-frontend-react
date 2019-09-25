@@ -97,15 +97,13 @@ class FormAlta extends Component {
 
         axios.post(api, data
         ).then((response) => {
-                if (response.status === 200) {
                     alert('Se registro la determinación ' + convertStyleString(this.state.descripcionPractica) + ' con éxito.');
                     this.vaciadoCampos();
                     return response.statusText;
-                } else {
-                    alert('No se ha podido registrar la determinación.');
-                    return Promise.reject({status: response.status, statusText: response.statusText});
-                }
-            });
+            }, (error) => {
+            alert('No se ha podido registrar la determinación.');
+            return Promise.reject({status: error.status, statusText: error.statusText});
+        });
     };
 
     fetchDeterminacion(e) {
