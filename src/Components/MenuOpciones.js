@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Image, Menu} from 'semantic-ui-react'
+import {Image, Menu, Icon} from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
 import '../App.css';
 
@@ -64,6 +64,25 @@ export default class MenuOpciones extends Component {
                         active={activeItem === 'Determinaciones'}
                         onClick={this.handleItemClick}
                     />
+                    <Menu.Menu position='right'>
+                        <Menu.Item
+                            as={Link} to='/ajustes'
+                            active={activeItem === 'Ajustes'}
+                            color={'teal'}
+                            onClick={this.handleItemClick}
+                        >
+                            <Icon inverted name='setting' size='large' />
+                        </Menu.Item>
+                        <Menu.Item
+                            as={Link} to='/logout'
+                            active={activeItem === 'Logout'}
+                            color={'red'}
+                            onClick={this.handleItemClick}
+                        >
+                            <Icon inverted name='log out' size='large' />
+                        </Menu.Item>
+                    </Menu.Menu>
+
 
                 </Menu>
 
