@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form } from 'semantic-ui-react'
+import { Button, Header, Form } from 'semantic-ui-react';
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import { urlTiposAnimales } from './../../Constants/URLs';
@@ -25,7 +25,7 @@ class AltaAnimal extends Component {
         errorPropietario: true,
         errorMail: true,
       })
-    this.fetchPaciente = this.fetchPaciente.bind(this);
+    this.getPaciente = this.getPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
     this.cambioTipo = this.cambioTipo.bind(this); 
     this.cambioPropietario = this.cambioPropietario.bind(this);
@@ -40,15 +40,17 @@ class AltaAnimal extends Component {
   } 
 
   comboTipos = () =>{
-    axios.get(urlTiposAnimales).then(tiposAnimales => {
-      this.setState({tipos:tiposAnimales}) 
+    axios.get(urlTiposAnimales).then(resolve => {
+      this.setState({
+        tipos: resolve.data,
+      });
     }, (error) => {
-        console.log('Error combo animales: ', error.message);
+        console.log('Error combo animales', error.message);
     })
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.comboTipos();
 
   }
@@ -68,27 +70,17 @@ class AltaAnimal extends Component {
             "tipoAnimalId": 1
         }
     };
-   
 
-    fetch(api, {
-      method: 'POST', 
-      body: JSON.stringify(data),
-      headers:{
-        'Content-Type': 'application/json'
-      }
-      }).then(response => {
-        if (response.ok) {
+      axios.post(api, data
+        ).then((response) => {
           alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.'); 
           this.vaciadoCampos();
-          return response.text();
-        } else {
+        }, (error) => {
           alert('No se ha podido registrar el paciente.');
-          return Promise.reject({status: response.status, statusText: response.statusText});
-        }
       });
   }
 
-  fetchPaciente(e){
+  getPaciente(e){
     e.preventDefault();
 
     this.handleBlurNombre()
@@ -211,7 +203,7 @@ class AltaAnimal extends Component {
       <div className='altasPaciente'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
 
-        <Form onSubmit={this.fetchPaciente}>
+        <Form onSubmit={this.getPaciente}>
 
           <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
@@ -229,7 +221,7 @@ class AltaAnimal extends Component {
 
           <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail === '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>      
           
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Animal</Button >       
+          <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Animal</Button >       
 
         </Form>  
       </div>

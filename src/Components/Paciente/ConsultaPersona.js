@@ -133,7 +133,7 @@ class ConsultaPersona extends Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fillCombos();
     const api = "/pacientes/id/" + this.props.id ;
     this.handleUpdateClick(api);

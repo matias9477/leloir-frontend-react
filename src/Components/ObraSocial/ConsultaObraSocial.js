@@ -157,8 +157,8 @@ class ConsultaObraSocial extends Component {
       cambios: false,
       errorRazonSocial: '',
       errorCuit: '',
-      errorMail: '',
-      errorTelefono: '',
+      errorMail: true,
+      errorTelefono: true,
     })
     if (this.state.cambios){
       const api = "/obras_sociales/id/" + this.props.match.params.id ;

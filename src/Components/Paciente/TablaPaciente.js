@@ -1,6 +1,6 @@
 import React from 'react';
-import axios from 'axios'
-import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react'
+import axios from 'axios';
+import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { orderBy } from 'lodash';
 import { oneOfType } from "prop-types";
@@ -10,6 +10,7 @@ import { titleCase, nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 import { animalType, institucionType, pacientesArrayType, personaType } from "../../Types";
 import {nroPorPagina} from "../../Constants/utils";
+import { urlPacientes } from '../../Constants/URLs';
 
 export default class TablaPaciente extends React.Component {
     constructor(props) {
@@ -35,7 +36,6 @@ export default class TablaPaciente extends React.Component {
     }
 
     getAllPacientes = () => {
-        const urlPacientes = '/pacientes/all';
         axios.get(urlPacientes).then(resolve => {
             this.setState({
                 pacientes: Object.values(resolve.data).flat(),
@@ -81,18 +81,18 @@ export default class TablaPaciente extends React.Component {
 
     checkApellido(apellido){
         if(apellido !== undefined){
-            return apellido
+            return apellido;
         } 
         else{
-            return ''
+            return '';
         }
     }
 
     mensajeConfirmacion(paciente) {
         if (paciente.bitAlta) {
-            return (`¿Esta seguro que quiere eliminar al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`)
+            return (`¿Esta seguro que quiere eliminar al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`);
         } else {
-            return (`¿Esta seguro que quiere dar de alta al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`)
+            return (`¿Esta seguro que quiere dar de alta al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`);
         }
     }
 

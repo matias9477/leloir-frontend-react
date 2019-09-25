@@ -18,8 +18,8 @@ class AltaObraSocial extends Component {
 
         errorRazonSocial: '',
         errorCuit: '',
-        errorTelefono: '',
-        errorMail: '',
+        errorTelefono: true,
+        errorMail: true,
 
       })
       this.nuevaObraSocial = this.nuevaObraSocial.bind(this);
@@ -120,8 +120,8 @@ class AltaObraSocial extends Component {
       mail:'',
       errorRazonSocial: '',
       errorCuit: '',
-      errorTelefono: '',
-      errorMail: '',
+      errorTelefono: true,
+      errorMail: true,
     })
   }
  

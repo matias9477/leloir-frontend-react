@@ -191,16 +191,7 @@ class ConsultaAnimal extends Component {
             },
       };
 
-      console.log('Type: ' + 'com.leloir.backend.domain.Animal')
-      console.log('Bit alta: ' + true)
-      console.log('Mail: ' + emptyToNull(this.state.mail))
-      console.log('Nombre: ' + titleCase(this.state.nombre))
-      console.log('Propietario: ' + titleCase(this.state.propietario))
-      console.log('Telefono: ' + emptyToNull(this.state.telefono))
-      console.log('Tipo animal nombre: ' + this.state.tipo)
-      console.log('Tipo animal id: ' + getIdTipoAnimal(this.state.tipo, this.state.tipos))
-
-      const api = '/pacientes/modificar/' + this.props.id;
+      const api = `/pacientes/modificar/${this.props.id}`;
 
       axios.put(api,data)
         .then((response) => {
@@ -221,7 +212,6 @@ class ConsultaAnimal extends Component {
       
     } else {
       alert("Revise los datos ingresados.")
-      console.log('Nombre: ', errorNombre,' Propietario: ', errorPropietario, ' Telefono: ', errorTelefono,' Tipo: ', errorTipo, ' Mail: ', errorMail)
     }    
 
   }

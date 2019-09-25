@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
@@ -40,7 +41,7 @@ class AltaPersona extends Component {
         errorTelefono: true,
 
       })
-    this.fetchPaciente = this.fetchPaciente.bind(this);
+    this.getPaciente = this.getPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
     this.cambioApellido = this.cambioApellido.bind(this);    
     this.cambioTipoDoc = this.cambioTipoDoc.bind(this);
@@ -72,55 +73,50 @@ class AltaPersona extends Component {
   }  
 
   comboSexos = () =>{
-    fetch(urlSexos).then ( resolve => {
-        if(resolve.ok) { 
-            return resolve.json();
-        } else {
-            throw Error(resolve.statusText);
-        }
-    }).then(sexo => {
-       this.setState({sexos:sexo}) 
+    axios.get(urlSexos).then(resolve => {
+      this.setState({
+          sexos: resolve.data,
+      });
+    }, (error) => {
+        console.log('Error combo sexo', error.message);
     })
+
   }
 
   comboPaises = () =>{
-    fetch(urlPaises).then ( resolve => {
-        if(resolve.ok) { 
-            return resolve.json();
-        } else {
-            throw Error(resolve.statusText);
-        }
-    }).then(pais => {
-        this.setState({paises:pais})
-    })    
+    axios.get(urlPaises).then(resolve => {
+      this.setState({
+          paises: resolve.data,
+      });
+    }, (error) => {
+        console.log('Error combo paises', error.message);
+    })
+
   }
 
   comboObrasSociales = () =>{
-    fetch(urlObrasSoc).then ( resolve => {
-        if(resolve.ok) { 
-            return resolve.json();
-        } else {
-            throw Error(resolve.statusText);
-        }
-    }).then(obrasSoc => {
-        this.setState({obrasSociales:obrasSoc});
+    axios.get(urlObrasSoc).then(resolve => {
+      this.setState({
+          obrasSociales: resolve.data,
+      });
+    }, (error) => {
+        console.log('Error combo obras sociales: ', error.message);
     })
+
   }
 
   comboTiposDocs = () =>{
-    fetch(urlDocs).then ( resolve => {
-        if(resolve.ok) { 
-            return resolve.json();
-        } else {
-            throw Error(resolve.statusText);
-        }
-    }).then(tipos => {
-        this.setState({documentos:tipos})
+    axios.get(urlDocs).then(resolve => {
+      this.setState({
+          documentos: resolve.data,
+      });
+    }, (error) => {
+        console.log('Error combo paises', error.message);
     })
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fillCombos();
 
   }
@@ -196,25 +192,17 @@ class AltaPersona extends Component {
     };
     }
 
-    fetch(api, {
-      method: 'POST', 
-      body: JSON.stringify(data),
-      headers:{
-        'Content-Type': 'application/json'
-      }
-      }).then(response => {
-        if (response.ok) {
-          alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
-          this.vaciadoCampos();
-          return response.text();
-        } else {
-          alert('No se ha podido registrar el paciente.');
-          return Promise.reject({status: response.status, statusText: response.statusText});
-        }
-      });
+    axios.post(api, data
+      ).then((response) => {
+        alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
+        this.vaciadoCampos();
+      }, (error) => {
+        alert('No se ha podido registrar el paciente.');
+    });
+
   }
 
-  fetchPaciente(e){
+  getPaciente(e){
     e.preventDefault();
 
     this.handleBlurNombre()
@@ -464,7 +452,7 @@ class AltaPersona extends Component {
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
           </Form.Field>
 
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Paciente</Button >
+          <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Paciente</Button >
 
         </Form>
       </div>

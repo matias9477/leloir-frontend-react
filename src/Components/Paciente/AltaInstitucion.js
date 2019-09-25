@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form } from 'semantic-ui-react'
+import { Button, Header, Form } from 'semantic-ui-react';
+
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
@@ -23,7 +25,7 @@ class AltaInstitucion extends Component {
         errorFax: true,
         
       })
-    this.fetchPaciente = this.fetchPaciente.bind(this);
+    this.getPaciente = this.getPaciente.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
@@ -48,27 +50,17 @@ class AltaInstitucion extends Component {
         "direccion": null,
         "fax": null
     };
-    
 
-    fetch(api, {
-      method: 'POST', 
-      body: JSON.stringify(data),
-      headers:{
-        'Content-Type': 'application/json'
-      }
-      }).then(response => {
-        if (response.ok) {
-          alert('Se registro el paciente ' + titleCase(this.state.nombre) + ' con éxito.'); 
-          this.vaciadoCampos();
-          return response.text();
-        } else {
-          alert('No se ha podido registrar el paciente.');
-          return Promise.reject({status: response.status, statusText: response.statusText});
-        }
-      });
+    axios.post(api, data
+      ).then((response) => {
+        alert('Se registro el paciente ' + titleCase(this.state.nombre) + ' con éxito.'); 
+        this.vaciadoCampos();
+      }, (error) => {
+        alert('No se ha podido registrar el paciente.');
+    });
   }
 
-  fetchPaciente(e){
+  getPaciente(e){
     e.preventDefault();
     
     this.handleBlurNombre()
@@ -177,7 +169,7 @@ class AltaInstitucion extends Component {
       <div className='altasPaciente'>
         <Header as='h3' dividing>Registrar nueva Institución</Header>
        
-        <Form onSubmit={this.fetchPaciente}>
+        <Form onSubmit={this.getPaciente}>
 
           <Form.Field required label='Nombre' control='input' 
           placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
@@ -189,7 +181,7 @@ class AltaInstitucion extends Component {
           <Form.Field label='Fax' control='input' 
           placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} className= {(this.state.errorFax=== '' || this.state.errorFax === true) ? null : 'error'} onBlur={this.handleBlurFax}/>    
           
-          <Button primary type="submit" onClick={this.fetchPaciente} className="boton"> Registrar Institución</Button >       
+          <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 
         </Form>  
       </div>
