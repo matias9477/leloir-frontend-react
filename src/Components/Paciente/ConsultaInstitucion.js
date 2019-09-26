@@ -3,8 +3,9 @@ import axios from 'axios'
 import { Button,  Form } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
-import { getHumanDate } from '../../Services/MetodosPaciente';
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
+import { getHumanDate } from '../../Services/MetodosPaciente';import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
+
 
 class ConsultaInstitucion extends Component {
     constructor(props) {
@@ -26,7 +27,7 @@ class ConsultaInstitucion extends Component {
         fax: '',
         fechaAlta: '',
             
-        errorNombre: '',
+        errorNombre: true,
         errorTelefono: true,
         errorMail: true,
         errorFax: true,
@@ -37,14 +38,9 @@ class ConsultaInstitucion extends Component {
         this.cambioTelefono = this.cambioTelefono.bind(this);
         this.cambioMail = this.cambioMail.bind(this);
         this.cambioFax = this.cambioFax.bind(this);
-
-        this.handleBlurNombre = this.handleBlurNombre.bind(this);
-        this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
-        this.handleBlurMail =  this.handleBlurMail.bind(this);
-        this.handleBlurFax = this.handleBlurFax.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const api = "/pacientes/id/" + this.props.id ;
         this.handleUpdateClick(api);
     }
@@ -66,8 +62,101 @@ class ConsultaInstitucion extends Component {
             console.log('Error fetch paciente: ', error.message);
         })
     }
-      
 
+    cancelar(e){
+        e.preventDefault();
+        this.setState({
+          modificacion: true,
+          cambios: false,
+          errorNombre: true,
+          errorTelefono: true,
+          errorMail: true,
+          errorFax: true,
+        })
+        if (this.state.cambios){
+          const api = "/pacientes/id/" + this.props.id ;
+          this.handleUpdateClick(api);
+        }
+    }
+
+    alta(e){
+        axios.put(`/pacientes/switch-alta/${this.props.id}`).then(response => {
+            alert("Se ha dado de alta al paciente con éxito.");
+              this.setState({estado: true})
+             
+              const api = "/pacientes/id/" + this.props.id ;
+              this.handleUpdateClick(api); 
+        }, (error) => {
+            if(this.state.bitAlta) {
+                alert(`No se ha podido dar de alta al paciente ${this.state.nombre} ${this.state.apellido}. Intentelo nuevamente.`)
+              }
+        })
+    
+    }
+    
+    habilitarModificacion(e){
+    e.preventDefault();
+    this.setState ({
+        modificacion: false,
+        cancelar: false,
+    })
+    }
+      
+    modificarPaciente = (e) => {
+    e.preventDefault();
+    
+    const { nombre, mail, telefono, fax } = this.state;
+
+    const errorNombre = validateNombre(nombre);
+    const errorTelefono = validateOnlyNumbers(telefono);
+    const errorFax = validateOnlyNumbers(fax);
+    const errorMail = validateMail(mail);
+
+    if ( errorNombre && errorMail && errorTelefono && errorFax ) {
+        var data = {
+            "type": 'com.leloir.backend.domain.Institucion',
+            "idPaciente": this.state.id,
+            "bitAlta": true,
+            "historial": null,
+            "mail": emptyToNull(this.state.mail),
+            "nombre": titleCase(this.state.nombre),
+            "telefono": emptyToNull(this.state.telefono),
+            "fechaAlta": fechaAltaDateStamp(this.state.fechaAlta),
+            "fax": this.state.fax,
+        };
+
+        const api = '/pacientes/modificar/' + this.props.id;
+        
+        axios.put(api, data).then(response => {
+        alert('Se ha modificado el paciente con éxito.');
+        }, (error) => {
+        alert('No se ha podido modificar el paciente.');
+        const api = "/pacientes/id/" + this.state.id ;
+        this.handleUpdateClick(api);
+        })
+
+        this.setState({
+            modificacion: true,
+            cancelar: true,
+            cambios: false,
+            errorNombre,
+            errorTelefono,
+            errorMail,
+            errorFax,
+        })
+        
+    } else {
+        alert("Revise los datos ingresados.")
+        this.setState({
+            errorNombre,
+            errorTelefono,
+            errorMail,
+            errorFax,
+        })
+    }    
+
+    }
+      
     cambioId(e) {
         this.setState( {
           id: e.target.value,
@@ -109,84 +198,60 @@ class ConsultaInstitucion extends Component {
         })
     }
 
-
-    handleBlurNombre = () => {
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
-        this.setState({ errorNombre: false })
-    } else {
-        this.setState({errorNombre: true})
-    }
-    }
-
-    handleBlurTelefono = () => {
-    if (this.state.telefono === ''){
-        this.setState({ errorTelefono: true })
-    } else if (isFinite(String(this.state.telefono))){
-        this.setState({ errorTelefono: true })
-    } else {
-        this.setState({
-        errorTelefono: false
-        })
-    }
-    }
-
-    handleBlurMail = () => {
-    if(this.state.mail === ''){
-        this.setState({
-        errorMail: true,
-        })
-    } else if ( validMail.test(this.state.mail) ) {
-        this.setState({
-            errorMail: true,
-        })
-    } else {
-        this.setState({
-        errorMail: false,
-        })
-    } 
-    }
-
-    handleBlurFax = () => {
-    if (this.state.fax === ''){
-        this.setState({ errorFax: true })
-    } else if (isFinite(String(this.state.fax))){
-        this.setState({ errorFax: true })
-    } else {
-        this.setState({
-        errorFax: false
-        })
-    }
-    }
-
-
     render(){
         return(
             <div className='Formularios'>
             {this.state.nombre === '' ? <CircularProgress size={50}/> : 
                 
             <Form>
-                <Form.Field required label='Número de Paciente' control='input' disabled={true}  value={this.state.id} onChange={this.cambioId} />
+                <Form.Field required label='Número de Paciente' control='input' disabled={true}  
+                value={this.state.id} 
+                onChange={this.cambioId} 
+                />
 
-                <Form.Field required label='Nombre Institucón' control='input' disabled={this.state.modificacion}  value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'}/>
+                <Form.Field required label='Nombre Institucón' control='input' disabled={this.state.modificacion}  
+                value={this.state.nombre} 
+                onChange={this.cambioNombre} 
+                className= {this.state.errorNombre === true ? null : 'error'} 
+                />
 
-                <Form.Field required label='Fecha alta' control='input' disabled={true} value={this.state.fechaAlta} onChange={this.cambioFechaAlta}/>
+                <Form.Field required label='Fecha alta' control='input' 
+                disabled={true} 
+                value={this.state.fechaAlta} 
+                onChange={this.cambioFechaAlta}
+                />
 
-                <Form.Field  label='Telefono' control='input' disabled={this.state.modificacion} value={this.state.telefono || ''} onChange={this.cambioTelefono}/>
+                <Form.Field  label='Telefono' control='input' 
+                disabled={this.state.modificacion} 
+                value={this.state.telefono || ''} 
+                onChange={this.cambioTelefono} 
+                className= {this.state.errorTelefono === true ? null : 'error'} 
+                />
 
-                <Form.Field  label='Mail' control='input' disabled={this.state.modificacion} value={this.state.mail || ''} onChange={this.cambioMail}/>
+                <Form.Field  label='Mail' control='input' 
+                disabled={this.state.modificacion} 
+                value={this.state.mail || ''} 
+                onChange={this.cambioMail} 
+                className= {this.state.errorMail === true ? null : 'error'} 
+                />
 
-                <Form.Field  label='Fax' control='input' disabled={this.state.modificacion} value={this.state.fax || ''} onChange={this.cambioFax}/>
+                <Form.Field  label='Fax' control='input' 
+                disabled={this.state.modificacion} 
+                value={this.state.fax || ''} 
+                onChange={this.cambioFax} 
+                className= {this.state.errorFax === true ? null : 'error'} 
+                />
 
                 {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
                     this.habilitarModificacion(e)} }>Modificar</Button>  : null}
 
                 {(!this.state.estado) ? <Button onClick={(e) => { 
-                    if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + ' ' + this.state.apellido + '?')) {  
+                    if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
                     this.alta(e)
                     } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
                     
                 {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => { 
-                    if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + ' ' + this.state.apellido + '?')) {  
+                    if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
                     this.modificarPaciente(e)
                     } else {e.preventDefault()} } }>
                     Aceptar

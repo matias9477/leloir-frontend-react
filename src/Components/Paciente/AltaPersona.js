@@ -6,7 +6,7 @@ import { addDays } from 'date-fns';
 import { Button, Form, Header } from 'semantic-ui-react'
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
 import { getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
-import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaPersona extends Component {
@@ -30,13 +30,13 @@ class AltaPersona extends Component {
         obrasSociales:[],
         sexos:[],
 
-        errorNombre: '',
-        errorApellido: '',
-        errorTipoDoc: '',
-        errorNroDoc: '',
-        errorSexo: '',
-        errorNac: '',
-        errorFechaNac: '',
+        errorNombre: true,
+        errorApellido: true,
+        errorTipoDoc: true,
+        errorNroDoc: true,
+        errorSexo: true,
+        errorNac: true,
+        errorFechaNac: true,
         errorMail: true,
         errorTelefono: true,
 
@@ -52,17 +52,6 @@ class AltaPersona extends Component {
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
-
-    this.handleBlurNombre = this.handleBlurNombre.bind(this);
-    this.handleBlurApellido = this.handleBlurApellido.bind(this);
-    this.handleBlurTipoDoc = this.handleBlurTipoDoc.bind(this);
-    this.handleBlurNroDoc = this.handleBlurNroDoc.bind(this);
-    this.handleBlurSexo = this.handleBlurSexo.bind(this);
-    this.handleBlurNacionalidad = this.handleBlurNacionalidad.bind(this);
-    this.handleBlurFechaNacimiento = this.handleBlurFechaNacimiento.bind(this);
-    this.handleBlurMail = this.handleBlurMail.bind(this);
-    this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
-
   }
   
   fillCombos = () =>{
@@ -204,24 +193,35 @@ class AltaPersona extends Component {
 
   getPaciente(e){
     e.preventDefault();
-
-    this.handleBlurNombre()
-    this.handleBlurApellido()
-    this.handleBlurTipoDoc()
-    this.handleBlurNroDoc()
-    this.handleBlurFechaNacimiento()
-    this.handleBlurSexo()
-    this.handleBlurNacionalidad()
-    this.handleBlurMail()
-    this.handleBlurTelefono()
     
-    const { errorNombre, errorApellido, errorTipoDoc, errorNroDoc, errorFechaNac, errorSexo, errorNac, errorMail, errorTelefono } = this.state;
+    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad, mail, telefono } = this.state;
+
+    const errorNombre = validateNombre(nombre);
+    const errorApellido = validateNombre(apellido);
+    const errorTipoDoc = validateRequiredCombos(tipoDoc);
+    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc);
+    const errorFechaNac = validateFechaNacimiento(fechaNacimiento);
+    const errorSexo = validateRequiredCombos(sexo);
+    const errorNac = validateRequiredCombos(nacionalidad);
+    const errorMail = validateMail(mail);
+    const errorTelefono = validateOnlyNumbers(telefono);
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       const api = '/pacientes/add';
       this.handleUpdateClick(api);
     } else {
       alert('Verifique los datos ingresados.');
+      this.setState({
+        errorNombre,
+        errorApellido,
+        errorTipoDoc,
+        errorNroDoc, 
+        errorFechaNac,
+        errorSexo, 
+        errorNac,
+        errorMail,
+        errorTelefono,
+      })
     }    
   }
 
@@ -239,12 +239,12 @@ class AltaPersona extends Component {
       telefono:'',
       mail:'',
       obraSocial:'',
-      errorNombre: '',
-      errorApellido: '',
-      errorTipoDoc: '',
-      errorNroDoc: '',
-      errorSexo: '',
-      errorNac: '',
+      errorNombre: true,
+      errorApellido: true,
+      errorTipoDoc: true,
+      errorNroDoc: true,
+      errorSexo: true,
+      errorNac: true,
       errorFechaNac: true,
       errorMail: true,
     })
@@ -308,96 +308,7 @@ class AltaPersona extends Component {
       this.setState( {
           obraSocial: e.target.value
       })
-  }
-
-  handleBlurNombre(){
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
-      this.setState({ errorNombre: false })
-    } else {
-      this.setState({errorNombre: true})
-    }
-  }
-
-  handleBlurApellido(){
-    if (this.state.apellido === '' || this.state.apellido.length === 0 || hasNumbers(this.state.apellido)){
-      this.setState({errorApellido: false})
-    } else {
-      this.setState({errorApellido: true})
-    }
-  }
-
-  handleBlurTipoDoc = () => {
-    if (this.state.tipoDoc.length === 0 || this.state.tipoDoc === ''){
-      this.setState({errorTipoDoc: false})
-    } else{
-      this.setState({errorTipoDoc: true})
-    }
-  }
-
-  handleBlurNroDoc = () => {
-    if (this.state.nroDoc === ''){
-      this.setState({errorNroDoc: false})
-    } else if (this.state.tipoDoc === 'Documento Nacional de Identidad' && isFinite(String(this.state.nroDoc))){
-      this.setState({errorNroDoc: true})
-    } else if (this.state.tipoDoc === 'Documento Nacional de Identidad' && !isFinite(String(this.state.nroDoc))){
-      this.setState({errorNroDoc: false})
-    } else if (this.state.tipoDoc === 'Pasaporte' && hasNumbers(this.state.nroDoc)){
-      this.setState({errorNroDoc: true})
-    }
-  }
-
-  handleBlurSexo = () => {
-    if (this.state.sexo.length === 0 || this.state.sexo === ''){
-      this.setState({errorSexo: false})
-    } else{
-      this.setState({errorSexo: true})
-    }
-  }
-
-  handleBlurNacionalidad = () => {
-    if (this.state.nacionalidad.length === 0 || this.state.nacionalidad === ''){
-      this.setState({errorNac: false})
-    } else{
-      this.setState({errorNac: true})
-    }
-  }
-
-  handleBlurFechaNacimiento = () => {
-    if (this.state.fechaNacimiento.length === 0 || this.state.fechaNacimiento === ''){
-      this.setState({errorFechaNac: false})
-    } else{
-      this.setState({errorFechaNac: true})
-    }
-  }
-
-  handleBlurMail = ( ) => {
-    if(this.state.mail === ''){
-      this.setState({
-        errorMail: true,
-      })
-    } else if ( validMail.test(this.state.mail) ) {
-        this.setState({
-          errorMail: true,
-        })
-    } else {
-      this.setState({
-        errorMail: false,
-      })
-    } 
-  }
-
-  handleBlurTelefono = () => {
-    if (this.state.telefono === ''){
-      this.setState({ errorTelefono: true })
-    } else if (isFinite(String(this.state.telefono))){
-      this.setState({ errorTelefono: true })
-    } else {
-      this.setState({
-        errorTelefono: false
-      })
-    }
-  }
-
+  }  
   
 
   render(){
@@ -408,45 +319,92 @@ class AltaPersona extends Component {
         <Form>
 
           <Form.Field required label='Nombre' control='input'
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
+          placeholder='Nombre' 
+          value={this.state.nombre} 
+          onChange={this.cambioNombre} 
+          className= {this.state.errorNombre === true ? null : 'error'} 
+          />
 
           <Form.Field required label='Apellido' control='input'
-          placeholder='Apellido' value={this.state.apellido} onChange={this.cambioApellido} className= {(this.state.errorApellido=== '' || this.state.errorApellido === true)? null : 'error' } onBlur={this.handleBlurApellido}/>
+          placeholder='Apellido' 
+          value={this.state.apellido} 
+          onChange={this.cambioApellido} 
+          className= {this.state.errorApellido === true ? null : 'error' } 
+          />
 
           <Form.Group widths='equal'>
-            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' value={this.state.tipoDoc} onChange={this.cambioTipoDoc} className= {(this.state.errorTipoDoc=== '' || this.state.errorTipoDoc === true) ? null : 'error'} onBlur={this.handleBlurTipoDoc}>
+            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' 
+            value={this.state.tipoDoc} 
+            onChange={this.cambioTipoDoc} 
+            className= {this.state.errorTipoDoc === true ? null : 'error'} 
+            >
                 <option value={null}> </option>
                 {this.state.documentos.map(item => (
                 <option key={item.idTipoDocumento}>{item.nombre}</option>))}
             </Form.Field>
-            <Form.Field required maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} label='Número de Documento' control='input' placeholder='Número de documento' value={this.state.nroDoc} onChange={this.cambioNroDoc} className= {(this.state.errorNroDoc=== '' || this.state.errorNroDoc === true) ? null : 'error'} onBlur={this.handleBlurNroDoc}>
-            </Form.Field>
-           </Form.Group>
 
-          <Form.Field required label='Sexo' control='select' placeholder = 'Sexo' value={this.state.sexo} onChange={this.cambioSexo} className= {(this.state.errorSexo=== '' || this.state.errorSexo === true) ? null : 'error'} onBlur={this.handleBlurSexo}>
+            <Form.Field required label='Número de Documento' control='input'
+            maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} 
+            placeholder='Número de documento' 
+            value={this.state.nroDoc} 
+            onChange={this.cambioNroDoc} 
+            className= {this.state.errorNroDoc === true ? null : 'error'} 
+            />
+          </Form.Group>
+
+          <Form.Field required label='Sexo' control='select' 
+          placeholder = 'Sexo' 
+          value={this.state.sexo} 
+          onChange={this.cambioSexo} 
+          className= {this.state.errorSexo === true ? null : 'error'} 
+          >
             <option value={null}>  </option>
             {this.state.sexos.map(item => (
             <option key={item.sexoId}>{item.nombre}</option>))}
           </Form.Field>
 
-          <Form.Field required label='Nacionalidad' control='select' placeholder = 'Nacionalidad' value={this.state.nacionalidad} onChange={this.cambioNacionalidad} className= {(this.state.errorNac=== '' || this.state.errorNac === true) ? null : 'error'} onBlur={this.handleBlurNacionalidad}>
+          <Form.Field required label='Nacionalidad' control='select' 
+          placeholder = 'Nacionalidad' 
+          value={this.state.nacionalidad} 
+          onChange={this.cambioNacionalidad} 
+          className= {this.state.errorNac === true ? null : 'error'} 
+          >
             <option value={null}>  </option>
               {this.state.paises.map(item => (
             <option key={item.idPais}>{item.nombreBonito}</option>))}
           </Form.Field>
 
-          <Form.Field required className= {(this.state.errorFechaNac=== '' || this.state.errorFechaNac === true) ? null : 'error'} onBlur={this.handleBlurFechaNacimiento}>
+          <Form.Field required 
+          className= {this.state.errorFechaNac === true ? null : 'error'}
+          >
             <label>Fecha de Nacimiento</label>
               <DatePicker placeholderText="Fecha de Nacimiento"
-              selected={this.state.fechaNacimiento} onChange= {this.cambioFechaNacimiento} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" maxDate={addDays(new Date(), 0)} dateFormat="yyyy-MM-dd">
+              selected={this.state.fechaNacimiento} 
+              onChange= {this.cambioFechaNacimiento} 
+              peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+              maxDate={addDays(new Date(), 0)} 
+              dateFormat="yyyy-MM-dd">
               </DatePicker>
           </Form.Field>
 
-          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error' } onBlur={this.handleBlurTelefono}/>
+          <Form.Field label='Telefono' control='input' 
+          placeholder='Teléfono' 
+          value={this.state.telefono} 
+          onChange={this.cambioTelefono} 
+          className= {this.state.errorTelefono === true ? null : 'error' }
+          />
 
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail === '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>
+          <Form.Field label='E-Mail' control='input' 
+          placeholder='E-Mail' 
+          value={this.state.mail} 
+          onChange={this.cambioMail} 
+          className= {this.state.errorMail === true ? null : 'error'} 
+          />
 
-          <Form.Field label='Obra Social' control='select' placeholder = 'Obra Social' value={this.state.obraSocial} onChange={this.cambioObraSocial} >
+          <Form.Field label='Obra Social' control='select' 
+          placeholder = 'Obra Social' 
+          value={this.state.obraSocial} 
+          onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
               {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}

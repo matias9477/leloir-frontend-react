@@ -30,3 +30,62 @@ export function nullTo(nro){
         return '-'
     }
 }
+
+export function validateRequiredCombos(valor){
+  if (valor.length === 0 || valor === ''){
+      return false
+  }
+  return true
+}
+
+export function validateNombre(nombre){
+  if (nombre === '' ||  hasNumbers(nombre)){
+    return false
+  } else {
+    return true
+  }
+}
+
+export function validateOnlyNumbers(telefono){
+  if (telefono === '' || telefono === null){
+    return true
+  } else if (isFinite(String(telefono))){
+    return true
+  } else {
+    return false
+  }
+}
+
+export function validateMail(mail){
+  const validMail = /\S+@\S+\.\S+/;
+  
+  if (mail === '' || mail === null){
+    return true
+  } else if ( validMail.test(mail) ) {
+    return true
+  } else {
+    return false
+  } 
+}
+
+export function validateNroDocumento(nroDoc, tipoDoc){
+  if (nroDoc === ''){
+    return false
+  } else if (tipoDoc === 'Documento Nacional de Identidad' && isFinite(String(nroDoc))){
+    return true
+  } else if (tipoDoc === 'Documento Nacional de Identidad' && !isFinite(String(nroDoc))){
+    return false
+  } else if (tipoDoc === 'Pasaporte' && hasNumbers(nroDoc)){
+    return true
+  }
+}
+
+
+export function validateFechaNacimiento(fechaNacimiento) {
+  if (fechaNacimiento.length === 0 || fechaNacimiento === ''){
+    return false
+  } else{
+    return true
+  }
+}
+

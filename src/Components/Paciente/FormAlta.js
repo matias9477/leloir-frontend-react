@@ -17,7 +17,7 @@ class FormAlta extends Component {
     this.cambioTipo = this.cambioTipo.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       opciones: [
         {key: 1, value: "Persona"},

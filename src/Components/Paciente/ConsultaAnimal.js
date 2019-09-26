@@ -4,10 +4,11 @@ import { Button,  Form } from 'semantic-ui-react'
 import './../styles.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos  } from './../../Services/MetodosDeValidacion';
 import { urlTiposAnimales } from './../../Constants/URLs';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { getIdTipoAnimal } from '../../Services/MetodosPaciente';
+import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
 
 class ConsultaAnimal extends Component {
   constructor(props) {
@@ -31,15 +32,14 @@ class ConsultaAnimal extends Component {
         fechaAlta: '',
 
         estado: '',
+
+        tipos:[],
         
         errorNombre: true,
         errorTelefono: true,
         errorTipo: true,
         errorPropietario: true,
         errorMail: true,
-      
-        tipos:[],
-        
       })
     this.cambioId = this.cambioId.bind(this);
     this.cambioNombre = this.cambioNombre.bind(this);
@@ -49,12 +49,6 @@ class ConsultaAnimal extends Component {
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioFechaAlta = this.cambioFechaAlta.bind(this);
     this.cambioBitAlta = this.cambioBitAlta.bind(this);
-
-    this.handleBlurNombre = this.handleBlurNombre.bind(this);
-    this.handleBlurMail = this.handleBlurMail.bind(this);
-    this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
-    this.handleBlurTipos = this.handleBlurTipos.bind(this);
-    this.handleBlurPropietario = this.handleBlurPropietario.bind(this);
     }
   
   comboTipos = () =>{
@@ -66,7 +60,7 @@ class ConsultaAnimal extends Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.comboTipos();
     const api = "/pacientes/id/" + this.props.id ;
     this.handleUpdateClick(api);
@@ -87,67 +81,15 @@ class ConsultaAnimal extends Component {
 
   }
 
-  handleBlurNombre(){
-    if (this.state.nombre !== ''  && this.state.nombre.length !== 0 && !hasNumbers(this.state.nombre)){
-      this.setState({ errorNombre: true })
-    } else {
-      this.setState({errorNombre: false})
-    }
-  }
-
-  handleBlurTipos = () => {
-    if (this.state.tipo.length === 0 || this.state.tipo === ''){
-      this.setState({errorTipo: false})
-    } else{
-      this.setState({errorTipo: true})
-    }
-  }
-
-  handleBlurMail = ( ) => {
-    if(this.state.mail === '' || this.state.mail === null){
-      this.setState({
-        errorMail: true,
-      })
-    } else if ( validMail.test(this.state.mail) ) {
-        this.setState({
-          errorMail: true,
-        })
-    } else {
-      this.setState({
-        errorMail: false,
-      })
-    } 
-  }
-
-  handleBlurTelefono = () => {
-    if (this.state.telefono === '' || this.state.telefono === null){
-      this.setState({ errorTelefono: true })
-    } else if (isFinite(String(this.state.telefono))){
-      this.setState({ errorTelefono: true })
-    } else {
-      this.setState({
-        errorTelefono: false
-      })
-    }
-  }
-
-  handleBlurPropietario(){
-    if (this.state.propietario === ''  || this.state.propietario.length === 0 ||  hasNumbers(this.state.propietario) || this.state.propietario === null){
-      this.setState({ errorPropietario: false })
-    } else {
-      this.setState({ errorPropietario: true })
-    }
-  }
-
   cancelar(e){
     e.preventDefault();
     this.setState({
       modificacion: true,
       cambios: false,
-      errorNombre: '',
+      errorNombre: true,
       errorTelefono: true,
-      errorTipo: '',
-      errorPropietario: '',
+      errorTipo: true,
+      errorPropietario: true,
       errorMail: true,
     })
     if (this.state.cambios){
@@ -163,55 +105,65 @@ class ConsultaAnimal extends Component {
       cancelar: false,
     })
   }
-  
 
   modificarPaciente = (e) => {
     e.preventDefault();
     
-    this.handleBlurNombre()
-    this.handleBlurMail()
-    this.handleBlurPropietario()
-    this.handleBlurTelefono()
-    this.handleBlurTipos()
-    
-    const { errorNombre, errorTipo, errorPropietario, errorMail, errorTelefono } = this.state;
+    const { nombre, tipo, propietario, mail, telefono } = this.state;
+
+    const errorNombre = validateNombre(nombre);
+    const errorTipo = validateRequiredCombos(tipo);
+    const errorPropietario = validateNombre(propietario);
+    const errorMail = validateMail(mail);
+    const errorTelefono = validateOnlyNumbers(telefono);
 
     if ( errorNombre && errorTipo && errorPropietario && errorMail && errorTelefono ) {
         var data = {
             "type": 'com.leloir.backend.domain.Animal',
+            "idPaciente": this.state.id,
             "bitAlta": true,
             "historial": null,
             "mail": emptyToNull(this.state.mail),
             "nombre": titleCase(this.state.nombre),
             "propietario": titleCase(this.state.propietario),
             "telefono": emptyToNull(this.state.telefono),
+            "fechaAlta": fechaAltaDateStamp(this.state.fechaAlta),
             "tipoAnimal": {
                 "nombre": this.state.tipo,
                 "tipoAnimalId": getIdTipoAnimal(this.state.tipo, this.state.tipos)
             },
       };
 
-      const api = `/pacientes/modificar/${this.props.id}`;
+      const api = '/pacientes/modificar/' + this.props.id;
+      
+      axios.put(api, data).then(response => {
+        alert('Se ha modificado el paciente con éxito.');
+      }, (error) => {
+        alert('No se ha podido modificar el paciente.');
+        const api = "/pacientes/id/" + this.state.id ;
+        this.handleUpdateClick(api);
+      })
 
-      axios.put(api,data)
-        .then((response) => {
-            if (response.status === 200) {
-                alert('Se ha modificado la determinación con éxito.');
-            } else {
-                alert('No se ha podido modificar la determinación.');
-                const api = "/pacientes/id/" + this.state.id ;
-                this.handleUpdateClick(api);
-            }
-        });
-  
       this.setState({
         modificacion: true,
         cancelar: true,
         cambios: false,
+        errorNombre,
+        errorTipo,
+        errorPropietario,
+        errorMail,
+        errorTelefono,
       })
       
     } else {
       alert("Revise los datos ingresados.")
+      this.setState({
+        errorNombre,
+        errorTipo,
+        errorPropietario,
+        errorMail,
+        errorTelefono,
+      })
     }    
 
   }
@@ -296,24 +248,53 @@ class ConsultaAnimal extends Component {
       <div className='Formularios'>
       {this.state.estado === '' ? <CircularProgress size={50}/> : 
       <Form>
-          <Form.Field required label='Número de Paciente' control='input' disabled={true}  value={this.state.id} onChange={this.cambioId} />
+          <Form.Field required label='Número de Paciente' control='input' disabled={true}  
+          value={this.state.id} 
+          onChange={this.cambioId} />
 
-          <Form.Field required label='Nombre Animal' control='input' disabled={this.state.modificacion}  value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre}/>
+          <Form.Field required label='Nombre Animal' control='input' 
+          disabled={this.state.modificacion}  
+          value={this.state.nombre} 
+          onChange={this.cambioNombre} 
+          className= {this.state.errorNombre === true ? null : 'error'} 
+          />
 
-          <Form.Field required label='Tipo Animal' control='select' disabled={this.state.modificacion} value={this.state.tipo} onChange={this.cambioTipo} className= {(this.state.errorTipo=== '' || this.state.errorTipo === true) ? null : 'error'} onBlur={this.handleBlurTipos}>
+          <Form.Field required label='Tipo Animal' control='select' 
+          disabled={this.state.modificacion} 
+          value={this.state.tipo} 
+          onChange={this.cambioTipo} 
+          className= {this.state.errorTipo === true ? null : 'error'} 
+          >
             <option value={null}>  </option>
             {this.state.tipos.map(item => (
             <option key={item.tipoAnimalId}>{item.nombre}</option>))}
           </Form.Field>
 
-          <Form.Field required label='Propietario' control='input' disabled={this.state.modificacion} value={this.state.propietario} onChange={this.cambioPropietario} className= {(this.state.errorPropietario === '' || this.state.errorPropietario === true) ? null : 'error'} onBlur={this.handleBlurPropietario}>
-          </Form.Field>
+          <Form.Field required label='Propietario' control='input' 
+          disabled={this.state.modificacion} 
+          value={this.state.propietario} 
+          onChange={this.cambioPropietario} 
+          className= {this.state.errorPropietario === true ? null : 'error'} 
+          />
 
-          <Form.Field required label='Fecha alta' control='input' disabled={true} value={this.state.fechaAlta} onChange={this.cambioFechaAlta}/>
+          <Form.Field required label='Fecha alta' control='input' 
+          disabled={true} 
+          value={this.state.fechaAlta} 
+          onChange={this.cambioFechaAlta}/>
 
-          <Form.Field  label='Telefono' control='input' disabled={this.state.modificacion} value={this.state.telefono || ''} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error'} onChange={this.cambioTelefono} onBlur={this.handleBlurTelefono}/>
+          <Form.Field  label='Telefono' control='input' 
+          disabled={this.state.modificacion} 
+          value={this.state.telefono || ''} 
+          className= {this.state.errorTelefono === true ? null : 'error'} 
+          onChange={this.cambioTelefono} 
+          />
 
-          <Form.Field  label='Mail' control='input' disabled={this.state.modificacion} value={this.state.mail || ''} className= {(this.state.errorMail === '' || this.state.errorMail === true) ? null : 'error'} onChange={this.cambioMail} onBlur={this.handleBlurMail}/>
+          <Form.Field  label='Mail' control='input' 
+          disabled={this.state.modificacion} 
+          value={this.state.mail || ''} 
+          className= {this.state.errorMail === true ? null : 'error'} 
+          onChange={this.cambioMail} 
+          />
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
               this.habilitarModificacion(e)} }>Modificar</Button>  : null}

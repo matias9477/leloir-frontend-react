@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react';
 
 import { getCurrentDate } from '../../Services/MetodosPaciente';
-import { emptyToNull, titleCase, hasNumbers, validMail } from './../../Services/MetodosDeValidacion';
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaInstitucion extends Component {
@@ -19,7 +19,7 @@ class AltaInstitucion extends Component {
         direccion: '',
         historial: [],
         
-        errorNombre: '',
+        errorNombre: true,
         errorTelefono: true,
         errorMail: true,
         errorFax: true,
@@ -30,12 +30,6 @@ class AltaInstitucion extends Component {
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioFax = this.cambioFax.bind(this);
-
-    this.handleBlurNombre = this.handleBlurNombre.bind(this);
-    this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
-    this.handleBlurMail =  this.handleBlurMail.bind(this);
-    this.handleBlurFax = this.handleBlurFax.bind(this);
-
   }
   
   handleUpdateClick = (api) => {
@@ -62,19 +56,25 @@ class AltaInstitucion extends Component {
 
   getPaciente(e){
     e.preventDefault();
-    
-    this.handleBlurNombre()
-    this.handleBlurMail()
-    this.handleBlurTelefono()
-    this.handleBlurFax()
 
-    const { errorNombre, errorMail, errorTelefono, errorFax } = this.state;
+    const { nombre, mail, telefono, fax } = this.state;
+    
+    const errorNombre = validateNombre(nombre);
+    const errorTelefono = validateOnlyNumbers(telefono);
+    const errorFax = validateOnlyNumbers(fax);
+    const errorMail = validateMail(mail);
 
     if ( errorNombre && errorMail && errorTelefono && errorFax ) {
       const api = '/pacientes/add';
       this.handleUpdateClick(api);
     } else {
       alert("Verifique los datos ingresados.")
+      this.setState({
+        errorNombre,
+        errorTelefono,
+        errorMail,
+        errorFax,
+    })
     }    
   }
 
@@ -84,7 +84,7 @@ class AltaInstitucion extends Component {
       telefono:'',
       mail:'',
       fax: '',
-      errorNombre: '',
+      errorNombre: true,
       errorTelefono: true,
       errorMail: true,
       errorFax: true,
@@ -115,54 +115,6 @@ class AltaInstitucion extends Component {
     })
   }
 
-  handleBlurNombre = () => {
-    if (this.state.nombre === ''  || this.state.nombre.length === 0 ||  hasNumbers(this.state.nombre)){
-      this.setState({ errorNombre: false })
-    } else {
-      this.setState({errorNombre: true})
-    }
-  }
-
-  handleBlurTelefono = () => {
-    if (this.state.telefono === ''){
-      this.setState({ errorTelefono: true })
-    } else if (isFinite(String(this.state.telefono))){
-      this.setState({ errorTelefono: true })
-    } else {
-      this.setState({
-        errorTelefono: false
-      })
-    }
-  }
-
-  handleBlurMail = () => {
-    if(this.state.mail === ''){
-      this.setState({
-        errorMail: true,
-      })
-    } else if ( validMail.test(this.state.mail) ) {
-        this.setState({
-          errorMail: true,
-        })
-    } else {
-      this.setState({
-        errorMail: false,
-      })
-    } 
-  }
-
-  handleBlurFax = () => {
-    if (this.state.fax === ''){
-      this.setState({ errorFax: true })
-    } else if (isFinite(String(this.state.fax))){
-      this.setState({ errorFax: true })
-    } else {
-      this.setState({
-        errorFax: false
-      })
-    }
-  }
-
    
   render(){
     return (
@@ -172,14 +124,32 @@ class AltaInstitucion extends Component {
         <Form onSubmit={this.getPaciente}>
 
           <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' value={this.state.nombre} onChange={this.cambioNombre} className= {(this.state.errorNombre=== '' || this.state.errorNombre === true) ? null : 'error'} onBlur={this.handleBlurNombre} />
+          placeholder='Nombre' 
+          value={this.state.nombre} 
+          onChange={this.cambioNombre} 
+          className= {this.state.errorNombre ? null : 'error'} 
+          />
           
-          <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error'} onBlur={this.handleBlurTelefono}/>
+          <Form.Field label='Telefono' control='input' 
+          placeholder='Teléfono' 
+          value={this.state.telefono} 
+          onChange={this.cambioTelefono} 
+          className= {this.state.errorTelefono === true ? null : 'error'} 
+          />
 
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail === '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>   
+          <Form.Field label='E-Mail' control='input' 
+          placeholder='E-Mail' 
+          value={this.state.mail} 
+          onChange={this.cambioMail} 
+          className= {this.state.errorMail === true ? null : 'error'} 
+          />   
 
           <Form.Field label='Fax' control='input' 
-          placeholder='Fax' value={this.state.fax} onChange={this.cambioFax} className= {(this.state.errorFax=== '' || this.state.errorFax === true) ? null : 'error'} onBlur={this.handleBlurFax}/>    
+          placeholder='Fax' 
+          value={this.state.fax} 
+          onChange={this.cambioFax} 
+          className= {this.state.errorFax === true ? null : 'error'} 
+          />    
           
           <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 
