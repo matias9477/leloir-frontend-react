@@ -167,8 +167,8 @@ export default class TablaPaciente extends React.Component {
         });
 
         const pac = this.state.pacientes.filter(function (paciente) {
-            return ((paciente.nombre === undefined ? null : paciente.nombre.includes(titleCase(valor.target.value))) || 
-                (paciente.apellido === undefined ? null : paciente.apellido.includes(titleCase(valor.target.value))) ||
+            return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(valor.target.value))) || 
+                (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(valor.target.value))) ||
                 (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
                 ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(valor.target.value)));
         });
@@ -231,7 +231,7 @@ export default class TablaPaciente extends React.Component {
                         <tbody className='centerAlignment'>
 
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((paciente, index) => (
-                            <tr key={index} paciente={paciente} className={paciente.bitAlta ? null : "pacienteBaja"}>
+                            <tr key={index} paciente={paciente} className={paciente.bitAlta ? null : "listadosBaja"}>
                                 <td data-label="Número Paciente">
                                     {paciente.id}
                                 </td>

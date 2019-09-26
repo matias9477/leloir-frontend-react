@@ -307,12 +307,12 @@ class ConsultaAnimal extends Component {
           {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => { 
             if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
               this.modificarPaciente(e)
-              } else {e.preventDefault()} } }>
+              } else {e.preventDefault()} } } primary>
             Aceptar
           </Button> : null}           
 
           {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => { 
-            this.cancelar(e)} }> X </Button> : null }     
+            this.cancelar(e)} } color='red'> Cancelar </Button> : null }     
                    
       </Form>  
       }

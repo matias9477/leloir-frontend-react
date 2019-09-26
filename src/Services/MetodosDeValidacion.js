@@ -11,8 +11,6 @@ export const emptyToNull = (v) => {
 export function hasNumbers(t){
     return /\d/.test(t);
 }
-  
-export const validMail = /\S+@\S+\.\S+/;
 
 export function titleCase(str) {
     var splitStr = str.toLowerCase().split(' ');
@@ -46,10 +44,30 @@ export function validateNombre(nombre){
   }
 }
 
+export function validateRequiredStringNum(nombre){
+  if (nombre === ''){
+    return false
+  } else if (hasNumbers(nombre) || (typeof(nombre) === 'string')){
+    return true
+  } else {
+    return false
+  }
+}
+
 export function validateOnlyNumbers(telefono){
   if (telefono === '' || telefono === null){
     return true
   } else if (isFinite(String(telefono))){
+    return true
+  } else {
+    return false
+  }
+}
+
+export function validateOnlyNumbersRequired(valor){
+  if (valor === '' || valor === null){
+    return false
+  } else if (isFinite(String(valor))){
     return true
   } else {
     return false
@@ -79,7 +97,6 @@ export function validateNroDocumento(nroDoc, tipoDoc){
     return true
   }
 }
-
 
 export function validateFechaNacimiento(fechaNacimiento) {
   if (fechaNacimiento.length === 0 || fechaNacimiento === ''){

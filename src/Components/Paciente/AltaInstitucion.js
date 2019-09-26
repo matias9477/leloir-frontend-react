@@ -118,7 +118,7 @@ class AltaInstitucion extends Component {
    
   render(){
     return (
-      <div className='altasPaciente'>
+      <div className='altasYConsultas'>
         <Header as='h3' dividing>Registrar nueva Institución</Header>
        
         <Form onSubmit={this.getPaciente}>

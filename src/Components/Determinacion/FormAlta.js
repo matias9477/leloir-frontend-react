@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Button, Container, Form, Header, Icon} from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import MenuOpciones from '../MenuOpciones';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import {
-  convertStyleString,
-  validateCodigoPractica,
-  validateDescripcionPractica
-} from './../../Services/MetodosDeterminacion';
+import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
+import { convertStyleString } from '../../Services/MetodosDeterminacion';
+import MenuOpciones from '../MenuOpciones';
 import './../styles.css';
-import axios from 'axios';
 
 class FormAlta extends Component {
     constructor(props) {
@@ -22,28 +18,16 @@ class FormAlta extends Component {
             unidadBioquimica: '',
             unidadMedida: '',
 
-
             errorCodigoPractica: true,
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
-            errorUnidadMedida: true,
-
-            loading: true,
         });
         this.fetchDeterminacion = this.fetchDeterminacion.bind(this);
         this.cambioCodigoPractica = this.cambioCodigoPractica.bind(this);
         this.cambioDescripcionPractica = this.cambioDescripcionPractica.bind(this);
         this.cambioUnidadBioquimica = this.cambioUnidadBioquimica.bind(this);
         this.cambioUnidadMedida = this.cambioUnidadMedida.bind(this);
-
     }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.loading !== true) {
-            // this.fillCombos();
-        }
-    }
-
 
     renderForm() {
         return (
@@ -57,24 +41,31 @@ class FormAlta extends Component {
                     <Header as='h3' dividing>Registrar nueva Determinación</Header>
                 </Container>
 
-                <Form onSubmit={this.fetchDeterminacion}>
+                <Form onSubmit={this.fetchDeterminacion} className='altasYConsultas'>
 
                     <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica'
-                                value={this.state.codigoPractica} onChange={this.cambioCodigoPractica}
-                                className={this.state.errorCodigoPractica ? null : 'error'}/>
+                    value={this.state.codigoPractica} 
+                    onChange={this.cambioCodigoPractica}
+                    className={this.state.errorCodigoPractica ? null : 'error'}
+                    />
 
-                    <Form.Field label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
-                                value={this.state.descripcionPractica} onChange={this.cambioDescripcionPractica}
-                                className={this.state.errorDescripcionPractica ? null : 'error'}/>
+                    <Form.Field required label='Descripción Práctica' control='input' 
+                    placeholder='Descripción Práctica'
+                    value={this.state.descripcionPractica} 
+                    onChange={this.cambioDescripcionPractica}
+                    className={this.state.errorDescripcionPractica ? null : 'error'}/>
 
                     <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                                value={this.state.unidadBioquimica} onChange={this.cambioUnidadBioquimica}/>
+                    value={this.state.unidadBioquimica} 
+                    onChange={this.cambioUnidadBioquimica}
+                    className={this.state.errorUnidadBioquimica ? null : 'error'}
+                    />
 
                     <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                                value={this.state.unidadMedida} onChange={this.cambioUnidadMedida}/>
+                    value={this.state.unidadMedida} 
+                    onChange={this.cambioUnidadMedida}/>
 
-                    <Button primary type="submit" onClick={this.fetchDeterminacion} className="boton"> Registrar
-                        Determinacion</Button>
+                    <Button primary type="submit" onClick={this.fetchDeterminacion} className="boton"> Registrar Determinacion</Button>
 
                 </Form>
             </div>
@@ -82,43 +73,42 @@ class FormAlta extends Component {
         );
     }
 
-    renderProgress() {
-        return <CircularProgress size={50}/>;
-    }
-
     handleUpdateClick = (api) => {
-        var data;
-        data = {
-            "codigoPractica": convertStyleString(this.state.codigoPractica),
+        var data = {
+            "bitAlta": true,
+            "codigoPractica": this.state.codigoPractica,
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
-            "unidadBioquimica": convertStyleString(this.state.unidadBioquimica),
-            "unidadMedida": convertStyleString(this.state.unidadMedida),
+            "unidadBioquimica": this.state.unidadBioquimica,
+            "unidadMedida": this.state.unidadMedida
         };
 
         axios.post(api, data
         ).then((response) => {
-                    alert('Se registro la determinación ' + convertStyleString(this.state.descripcionPractica) + ' con éxito.');
-                    this.vaciadoCampos();
-                    return response.statusText;
-            }, (error) => {
+            alert('Se registro la determinación ' + this.state.descripcionPractica + ' con éxito.');
+            this.vaciadoCampos();
+        }, (error) => {
             alert('No se ha podido registrar la determinación.');
-            return Promise.reject({status: error.status, statusText: error.statusText});
         });
     };
 
     fetchDeterminacion(e) {
         e.preventDefault();
-        const {codigoPractica, descripcionPractica} = this.state;
-        const errorCodigoPractica= validateCodigoPractica(codigoPractica);
-        const errorDescripcionPractica = validateDescripcionPractica(descripcionPractica);
 
-        if (errorCodigoPractica && errorDescripcionPractica) {
+        const {codigoPractica, unidadBioquimica, descripcionPractica} = this.state;
+
+        const errorCodigoPractica= validateOnlyNumbersRequired(codigoPractica);
+        const errorUnidadBioquimica = validateOnlyNumbersRequired(unidadBioquimica);
+        const errorDescripcionPractica = validateRequiredStringNum(descripcionPractica);
+
+        if (errorCodigoPractica && errorUnidadBioquimica && errorDescripcionPractica) {
             const api = '/determinaciones/add';
             this.handleUpdateClick(api);
-
         } else {
+            alert('Verificar datos ingresados.')
             this.setState({
-                errorCodigoPractica, errorDescripcionPractica
+                errorCodigoPractica, 
+                errorUnidadBioquimica,
+                errorDescripcionPractica,
             })
         }
     }
@@ -129,9 +119,7 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
-            determinacion: [],
             errorCodigoPractica: true,
-            errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
             errorUnidadMedida: true,
         })
@@ -161,8 +149,8 @@ class FormAlta extends Component {
         })
     }
 
-    render() {
 
+    render() {
         return (
             <div className='union'>
                 <MenuOpciones/>

@@ -313,7 +313,7 @@ class AltaPersona extends Component {
 
   render(){
     return (
-      <div className='altasPaciente'>
+      <div className='altasYConsultas'>
         <Header as='h3' dividing>Registrar nuevo Paciente</Header>
 
         <Form>

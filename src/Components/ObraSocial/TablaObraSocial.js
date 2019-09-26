@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
+import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
 
 import MenuOpciones from '../MenuOpciones';
 import { urlObrasSoc } from './../../Constants/URLs';
-import {nroPorPagina} from "../../Constants/utils";
+import { nroPorPagina } from "../../Constants/utils";
+import { nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 export default class TablaObraSocial extends React.Component {
@@ -206,7 +207,7 @@ export default class TablaObraSocial extends React.Component {
                     <tbody className='centerAlignment'>
                     
                         {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (obraSocial, index) => (
-                        <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "pacienteBaja"} > 
+                        <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "listadosBaja"} > 
                             <td data-label="Id">
                                 {obraSocial.idObraSocial}
                             </td>
@@ -217,7 +218,7 @@ export default class TablaObraSocial extends React.Component {
                                 {obraSocial.cuit}
                             </td>
                             <td data-label="Telefono">
-                                {obraSocial.telefono}
+                                {nullTo(obraSocial.telefono)}
                             </td>
                             <td>
                                 <Dropdown item icon='ellipsis horizontal' simple>

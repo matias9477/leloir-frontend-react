@@ -469,6 +469,7 @@ class ConsultaPersona extends Component {
             </Form.Field>
 
             <Form.Field required label='Número de documento' control='input'  disabled={this.state.modificacion}  
+            maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} 
             value={this.state.nroDoc} 
             onChange={this.cambioNroDoc} 
             className= {this.state.errorNroDoc === true ? null : 'error'}
@@ -551,12 +552,12 @@ class ConsultaPersona extends Component {
           {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => { 
             if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + ' ' + this.state.apellido + '?')) {  
               this.modificarPaciente(e)
-              } else {e.preventDefault()} } }>
+              } else {e.preventDefault()} } } primary>
             Aceptar
           </Button> : null}           
 
           {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => { 
-            this.cancelar(e)} }> X </Button> : null }     
+            this.cancelar(e)} } color='red'> Cancelar </Button> : null }     
                    
       </Form>  
       }
