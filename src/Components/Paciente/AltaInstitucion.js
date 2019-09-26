@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form } from 'semantic-ui-react';
+import { Button, Header, Form, FormGroup } from 'semantic-ui-react';
 
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
@@ -129,20 +129,22 @@ class AltaInstitucion extends Component {
           onChange={this.cambioNombre} 
           className= {this.state.errorNombre ? null : 'error'} 
           />
-          
-          <Form.Field label='Telefono' control='input' 
-          placeholder='Teléfono' 
-          value={this.state.telefono} 
-          onChange={this.cambioTelefono} 
-          className= {this.state.errorTelefono === true ? null : 'error'} 
-          />
+        
+          <Form.Group widths='equal'>
+            <Form.Field label='Telefono' control='input' 
+            placeholder='Teléfono' 
+            value={this.state.telefono} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            />
 
-          <Form.Field label='E-Mail' control='input' 
-          placeholder='E-Mail' 
-          value={this.state.mail} 
-          onChange={this.cambioMail} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          />   
+            <Form.Field label='E-Mail' control='input' 
+            placeholder='E-Mail' 
+            value={this.state.mail} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            />    
+          </Form.Group>
 
           <Form.Field label='Fax' control='input' 
           placeholder='Fax' 
@@ -150,6 +152,8 @@ class AltaInstitucion extends Component {
           onChange={this.cambioFax} 
           className= {this.state.errorFax === true ? null : 'error'} 
           />    
+
+          <br/>
           
           <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 

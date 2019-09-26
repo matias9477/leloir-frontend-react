@@ -248,27 +248,37 @@ class ConsultaAnimal extends Component {
       <div className='Formularios'>
       {this.state.estado === '' ? <CircularProgress size={50}/> : 
       <Form>
-          <Form.Field required label='Número de Paciente' control='input' disabled={true}  
-          value={this.state.id} 
-          onChange={this.cambioId} />
+         <Form.Group widths='equal'>
+            <Form.Field required label='Número de Paciente' control='input' disabled={true}  
+            value={this.state.id} 
+            onChange={this.cambioId} />
 
-          <Form.Field required label='Nombre Animal' control='input' 
-          disabled={this.state.modificacion}  
-          value={this.state.nombre} 
-          onChange={this.cambioNombre} 
-          className= {this.state.errorNombre === true ? null : 'error'} 
-          />
+            <Form.Field required label='Fecha alta' control='input' 
+            disabled={true} 
+            value={this.state.fechaAlta} 
+            onChange={this.cambioFechaAlta}/>
 
-          <Form.Field required label='Tipo Animal' control='select' 
-          disabled={this.state.modificacion} 
-          value={this.state.tipo} 
-          onChange={this.cambioTipo} 
-          className= {this.state.errorTipo === true ? null : 'error'} 
-          >
-            <option value={null}>  </option>
-            {this.state.tipos.map(item => (
-            <option key={item.tipoAnimalId}>{item.nombre}</option>))}
-          </Form.Field>
+          </Form.Group>
+
+          <Form.Group widths='equal'>
+            <Form.Field required label='Nombre Animal' control='input' 
+            disabled={this.state.modificacion}  
+            value={this.state.nombre} 
+            onChange={this.cambioNombre} 
+            className= {this.state.errorNombre === true ? null : 'error'} 
+            />
+
+            <Form.Field required label='Tipo Animal' control='select' 
+            disabled={this.state.modificacion} 
+            value={this.state.tipo} 
+            onChange={this.cambioTipo} 
+            className= {this.state.errorTipo === true ? null : 'error'} 
+            >
+              <option value={null}>  </option>
+              {this.state.tipos.map(item => (
+              <option key={item.tipoAnimalId}>{item.nombre}</option>))}
+            </Form.Field>
+          </Form.Group>
 
           <Form.Field required label='Propietario' control='input' 
           disabled={this.state.modificacion} 
@@ -277,24 +287,23 @@ class ConsultaAnimal extends Component {
           className= {this.state.errorPropietario === true ? null : 'error'} 
           />
 
-          <Form.Field required label='Fecha alta' control='input' 
-          disabled={true} 
-          value={this.state.fechaAlta} 
-          onChange={this.cambioFechaAlta}/>
+          <Form.Group widths='equal'>
+            <Form.Field  label='Telefono' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.telefono || ''} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            onChange={this.cambioTelefono} 
+            />
 
-          <Form.Field  label='Telefono' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.telefono || ''} 
-          className= {this.state.errorTelefono === true ? null : 'error'} 
-          onChange={this.cambioTelefono} 
-          />
+            <Form.Field  label='Mail' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.mail || ''} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            onChange={this.cambioMail} 
+            />
+          </Form.Group>
 
-          <Form.Field  label='Mail' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.mail || ''} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          onChange={this.cambioMail} 
-          />
+          <br/>
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
               this.habilitarModificacion(e)} }>Modificar</Button>  : null}

@@ -152,24 +152,25 @@ class AltaAnimal extends Component {
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
 
         <Form onSubmit={this.getPaciente}>
-
-          <Form.Field required label='Nombre' control='input' 
-          placeholder='Nombre' 
-          value={this.state.nombre} 
-          onChange={this.cambioNombre} 
-          className= {this.state.errorNombre === true ? null : 'error'} 
-          />
-        
-          <Form.Field required label='Tipo Animal' control='select' 
-          placeholder = 'Tipo animal' 
-          value={this.state.tipo} 
-          onChange={this.cambioTipo} 
-          className= {this.state.errorTipo === true ? null : 'error'} 
-          >
-            <option value={null}>  </option>
-            {this.state.tipos.map(item => (
-            <option key={item.tipoAnimalId}>{item.nombre}</option>))}
-          </Form.Field>
+          <Form.Group widths='equal'>
+            <Form.Field required label='Nombre' control='input' 
+            placeholder='Nombre' 
+            value={this.state.nombre} 
+            onChange={this.cambioNombre} 
+            className= {this.state.errorNombre === true ? null : 'error'} 
+            />
+          
+            <Form.Field required label='Tipo Animal' control='select' 
+            placeholder = 'Tipo animal' 
+            value={this.state.tipo} 
+            onChange={this.cambioTipo} 
+            className= {this.state.errorTipo === true ? null : 'error'} 
+            >
+              <option value={null}>  </option>
+              {this.state.tipos.map(item => (
+              <option key={item.tipoAnimalId}>{item.nombre}</option>))}
+            </Form.Field>
+          </Form.Group>
 
           <Form.Field required label='Propietario' control='input' placeholder='Propietario' 
           value={this.state.propietario} 
@@ -177,19 +178,23 @@ class AltaAnimal extends Component {
           className= {this.state.errorPropietario === true ? null : 'error'} 
           />
 
-          <Form.Field label='Telefono' control='input' 
-          placeholder='Teléfono' 
-          value={this.state.telefono} 
-          onChange={this.cambioTelefono} 
-          className= {this.state.errorTelefono === true ? null : 'error' } 
-          />
+          <Form.Group widths='equal'>
+            <Form.Field label='Telefono' control='input' 
+            placeholder='Teléfono' 
+            value={this.state.telefono} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error' } 
+            />
 
-          <Form.Field label='E-Mail' control='input' 
-          placeholder='E-Mail' value={this.state.mail} 
-          onChange={this.cambioMail} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          />      
-          
+            <Form.Field label='E-Mail' control='input' 
+            placeholder='E-Mail' value={this.state.mail} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            />    
+          </Form.Group>  
+
+          <br/>
+        
           <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Animal</Button >       
 
         </Form>  

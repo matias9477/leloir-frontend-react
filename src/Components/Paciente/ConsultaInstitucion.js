@@ -204,10 +204,18 @@ class ConsultaInstitucion extends Component {
             {this.state.nombre === '' ? <CircularProgress size={50}/> : 
                 
             <Form>
-                <Form.Field required label='Número de Paciente' control='input' disabled={true}  
-                value={this.state.id} 
-                onChange={this.cambioId} 
-                />
+                <Form.Group widths='equal'>
+                    <Form.Field required label='Número de Paciente' control='input' disabled={true} 
+                    value={this.state.id} 
+                    onChange={this.cambioId} 
+                    />
+
+                    <Form.Field required label='Fecha alta' control='input' 
+                    disabled={true} 
+                    value={this.state.fechaAlta} 
+                    onChange={this.cambioFechaAlta}
+                    />
+                </Form.Group>
 
                 <Form.Field required label='Nombre Institucón' control='input' disabled={this.state.modificacion}  
                 value={this.state.nombre} 
@@ -215,25 +223,21 @@ class ConsultaInstitucion extends Component {
                 className= {this.state.errorNombre === true ? null : 'error'} 
                 />
 
-                <Form.Field required label='Fecha alta' control='input' 
-                disabled={true} 
-                value={this.state.fechaAlta} 
-                onChange={this.cambioFechaAlta}
-                />
+                <Form.Group widths='equal'>
+                    <Form.Field  label='Telefono' control='input' 
+                    disabled={this.state.modificacion} 
+                    value={this.state.telefono || ''} 
+                    onChange={this.cambioTelefono} 
+                    className= {this.state.errorTelefono === true ? null : 'error'} 
+                    />
 
-                <Form.Field  label='Telefono' control='input' 
-                disabled={this.state.modificacion} 
-                value={this.state.telefono || ''} 
-                onChange={this.cambioTelefono} 
-                className= {this.state.errorTelefono === true ? null : 'error'} 
-                />
-
-                <Form.Field  label='Mail' control='input' 
-                disabled={this.state.modificacion} 
-                value={this.state.mail || ''} 
-                onChange={this.cambioMail} 
-                className= {this.state.errorMail === true ? null : 'error'} 
-                />
+                    <Form.Field  label='Mail' control='input' 
+                    disabled={this.state.modificacion} 
+                    value={this.state.mail || ''} 
+                    onChange={this.cambioMail} 
+                    className= {this.state.errorMail === true ? null : 'error'} 
+                    />
+                </Form.Group>
 
                 <Form.Field  label='Fax' control='input' 
                 disabled={this.state.modificacion} 
@@ -241,6 +245,8 @@ class ConsultaInstitucion extends Component {
                 onChange={this.cambioFax} 
                 className= {this.state.errorFax === true ? null : 'error'} 
                 />
+
+                <br/>
 
                 {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
                     this.habilitarModificacion(e)} }>Modificar</Button>  : null}

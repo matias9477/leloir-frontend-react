@@ -317,23 +317,24 @@ class AltaPersona extends Component {
         <Header as='h3' dividing>Registrar nuevo Paciente</Header>
 
         <Form>
-
-          <Form.Field required label='Nombre' control='input'
-          placeholder='Nombre' 
-          value={this.state.nombre} 
-          onChange={this.cambioNombre} 
-          className= {this.state.errorNombre === true ? null : 'error'} 
-          />
-
-          <Form.Field required label='Apellido' control='input'
-          placeholder='Apellido' 
-          value={this.state.apellido} 
-          onChange={this.cambioApellido} 
-          className= {this.state.errorApellido === true ? null : 'error' } 
-          />
-
           <Form.Group widths='equal'>
-            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' 
+            <Form.Field required label='Nombre' control='input'
+            placeholder='Nombre' 
+            value={this.state.nombre} 
+            onChange={this.cambioNombre} 
+            className= {this.state.errorNombre === true ? null : 'error'} 
+            />
+
+            <Form.Field required label='Apellido' control='input'
+            placeholder='Apellido' 
+            value={this.state.apellido} 
+            onChange={this.cambioApellido} 
+            className= {this.state.errorApellido === true ? null : 'error' } 
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' width={5}
             value={this.state.tipoDoc} 
             onChange={this.cambioTipoDoc} 
             className= {this.state.errorTipoDoc === true ? null : 'error'} 
@@ -344,7 +345,7 @@ class AltaPersona extends Component {
             </Form.Field>
 
             <Form.Field required label='Número de Documento' control='input'
-            maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} 
+            maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} width={11}
             placeholder='Número de documento' 
             value={this.state.nroDoc} 
             onChange={this.cambioNroDoc} 
@@ -352,54 +353,57 @@ class AltaPersona extends Component {
             />
           </Form.Group>
 
-          <Form.Field required label='Sexo' control='select' 
-          placeholder = 'Sexo' 
-          value={this.state.sexo} 
-          onChange={this.cambioSexo} 
-          className= {this.state.errorSexo === true ? null : 'error'} 
-          >
-            <option value={null}>  </option>
-            {this.state.sexos.map(item => (
-            <option key={item.sexoId}>{item.nombre}</option>))}
-          </Form.Field>
+            <Form.Field required label='Sexo' control='select' 
+            placeholder = 'Sexo'
+            value={this.state.sexo} 
+            onChange={this.cambioSexo} 
+            className= {this.state.errorSexo === true ? null : 'error'} 
+            >
+              <option value={null}>  </option>
+              {this.state.sexos.map(item => (
+              <option key={item.sexoId}>{item.nombre}</option>))}
+            </Form.Field>
 
-          <Form.Field required label='Nacionalidad' control='select' 
-          placeholder = 'Nacionalidad' 
-          value={this.state.nacionalidad} 
-          onChange={this.cambioNacionalidad} 
-          className= {this.state.errorNac === true ? null : 'error'} 
-          >
-            <option value={null}>  </option>
-              {this.state.paises.map(item => (
-            <option key={item.idPais}>{item.nombreBonito}</option>))}
-          </Form.Field>
+            <Form.Field required label='Nacionalidad' control='select' 
+            placeholder = 'Nacionalidad' 
+            value={this.state.nacionalidad} 
+            onChange={this.cambioNacionalidad} 
+            className= {this.state.errorNac === true ? null : 'error'} 
+            >
+              <option value={null}>  </option>
+                {this.state.paises.map(item => (
+              <option key={item.idPais}>{item.nombreBonito}</option>))}
+            </Form.Field>
+         
 
-          <Form.Field required 
-          className= {this.state.errorFechaNac === true ? null : 'error'}
-          >
-            <label>Fecha de Nacimiento</label>
-              <DatePicker placeholderText="Fecha de Nacimiento"
-              selected={this.state.fechaNacimiento} 
-              onChange= {this.cambioFechaNacimiento} 
-              peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
-              maxDate={addDays(new Date(), 0)} 
-              dateFormat="yyyy-MM-dd">
-              </DatePicker>
-          </Form.Field>
+            <Form.Field required 
+            className= {this.state.errorFechaNac === true ? null : 'error'}
+            >
+              <label>Fecha de Nacimiento</label>
+                <DatePicker placeholderText="Fecha de Nacimiento"
+                selected={this.state.fechaNacimiento} 
+                onChange= {this.cambioFechaNacimiento} 
+                peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+                maxDate={addDays(new Date(), 0)} 
+                dateFormat="yyyy-MM-dd">
+                </DatePicker>
+            </Form.Field>
 
-          <Form.Field label='Telefono' control='input' 
-          placeholder='Teléfono' 
-          value={this.state.telefono} 
-          onChange={this.cambioTelefono} 
-          className= {this.state.errorTelefono === true ? null : 'error' }
-          />
+          <Form.Group widths='equal'>
+            <Form.Field label='Telefono' control='input' 
+            placeholder='Teléfono' 
+            value={this.state.telefono} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error' }
+            />
 
-          <Form.Field label='E-Mail' control='input' 
-          placeholder='E-Mail' 
-          value={this.state.mail} 
-          onChange={this.cambioMail} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          />
+            <Form.Field label='E-Mail' control='input' 
+            placeholder='E-Mail' 
+            value={this.state.mail} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            />
+          </Form.Group>
 
           <Form.Field label='Obra Social' control='select' 
           placeholder = 'Obra Social' 
@@ -409,6 +413,8 @@ class AltaPersona extends Component {
               {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
           </Form.Field>
+        
+          <br/>
 
           <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Paciente</Button >
 

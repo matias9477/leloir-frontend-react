@@ -436,29 +436,38 @@ class ConsultaPersona extends Component {
       <div className='Formularios'>
       {this.state.estado === '' ? <CircularProgress size={50}/> : 
       <Form>
-          
-          <Form.Field required label='Número de Paciente' control='input' 
-          disabled={true}  
-          value={this.state.id} 
-          onChange={this.cambioId} />
-
-          <Form.Field required label='Nombre' control='input' 
-          disabled={this.state.modificacion}  
-          value={this.state.nombre} 
-          onChange={this.cambioNombre}
-          className= {this.state.errorNombre === true ? null : 'error'} 
-          />
-
-          <Form.Field required label='Apellido' control='input' 
-          disabled={this.state.modificacion}  
-          value={this.state.apellido} 
-          onChange={this.cambioApellido} 
-          className= {this.state.errorApellido === true ? null : 'error'} 
-          />
-          
           <Form.Group widths='equal'>
-            <Form.Field required label='Tipo documento' control='select' 
+            <Form.Field required label='Número de Paciente' control='input' 
+            disabled={true}  
+            value={this.state.id} 
+            onChange={this.cambioId} />
+            
+            <Form.Field required label='Fecha alta' control='input' 
+            disabled={true} 
+            value={this.state.fechaAlta} 
+            onChange={this.cambioFechaAlta} 
+            />
+          </Form.Group>
+
+          <Form.Group widths='equal'>
+            <Form.Field required label='Nombre' control='input' 
             disabled={this.state.modificacion}  
+            value={this.state.nombre} 
+            onChange={this.cambioNombre}
+            className= {this.state.errorNombre === true ? null : 'error'} 
+            />
+
+            <Form.Field required label='Apellido' control='input' 
+            disabled={this.state.modificacion}  
+            value={this.state.apellido} 
+            onChange={this.cambioApellido} 
+            className= {this.state.errorApellido === true ? null : 'error'} 
+            />
+          </Form.Group>
+          
+          <Form.Group>
+            <Form.Field required label='Tipo documento' control='select' 
+            disabled={this.state.modificacion} width={5}
             value={this.state.tipoDoc} 
             onChange={this.cambioTipoDoc} 
             className= {this.state.errorTipoDoc === true ? null : 'error'} 
@@ -468,19 +477,13 @@ class ConsultaPersona extends Component {
               <option key={item.idTipoDocumento}>{item.nombre}</option>))}
             </Form.Field>
 
-            <Form.Field required label='Número de documento' control='input'  disabled={this.state.modificacion}  
+            <Form.Field required label='Número de documento' control='input'  disabled={this.state.modificacion} width={11}
             maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} 
             value={this.state.nroDoc} 
             onChange={this.cambioNroDoc} 
             className= {this.state.errorNroDoc === true ? null : 'error'}
             />
           </Form.Group>
-
-          <Form.Field required label='Fecha alta' control='input' 
-          disabled={true} 
-          value={this.state.fechaAlta} 
-          onChange={this.cambioFechaAlta} 
-          />
 
           <Form.Field required label='Sexo' control='select' 
           disabled={this.state.modificacion} 
@@ -516,19 +519,21 @@ class ConsultaPersona extends Component {
               </DatePicker> 
           </Form.Field>
 
-          <Form.Field  label='Telefono' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.telefono || ''} 
-          className= {this.state.errorTelefono === true ? null : 'error'} 
-          onChange={this.cambioTelefono} 
-          />
+          <Form.Group widths='equal'>
+            <Form.Field  label='Telefono' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.telefono || ''} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            onChange={this.cambioTelefono} 
+            />
 
-          <Form.Field  label='Mail' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.mail || ''} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          onChange={this.cambioMail} 
-          />
+            <Form.Field  label='Mail' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.mail || ''} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            onChange={this.cambioMail} 
+            />
+          </Form.Group>
 
           <Form.Field  label='Obra Social' control='select' 
           disabled={this.state.modificacion} 
@@ -540,6 +545,8 @@ class ConsultaPersona extends Component {
             {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
           </Form.Field> 
+
+          <br/>
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
               this.habilitarModificacion(e)} }>Modificar</Button>  : null}
