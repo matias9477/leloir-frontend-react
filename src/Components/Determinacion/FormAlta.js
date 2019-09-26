@@ -43,17 +43,19 @@ class FormAlta extends Component {
 
                 <Form onSubmit={this.fetchDeterminacion} className='altasYConsultas'>
 
-                    <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica'
-                    value={this.state.codigoPractica} 
-                    onChange={this.cambioCodigoPractica}
-                    className={this.state.errorCodigoPractica ? null : 'error'}
-                    />
+                    <Form.Group widths='equal'>
+                        <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
+                        value={this.state.codigoPractica} 
+                        onChange={this.cambioCodigoPractica}
+                        className={this.state.errorCodigoPractica ? null : 'error'}
+                        />
 
-                    <Form.Field required label='Descripción Práctica' control='input' 
-                    placeholder='Descripción Práctica'
-                    value={this.state.descripcionPractica} 
-                    onChange={this.cambioDescripcionPractica}
-                    className={this.state.errorDescripcionPractica ? null : 'error'}/>
+                        <Form.Field required label='Descripción Práctica' control='input' 
+                        placeholder='Descripción Práctica'
+                        value={this.state.descripcionPractica} 
+                        onChange={this.cambioDescripcionPractica}
+                        className={this.state.errorDescripcionPractica ? null : 'error'}/>
+                    </Form.Group>
 
                     <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
                     value={this.state.unidadBioquimica} 
@@ -64,6 +66,8 @@ class FormAlta extends Component {
                     <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
                     value={this.state.unidadMedida} 
                     onChange={this.cambioUnidadMedida}/>
+
+                    <br/>
 
                     <Button primary type="submit" onClick={this.fetchDeterminacion} className="boton"> Registrar Determinacion</Button>
 

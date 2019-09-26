@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
@@ -55,20 +56,23 @@ class FormConsulta extends Component {
                     <Header as='h3' dividing>Búsqueda y modificación</Header>
                 </Container>
                 
+                {this.state.estado === '' ? <CircularProgress size={50}/> : 
                 <Form className='altasYConsultas'>
-                    <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica'
-                    value={this.state.codigoPractica} 
-                    disabled={this.state.modificacion}
-                    onChange={this.cambioCodigoPractica}
-                    className={this.state.errorCodigoPractica ? null : 'error'}
-                    />
+                    <Form.Group widths='equal'>
+                        <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
+                        value={this.state.codigoPractica} 
+                        disabled={this.state.modificacion}
+                        onChange={this.cambioCodigoPractica}
+                        className={this.state.errorCodigoPractica ? null : 'error'}
+                        />
 
-                    <Form.Field label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
-                    value={this.state.descripcionPractica} 
-                    disabled={this.state.modificacion}
-                    onChange={this.cambioDescripcionPractica}
-                    className={this.state.errorDescripcionPractica ? null : 'error'}
-                    />
+                        <Form.Field label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
+                        value={this.state.descripcionPractica} 
+                        disabled={this.state.modificacion}
+                        onChange={this.cambioDescripcionPractica}
+                        className={this.state.errorDescripcionPractica ? null : 'error'}
+                        />
+                    </Form.Group>
 
                     <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
                     value={this.state.unidadBioquimica}
@@ -100,6 +104,7 @@ class FormConsulta extends Component {
                         this.cancelar(e)} } color='red'> Cancelar </Button> : null }
 
                 </Form>
+                }
             </div>
         );
     }
