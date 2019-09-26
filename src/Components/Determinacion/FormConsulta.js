@@ -142,7 +142,7 @@ class FormConsulta extends Component {
                 "codigoPractica": this.state.codigoPractica,
                 "descripcionPractica": convertStyleString(this.state.descripcionPractica),
                 "unidadBioquimica": this.state.unidadBioquimica,
-                "unidadMedida": this.state.unidadMedida
+                "unidadMedida": this.state.unidadMedida,
             };
 
             const api = '/determinaciones/modificar/' + this.props.match.params.codigoPractica;
@@ -227,18 +227,17 @@ class FormConsulta extends Component {
     }
 
     alta(e){
-        axios.put(`/determinaciones/switch-alta/${this.props.id}`).then(response => {
+        axios.put(`/determinaciones/switch-alta/${this.state.codigoPractica}`).then(response => {
             alert("Se ha dado de alta la determinación con éxito.");
               this.setState({estado: true})
              
-              const api = "/determinaciones/id/" + this.props.id ;
+              const api = "/determinaciones/id/" + this.state.codigoPractica ;
               this.handleUpdateClick(api); 
         }, (error) => {
             if(this.state.bitAlta) {
                 alert(`No se ha podido dar de alta la determinación. Intentelo nuevamente.`)
               }
         })
-    
       }
 
 
