@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MenuOpciones from '../../MenuOpciones';
 import Afluencia from './Afluencia';
+import Cola from './Cola';
 
 class LPSecretaria extends Component {
     constructor(props) {
@@ -41,6 +42,7 @@ class LPSecretaria extends Component {
         return (
             <div>
                 <Afluencia/>
+                <Cola/>
             </div>
         );
     }
