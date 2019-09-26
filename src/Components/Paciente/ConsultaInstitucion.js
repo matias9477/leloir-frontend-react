@@ -205,7 +205,7 @@ class ConsultaInstitucion extends Component {
                 
             <Form>
                 <Form.Group widths='equal'>
-                    <Form.Field required label='Número de Paciente' control='input' disabled={true} 
+                    <Form.Field required label='Número de Paciente' control='input' disabled={true} width={5}
                     value={this.state.id} 
                     onChange={this.cambioId} 
                     />

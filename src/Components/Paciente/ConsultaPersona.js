@@ -438,7 +438,7 @@ class ConsultaPersona extends Component {
       <Form>
           <Form.Group widths='equal'>
             <Form.Field required label='Número de Paciente' control='input' 
-            disabled={true}  
+            disabled={true} width={5}
             value={this.state.id} 
             onChange={this.cambioId} />
             

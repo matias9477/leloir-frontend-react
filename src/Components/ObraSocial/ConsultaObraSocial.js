@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import './../styles.css';
-import MenuOpciones from '../MenuOpciones';
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail, validateOnlyNumbersRequired  } from '../../Services/MetodosDeValidacion';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {Link} from 'react-router-dom';
 
+import MenuOpciones from '../MenuOpciones';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail, validateOnlyNumbersRequired  } from '../../Services/MetodosDeValidacion';
+import './../styles.css';
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ConsultaObraSocial extends Component {
         valor:true,
 
         cambios: false,
+        estado: '',
 
         id:'',
         razonSocial: '',
@@ -46,6 +48,7 @@ class ConsultaObraSocial extends Component {
   renderForm() {
     return (
       <div className='Formularios'>
+      
         <Container className='btnHeader'>
           <Button className='boton' as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
@@ -54,19 +57,23 @@ class ConsultaObraSocial extends Component {
           <Header as='h3' dividing>Búsqueda y modificación</Header>
         </Container>
 
+      {this.state.estado === '' ? <CircularProgress size={50}/> : 
+
       <Form className='altasYConsultas'>
           
-          <Form.Field required label='Id' control='input' 
-          disabled={true}  
-          value={this.state.id} 
-          onChange={this.cambioId} />
+          <Form.Group widths='equal'>  
+            <Form.Field required label='Id' control='input' 
+            disabled={true}  width={5}
+            value={this.state.id} 
+            onChange={this.cambioId} />
 
-          <Form.Field required label='Razon Social' control='input' 
-          disabled={this.state.modificacion}  
-          value={this.state.razonSocial} 
-          onChange={this.cambioRazonSocial} 
-          className= {this.state.errorRazonSocial === true ? null : 'error'} 
-          />
+            <Form.Field required label='Razon Social' control='input' 
+            disabled={this.state.modificacion}  
+            value={this.state.razonSocial} 
+            onChange={this.cambioRazonSocial} 
+            className= {this.state.errorRazonSocial === true ? null : 'error'} 
+            />
+          </Form.Group>
 
           <Form.Field required label='Cuit' maxLength={11} control='input' 
           disabled={this.state.modificacion}  
@@ -74,21 +81,24 @@ class ConsultaObraSocial extends Component {
           onChange={this.cambioCuit} 
           className= {this.state.errorCuit === true ? null : 'error'} 
           />
-        
-          <Form.Field  label='Telefono' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.telefono || ''} 
-          onChange={this.cambioTelefono} 
-          className= {this.state.errorTelefono === true ? null : 'error'} 
-          />
 
-          <Form.Field  label='Mail' control='input' 
-          disabled={this.state.modificacion} 
-          value={this.state.mail || ''} 
-          onChange={this.cambioMail} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          />
+          <Form.Group widths='equal'>        
+            <Form.Field  label='Telefono' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.telefono || ''} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            />
 
+            <Form.Field  label='Mail' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.mail || ''} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            />
+          </Form.Group>
+
+          <br/>
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
               this.habilitarModificacion(e)} }>Modificar</Button>  : null}
@@ -109,6 +119,7 @@ class ConsultaObraSocial extends Component {
             this.cancelar(e)}} color='red'> Cancelar </Button>: null }     
                    
       </Form>  
+      }
     </div>
     );
   }

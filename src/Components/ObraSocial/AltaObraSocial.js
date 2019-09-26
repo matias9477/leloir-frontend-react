@@ -57,19 +57,23 @@ class AltaObraSocial extends Component {
           className= {this.state.errorCuit === true ? null : 'error'} 
           />
 
-          <Form.Field label='Telefono' control='input' 
-          placeholder='Teléfono' 
-          value={this.state.telefono} 
-          onChange={this.cambioTelefono} 
-          className= {this.state.errorTelefono === true ? null : 'error'} 
-          />
+          <Form.Group widths='equal'>
+            <Form.Field label='Telefono' control='input' 
+            placeholder='Teléfono' 
+            value={this.state.telefono} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            />
 
-          <Form.Field label='E-Mail' control='input' 
-          placeholder='E-Mail' 
-          value={this.state.mail} 
-          onChange={this.cambioMail} 
-          className= {this.state.errorMail === true ? null : 'error'} 
-          />      
+            <Form.Field label='E-Mail' control='input' 
+            placeholder='E-Mail' 
+            value={this.state.mail} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            /> 
+          </Form.Group>     
+
+          <br/>
           
           <Button primary type="submit" onClick={this.nuevaObraSocial} className="boton"> Registrar Obra Social</Button >       
 
