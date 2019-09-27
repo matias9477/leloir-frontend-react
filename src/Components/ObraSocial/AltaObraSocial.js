@@ -15,23 +15,27 @@ class AltaObraSocial extends Component {
         telefono:'',
         mail:'',
         cuit: '',
+        valorUb: '',
 
         errorRazonSocial: '',
         errorCuit: '',
         errorTelefono: '',
         errorMail: '',
+        errorValorUb:'',
 
-      })
+      });
       this.nuevaObraSocial = this.nuevaObraSocial.bind(this);
       this.cambioRazonSocial = this.cambioRazonSocial.bind(this);
       this.cambioTelefono = this.cambioTelefono.bind(this);
       this.cambioMail = this.cambioMail.bind(this);
       this.cambioCuit = this.cambioCuit.bind(this);
+      this.cambioValorUb = this.cambioValorUb.bind(this);
 
       this.handleBlurRazonSocial = this.handleBlurRazonSocial.bind(this);
       this.handleBlurCuit = this.handleBlurCuit.bind(this);
       this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
       this.handleBlurMail = this.handleBlurMail.bind(this);
+      this.handleBlurValorUb = this.handleBlurValorUb.bind(this);
   }
   
 
@@ -51,14 +55,16 @@ class AltaObraSocial extends Component {
           <Form.Field required label='Razón Social' control='input' 
           placeholder='Razón Social' value={this.state.razonSocial} onChange={this.cambioRazonSocial} className= {(this.state.errorRazonSocial=== '' || this.state.errorRazonSocial === true) ? null : 'error'} onBlur={this.handleBlurRazonSocial}/>
           
-          <Form.Field required label='Cuit' maxLength={11} control='input'
+          <Form.Field label='Cuit' maxLength={11} control='input'
           placeholder='Cuit' value={this.state.cuit} onChange={this.cambioCuit} className= {(this.state.errorCuit === '' || this.state.errorCuit === true) ? null : 'error'} onBlur={this.handleBlurCuit}/>
 
           <Form.Field label='Telefono' control='input' placeholder='Teléfono' value={this.state.telefono} onChange={this.cambioTelefono} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error'} onBlur={this.handleBlurTelefono}/>
 
-          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail=== '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>      
-          
-          <Button primary type="submit" onClick={this.nuevaObraSocial} className="boton"> Registrar Obra Social</Button >       
+          <Form.Field label='E-Mail' control='input' placeholder='E-Mail' value={this.state.mail} onChange={this.cambioMail} className= {(this.state.errorMail=== '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>
+
+          <Form.Field label='Valor Unidad Bioquimica' control='input' placeholder='Valor' value={this.state.valorUb} onChange={this.cambioValorUb} className={(this.state.errorValorUb===''|| this.state.errorValorUb === true) ? null : 'error'} onBlur={this.handleBlurValorUb}/>
+
+          <Button primary type="submit" onClick={this.nuevaObraSocial} className="boton"> Registrar Obra Social</Button >
 
         </Form>  
       </div>
@@ -70,16 +76,18 @@ class AltaObraSocial extends Component {
     this.handleBlurRazonSocial(); 
     this.handleBlurCuit(); 
     this.handleBlurTelefono(); 
-    this.handleBlurMail(); 
+    this.handleBlurMail();
+    this.handleBlurValorUb();
 
-    const { errorRazonSocial, errorCuit, errorTelefono, errorMail } = this.state;
+    const { errorRazonSocial, errorCuit, errorTelefono, errorMail, errorValorUb } = this.state;
 
-    if( errorRazonSocial && errorCuit && errorTelefono && errorMail) {
+    if( errorRazonSocial && errorCuit && errorTelefono && errorMail && errorValorUb) {
       var data = {
         "razonSocial": titleCase(this.state.razonSocial),
         "cuit": this.state.cuit,
         "telefono": emptyToNull(this.state.telefono),
         "email": emptyToNull(this.state.mail.toLowerCase()),
+        "valorUb": emptyToNull(this.state.valorUb),
         "bitActivo": true
       };
 
@@ -97,14 +105,15 @@ class AltaObraSocial extends Component {
 
   nuevaObraSocial(e){
     e.preventDefault();
-    const { errorRazonSocial, errorCuit, errorMail, errorTelefono  } = this.state;
+    const { errorRazonSocial, errorCuit, errorMail, errorTelefono, errorValorUb  } = this.state;
     
-    this.handleBlurRazonSocial()
-    this.handleBlurCuit()
-    this.handleBlurMail()
-    this.handleBlurTelefono()
+    this.handleBlurRazonSocial();
+    this.handleBlurCuit();
+    this.handleBlurMail();
+    this.handleBlurTelefono();
+    this.handleBlurValorUb();
 
-    if ( errorRazonSocial && errorCuit && errorMail && errorTelefono  ) {
+    if ( errorRazonSocial && errorCuit && errorMail && errorTelefono  && errorValorUb) {
       const api = '/obras_sociales/add';
       this.handleUpdateClick(api);
     } else {
@@ -122,6 +131,7 @@ class AltaObraSocial extends Component {
       errorCuit: '',
       errorTelefono: '',
       errorMail: '',
+      errorValorUb: '',
     })
   }
  
@@ -135,7 +145,7 @@ class AltaObraSocial extends Component {
     this.setState( {
       cuit: e.target.value
     })
-  }  
+  }
 
   cambioTelefono(e){
     this.setState( {
@@ -149,6 +159,11 @@ class AltaObraSocial extends Component {
     })
   }
 
+  cambioValorUb(e) {
+    this.setState( {
+      valorUb: e.target.value
+    })
+  }
   handleBlurRazonSocial = () => {
     if (this.state.razonSocial === ''  || this.state.razonSocial.length === 0 ||  hasNumbers(this.state.razonSocial)){
       this.setState({ errorRazonSocial: false })
@@ -193,6 +208,16 @@ class AltaObraSocial extends Component {
         errorMail: false,
       })
     } 
+  }
+
+  handleBlurValorUb = () => {
+    if (this.state.valorUb.length === 0) {
+      this.setState({ errorValorUb: false})
+    } else if(isFinite(String(this.state.valorUb))){
+      this.setState({ errorValorUb: true})
+    } else{
+      this.setState({ errorValorUb: false})
+    }
   }
 
 

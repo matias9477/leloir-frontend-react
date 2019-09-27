@@ -56,7 +56,7 @@ export default class TablaObraSocial extends React.Component {
     bitInverse = obraSocial => {
         axios.put(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`).then(response => {
             if (obraSocial.bitActivo) {
-                alert(`Se ha eliminado la obra social ${obraSocial.razonSocial} con éxito.`);
+                alert(`Se ha dado de baja la obra social ${obraSocial.razonSocial} con éxito.`);
                 this.fetchobrasSocialesAll()
             } else {
                 alert(`Se ha dado de alta la obra social ${obraSocial.razonSocial} con éxito.`);
@@ -64,7 +64,7 @@ export default class TablaObraSocial extends React.Component {
             }    
             }, (error) => {
                 if (obraSocial.bitActivo) {
-                    alert(`No se ha podido eliminar la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
+                    alert(`No se ha podido dar de baja la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
                 } else {
                     alert(`No se ha podido dar de alta la obra social. ${obraSocial.razonSocial} Intentelo nuevamente.`)
                 }
@@ -73,7 +73,7 @@ export default class TablaObraSocial extends React.Component {
 
     mensajeConfirmacion(obraSocial){
         if (obraSocial.bitActivo){
-            return (`¿Esta seguro que quiere eliminar la obra social ${obraSocial.razonSocial}?`)
+            return (`¿Esta seguro que quiere dar de baja la obra social ${obraSocial.razonSocial}?`)
         }
         else {
             return (`¿Esta seguro que quiere dar de alta la obra social ${obraSocial.razonSocial}?`)
