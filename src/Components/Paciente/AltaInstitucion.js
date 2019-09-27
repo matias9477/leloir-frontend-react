@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form, FormGroup } from 'semantic-ui-react';
+import { Button, Header, Form } from 'semantic-ui-react';
 
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
