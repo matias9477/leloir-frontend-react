@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
+import { Grid, Header, Image, Segment } from 'semantic-ui-react';
 import LoginComponent from './Login';
 
 const LoginForm = () => (
@@ -11,13 +11,9 @@ const LoginForm = () => (
          </div>
         Ingrese a su cuenta
       </Header>
-      <Form size='large'>
-        <Segment stacked>
-
+      <Segment stacked>
         <LoginComponent/>
-
-        </Segment>
-      </Form>
+      </Segment>
     </Grid.Column>
   </Grid>
 )
