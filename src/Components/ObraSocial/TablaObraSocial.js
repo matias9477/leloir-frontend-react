@@ -1,10 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
+import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
+
 import MenuOpciones from '../MenuOpciones';
 import { urlObrasSoc } from './../../Constants/URLs';
+import { nroPorPagina } from "../../Constants/utils";
+import { nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 export default class TablaObraSocial extends React.Component {
@@ -12,7 +15,7 @@ export default class TablaObraSocial extends React.Component {
         super(props);
         this.state = {
           obrasSociales: [],
-          limit: 25,
+          limit: nroPorPagina[1].value,
           activePage: 1,
           totalCount: 0,
           sortParams:{
@@ -80,27 +83,28 @@ export default class TablaObraSocial extends React.Component {
         }
     }
 
-    cantidadPorPagina(){
-        return ( 
-        <div className='rightAlign'>
-            Cantidad de obras sociales por página: &nbsp;&nbsp; 
-            <select id='int' onChange={this.cambioLimite} value={this.state.limit} className='selectCantidad'>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </div>
-        
+    cantidadPorPagina() {
+        return (
+            <div className='rightAlign'>
+                <span>
+                    Cantidad de obras sociales por página:{' '}
+                    <Dropdown
+                        inline
+                        options={nroPorPagina}
+                        value = {this.state.limit}
+                        onChange={this.cambioLimite} 
+                    />
+                </span>
+            </div>
         )
-    }
+    };
 
-    cambioLimite(e){
-        this.setState( {
-            limit: e.target.value,
+    cambioLimite(e, data) {
+        this.setState({
+            limit: data.value,
             activePage: 1,
-        })
-        return this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit));
+        });
+        return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
 
     loadData(from, to){
@@ -173,7 +177,7 @@ export default class TablaObraSocial extends React.Component {
                     <Header as='h2'>Obras Sociales</Header>
                     
                     <Button as= {Link} to='/obras_sociales/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                        <Icon name='user' /> Nueva Obra Social
+                        <Icon name='medkit' /> Nueva Obra Social
                     </Button>
                   
                     <br></br>
@@ -203,7 +207,7 @@ export default class TablaObraSocial extends React.Component {
                     <tbody className='centerAlignment'>
                     
                         {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (obraSocial, index) => (
-                        <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "pacienteBaja"} > 
+                        <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "listadosBaja"} > 
                             <td data-label="Id">
                                 {obraSocial.idObraSocial}
                             </td>
@@ -214,7 +218,7 @@ export default class TablaObraSocial extends React.Component {
                                 {obraSocial.cuit}
                             </td>
                             <td data-label="Telefono">
-                                {obraSocial.telefono}
+                                {nullTo(obraSocial.telefono)}
                             </td>
                             <td>
                                 <Dropdown item icon='ellipsis horizontal' simple>
