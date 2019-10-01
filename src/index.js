@@ -14,7 +14,7 @@ import ConsultaObraSocial from './Components/ObraSocial/ConsultaObraSocial';
 import AltaObraSocial from './Components/ObraSocial/AltaObraSocial';
 import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
 import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
-
+import AltaMuestra from './Components/Muestra/FormAlta';
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
 
 
@@ -38,6 +38,7 @@ ReactDOM.render(
             <AuthenticatedRoute exact path="/determinaciones" component={DeterminacionesContainer}/>
             <AuthenticatedRoute exact path="/determinaciones/add" component={FormAltaDeterminacion}/>
             <AuthenticatedRoute exact path="/determinaciones/consulta/:codigoPractica" component={FormConsultaDeterminacion}/>
+            <AuthenticatedRoute exact patj="/muestras" component={AltaMuestra}/>
         </Switch>
     </Router>
 
