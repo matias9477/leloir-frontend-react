@@ -113,7 +113,7 @@ class FormNuevoAnalisis extends Component {
                 openMenuOnClick={false}
                 isClearable={true}
               />
-              <Button as= {Link} to='/pacientes/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
+              <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' primary size='small'>
                 <Icon name='user' /> Nuevo Paciente
               </Button>
             </div>

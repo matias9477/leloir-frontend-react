@@ -37,11 +37,12 @@ class FormAlta extends Component {
   }
   
   renderForm(){
+    const url = this.props.location.state.prevPath;
     return (
       <div className='Formularios'>
         
         <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to='/pacientes' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+          <Button className='boton' as= {Link} to={url} exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
           </Button>
         </Container>
@@ -70,7 +71,6 @@ class FormAlta extends Component {
 
 
   render() {
-    
     return (
       <div className='union'>
         <MenuOpciones/>
