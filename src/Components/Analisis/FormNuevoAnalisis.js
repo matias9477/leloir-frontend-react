@@ -12,11 +12,12 @@ class FormNuevoAnalisis extends Component {
   constructor(props) {
     super(props);
     this.state = ({
-        muestra: '',
         determinaciones: [],
-        pacientes:[],
+        pacientes: [],
+        muestra: [],
 
         selectedPaciente: '',
+        selectedDeterminaciones: [],
 
         errorPaciente: true,
         errorDeterminaciones: true,
@@ -57,6 +58,15 @@ class FormNuevoAnalisis extends Component {
 
   handleChangeListPacientes = selectedPaciente => {
     this.setState({ selectedPaciente })
+  }
+
+  searchDeterminaciones(){
+    const nodess = this.state.determinaciones.map(({descripcionPractica, codigoPractica}) => ({value: descripcionPractica, label: descripcionPractica, key: codigoPractica}));
+    return nodess;
+  }
+
+  handleChangeListDeterminaciones = selectedDeterminaciones => {
+    this.setState({ selectedDeterminaciones })
   }
 
   handleUpdateClick = (api) => {
@@ -110,10 +120,9 @@ class FormNuevoAnalisis extends Component {
                 options={this.searchPacientes()}
                 onChange={this.handleChangeListPacientes}
                 placeholder= "Busque un paciente..."
-                openMenuOnClick={false}
                 isClearable={true}
               />
-              <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' primary size='small'>
+              <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
                 <Icon name='user' /> Nuevo Paciente
               </Button>
             </div>
@@ -121,14 +130,16 @@ class FormNuevoAnalisis extends Component {
             <Header as={'h5'}>Determinaciones a realizar:</Header>
             <Select
               isMulti
-              name="colors"
-              options={this.state.determinaciones}
-              placeholder= 'Seleccione determinaciones...'
+              options={this.searchDeterminaciones()}
+              onChange={this.handleChangeListDeterminaciones}
               className="basic-multi-select"
               classNamePrefix="select"
+              placeholder='Seleccione determinaciones...'
             />
 
             <Header as={'h5'}>Muestra:</Header>
+            <Button>Generar Muestra</Button>
+            <br/><br/>
             <TextArea placeholder='Ingrese muestra...' style={{ minHeight: 100 }} />
 
             <br/> <br/> <br/>
