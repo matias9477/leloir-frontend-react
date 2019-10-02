@@ -21,20 +21,21 @@ export default class MenuOpciones extends Component {
             
             <div className="Menu">
                 <Menu inverted>
-                    <Menu.Item name='home'
-                               as={Link} to='/'
-                               active={activeItem === 'home'}
-                               onClick={this.handleItemClick}
-
+                    <Menu.Item 
+                        name='home'
+                        as={Link} to='/'
+                        active={activeItem === 'home'}
+                        onClick={this.handleItemClick}
                     >
                         <Image src="/android-chrome-192x192.png" size='mini' centered/>
                     </Menu.Item>
 
 
-                    <Menu.Item name='Pacientes'
-                               as={Link} to='/pacientes'
-                               active={activeItem === 'Pacientes'}
-                               onClick={this.handleItemClick}
+                    <Menu.Item 
+                        name='Pacientes'
+                        as={Link} to='/pacientes'
+                        active={activeItem === 'Pacientes'}
+                        onClick={this.handleItemClick}
                     />
 
 
@@ -56,8 +57,15 @@ export default class MenuOpciones extends Component {
 
                     <Menu.Item
                         name='Obras Sociales'
-                        as={Link} to='/'
+                        as={Link} to='/obras_sociales'
                         active={activeItem === 'Obras Sociales'}
+                        onClick={this.handleItemClick}
+                    />
+
+                    <Menu.Item
+                        name='Determinaciones'
+                        as={Link} to='/determinaciones'
+                        active={activeItem === 'Determinaciones'}
                         onClick={this.handleItemClick}
                     />
 

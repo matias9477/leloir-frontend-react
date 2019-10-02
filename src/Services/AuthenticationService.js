@@ -1,40 +1,27 @@
 import axios from 'axios'
+import {urlSignIn} from "../Constants/URLs";
 
-export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
+export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser';
+export const USER_NAME_SESSION_ATTRIBUTE_TOKEN = 'authenticatedUserToken';
 
 class AuthenticationService {
 
-    executeBasicAuthenticationService(username, password) {
-        return axios.get('/basicauth',
-            { headers: { authorization: this.createBasicAuthToken(username, password) } })
-    }
-
-    executeJwtAuthenticationService(username, password) {
-        console.log(username);
-        return axios.post('/authenticate', {
-            username,
+    executeJwtAuthenticationService(usernameOrEmail, password) {
+        return axios.post(urlSignIn, {
+            usernameOrEmail,
             password
         })
     }
 
-    createBasicAuthToken(username, password) {
-        return 'Basic ' + window.btoa(username + ":" + password)
+    registerSuccessfulLoginForJwt(username, tokenType, accesstoken) {
+        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username);
+        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN, this.createJWTToken(tokenType, accesstoken));
+        this.setupAxiosInterceptors()
     }
 
-    registerSuccessfulLogin(username, password) {
-        //let basicAuthHeader = 'Basic ' +  window.btoa(username + ":" + password)
-        //console.log('registerSuccessfulLogin')
-        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
-        this.setupAxiosInterceptors(this.createBasicAuthToken(username, password))
-    }
-
-    registerSuccessfulLoginForJwt(username, token) {
-        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
-        this.setupAxiosInterceptors(this.createJWTToken(token))
-    }
-
-    createJWTToken(token) {
-        return 'Bearer ' + token
+    createJWTToken(tokenType, accesstoken) {
+        console.log(tokenType + ' ' +  accesstoken);
+        return tokenType + ' ' +  accesstoken
     }
 
 
@@ -44,21 +31,21 @@ class AuthenticationService {
 
     isUserLoggedIn() {
         let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME)
-        if (user === null) return false
-        return true
+        return user !== null;
+
     }
 
     getLoggedInUserName() {
         let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME)
-        if (user === null) return ''
+        if (user === null) return '';
         return user
     }
 
-    setupAxiosInterceptors(token) {
+    setupAxiosInterceptors() {
         axios.interceptors.request.use(
             (config) => {
                 if (this.isUserLoggedIn()) {
-                    config.headers.authorization = token
+                    config.headers.authorization = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN)
                 }
                 return config
             }
