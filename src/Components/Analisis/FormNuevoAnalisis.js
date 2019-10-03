@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Button, Header, Form, Icon, TextArea } from 'semantic-ui-react'
+import { Button, Header, Form, Icon, TextArea, Grid } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import Select from 'react-select'
 
@@ -23,6 +23,7 @@ class FormNuevoAnalisis extends Component {
         errorDeterminaciones: true,
       })
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
+      this.generarMuestra = this.generarMuestra.bind(this);
     }
 
   componentDidMount(){
@@ -102,53 +103,61 @@ class FormNuevoAnalisis extends Component {
     }
   }
 
+  generarMuestra(){
+    this.setState({ muestra:[...this.state.muestra, Math.floor(Math.random() * 100)] })
+  }
 
   render() {
     return (
       <div className='union'>
         <MenuOpciones/>
-        <div className="btnHeader">
+        <Form  className="btnHeader">
           <Header as='h2'>Registrar nuevo Análisis</Header>
-          <br/>
-          <Form>
-            
-            <Header as={'h5'}>Paciente:</Header>
-            <div className='union'>
+          
+          <Header as={'h5'}>Paciente:</Header>
+          <Grid columns='equal' >
+            <Grid.Column width={12}>
               <Select
-                className='inputBusquedaPacientes'
                 value={this.state.selectedPaciente}
                 options={this.searchPacientes()}
                 onChange={this.handleChangeListPacientes}
                 placeholder= "Busque un paciente..."
                 isClearable={true}
               />
+            </Grid.Column>
+            <Grid.Column>
               <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
                 <Icon name='user' /> Nuevo Paciente
               </Button>
-            </div>
+            </Grid.Column>
+          </Grid>
 
-            <Header as={'h5'}>Determinaciones a realizar:</Header>
-            <Select
-              isMulti
-              options={this.searchDeterminaciones()}
-              onChange={this.handleChangeListDeterminaciones}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder='Seleccione determinaciones...'
-            />
+          <Header as={'h5'}>Determinaciones a realizar:</Header>
+          <Select
+            isMulti
+            options={this.searchDeterminaciones()}
+            onChange={this.handleChangeListDeterminaciones}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            placeholder='Seleccione determinaciones...'
+          />
 
-            <Header as={'h5'}>Muestra:</Header>
-            <Button>Generar Muestra</Button>
-            <br/><br/>
-            <TextArea placeholder='Ingrese muestra...' style={{ minHeight: 100 }} />
+          <Header as={'h5'}>Muestra:</Header>
+          <Grid columns='equal' >
+            <Grid.Column>
+              <Button onClick={this.generarMuestra} >Generar Muestra</Button>       
+            </Grid.Column>
+            <Grid.Column width={13}>
+              <TextArea value={this.state.muestra} placeholder='Ingrese muestra...' style={{ minHeight: 100 }}/>
+            </Grid.Column>
+          </Grid>
 
-            <br/> <br/> <br/>
-            <Button floated='right' primary size='small'> 
-              Registrar Análisis
-            </Button>
-            
-          </Form>
-        </div>
+          <br/> <br/>
+          <Button primary size='small'> 
+            Registrar Análisis
+          </Button>
+          
+        </Form>
       </div>
     );
   }
