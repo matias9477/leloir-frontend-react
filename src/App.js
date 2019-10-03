@@ -7,6 +7,7 @@ import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria'
 
 function App(){
   return(
+    // <div className="App">
     <div className="App">
       {/* <MenuOpciones></MenuOpciones> */}
       <LPSecretaria/>

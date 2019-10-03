@@ -65,6 +65,7 @@ class Afluencia extends Component {
                 </div>
                 <Cola entries={this.state.patients}/>
             </div>
+            
 
         );
     }
