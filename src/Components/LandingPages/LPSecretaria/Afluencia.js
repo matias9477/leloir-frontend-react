@@ -4,6 +4,7 @@ import {Button, Icon,Input, Form} from 'semantic-ui-react';
 import './LPSecretaria.css';
 import Cola from './Cola';
 
+
 class Afluencia extends Component {
     constructor(props) {
         super(props);
@@ -11,6 +12,7 @@ class Afluencia extends Component {
             patients: []
         });
         this.addPatient = this.addPatient.bind(this);
+        this.deletePatient = this.deletePatient.bind(this);
     }
 
     addPatient(e){
@@ -34,6 +36,17 @@ class Afluencia extends Component {
         e.preventDefault();
     }
 
+    deletePatient(key){
+        var filteredPatients = this.state.patients.filter(
+            function (patient) {
+            return (patient.key !== key)
+        });     
+
+        this.setState({
+            patients: filteredPatients
+        });
+
+    }
     // cambioNombre(e) {
     //     this.setState( {
     //       nombre: e.target.value
@@ -63,7 +76,9 @@ class Afluencia extends Component {
                          
                 </Form>
                 </div>
-                <Cola entries={this.state.patients}/>
+                <Cola entries={this.state.patients}
+                    delete={this.deletePatient}
+                />
             </div>
             
 
