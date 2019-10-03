@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './LPSecretaria.css';
+import { Item } from 'semantic-ui-react';
 
 class Cola extends Component {
-    constructor(props) {
-        super(props);
 
+    createPatient(patient){
+        return <li key={patient.key}>{patient.text}</li>
     }
 
-    render() {
+    render(){
+        var patientEntries = this.props.entries;
+        var listPatients = patientEntries.map(this.createPatient);
+
         return (
-            <div className="Cola">
-                Cola
-            </div>
+            <ul className="List">
+                {listPatients}
+            </ul>
         );
     }
+
 }
 
-Cola.propTypes = {
-
-};
 
 export default Cola;

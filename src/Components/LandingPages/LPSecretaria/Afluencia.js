@@ -1,73 +1,77 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {Button, Icon,Input} from 'semantic-ui-react';
+// import PropTypes from 'prop-types';
+import {Button, Icon,Input, Form} from 'semantic-ui-react';
 import './LPSecretaria.css';
+import Cola from './Cola';
 
 class Afluencia extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            nombre:'',
-        })
-        this.cambioNombre = this.cambioNombre.bind(this);
-
+            patients: []
+        });
+        this.addPatient = this.addPatient.bind(this);
     }
 
-    cambioNombre(e) {
-        this.setState( {
-          nombre: e.target.value
-        })
-      }
+    addPatient(e){
+        if(this._inputElement.value !== "") {
+            var newPacient = {
+                text: this._inputElement.value,
+                key: Date.now()
+            };
 
-    handleAdd=()=>{
-        console.log(this.state.nombre)
+            this.setState((prevState) =>{
+                return {
+                    patients: prevState.patients.concat(newPacient)
+                };
+            });
+            this._inputElement.value = "";
+        }
+
+        
+        console.log(this.state.patients);
+
+        e.preventDefault();
     }
 
-    componentWillMount() {
+    // cambioNombre(e) {
+    //     this.setState( {
+    //       nombre: e.target.value
+    //     })
+    //   }
 
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-
+    // handleAdd=()=>{
+    //     console.log(this.state.nombre)
     // }
 
-    componentWillUpdate(nextProps, nextState) {
-
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-    }
-
-    componentWillUnmount() {
-
-    }
 
     render() {
         return (
-            <div className="afluencia">
-                <Button primary icon onClick={this.handleAdd}>
-                    <Icon name='add user'/>
-                </Button>
+            <div className="afluenciaMain">
+                <div className="afluenciaHeader">
+                <Form onSubmit={this.addPatient} >
+                    <Button primary icon type="submit">
+                        <Icon name='add user'/>
+                    </Button>
                 {/* &nbsp;  significa non blank space y se usa como recurso html para agregar espacios*/}
-                &nbsp;&nbsp;&nbsp;<label>Nombre</label>&nbsp;&nbsp;&nbsp;
-                <Input placeholder="Ingrese nombre..." onChange={this.cambioNombre}></Input>
+                    &nbsp;&nbsp;&nbsp;<label>Nombre</label>&nbsp;&nbsp;&nbsp;
+                    {/* <Input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..." ></Input> */}
+                    <input ref={(a) => this._inputElement = a} 
+                  placeholder="Ingrese nombre..."/>
+
+                  
+                         
+                </Form>
+                </div>
+                <Cola entries={this.state.patients}/>
             </div>
 
         );
     }
 }
 
-Afluencia.propTypes = {
+// Afluencia.propTypes = {
 
-};
+// };
 
 export default Afluencia;

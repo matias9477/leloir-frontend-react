@@ -40,9 +40,8 @@ class LPSecretaria extends Component {
 
     render() {
         return (
-            <div>
+            <div className="LPSecretaria">
                 <Afluencia/>
-                <Cola/>
             </div>
         );
     }
