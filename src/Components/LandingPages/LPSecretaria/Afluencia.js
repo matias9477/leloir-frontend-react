@@ -47,16 +47,6 @@ class Afluencia extends Component {
         });
 
     }
-    // cambioNombre(e) {
-    //     this.setState( {
-    //       nombre: e.target.value
-    //     })
-    //   }
-
-    // handleAdd=()=>{
-    //     console.log(this.state.nombre)
-    // }
-
 
     render() {
         return (
@@ -68,7 +58,6 @@ class Afluencia extends Component {
                     </Button>
                 {/* &nbsp;  significa non blank space y se usa como recurso html para agregar espacios*/}
                     &nbsp;&nbsp;&nbsp;<label>Nombre</label>&nbsp;&nbsp;&nbsp;
-                    {/* <Input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..." ></Input> */}
                     <input ref={(a) => this._inputElement = a} 
                   placeholder="Ingrese nombre..."/>
 
