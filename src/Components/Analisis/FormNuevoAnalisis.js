@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import axios from 'axios'
-import { Button, Header, Form, Icon, TextArea, Grid } from 'semantic-ui-react'
+import axios from 'axios';
+import { Button, Header, Form, Icon, TextArea, Grid } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
-import Select from 'react-select'
+import Select from 'react-select';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import MenuOpciones from '../MenuOpciones';
 import { urlDeterminaciones } from '../../Constants/URLs';
+import { getCurrentDate } from '../../Services/MetodosPaciente';
+import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class FormNuevoAnalisis extends Component {
@@ -16,14 +19,21 @@ class FormNuevoAnalisis extends Component {
         pacientes: [],
         muestra: [],
 
+        loading: true,
+
         selectedPaciente: '',
         selectedDeterminaciones: [],
+
+        pacienteFinal: [],
+        determinacionesFinales: [],
 
         errorPaciente: true,
         errorDeterminaciones: true,
       })
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
       this.generarMuestra = this.generarMuestra.bind(this);
+      this.getPaciente = this.getPaciente.bind(this);
+      this.getDeterminaciones = this.getDeterminaciones.bind(this);
     }
 
   componentDidMount(){
@@ -35,6 +45,7 @@ class FormNuevoAnalisis extends Component {
     axios.get(urlDeterminaciones).then((response) => {
         this.setState({
           determinaciones: Object.values(response.data).flat(),
+          loading: false,
         });
     }, (error) => {
         console.log('Error en carga de deteminaciones: ', error.message);
@@ -53,7 +64,7 @@ class FormNuevoAnalisis extends Component {
   };
 
   searchPacientes(){
-      const nodess = this.state.pacientes.map(({nombre, apellido, id}) => ({value:`${nombre} ${this.checkApellido(apellido)}`, label: `${nombre} ${this.checkApellido(apellido)}`, key: id}));
+      const nodess = this.state.pacientes.map(({nombre, apellido, nroDocumento, id}) => ({value:`${nombre} ${checkAtributo(apellido)}`, label: `${nombre} ${checkAtributo(apellido)} ${' '} ${checkAtributo(nroDocumento)}`, key: id}));
       return nodess;
   }
 
@@ -70,8 +81,54 @@ class FormNuevoAnalisis extends Component {
     this.setState({ selectedDeterminaciones })
   }
 
+  getIconTipo(tipo){
+    if (tipo === 'com.leloir.backend.domain.Animal'){
+        return 'paw'
+    } else if(tipo === 'com.leloir.backend.domain.Persona'){
+        return 'user'
+    } else if(tipo === 'com.leloir.backend.domain.Institucion'){
+        return 'building'
+    }
+  }
+
+  generarMuestra(){
+    this.setState({ muestra: [...this.state.muestra, Math.floor(Math.random() * 100)] })
+  }
+
+  getPaciente(){
+    const url = `/pacientes/id/${this.state.selectedPaciente.key}`;
+    axios.get(url).then(resolve => {
+      this.setState({
+          pacienteFinal: resolve.data,
+      });
+    }, (error) => {
+        console.log('Error get tipo', error.message);
+    }) 
+  }
+
+  getDeterminaciones(){
+    console.log('hol')
+    for (var i = 0; i < this.state.selectedDeterminaciones.length; i++) { 
+      const url = `/determinaciones/id/${this.state.selectedDeterminaciones[i].key}`;
+      axios.get(url).then(resolve => {
+        this.setState({ determinacionesFinales: [...this.state.determinacionesFinales, resolve.data] });
+      }, (error) => {
+          console.log('Error get tipo', error.message);
+      }) 
+    }
+    console.log(this.state.determinacionesFinales)
+  }
+  
   handleUpdateClick = (api) => {
     var data = {
+      "fecha": getCurrentDate(),
+      "costo": 0,
+      "estado": {
+        "estadoId": 3,
+        "nombre": "EN PREPARACION",
+        "descripcion": null
+      },
+      
     };
 
     axios.post(api, data).then((response) => {
@@ -84,33 +141,28 @@ class FormNuevoAnalisis extends Component {
 
   nuevoAnalisis(e){
     e.preventDefault();
-    const { errorPaciente, errorDeterminaciones } = this.state;
+    const { selectedPaciente, selectedDeterminaciones } = this.state;
+
+    const errorPaciente = validateRequiredCombos(selectedPaciente);
+    const errorDeterminaciones = validateRequiredCombos(selectedDeterminaciones);
     
     if ( errorPaciente && errorDeterminaciones ) {
       const api = '/analisis/add';
       this.handleUpdateClick(api);
     } else {
-      alert("Revise los datos ingresados.")
+      alert("Revise los datos ingresados.");
+      this.setState({
+        errorPaciente: false,
+        errorDeterminaciones: false,
+      })
     }    
-  }
-
-  checkApellido(apellido){
-    if(apellido !== undefined){
-        return apellido;
-    } 
-    else{
-        return '';
-    }
-  }
-
-  generarMuestra(){
-    this.setState({ muestra:[...this.state.muestra, Math.floor(Math.random() * 100)] })
   }
 
   render() {
     return (
       <div className='union'>
         <MenuOpciones/>
+        {this.state.loading ? <CircularProgress className={'centeredPosition'} size={50}/> : 
         <Form  className="btnHeader">
           <Header as='h2'>Registrar nuevo Análisis</Header>
           
@@ -140,6 +192,7 @@ class FormNuevoAnalisis extends Component {
             className="basic-multi-select"
             classNamePrefix="select"
             placeholder='Seleccione determinaciones...'
+            closeMenuOnSelect={false}
           />
 
           <Header as={'h5'}>Muestra:</Header>
@@ -148,16 +201,17 @@ class FormNuevoAnalisis extends Component {
               <Button onClick={this.generarMuestra} >Generar Muestra</Button>       
             </Grid.Column>
             <Grid.Column width={13}>
-              <TextArea value={this.state.muestra} placeholder='Ingrese muestra...' style={{ minHeight: 100 }}/>
+              <TextArea value={this.state.muestra} placeholder='Genere muestra...' style={{ minHeight: 100 }}/>
             </Grid.Column>
           </Grid>
 
           <br/> <br/>
-          <Button primary size='small'> 
+          <Button primary size='small' onClick={this.nuevoAnalisis}> 
             Registrar Análisis
           </Button>
           
         </Form>
+        }
       </div>
     );
   }
