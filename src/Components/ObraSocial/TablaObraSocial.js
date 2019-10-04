@@ -177,7 +177,7 @@ export default class TablaObraSocial extends React.Component {
                     <Header as='h2'>Obras Sociales</Header>
                     
                     <Button as= {Link} to='/obras_sociales/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                        <Icon name='user' /> Nueva Obra Social
+                        <Icon name='medkit' /> Nueva Obra Social
                     </Button>
                   
                     <br></br>
