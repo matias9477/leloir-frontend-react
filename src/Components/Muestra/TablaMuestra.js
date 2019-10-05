@@ -7,7 +7,6 @@ import { orderBy } from 'lodash';
 import MenuOpciones from '../MenuOpciones';
 import { urlMuestras } from './../../Constants/URLs';
 import { nroPorPagina } from "../../Constants/utils";
-import { nullTo } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 export default class TablaMuestra extends React.Component {
@@ -67,7 +66,7 @@ export default class TablaMuestra extends React.Component {
             }
         }, (error) => {
             if (muestra.bitActivo) {
-                alert(`No se ha podido eliminar la muestra ${muestra.idMuestra}. Intentelo nuevamente.`)
+                alert(`No se ha podido dar de baja la muestra ${muestra.idMuestra}. Intentelo nuevamente.`)
             } else {
                 alert(`No se ha podido dar de alta la muestra. ${muestra.idMuestra} Intentelo nuevamente.`)
             }
@@ -153,15 +152,13 @@ export default class TablaMuestra extends React.Component {
             filtro: valor.target.value,
         })
 
-        var os = this.state.muestras.filter(function (muestra) {
-
-            return (muestra.idMuestra.includes(valor.target.value) ||
-                muestra.tipoMuestra.toString().includes(valor.target.value) );
+        var mu = this.state.muestras.filter(function (muestra) {
+           return (muestra.idMuestra === undefined ? null : muestra.idMuestra.toString().includes(valor.target.value));
         });
 
         this.setState({
-            muestrasFiltrados: os,
-            totalCount: os.length,
+            muestrasFiltrados: mu,
+            totalCount: mu.length,
         })
 
     }
@@ -214,11 +211,11 @@ export default class TablaMuestra extends React.Component {
                                 <td data-label="Tipo Muesta">
                                     {muestra.tipoMuestra}
                                 </td>
-                                <td data-label="Fecha">
-                                    {muestra.fecha}
+                                <td data-label="Fecha Alta">
+                                    {muestra.fechaAlta}
                                 </td>
                                 <td data-label="Estado">
-                                    {muestra.idEstado}
+                                    {muestra.estado}
                                 </td>
                                 <td>
                                     <Dropdown item icon='ellipsis horizontal' simple>
