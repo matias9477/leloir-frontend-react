@@ -153,7 +153,8 @@ export default class TablaMuestra extends React.Component {
         })
 
         var mu = this.state.muestras.filter(function (muestra) {
-           return (muestra.idMuestra === undefined ? null : muestra.idMuestra.toString().includes(valor.target.value));
+           return ((muestra.idMuestra === undefined ? null : muestra.idMuestra.toString().includes(valor.target.value)) ||
+               (muestra.analisisId === undefined ? null : muestra.analisisId.toString().includes(valor.target.value)) );
         });
 
         this.setState({
@@ -193,7 +194,8 @@ export default class TablaMuestra extends React.Component {
                     <table className="ui single line table" >
                         <thead className='centerAlignment'>
                         <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("idMuestra")}  >Id</th>
+                            <th onClick={() => this.handleColumnHeaderClick("idMuestra")}  >Muestra</th>
+                            <th onClick={() => this.handleColumnHeaderClick("analisisId")}  >Analisis</th>
                             <th onClick={() => this.handleColumnHeaderClick("tipoMuestrsa")} >Tipo Muestra</th>
                             <th onClick={() => this.handleColumnHeaderClick("fecha")} >Fecha</th>
                             <th onClick={() => this.handleColumnHeaderClick("idEstado")} >Estado</th>
@@ -207,6 +209,9 @@ export default class TablaMuestra extends React.Component {
                             <tr key={index} value={muestra} className={ muestra.bitActivo ? null : "listadosBaja"} >
                                 <td data-label="Id Muestra">
                                     {muestra.idMuestra}
+                                </td>
+                                <td data-label="Analisis">
+                                    {muestra.analisisId}
                                 </td>
                                 <td data-label="Tipo Muesta">
                                     {muestra.tipoMuestra}
