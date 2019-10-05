@@ -85,12 +85,6 @@ class ConsultaObraSocial extends Component {
           className= {this.state.errorCuit === true ? null : 'error'} 
           />
 
-          <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
-                      disabled={this.state.modificacion}
-                      value={this.state.valorUb}
-                      onChange={this.cambioValorUb}
-                      className= {this.state.errorValorUb === true ? null : 'error'}
-          />
 
           <Form.Group widths='equal'>        
             <Form.Field  label='Telefono' control='input' 
@@ -106,6 +100,12 @@ class ConsultaObraSocial extends Component {
             onChange={this.cambioMail} 
             className= {this.state.errorMail === true ? null : 'error'} 
             />
+              <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
+                           disabled={this.state.modificacion}
+                           value={this.state.valorUb}
+                           onChange={this.cambioValorUb}
+                           className= {this.state.errorValorUb === true ? null : 'error'}
+              />
           </Form.Group>
 
           <br/>
