@@ -200,6 +200,7 @@ export default class TablaMuestra extends React.Component {
                             <th onClick={() => this.handleColumnHeaderClick("tipoMuestrsa")} >Tipo Muestra</th>
                             <th onClick={() => this.handleColumnHeaderClick("fecha")} >Fecha</th>
                             <th onClick={() => this.handleColumnHeaderClick("idEstado")} >Estado</th>
+                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
                         </tr>
                         </thead>
 
@@ -207,11 +208,11 @@ export default class TablaMuestra extends React.Component {
 
                         {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (muestra, index) => (
                             <tr key={index} value={muestra} className={ muestra.bitActivo ? null : "listadosBaja"} >
-                                <td data-label="Id">
+                                <td data-label="Id Muestra">
                                     {muestra.idMuestra}
                                 </td>
                                 <td data-label="Tipo Muesta">
-                                    {muestra.tipoMuesta}
+                                    {muestra.tipoMuestra}
                                 </td>
                                 <td data-label="Fecha">
                                     {muestra.fecha}
@@ -225,7 +226,7 @@ export default class TablaMuestra extends React.Component {
                                             <Dropdown.Item onClick={() => window.confirm(this.mensajeConfirmacion(muestra)) ? this.bitInverse(muestra): null} >
                                                 {this.estado(muestra.bitActivo)}
                                             </Dropdown.Item>
-                                            <Dropdown.Item as= {Link} to={`/muestras/consulta/${muestra.idMuestra}`} exact='true'>
+                                            <Dropdown.Item as= {Link} to={`/muestras/id/${muestra.idMuestra}`} exact='true'>
                                                 Ver/Modificar
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
