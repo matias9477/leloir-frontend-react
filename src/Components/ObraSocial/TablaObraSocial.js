@@ -7,7 +7,7 @@ import { orderBy } from 'lodash';
 import MenuOpciones from '../MenuOpciones';
 import { urlObrasSoc } from './../../Constants/URLs';
 import { nroPorPagina } from "../../Constants/utils";
-import { nullTo } from '../../Services/MetodosDeValidacion';
+import { nullTo, titleCase} from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 export default class TablaObraSocial extends React.Component {
@@ -151,19 +151,17 @@ export default class TablaObraSocial extends React.Component {
     handleSearch(valor){
         this.setState({
             filtro: valor.target.value,
-        })
-        
-        var os = this.state.obrasSociales.filter(function (obraSocial) {
-               
-            return (obraSocial.razonSocial.toLowerCase().includes(valor.target.value.toLowerCase()) || 
-            obraSocial.cuit.toString().includes(valor.target.value) );
+        });
+
+        const os = this.state.obrasSociales.filter(function (muestra) {
+            return (muestra.razonSocial=== undefined ? null : titleCase(muestra.razonSocial).includes(titleCase(valor.target.value)) ||
+                (muestra.idObraSocial=== undefined ? null : muestra.idObraSocial.toString().includes(valor.target.value)))
           });
 
         this.setState({
             obrasSocialesFiltrados: os,
             totalCount: os.length,
         })
-
     }
 
 
@@ -215,7 +213,7 @@ export default class TablaObraSocial extends React.Component {
                                 {obraSocial.razonSocial}
                             </td>
                             <td data-label="Cuit">
-                                {obraSocial.cuit}
+                                {nullTo(obraSocial.cuit)}
                             </td>
                             <td data-label="Telefono">
                                 {nullTo(obraSocial.telefono)}

@@ -4,7 +4,7 @@ import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 
 import MenuOpciones from '../MenuOpciones';
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateOnlyNumbersRequired } from './../../Services/MetodosDeValidacion';
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class AltaObraSocial extends Component {
@@ -54,7 +54,7 @@ class AltaObraSocial extends Component {
           className= {this.state.errorRazonSocial === true ? null : 'error'}
           />
           
-          <Form.Field required label='Cuit' maxLength={11} control='input'
+          <Form.Field label='Cuit' maxLength={11} control='input'
           placeholder='Cuit'
           value={this.state.cuit}
           onChange={this.cambioCuit}
@@ -99,6 +99,7 @@ class AltaObraSocial extends Component {
       "cuit": this.state.cuit,
       "telefono": emptyToNull(this.state.telefono),
       "email": emptyToNull(this.state.mail.toLowerCase()),
+      "valorUb":emptyToNull(this.state.valorUb),
       "bitActivo": true
     };
 
@@ -117,7 +118,7 @@ class AltaObraSocial extends Component {
     const { razonSocial, cuit, telefono, mail, valorUb } = this.state;
 
     const errorRazonSocial = validateNombre(razonSocial);
-    const errorCuit = validateOnlyNumbersRequired(cuit);
+    const errorCuit = validateOnlyNumbers(cuit);
     const errorTelefono = validateOnlyNumbers(telefono);
     const errorMail = validateMail(mail);
     const errorValorUb = validateOnlyNumbers(valorUb);
