@@ -36,7 +36,7 @@ class AltaAnimal extends Component {
   comboTipos = () =>{
     axios.get(urlTiposAnimales).then(resolve => {
       this.setState({
-        tipos: resolve.data,
+        tipos: Object.values(resolve.data).flat(),
       });
     }, (error) => {
         console.log('Error combo animales', error.message);

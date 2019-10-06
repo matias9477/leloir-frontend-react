@@ -49,7 +49,7 @@ export default class MenuOpciones extends Component {
 
                     <Menu.Item
                         name='Muestras'
-                        as={Link} to='/'
+                        as={Link} to='/muestras'
                         active={activeItem === 'Muestras'}
                         onClick={this.handleItemClick}
                     />
