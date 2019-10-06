@@ -1,0 +1,81 @@
+body{
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.Formularios{
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 40px;
+}
+
+.altasYConsultas{ 
+    width: 80%;
+    margin-top: 40px;
+    margin-bottom: 45px;
+    vertical-align: center;
+    display: inline-block;
+}
+
+.FormAlta{
+    width: 100%;
+}
+
+.login{
+    width: 100%;
+    align-self: center;
+}
+
+.boton{
+    padding: 50px;
+}
+
+.Navigator{
+    display:flex; 
+    flex-direction:row;
+}
+
+.error{
+    border-color: red;
+}
+
+.union{
+    display:flex; 
+    flex-direction:row;
+}
+
+.btnHeader{
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 100px;
+}
+  
+.listadosBaja{
+    color: rgb(163, 160, 160);
+}
+
+.tablaListadoHistorico{
+    width: 100%;
+    margin: 90px 25px 25px;
+}
+
+.tablaDeterminaciones{
+    width: 78%;
+    margin: 25px;
+}
+
+.rightAlign{
+    position: absolute;
+    right: 35px;
+}
+
+.selectCantidad{
+    border: none;
+}
+
+.centerAlignment{
+    text-align: center;
+}
+
