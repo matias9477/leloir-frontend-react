@@ -64,7 +64,7 @@ class AltaPersona extends Component {
   comboSexos = () =>{
     axios.get(urlSexos).then(resolve => {
       this.setState({
-          sexos: resolve.data,
+          sexos: Object.values(resolve.data).flat(),
       });
     }, (error) => {
         console.log('Error combo sexo', error.message);
@@ -75,7 +75,7 @@ class AltaPersona extends Component {
   comboPaises = () =>{
     axios.get(urlPaises).then(resolve => {
       this.setState({
-          paises: resolve.data,
+          paises: Object.values(resolve.data).flat(),
       });
     }, (error) => {
         console.log('Error combo paises', error.message);
@@ -86,7 +86,7 @@ class AltaPersona extends Component {
   comboObrasSociales = () =>{
     axios.get(urlObrasSoc).then(resolve => {
       this.setState({
-          obrasSociales: resolve.data,
+          obrasSociales: Object.values(resolve.data).flat(),
       });
     }, (error) => {
         console.log('Error combo obras sociales: ', error.message);
@@ -97,7 +97,7 @@ class AltaPersona extends Component {
   comboTiposDocs = () =>{
     axios.get(urlDocs).then(resolve => {
       this.setState({
-          documentos: resolve.data,
+          documentos: Object.values(resolve.data).flat(),
       });
     }, (error) => {
         console.log('Error combo paises', error.message);
