@@ -50,12 +50,14 @@ class ConsultaAnimal extends Component {
     this.cambioFechaAlta = this.cambioFechaAlta.bind(this);
     this.cambioBitAlta = this.cambioBitAlta.bind(this);
     }
-  
+
   comboTipos = () =>{
-    axios.get(urlTiposAnimales).then(tiposAnimales => {
-      this.setState({tipos:tiposAnimales.data}) 
+    axios.get(urlTiposAnimales).then(resolve => {
+      this.setState({
+        tipos: Object.values(resolve.data).flat(),
+      });
     }, (error) => {
-        console.log('Error combo animales: ', error.message);
+        console.log('Error combo animales', error.message);
     })
 
   }
