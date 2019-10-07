@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import './LPSecretaria.css';
-import { Item } from 'semantic-ui-react';
 import FlipMove from 'react-flip-move';
 
-class Cola extends Component {
+import './LPSecretaria.css';
 
+class Cola extends Component {
 
     constructor(props){
         super(props);
         this.state={
-
         }
-
         this.createPatient = this.createPatient.bind(this);
-
     }
 
     createPatient(patient){

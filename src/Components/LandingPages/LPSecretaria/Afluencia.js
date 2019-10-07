@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-import {Button, Icon,Input, Form} from 'semantic-ui-react';
-import './LPSecretaria.css';
-import Cola from './Cola';
+import { Button, Icon, Form, Grid } from 'semantic-ui-react';
 
+import Cola from './Cola';
+import Atencion from './Atencion';
+import { titleCase } from '../../../Services/MetodosDeValidacion';
+import './LPSecretaria.css';
 
 class Afluencia extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            patients: []
+            patients: [],
+            next: '',
         });
         this.addPatient = this.addPatient.bind(this);
         this.deletePatient = this.deletePatient.bind(this);
+        this.next = this.next.bind(this);
     }
 
     addPatient(e){
         if(this._inputElement.value !== "") {
             var newPacient = {
-                text: this._inputElement.value,
+                text: titleCase(this._inputElement.value),
                 key: Date.now()
             };
 
@@ -29,9 +32,6 @@ class Afluencia extends Component {
             });
             this._inputElement.value = "";
         }
-
-        
-        console.log(this.state.patients);
 
         e.preventDefault();
     }
@@ -48,35 +48,51 @@ class Afluencia extends Component {
 
     }
 
+    next(){
+        this.setState({ next: this.state.patients[0] })
+        this.deletePatient(this.state.patients[0].key)        
+    }
+
     render() {
         return (
             <div className="afluenciaMain">
-                <div className="afluenciaHeader">
-                <Form onSubmit={this.addPatient} >
-                    <Button primary icon type="submit">
-                        <Icon name='add user'/>
-                    </Button>
-                {/* &nbsp;  significa non blank space y se usa como recurso html para agregar espacios*/}
-                    &nbsp;&nbsp;&nbsp;<label>Nombre</label>&nbsp;&nbsp;&nbsp;
-                    <input ref={(a) => this._inputElement = a} 
-                  placeholder="Ingrese nombre..."/>
+                <Grid width='equal'>
+                    <Grid.Column width={5}>
+                        <h2>Cola de Espera</h2>
+                        <div className="afluenciaHeader">
+                    
+                            <Form onSubmit={this.addPatient} >
 
-                  
-                         
-                </Form>
-                </div>
-                <Cola entries={this.state.patients}
-                    delete={this.deletePatient}
-                />
+                                <label>Nombre Paciente</label>
+                                <div className='union'>
+
+                                    <input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..."/>
+                                    <Button primary icon type="submit">
+                                        <Icon name='add user'/>
+                                    </Button>
+
+                                </div>  
+                            </Form>
+                        </div>
+
+                        <Cola entries={this.state.patients}
+                            delete={this.deletePatient}
+                        />
+
+                        {this.state.patients.length > 0 ? <Button icon labelPosition='right' size='small' onClick={() => this.next()}>
+                            <Icon name='arrow alternate circle right outline' color='blue' />Siguiente
+                            </Button> : null}
+
+                    </Grid.Column>
+
+                    <Grid.Column width={11}>
+                        <Atencion next={this.state.next}/>
+                    </Grid.Column>
+                </Grid>
+
             </div>
-            
-
         );
     }
 }
-
-// Afluencia.propTypes = {
-
-// };
 
 export default Afluencia;
