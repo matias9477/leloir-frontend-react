@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Header, Icon, Button } from 'semantic-ui-react';
+import { Form, Header, Icon, Button, Grid } from 'semantic-ui-react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
 
@@ -66,20 +66,26 @@ class Atencion extends Component {
     patientNotFound(){
         if(this.props.next !== ""){ 
             return (
-            <div>Paciente no encontrado
-                <br/>
-            <Header as='h5'>Busquelo</Header>
-            <Select
-                value={this.state.selectedPaciente}
-                options={this.searchPacientes()}
-                onChange={this.handleChangeListPacientes}
-                placeholder= "Busque un paciente..."
-                isClearable={true}
-            />
-            <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
-                <Icon name='user' /> Nuevo Paciente
-            </Button>
-            </div>
+                <div>Paciente no encontrado 
+                <br/><br/><br/>
+                <Grid columns='equal'>
+                    <Grid.Column>
+                        <Header as='h5'>Busque el paciente o Registrelo</Header>
+                        <Select
+                            value={this.state.selectedPaciente}
+                            options={this.searchPacientes()}
+                            onChange={this.handleChangeListPacientes}
+                            placeholder= "Busque un paciente..."
+                            isClearable={true}
+                        />
+                    </Grid.Column>
+                    <Grid.Column width={5}>
+                        <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
+                            <Icon name='user' /> Nuevo Paciente
+                        </Button>
+                    </Grid.Column>
+                </Grid>
+                </div>
             )
         }
         
@@ -92,9 +98,8 @@ class Atencion extends Component {
                 <Header as='h2'>Atención</Header>
                 <Form className='formAtencion'>
                     <Form.Field label='Paciente' value={this.props.next.text} control='input' />
+                    {this.find() === '' ? this.patientNotFound() : "Paciente encontrado"}
                 </Form>
-
-                {this.find() === '' ? this.patientNotFound() : "Paciente encontrado"}
 
             </div>
         );
