@@ -1,5 +1,5 @@
 {
-  "name": "react-form",
+  "name": "leloir-frontend",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://leloir-be-test-env.us-east-2.elasticbeanstalk.com",

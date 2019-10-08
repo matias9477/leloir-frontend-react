@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 import AuthenticationService from '../../Services/AuthenticationService';
-import {Button, Form} from 'semantic-ui-react';
+import {Button, Form, Label, Icon} from 'semantic-ui-react';
 import './../styles.css';
 import {withRouter} from 'react-router-dom';
 
@@ -55,14 +55,31 @@ class LoginComponent extends Component {
         return (
             <Form className='login'>
                 <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
-                            onChange={this.cambioUsuario}/>
-                <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' placeholder='Contraseña'
-                            onChange={this.cambioPass}/>
+                onChange={this.cambioUsuario}
+                className={this.state.hasLoginFailed ? 'error' : null}
+                />
+
+                <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' 
+                placeholder='Contraseña'
+                onChange={this.cambioPass}
+                className={this.state.hasLoginFailed ? 'error' : null}
+                />
+
                 <Button content='Iniciar Sesión' primary onClick={this.loginClicked}/>
+                
+                {this.state.hasLoginFailed ?
+                <Label style={errorStyle}>
+                    <Icon name='warning circle' color='red' /> Usuario y/o contraseña errónea. Revise los datos ingresados.
+                </Label> : null }
             </Form>
 
         )
     }
 }
+
+const errorStyle = {
+    marginTop: '15px',
+    backgroundColor: 'white',
+  };
 
 export default withRouter(LoginComponent)

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import './../styles.css';
-import MenuOpciones from '../MenuOpciones';
-import { titleCase, hasNumbers, validMail, emptyToNull  } from '../../Services/MetodosDeValidacion';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {Link} from 'react-router-dom';
 
+import MenuOpciones from '../MenuOpciones';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail, validateOnlyNumbersRequired  } from '../../Services/MetodosDeValidacion';
+import './../styles.css';
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
@@ -17,17 +18,20 @@ class ConsultaObraSocial extends Component {
         valor:true,
 
         cambios: false,
+        estado: '',
 
         id:'',
         razonSocial: '',
         telefono:'',
         mail:'',
         cuit:'',
+        valorUb:'',
         
-        errorRazonSocial: '',
-        errorCuit: '',
-        errorTelefono: '',
-        errorMail: '',
+        errorRazonSocial: true,
+        errorCuit: true,
+        errorTelefono: true,
+        errorMail: true,
+        errorValorUb:true,
         
       })
     this.cambioId = this.cambioId.bind(this);
@@ -35,11 +39,7 @@ class ConsultaObraSocial extends Component {
     this.cambioTelefono = this.cambioTelefono.bind(this);
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioCuit = this.cambioCuit.bind(this);
-
-    this.handleBlurRazonSocial = this.handleBlurRazonSocial.bind(this);
-    this.handleBlurCuit = this.handleBlurCuit.bind(this);
-    this.handleBlurTelefono = this.handleBlurTelefono.bind(this);
-    this.handleBlurMail = this.handleBlurMail.bind(this);
+    this.cambioValorUb = this.cambioValorUb.bind(this);
   }
 
   componentDidMount() {
@@ -47,48 +47,11 @@ class ConsultaObraSocial extends Component {
     this.handleUpdateClick(api);
   }
 
-  handleBlurRazonSocial = () => {
-    if (this.state.razonSocial === ''  || this.state.razonSocial.length === 0 ||  hasNumbers(this.state.razonSocial)){
-      this.setState({ errorRazonSocial: false })
-    } else {
-      this.setState({errorRazonSocial: true})
-    }
-  }
-
-  handleBlurCuit = () => {
-    if (this.state.cuit === '') {
-      this.setState({ errorCuit: false})
-    } else if(isFinite(String(this.state.cuit))){
-      this.setState({ errorCuit: true})
-    } else{
-      this.setState({ errorCuit: false})
-    }
-  }
-
-  handleBlurTelefono = () => {
-    if (this.state.telefono === '' || this.state.telefono === null){
-      this.setState({ errorTelefono: true })
-    } else if (isFinite(String(this.state.telefono))){
-      this.setState({ errorTelefono: true })
-    } else {
-      this.setState({errorTelefono: false })
-    }
-  }
-
-  handleBlurMail = ( ) => {
-    if(this.state.mail === '' || this.state.mail === null){
-      this.setState({errorMail: true})
-    } else if ( validMail.test(this.state.mail) ) {
-        this.setState({ errorMail: true })
-    } else {
-      this.setState({errorMail: false })
-    } 
-  }
-
 
   renderForm() {
     return (
       <div className='Formularios'>
+      
         <Container className='btnHeader'>
           <Button className='boton' as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
@@ -97,18 +60,55 @@ class ConsultaObraSocial extends Component {
           <Header as='h3' dividing>Búsqueda y modificación</Header>
         </Container>
 
-      <Form>
+      {this.state.estado === '' ? <CircularProgress size={50}/> : 
+
+      <Form className='altasYConsultas'>
           
-          <Form.Field required label='Id' control='input' disabled={true}  value={this.state.id} onChange={this.cambioId} />
+          <Form.Group widths='equal'>  
+            <Form.Field required label='Id' control='input' 
+            disabled={true}  width={5}
+            value={this.state.id} 
+            onChange={this.cambioId} />
 
-          <Form.Field required label='Razon Social' control='input' disabled={this.state.modificacion}  value={this.state.razonSocial} onChange={this.cambioRazonSocial} className= {(this.state.errorRazonSocial=== '' || this.state.errorRazonSocial === true) ? null : 'error'} onBlur={this.handleBlurRazonSocial}/>
+            <Form.Field required label='Razon Social' control='input' 
+            disabled={this.state.modificacion}  
+            value={this.state.razonSocial} 
+            onChange={this.cambioRazonSocial} 
+            className= {this.state.errorRazonSocial === true ? null : 'error'} 
+            />
+          </Form.Group>
 
-          <Form.Field required label='Cuit' maxLength={11} control='input' disabled={this.state.modificacion}  value={this.state.cuit} onChange={this.cambioCuit} className= {(this.state.errorCuit === '' || this.state.errorCuit === true) ? null : 'error'} onBlur={this.handleBlurCuit}/>
-        
-          <Form.Field  label='Telefono' control='input' disabled={this.state.modificacion} value={this.state.telefono || ''} onChange={this.cambioTelefono} className= {(this.state.errorTelefono === '' || this.state.errorTelefono === true) ? null : 'error'} onBlur={this.handleBlurTelefono}/>
+          <Form.Field  label='Cuit' maxLength={11} control='input'
+          disabled={this.state.modificacion}  
+          value={this.state.cuit} 
+          onChange={this.cambioCuit} 
+          className= {this.state.errorCuit === true ? null : 'error'} 
+          />
 
-          <Form.Field  label='Mail' control='input' disabled={this.state.modificacion} value={this.state.mail || ''} onChange={this.cambioMail} className= {(this.state.errorMail=== '' || this.state.errorMail === true) ? null : 'error'} onBlur={this.handleBlurMail}/>
 
+          <Form.Group widths='equal'>        
+            <Form.Field  label='Telefono' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.telefono || ''} 
+            onChange={this.cambioTelefono} 
+            className= {this.state.errorTelefono === true ? null : 'error'} 
+            />
+
+            <Form.Field  label='Mail' control='input' 
+            disabled={this.state.modificacion} 
+            value={this.state.mail || ''} 
+            onChange={this.cambioMail} 
+            className= {this.state.errorMail === true ? null : 'error'} 
+            />
+              <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
+                           disabled={this.state.modificacion}
+                           value={this.state.valorUb}
+                           onChange={this.cambioValorUb}
+                           className= {this.state.errorValorUb === true ? null : 'error'}
+              />
+          </Form.Group>
+
+          <br/>
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
               this.habilitarModificacion(e)} }>Modificar</Button>  : null}
@@ -121,16 +121,15 @@ class ConsultaObraSocial extends Component {
           {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => { 
             if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {  
               this.modificarObraSocial(e)
-              } else {e.preventDefault()} } }>
+              } else {e.preventDefault()} } } primary>
             Aceptar
           </Button> : null}           
 
           {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => { 
-            this.cancelar(e)}}>
-              <Icon name={'cancel'} color='red'/>
-          </Button>: null }     
+            this.cancelar(e)}} color='red'> Cancelar </Button>: null }     
                    
       </Form>  
+      }
     </div>
     );
   }
@@ -153,12 +152,13 @@ class ConsultaObraSocial extends Component {
   cancelar(e){
     e.preventDefault();
     this.setState({
-      modificacion: true,
-      cambios: false,
-      errorRazonSocial: '',
-      errorCuit: '',
-      errorMail: '',
-      errorTelefono: '',
+        modificacion: true,
+        cambios: false,
+        errorRazonSocial: true,
+        errorCuit: true,
+        errorMail: true,
+        errorTelefono: true,
+        errorValorUb: true,
     })
     if (this.state.cambios){
       const api = "/obras_sociales/id/" + this.props.match.params.id ;
@@ -177,21 +177,22 @@ class ConsultaObraSocial extends Component {
   modificarObraSocial = (e) => {
     e.preventDefault();
 
-    this.handleBlurRazonSocial();
-    this.handleBlurCuit();
-    this.handleBlurMail();
-    this.handleBlurTelefono();
-    
-    const { errorRazonSocial, errorCuit, errorMail, errorTelefono  } = this.state;
+    const { razonSocial, cuit, telefono, mail, valorUb} = this.state;
 
-    var data;
+    const errorRazonSocial = validateNombre(razonSocial);
+    const errorCuit = validateOnlyNumbersRequired(cuit);
+    const errorTelefono = validateOnlyNumbers(telefono);
+    const errorMail = validateMail(mail);
+    const errorValorUb = validateOnlyNumbers(valorUb);
+    
     if ( errorRazonSocial && errorCuit && errorMail && errorTelefono ) {
-        data = {
+      var data = {
           "razonSocial": titleCase(this.state.razonSocial),
           "idObraSocial": this.state.id,
           "email": emptyToNull(this.state.mail),
           "telefono": emptyToNull(this.state.telefono),
           "cuit": this.state.cuit,
+          "valorUb": emptyToNull(this.state.valorUb),
           "bitActivo": true,
         }
       
@@ -206,13 +207,25 @@ class ConsultaObraSocial extends Component {
       })
   
       this.setState({
-        modificacion: true,
-        cancelar: true,
-        cambios: false,
+          modificacion: true,
+          cancelar: true,
+          cambios: false,
+          errorRazonSocial,
+          errorCuit,
+          errorTelefono,
+          errorMail,
+          errorValorUb,
       })
       
     } else {
-      alert("Revise los datos ingresados.")
+      alert("Revise los datos ingresados.");
+      this.setState({
+          errorRazonSocial,
+          errorCuit,
+          errorTelefono,
+          errorMail,
+          errorValorUb,
+      })
     }    
 
   }
@@ -221,17 +234,19 @@ class ConsultaObraSocial extends Component {
   handleUpdateClick = (api) => {
     axios.get(api).then(obraSocial => {
       this.setState({
-        id: obraSocial.data.idObraSocial,
-        razonSocial: obraSocial.data.razonSocial,
-        telefono: obraSocial.data.telefono,
-        mail: obraSocial.data.email,
-        cuit: obraSocial.data.cuit,    
-        isbottonPressed: false,
-        estado: obraSocial.data.bitActivo,
-        errorRazonSocial: true,
-        errorCuit: true,
-        errorTelefono: true,
-        errorMail: true,
+          id: obraSocial.data.idObraSocial,
+          razonSocial: obraSocial.data.razonSocial,
+          telefono: obraSocial.data.telefono,
+          mail: obraSocial.data.email,
+          cuit: obraSocial.data.cuit,
+          valorUb: obraSocial.data.valorUb,
+          isbottonPressed: false,
+          estado: obraSocial.data.bitActivo,
+          errorRazonSocial: true,
+          errorCuit: true,
+          errorTelefono: true,
+          errorMail: true,
+          errorValorUb: true,
       });
     }, (error) => {
         alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 
@@ -267,6 +282,12 @@ class ConsultaObraSocial extends Component {
           cambios: true,
       })
   }
+    cambioValorUb(e){
+        this.setState( {
+            valorUb: e.target.value,
+            cambios: true,
+        })
+    }
 
   cambioCuit(e){
       this.setState( {
