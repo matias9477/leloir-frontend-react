@@ -11,6 +11,13 @@ export const getCurrentDate = () =>{
     return year + '-' + month + '-' + date + "T00:00:00";
 }
 
+export const getIdTipoMuestra = (tipoMuestra, tipos) => {
+    for(let i=0; i < tipos.length; i++){
+        if (tipoMuestra === tipos[i].nombre)
+            return tipos[i].tipoMuestraId;
+    }
+}
+
 export function validateDescrip(nom){
     if (nom.length === 0 || nom === ''){
         return false

@@ -4,7 +4,7 @@
    export const urlPaises = "/paises/all";
    export const urlSexos = "/sexo/all";
    export const urlTiposAnimales = "/tipos-animales/all"
-   
+   export const urlTiposMuestras = "/tipos_muestras/all"
    export const urlObraSocial = "obras_sociales/id/"
    export const urlMuestras = "/muestras/all"
    export const urlDeterminaciones = "/determinaciones/all"
