@@ -79,3 +79,13 @@ body{
     text-align: center;
 }
 
+.avoidMenu{
+    margin-top: 100px;
+    width: 100%;
+    margin-right: 25px;
+    margin-left: 25px;
+}
+
+.afluence{
+    position: left;
+}

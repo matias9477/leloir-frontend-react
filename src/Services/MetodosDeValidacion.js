@@ -106,3 +106,11 @@ export function validateFechaNacimiento(fechaNacimiento) {
   }
 }
 
+export function checkAtributo(atributo){
+  if (atributo !== undefined){
+      return atributo;
+  } 
+  else {
+      return '';
+  }
+}
