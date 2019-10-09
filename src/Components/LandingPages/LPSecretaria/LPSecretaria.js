@@ -1,52 +1,23 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import "./../../styles.css";
 import MenuOpciones from '../../MenuOpciones';
+import Afluencia from './Afluencia';
 
 class LPSecretaria extends Component {
-    constructor(props) {
-        super(props);
-
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
+    
     render() {
         return (
-            <div>
+            
+            <div className="union">
                 <MenuOpciones/>
+                <div className="avoidMenu">   
+                    <Afluencia/>
+                </div>
             </div>
+            
         );
     }
 }
 
-LPSecretaria.propTypes = {
-
-};
 
 export default LPSecretaria;
