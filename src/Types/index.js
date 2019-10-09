@@ -63,7 +63,6 @@ export const determinacionType = shape({
 export const empleadoTypes = {
     apellido: string,
     bitAlta: bool,
-    empleadoId: number,
     fechaAlta: string,
     fechaNacimiento: string,
     mail: string,
