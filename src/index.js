@@ -14,8 +14,6 @@ import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
 import TablaObraSocial from './Components/ObraSocial/TablaObraSocial';
 import ConsultaObraSocial from './Components/ObraSocial/ConsultaObraSocial';
 import AltaObraSocial from './Components/ObraSocial/AltaObraSocial';
-import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
-import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
 import LogoutContainer from "./Components/Logout/LogoutContainer";
 
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';

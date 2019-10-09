@@ -1,11 +1,34 @@
 import React, {Component} from 'react';
 import {Grid, Menu, Segment} from 'semantic-ui-react'
 import MenuLateral from "../MenuOpciones";
+import MiPerfil from "./MiPerfil";
+import NuevoUsuario from "./NuevoUsuario";
 
 class Ajustes extends Component {
-    state = {activeItem: 'bio'}
+    constructor(props) {
+        super(props);
+        this.state = ({
+            activeItem: '',
+
+        });
+        this.handleItemClick = this.handleItemClick.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            activeItem: 'MiPerfil'
+        })
+    }
 
     handleItemClick = (e, {name}) => this.setState({activeItem: name})
+
+    getMenuPane(){
+        if(this.state.activeItem === 'MiPerfil'){
+            return <MiPerfil/>
+        } else if ( this.state.activeItem === 'NuevoUsuario') {
+            return <NuevoUsuario/>
+        }
+    }
 
     render() {
         const {activeItem} = this.state
@@ -18,23 +41,13 @@ class Ajustes extends Component {
                         <Grid.Column width={4}>
                             <Menu fluid vertical tabular>
                                 <Menu.Item
-                                    name='bio'
-                                    active={activeItem === 'bio'}
+                                    name='MiPerfil'
+                                    active={activeItem === 'MiPerfil'}
                                     onClick={this.handleItemClick}
                                 />
                                 <Menu.Item
-                                    name='pics'
-                                    active={activeItem === 'pics'}
-                                    onClick={this.handleItemClick}
-                                />
-                                <Menu.Item
-                                    name='companies'
-                                    active={activeItem === 'companies'}
-                                    onClick={this.handleItemClick}
-                                />
-                                <Menu.Item
-                                    name='links'
-                                    active={activeItem === 'links'}
+                                    name='NuevoUsuario'
+                                    active={activeItem === 'NuevoUsuario'}
                                     onClick={this.handleItemClick}
                                 />
                             </Menu>
@@ -42,8 +55,7 @@ class Ajustes extends Component {
 
                         <Grid.Column stretched width={12}>
                             <Segment>
-                                This is an stretched grid column. This segment will always match the
-                                tab height
+                                {this.getMenuPane()}
                             </Segment>
                         </Grid.Column>
                     </Grid>
