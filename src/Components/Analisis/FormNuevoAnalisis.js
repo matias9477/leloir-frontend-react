@@ -121,14 +121,93 @@ class FormNuevoAnalisis extends Component {
   
   handleUpdateClick = (api) => {
     var data = {
-      "fecha": getCurrentDate(),
       "costo": 0,
+      "derivacion": null,
+      "determinaciones": [
+        {
+          "analisis_determinacion_id": 0,
+          "determinacion": {
+            "bitAlta": true,
+            "codigoPractica": 0,
+            "descripcionPractica": "string",
+            "unidadBioquimica": 0,
+            "unidadMedida": "string"
+          },
+          "resultado": 0
+        }
+      ],
       "estado": {
-        "estadoId": 3,
-        "nombre": "EN PREPARACION",
-        "descripcion": null
+        "descripcion": "string",
+        "estadoId": 2,
+        "nombre": "TERMINADO"
       },
-      
+      "ordenMedica": null,
+      "paciente": {
+        "bitAlta": true,
+        "fechaAlta": "2019-10-08T17:15:14.915Z",
+        "historial": 0,
+        "idPaciente": 0,
+        "mail": "string",
+        "telefono": 0
+      },
+      "secretaria": {
+        "apellido": "simes",
+        "bitAlta": true,
+        "empleadoId": 1,
+        "fechaAlta": "2019-06-20T00:00:00",
+        "fechaNacimiento": "2018-08-08T00:00:00",
+        "mail": null,
+        "nacionalidad": {
+          "codigoTelefono": 54,
+          "idPais": 10,
+          "iso": "AR",
+          "iso3": "ARG",
+          "nombre": "ARGENTINA",
+          "nombreBonito": "Argentina"
+        },
+        "nombre": "Juan Carlos",
+        "nroDocumento": "89798",
+        "rolId": null,
+        "sexo": {
+          "nombre": "Masculino",
+          "sexoId": 1
+        },
+        "telefono": null,
+        "tipoDocumento": {
+          "idTipoDocumento": 2,
+          "nombre": "Pasaporte"
+        },
+        "usuarioId": null
+      },
+      "tecnico": {
+        "apellido": "Simes",
+        "bitAlta": true,
+        "empleadoId": 1,
+        "fechaAlta": "2019-06-20T00:00:00",
+        "fechaNacimiento": "2018-08-08T00:00:00",
+        "mail": null,
+        "nacionalidad": {
+          "codigoTelefono": 54,
+          "idPais": 10,
+          "iso": "AR",
+          "iso3": "ARG",
+          "nombre": "ARGENTINA",
+          "nombreBonito": "Argentina"
+        },
+        "nombre": "Juan Carlos",
+        "nroDocumento": "89798",
+        "rolId": null,
+        "sexo": {
+          "nombre": "Masculino",
+          "sexoId": 1
+        },
+        "telefono": null,
+        "tipoDocumento": {
+          "idTipoDocumento": 2,
+          "nombre": "Pasaporte"
+        },
+        "usuarioId": null
+      },
     };
 
     axios.post(api, data).then((response) => {
@@ -159,6 +238,7 @@ class FormNuevoAnalisis extends Component {
   }
 
   render() {
+    
     return (
       <div className='union'>
         <MenuOpciones/>
@@ -194,16 +274,6 @@ class FormNuevoAnalisis extends Component {
             placeholder='Seleccione determinaciones...'
             closeMenuOnSelect={false}
           />
-
-          <Header as={'h5'}>Muestra:</Header>
-          <Grid columns='equal' >
-            <Grid.Column>
-              <Button onClick={this.generarMuestra} >Generar Muestra</Button>       
-            </Grid.Column>
-            <Grid.Column width={13}>
-              <TextArea value={this.state.muestra} placeholder='Genere muestra...' style={{ minHeight: 100 }}/>
-            </Grid.Column>
-          </Grid>
 
           <br/> <br/>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
