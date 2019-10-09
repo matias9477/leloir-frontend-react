@@ -1,22 +1,23 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import MenuLateral from "../MenuOpciones";
 import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
+
+import MenuLateral from "../MenuOpciones";
+import { titleCase } from './../../Services/MetodosDeValidacion';
+import { urlDeterminaciones } from "../../Constants/URLs"
+import { orderBy } from "lodash";
+import { arrayOf, number, oneOf, shape, string } from "prop-types";
+import { determinacionType } from "../../Types";
+import { nroPorPagina } from "../../Constants/utils";
 import './../styles.css';
-import {titleCase} from './../../Services/MetodosDeValidacion';
-import {urlDeterminaciones} from "../../Constants/URLs"
-import {orderBy} from "lodash";
-import {arrayOf, number, oneOf, shape, string} from "prop-types";
-import {determinacionType} from "../../Types";
-import {nroPorPagina} from "../../Constants/utils";
 
 class Determinaciones extends Component {
     constructor(props) {
         super(props);
         this.state = {
             determinaciones: [],
-            limit: nroPorPagina[0].value,
+            limit: nroPorPagina[1].value,
             activePage: 1,
             totalCount: 0,
             sortParams: {
@@ -69,7 +70,6 @@ class Determinaciones extends Component {
 
         )
     };
-
 
     cambioLimite(e, data) {
         this.setState({
@@ -127,6 +127,7 @@ class Determinaciones extends Component {
         })
 
     }
+
     bitInverse = determinacion => {
         axios.put(`/determinaciones/switch-alta/${determinacion.codigoPractica}`).then(response => {
             if (determinacion.bitAlta) {
@@ -154,6 +155,7 @@ class Determinaciones extends Component {
             return (`¿Esta seguro que quiere dar de alta la determinación ${determinacion.descripcionPractica} ?`)
         }
     }
+
     estado(bitAlta) {
         if (bitAlta) {
             return "Dar de baja"
@@ -161,6 +163,8 @@ class Determinaciones extends Component {
             return "Dar de alta"
         }
     }
+
+
     render() {
         return (
             <div className='union'>
@@ -181,9 +185,7 @@ class Determinaciones extends Component {
                     <div className='union'>
                         <div className="ui icon input">
 
-
-                            <Input value={this.state.filtro} onChange={this.handleSearch}
-                                   placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
+                        <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
 
                         </div>
                         {this.cantidadPorPagina()}
@@ -196,13 +198,13 @@ class Determinaciones extends Component {
                             <th onClick={() => this.handleColumnHeaderClick("descripcionPractica")}>Descripción Práctica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadBioquimica")}>Unidad Bioquímica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadMedida")}>Unidad Medida</th>
-                            <th onClick={() => this.handleColumnHeaderClick("opcion")}>Opciones</th>
+                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
                         </tr>
                         </thead>
 
                         <tbody className='centerAlignment'>
                         {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((determinacion, index) => (
-                            <tr key={index} determinacion={determinacion}>
+                            <tr key={index} determinacion={determinacion} className={determinacion.bitAlta ? null : "listadosBaja"}>
                                 <td data-label="Código Práctica">
                                     {determinacion.codigoPractica}
                                 </td>

@@ -1,55 +1,7 @@
+  
 
   export function fechaAltaDateStamp(alta){
     return alta + "T00:00:00";
-  }
-
-  export function validateName(nom){
-    if (nom.length === 0 || nom === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateApellido(ap){
-    if (ap.length === 0 || ap === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateTipoDoc(tdoc){
-    if (tdoc.length === 0 || tdoc === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateNroDoc(ndoc){
-    if (ndoc.length === 0 || ndoc === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateSexo(sex){
-    if (sex.length === 0 || sex === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateNacionalidad(nac){
-    if (nac.length === 0 || nac === ''){
-      return false
-    }
-    return true
-  }
-
-  export function validateNacimiento(fnac){
-    if (fnac === null || fnac.length === 0 || fnac === ''){
-      return false
-    }
-    return true
   }
 
   export const getCurrentDate = () =>{
@@ -103,6 +55,13 @@
     var m = (date.getMonth()+1).toString();
     var mm = (m.length === 2) ? m : "0"+m;     
     return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
+  }
+
+  export const getIdTipoAnimal = (tipoAnimal, tipos) => {
+    for(let i=0; i < tipos.length; i++){
+      if (tipoAnimal === tipos[i].nombre)
+        return tipos[i].tipoAnimalId;
+    }
   }
 
   export const getIdTipoDoc = (tipoDoc, documentos) => {
@@ -188,3 +147,4 @@
         return sexos[i].sexoId;
     }
   }
+

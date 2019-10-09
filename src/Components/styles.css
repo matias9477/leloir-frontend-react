@@ -7,7 +7,15 @@ body{
     width: 70%;
     margin-left: 150px;
     margin-right: 25px;
-    margin-top: 100px;
+    margin-top: 40px;
+}
+
+.altasYConsultas{ 
+    width: 80%;
+    margin-top: 40px;
+    margin-bottom: 45px;
+    vertical-align: center;
+    display: inline-block;
 }
 
 .FormAlta{
@@ -20,7 +28,7 @@ body{
 }
 
 .boton{
-    margin: 30px;
+    padding: 50px;
 }
 
 .Navigator{
@@ -38,11 +46,14 @@ body{
 }
 
 .btnHeader{
-    margin-bottom: 30px;
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 100px;
 }
   
-.pacienteBaja{
-    color: rgb(196, 195, 193);
+.listadosBaja{
+    color: rgb(163, 160, 160);
 }
 
 .tablaListadoHistorico{
