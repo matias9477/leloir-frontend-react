@@ -251,7 +251,6 @@ class NuevoUsuario extends Component {
 
     handleNuevoUsuarioClick = () => {
         let data = this.state.signUpRequest;
-        console.log(data);
         axios.post('/auth/signup', data
         ).then((response) => {
             alert('Se creo usuario correctamente');
