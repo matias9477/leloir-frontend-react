@@ -14,7 +14,10 @@ import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
 import TablaObraSocial from './Components/ObraSocial/TablaObraSocial';
 import ConsultaObraSocial from './Components/ObraSocial/ConsultaObraSocial';
 import AltaObraSocial from './Components/ObraSocial/AltaObraSocial';
+import LogoutContainer from "./Components/Logout/LogoutContainer";
+
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
+import AjustesContainer from "./Components/Ajustes/AjustesContainer";
 import TablaMuestra from './Components/Muestra/TablaMuestra';
 
 
@@ -36,6 +39,8 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/determinaciones/add" component={FormAltaDeterminacion}/>
         <AuthenticatedRoute exact path="/determinaciones/consulta/:codigoPractica" component={FormConsultaDeterminacion}/>
         <AuthenticatedRoute exact path="/muestras" component={TablaMuestra}/>
+        <AuthenticatedRoute exact path="/Logout" component={LogoutContainer}/>
+        <AuthenticatedRoute exact path="/ajustes" component={AjustesContainer}/>
         </Switch>
     </Router>
 
