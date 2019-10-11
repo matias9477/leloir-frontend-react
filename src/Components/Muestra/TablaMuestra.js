@@ -197,7 +197,7 @@ export default class TablaMuestra extends React.Component {
                             <th onClick={() => this.handleColumnHeaderClick("idMuestra")}  >Muestra</th>
                             <th onClick={() => this.handleColumnHeaderClick("analisisId")}  >Analisis</th>
                             <th onClick={() => this.handleColumnHeaderClick("tipoMuestra")} >Tipo Muestra</th>
-                            <th onClick={() => this.handleColumnHeaderClick("fecha")} >Fecha</th>
+                            <th onClick={() => this.handleColumnHeaderClick("createdAt")} >Fecha</th>
                             <th onClick={() => this.handleColumnHeaderClick("idEstado")} >Estado</th>
                             <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
                         </tr>
@@ -217,7 +217,7 @@ export default class TablaMuestra extends React.Component {
                                     {muestra.tipoMuestra}
                                 </td>
                                 <td data-label="Fecha Alta">
-                                    {muestra.fechaAlta}
+                                    {muestra.createdAt}
                                 </td>
                                 <td data-label="Estado">
                                     {muestra.estado}
