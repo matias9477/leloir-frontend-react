@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, TextArea, Grid } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -9,6 +9,7 @@ import MenuOpciones from '../MenuOpciones';
 import { urlDeterminaciones } from '../../Constants/URLs';
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
+import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
 
 class FormNuevoAnalisis extends Component {
@@ -24,7 +25,7 @@ class FormNuevoAnalisis extends Component {
         selectedPaciente: '',
         selectedDeterminaciones: [],
 
-        pacienteFinal: [],
+        pacienteFinal: '',
         determinacionesFinales: [],
 
         errorPaciente: true,
@@ -62,6 +63,18 @@ class FormNuevoAnalisis extends Component {
         console.log('Error en carga de pacientes: ', error.message);
     })
   };
+
+  handleChangePatient = (e, selectedPaciente) => {
+    console.log(e.target.value)
+    let nuevoPaciente = this.state.pacientes.find(function (element) {
+        return (element.id.toString() === e.target.value);
+    })
+    this.setState(prevState => ({
+        pacienteFinal: nuevoPaciente,
+        selectedPaciente
+    }))
+};
+
 
   searchPacientes(){
       const nodess = this.state.pacientes.map(({nombre, apellido, nroDocumento, id}) => ({value:`${nombre} ${checkAtributo(apellido)}`, label: `${nombre} ${checkAtributo(apellido)} ${' '} ${checkAtributo(nroDocumento)}`, key: id}));
@@ -237,8 +250,13 @@ class FormNuevoAnalisis extends Component {
     }    
   }
 
+  getOptionLabel = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
+
+  getOptionValue = option => option.id;
+
   render() {
-    
+    console.log(this.state.selectedPaciente)
+    const patientName = this.state.pacienteFinal
     return (
       <div className='union'>
         <MenuOpciones/>
@@ -250,11 +268,16 @@ class FormNuevoAnalisis extends Component {
           <Grid columns='equal' >
             <Grid.Column width={12}>
               <Select
+                name='pacientes'
                 value={this.state.selectedPaciente}
-                options={this.searchPacientes()}
                 onChange={this.handleChangeListPacientes}
                 placeholder= "Busque un paciente..."
                 isClearable={true}
+                labelKey='nombre'
+                valueKey='nombre'
+                options={this.state.pacientes}
+                getOptionValue={this.getOptionValue}
+                getOptionLabel={this.getOptionLabel}
               />
             </Grid.Column>
             <Grid.Column>
@@ -263,6 +286,8 @@ class FormNuevoAnalisis extends Component {
               </Button>
             </Grid.Column>
           </Grid>
+
+          <SelectedPaciente selected={this.state.selectedPaciente}/>
 
           <Header as={'h5'}>Determinaciones a realizar:</Header>
           <Select
@@ -278,10 +303,12 @@ class FormNuevoAnalisis extends Component {
           <br/> <br/>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
             Registrar Análisis
-          </Button>
+          </Button>  
           
         </Form>
         }
+
+        
       </div>
     );
   }
