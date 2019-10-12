@@ -1,11 +1,12 @@
-import React, {Component} from 'react'
-import {Image, Menu} from 'semantic-ui-react'
+import React, {Component, createRef} from 'react'
+import {Image, Menu, Icon, Sticky} from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
 import '../App.css';
 
 export default class MenuOpciones extends Component {
 
     state = {activeItem: ''};
+    contextRef = createRef();
 
     handleItemClick = (e, {name}) => this.setState({activeItem: name});
 
@@ -14,7 +15,10 @@ export default class MenuOpciones extends Component {
 
         return (
 
-            //<Router>
+            <Sticky context={this.contextRef}>
+
+
+
             <div className="Menu">
                 <Menu inverted>
                     <Menu.Item 
@@ -64,11 +68,32 @@ export default class MenuOpciones extends Component {
                         active={activeItem === 'Determinaciones'}
                         onClick={this.handleItemClick}
                     />
+                    <Menu.Menu position='right'>
+                        <Menu.Item
+                            as={Link} to='/ajustes'
+                            active={activeItem === 'Ajustes'}
+                            color={'teal'}
+                            onClick={this.handleItemClick}
+                        >
+                            <Icon inverted name='setting' size='large' />
+                        </Menu.Item>
+                        <Menu.Item
+                            as={Link} to='/logout'
+                            active={activeItem === 'Logout'}
+                            color={'red'}
+                            onClick={this.handleItemClick}
+                        >
+                            <Icon inverted name='log out' size='large' />
+                        </Menu.Item>
+                    </Menu.Menu>
+
 
                 </Menu>
 
+
             </div>
-            // </Router>
+            </Sticky>
+
 
         )
     }
