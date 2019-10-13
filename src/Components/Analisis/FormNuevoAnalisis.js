@@ -32,9 +32,6 @@ class FormNuevoAnalisis extends Component {
         errorDeterminaciones: true,
       })
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
-      this.generarMuestra = this.generarMuestra.bind(this);
-      this.getPaciente = this.getPaciente.bind(this);
-      this.getDeterminaciones = this.getDeterminaciones.bind(this);
     }
 
   componentDidMount(){
@@ -64,23 +61,6 @@ class FormNuevoAnalisis extends Component {
     })
   };
 
-  handleChangePatient = (e, selectedPaciente) => {
-    console.log(e.target.value)
-    let nuevoPaciente = this.state.pacientes.find(function (element) {
-        return (element.id.toString() === e.target.value);
-    })
-    this.setState(prevState => ({
-        pacienteFinal: nuevoPaciente,
-        selectedPaciente
-    }))
-};
-
-
-  searchPacientes(){
-      const nodess = this.state.pacientes.map(({nombre, apellido, nroDocumento, id}) => ({value:`${nombre} ${checkAtributo(apellido)}`, label: `${nombre} ${checkAtributo(apellido)} ${' '} ${checkAtributo(nroDocumento)}`, key: id}));
-      return nodess;
-  }
-
   handleChangeListPacientes = selectedPaciente => {
     this.setState({ selectedPaciente })
   }
@@ -104,21 +84,6 @@ class FormNuevoAnalisis extends Component {
     }
   }
 
-  generarMuestra(){
-    this.setState({ muestra: [...this.state.muestra, Math.floor(Math.random() * 100)] })
-  }
-
-  getPaciente(){
-    const url = `/pacientes/id/${this.state.selectedPaciente.key}`;
-    axios.get(url).then(resolve => {
-      this.setState({
-          pacienteFinal: resolve.data,
-      });
-    }, (error) => {
-        console.log('Error get tipo', error.message);
-    }) 
-  }
-
   getDeterminaciones(){
     console.log('hol')
     for (var i = 0; i < this.state.selectedDeterminaciones.length; i++) { 
@@ -136,6 +101,11 @@ class FormNuevoAnalisis extends Component {
     var data = {
       "costo": 0,
       "derivacion": null,
+      "estado": {
+        "estadoId": 3,
+        "nombre": "EN PREPARACION",
+        "descripcion": null
+      },
       "determinaciones": [
         {
           "analisis_determinacion_id": 0,
@@ -149,77 +119,76 @@ class FormNuevoAnalisis extends Component {
           "resultado": 0
         }
       ],
-      "estado": {
+      "ordenMedica": {
         "descripcion": "string",
-        "estadoId": 2,
-        "nombre": "TERMINADO"
+        "fecha": "2019-10-13T21:25:51.159Z",
+        "ordenMedicaId": 0
       },
-      "ordenMedica": null,
       "paciente": {
-        "bitAlta": true,
-        "fechaAlta": "2019-10-08T17:15:14.915Z",
-        "historial": 0,
-        "idPaciente": 0,
-        "mail": "string",
-        "telefono": 0
+        "bitAlta": this.state.selectedPaciente.bitAlta,
+        "fechaAlta": this.state.selectedPaciente.fechaAlta,
+        "historial": this.state.selectedPaciente.historial,
+        "idPaciente": this.state.selectedPaciente.id,
+        "mail": this.state.selectedPaciente.mail,
+        "telefono": this.state.selectedPaciente.telefono
       },
       "secretaria": {
-        "apellido": "simes",
-        "bitAlta": true,
         "empleadoId": 1,
-        "fechaAlta": "2019-06-20T00:00:00",
-        "fechaNacimiento": "2018-08-08T00:00:00",
-        "mail": null,
-        "nacionalidad": {
-          "codigoTelefono": 54,
-          "idPais": 10,
-          "iso": "AR",
-          "iso3": "ARG",
-          "nombre": "ARGENTINA",
-          "nombreBonito": "Argentina"
-        },
         "nombre": "Juan Carlos",
-        "nroDocumento": "89798",
-        "rolId": null,
-        "sexo": {
-          "nombre": "Masculino",
-          "sexoId": 1
-        },
-        "telefono": null,
+        "apellido": "Simes",
         "tipoDocumento": {
           "idTipoDocumento": 2,
           "nombre": "Pasaporte"
         },
-        "usuarioId": null
+        "nroDocumento": "89798",
+        "fechaNacimiento": "2018-08-08T00:00:00",
+        "fechaAlta": "2019-06-20T00:00:00",
+        "nacionalidad": {
+          "idPais": 10,
+          "iso": "AR",
+          "nombre": "ARGENTINA",
+          "nombreBonito": "Argentina",
+          "iso3": "ARG",
+          "codigoTelefono": 54
+        },
+        "sexo": {
+          "sexoId": 1,
+          "nombre": "Masculino"
+        },
+        "telefono": null,
+        "mail": null,
+        "usuarioId": null,
+        "rolId": null,
+        "bitAlta": true
       },
       "tecnico": {
-        "apellido": "Simes",
-        "bitAlta": true,
         "empleadoId": 1,
-        "fechaAlta": "2019-06-20T00:00:00",
-        "fechaNacimiento": "2018-08-08T00:00:00",
-        "mail": null,
-        "nacionalidad": {
-          "codigoTelefono": 54,
-          "idPais": 10,
-          "iso": "AR",
-          "iso3": "ARG",
-          "nombre": "ARGENTINA",
-          "nombreBonito": "Argentina"
-        },
         "nombre": "Juan Carlos",
-        "nroDocumento": "89798",
-        "rolId": null,
-        "sexo": {
-          "nombre": "Masculino",
-          "sexoId": 1
-        },
-        "telefono": null,
+        "apellido": "Simes",
         "tipoDocumento": {
           "idTipoDocumento": 2,
           "nombre": "Pasaporte"
         },
-        "usuarioId": null
+        "nroDocumento": "89798",
+        "fechaNacimiento": "2018-08-08T00:00:00",
+        "fechaAlta": "2019-06-20T00:00:00",
+        "nacionalidad": {
+          "idPais": 10,
+          "iso": "AR",
+          "nombre": "ARGENTINA",
+          "nombreBonito": "Argentina",
+          "iso3": "ARG",
+          "codigoTelefono": 54
+        },
+        "sexo": {
+          "sexoId": 1,
+          "nombre": "Masculino"
+        },
+        "telefono": null,
+        "mail": null,
+        "usuarioId": null,
+        "rolId": null,
+        "bitAlta": true
       },
     };
 
@@ -250,13 +219,16 @@ class FormNuevoAnalisis extends Component {
     }    
   }
 
-  getOptionLabel = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
+  getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
 
-  getOptionValue = option => option.id;
+  getOptionValuePatient = option => option.id;
+
+  getOptionLabelDeterminaciones = option => option.descripcionPractica;
+
+  getOptionValueDeterminaciones = option => option.codigoPractica;
 
   render() {
-    console.log(this.state.selectedPaciente)
-    const patientName = this.state.pacienteFinal
+
     return (
       <div className='union'>
         <MenuOpciones/>
@@ -273,11 +245,9 @@ class FormNuevoAnalisis extends Component {
                 onChange={this.handleChangeListPacientes}
                 placeholder= "Busque un paciente..."
                 isClearable={true}
-                labelKey='nombre'
-                valueKey='nombre'
                 options={this.state.pacientes}
-                getOptionValue={this.getOptionValue}
-                getOptionLabel={this.getOptionLabel}
+                getOptionValue={this.getOptionValuePatient}
+                getOptionLabel={this.getOptionLabelPatient}
               />
             </Grid.Column>
             <Grid.Column>
@@ -292,12 +262,14 @@ class FormNuevoAnalisis extends Component {
           <Header as={'h5'}>Determinaciones a realizar:</Header>
           <Select
             isMulti
-            options={this.searchDeterminaciones()}
+            options={this.state.determinaciones}
             onChange={this.handleChangeListDeterminaciones}
             className="basic-multi-select"
             classNamePrefix="select"
             placeholder='Seleccione determinaciones...'
             closeMenuOnSelect={false}
+            getOptionValue={this.getOptionValueDeterminaciones}
+            getOptionLabel={this.getOptionLabelDeterminaciones}
           />
 
           <br/> <br/>

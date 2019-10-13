@@ -4,7 +4,6 @@ import { Header, Container } from 'semantic-ui-react';
 import { checkAtributo, titleCase } from '../../Services/MetodosDeValidacion'; 
 
 const SelectedPaciente = props => {
-    console.log(props.selected)
     return (
         <div>
             {(props.selected === '' || props.selected === null) ? null : 
@@ -16,6 +15,7 @@ const SelectedPaciente = props => {
                     {checkAtributo(props.selected.nroDocumento) ? `${props.selected.tipoDocumento}: ${props.selected.nroDocumento}`: null}
                     {checkAtributo(props.selected.tipoAnimal) ? `TipoAnimal: ${titleCase(props.selected.tipoAnimal)}` : null} <br/>
                     {checkAtributo(props.selected.propietario) ? `Propietario: ${props.selected.propietario}`: null}
+                    {checkAtributo(props.selected.obraSocial) ? `Obra social: ${props.selected.obraSocial}`: null}
                 </p>
             
             </Container>
