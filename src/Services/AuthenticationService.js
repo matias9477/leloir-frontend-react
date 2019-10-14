@@ -20,23 +20,24 @@ class AuthenticationService {
     }
 
     createJWTToken(tokenType, accesstoken) {
-        console.log(tokenType + ' ' +  accesstoken);
-        return tokenType + ' ' +  accesstoken
+        return tokenType + ' ' + accesstoken
     }
 
 
     logout() {
         sessionStorage.removeItem(USER_NAME_SESSION_ATTRIBUTE_NAME);
+        sessionStorage.removeItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN);
     }
 
     isUserLoggedIn() {
-        let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME)
-        return user !== null;
+        let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME);
+        let token = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_TOKEN);
+        return (user !== null) && (token !== null);
 
     }
 
     getLoggedInUserName() {
-        let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME)
+        let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME);
         if (user === null) return '';
         return user
     }
