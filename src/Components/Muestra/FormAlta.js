@@ -3,7 +3,7 @@ import axios from 'axios'
 import {Button, Container, Form, Header, Icon} from 'semantic-ui-react'
 import {getIdTipoMuestra} from './../../Services/MetodosMuestra'
 import MenuOpciones from '../MenuOpciones';
-import { hasNumbers, validateRequiredCombos} from './../../Services/MetodosDeValidacion';
+import { validateOnlyNumbersRequired, validateRequiredCombos} from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 import {urlTiposMuestras} from "../../Constants/URLs";
 import {Link} from "react-router-dom";
@@ -89,12 +89,12 @@ class FormAlta extends Component {
 
     handleUpdateClick = (api) => {
         var data = {
-            "analisis": hasNumbers(this.state.analisisId),
+            "analisisId": this.state.analisisId,
             "bitActivo": true,
             "estado": {
                 "descripcion": "string",
-                "estadoId": 2,
-                "nombre": "TERMINADO"
+                "estadoId": 1,
+                "nombre": "EN PROCESO"
             },
             "tipoMuestra": {
                 "idMuestra": getIdTipoMuestra(this.state.tipo,this.state.tipos),
@@ -115,7 +115,7 @@ class FormAlta extends Component {
 
         const {analisisId, tipo} = this.state;
 
-        const errorAnalisisId = hasNumbers(analisisId);
+        const errorAnalisisId = validateOnlyNumbersRequired(analisisId);
         const errorTipo = validateRequiredCombos(tipo);
 
         if (errorAnalisisId && errorTipo) {
