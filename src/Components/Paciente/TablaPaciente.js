@@ -63,7 +63,7 @@ export default class TablaPaciente extends React.Component {
         
         axios.put(urlPacientes).then(response => {
                 if (paciente.bitAlta) {
-                    alert(`Se ha eliminado el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)} con éxito.`);
+                    alert(`Se ha dado de baja el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)} con éxito.`);
                     this.getAllPacientes()
                 } else {
                     alert(`Se ha dado de alta al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)} con éxito.`);
@@ -71,7 +71,7 @@ export default class TablaPaciente extends React.Component {
                 }    
         }, (error) => {
             if (paciente.bitAlta) {
-                alert(`No se ha podido eliminar el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}. Intentelo nuevamente.`)
+                alert(`No se ha podido dar de baja el paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}. Intentelo nuevamente.`)
             } else {
                 alert(`No se ha podido dar de alta al paciente. ${paciente.nombre} ${this.checkApellido(paciente.apellido)} Intentelo nuevamente.`)
             }

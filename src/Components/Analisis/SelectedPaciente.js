@@ -27,7 +27,7 @@ const SelectedPaciente = props => {
 
 const Style = {
     marginTop: '15px',
-    backgroundColor: '#E9F3F7',
+    backgroundColor: '#e8f6ff',
     padding: '8px',
     fontSize: 'small',
 };

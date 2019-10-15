@@ -18,15 +18,11 @@ class FormNuevoAnalisis extends Component {
     this.state = ({
         determinaciones: [],
         pacientes: [],
-        muestra: [],
 
         loading: true,
 
         selectedPaciente: '',
         selectedDeterminaciones: [],
-
-        pacienteFinal: '',
-        determinacionesFinales: [],
 
         errorPaciente: true,
         errorDeterminaciones: true,
@@ -65,11 +61,6 @@ class FormNuevoAnalisis extends Component {
     this.setState({ selectedPaciente })
   }
 
-  searchDeterminaciones(){
-    const nodess = this.state.determinaciones.map(({descripcionPractica, codigoPractica}) => ({value: descripcionPractica, label: descripcionPractica, key: codigoPractica}));
-    return nodess;
-  }
-
   handleChangeListDeterminaciones = selectedDeterminaciones => {
     this.setState({ selectedDeterminaciones })
   }
@@ -82,19 +73,6 @@ class FormNuevoAnalisis extends Component {
     } else if(tipo === 'com.leloir.backend.domain.Institucion'){
         return 'building'
     }
-  }
-
-  getDeterminaciones(){
-    console.log('hol')
-    for (var i = 0; i < this.state.selectedDeterminaciones.length; i++) { 
-      const url = `/determinaciones/id/${this.state.selectedDeterminaciones[i].key}`;
-      axios.get(url).then(resolve => {
-        this.setState({ determinacionesFinales: [...this.state.determinacionesFinales, resolve.data] });
-      }, (error) => {
-          console.log('Error get tipo', error.message);
-      }) 
-    }
-    console.log(this.state.determinacionesFinales)
   }
   
   handleUpdateClick = (api) => {
@@ -271,6 +249,10 @@ class FormNuevoAnalisis extends Component {
             getOptionValue={this.getOptionValueDeterminaciones}
             getOptionLabel={this.getOptionLabelDeterminaciones}
           />
+
+          <Header as={'h5'}>Orden Médica:</Header>
+          <Form.Field placeholder='Nombre del Médico' control='input'/>
+          <Form.Field placeholder='Fecha orden' control='input' />
 
           <br/> <br/>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
