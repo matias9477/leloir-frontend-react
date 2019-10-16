@@ -68,6 +68,14 @@ export default class MenuOpciones extends Component {
                         active={activeItem === 'Determinaciones'}
                         onClick={this.handleItemClick}
                     />
+
+                    <Menu.Item
+                        name='Diario Practicas'
+                        as={Link} to='/diario-practicas'
+                        active={activeItem === 'Diario Practicas'}
+                        onClick={this.handleItemClick}
+                    />
+
                     <Menu.Menu position='right'>
                         <Menu.Item
                             as={Link} to='/ajustes'

@@ -19,6 +19,7 @@ import LogoutContainer from "./Components/Logout/LogoutContainer";
 import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
 import AjustesContainer from "./Components/Ajustes/AjustesContainer";
 import TablaMuestra from './Components/Muestra/TablaMuestra';
+import DiarioPracticasContainer from "./Components/DiarioPracticas/DiarioPracticasContainer";
 
 
 ReactDOM.render(
@@ -41,6 +42,7 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/muestras" component={TablaMuestra}/>
         <AuthenticatedRoute exact path="/Logout" component={LogoutContainer}/>
         <AuthenticatedRoute exact path="/ajustes" component={AjustesContainer}/>
+        <AuthenticatedRoute exact path="/diario-practicas" component={DiarioPracticasContainer}/>
         </Switch>
     </Router>
 
