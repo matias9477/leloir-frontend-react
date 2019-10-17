@@ -67,16 +67,6 @@ class FormNuevoAnalisis extends Component {
   handleChangeListDeterminaciones = selectedDeterminaciones => {
     this.setState({ selectedDeterminaciones })
   }
-
-  getIconTipo(tipo){
-    if (tipo === 'com.leloir.backend.domain.Animal'){
-        return 'paw'
-    } else if(tipo === 'com.leloir.backend.domain.Persona'){
-        return 'user'
-    } else if(tipo === 'com.leloir.backend.domain.Institucion'){
-        return 'building'
-    }
-  }
   
   handleUpdateClick = (api) => {
     var data = {
@@ -204,21 +194,10 @@ class FormNuevoAnalisis extends Component {
 
   getOptionValuePatient = option => option.id;
 
-  getOptionLabelDeterminaciones = option => option.descripcionPractica;
+  getOptionLabelDeterminaciones = option => `${option.codigoPractica} ${option.descripcionPractica}`;
 
   getOptionValueDeterminaciones = option => option.codigoPractica;
 
-  handleOrden = (e) => {
-    this.setState({ checkOrdenMedica: !this.state.checkOrdenMedica })
-  }
-
-  handleOrdenDate = (e) => {
-    this.setState({ ordenDate: e })
-  }
-
-  handleDoctorsName = (e) => {
-    this.setState({ doctorsName: e.target.value })
-  }
 
   render() {
     return (
@@ -226,6 +205,9 @@ class FormNuevoAnalisis extends Component {
         <MenuOpciones/>
         {this.state.loading ? <CircularProgress className={'centeredPosition'} size={50}/> : 
         <Form  className="btnHeader">
+          <Button className='boton' as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+            <Icon name='arrow alternate circle left' /> Volver
+          </Button>
           <Header as='h2'>Registrar nuevo Análisis</Header>
           
           <Header as={'h5'}>Paciente:</Header>
