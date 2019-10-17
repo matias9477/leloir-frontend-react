@@ -13,10 +13,10 @@ export const getCurrentDate = () =>{
 
 export const getIdTipoMuestra = (tipoMuestra, tipos) => {
     for(let i=0; i < tipos.length; i++){
-        if (tipoMuestra === tipos[i].nombre)
-            return tipos[i].tipoMuestraId;
+      if (tipoMuestra === tipos[i].nombre)
+        return tipos[i].tipoMuestraId;
     }
-}
+  }
 
 export function validateDescrip(nom){
     if (nom.length === 0 || nom === ''){

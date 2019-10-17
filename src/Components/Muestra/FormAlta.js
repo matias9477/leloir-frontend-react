@@ -24,7 +24,7 @@ class FormAlta extends Component {
 
         });
         this.fetchMuestra = this.fetchMuestra.bind(this);
-        this.cambioAnalisisId= this.cambioAnalisisId.bind(this);
+        this.cambioAnalisisId = this.cambioAnalisisId.bind(this);
         this.cambioTipo = this.cambioTipo.bind(this);
 
     }
@@ -97,15 +97,15 @@ class FormAlta extends Component {
                 "nombre": "EN PROCESO"
             },
             "tipoMuestra": {
-                "idMuestra": getIdTipoMuestra(this.state.tipo,this.state.tipos),
-                "nombre": this.state.tipo
+                "nombre": this.state.tipo,
+                "tipoMuestraId": getIdTipoMuestra(this.state.tipo,this.state.tipos),
             }
         };
 
         axios.post(api, data).then((response) => {
-            alert('Se generó código muestra');
+            alert('Se generó la muestra');
         }, (error) => {
-            alert('No se ha podido generar código muestra');
+            alert('No se ha podido generar la muestra');
         })
 
     };
