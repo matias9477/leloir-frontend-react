@@ -3,6 +3,10 @@ import MenuLateral from "../MenuOpciones";
 import {Button, Card, List} from 'semantic-ui-react'
 import axios from "axios";
 
+const handleClick = (id) => {
+    console.log(id); //Turra tu codigo va aqui
+};
+
 const CardExampleGroups = (pendientes) => (
     <Card.Group itemsPerRow={2}>
 
@@ -26,13 +30,15 @@ const CardExampleGroups = (pendientes) => (
                                 <Button basic color='green'>
                                     Emitir Analisis
                                 </Button>
-                                <Button basic color='blue'>
+                                <Button basic color='blue'
+                                        onClick={() => handleClick(analisis.idAnalisis)}>
                                     Modificar Resultados
                                 </Button>
                             </div>
                         ) : (
                             <div className='ui two buttons'>
-                                <Button basic color='blue'>
+                                <Button basic color='blue'
+                                        onClick={() => handleClick(analisis.idAnalisis)}>
                                     Cargar Resultados
                                 </Button>
                             </div>
