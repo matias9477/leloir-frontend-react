@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, Radio, Container } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import MenuOpciones from '../MenuOpciones';
 import { urlDeterminaciones } from '../../Constants/URLs';
-import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
@@ -23,6 +22,10 @@ class FormNuevoAnalisis extends Component {
 
         selectedPaciente: '',
         selectedDeterminaciones: [],
+
+        checkOrdenMedica: false,
+        doctorsName: '',
+        ordenDate: '',
 
         errorPaciente: true,
         errorDeterminaciones: true,
@@ -205,8 +208,19 @@ class FormNuevoAnalisis extends Component {
 
   getOptionValueDeterminaciones = option => option.codigoPractica;
 
-  render() {
+  handleOrden = (e) => {
+    this.setState({ checkOrdenMedica: !this.state.checkOrdenMedica })
+  }
 
+  handleOrdenDate = (e) => {
+    this.setState({ ordenDate: e })
+  }
+
+  handleDoctorsName = (e) => {
+    this.setState({ doctorsName: e.target.value })
+  }
+
+  render() {
     return (
       <div className='union'>
         <MenuOpciones/>
@@ -249,10 +263,6 @@ class FormNuevoAnalisis extends Component {
             getOptionValue={this.getOptionValueDeterminaciones}
             getOptionLabel={this.getOptionLabelDeterminaciones}
           />
-
-          <Header as={'h5'}>Orden Médica:</Header>
-          <Form.Field placeholder='Nombre del Médico' control='input'/>
-          <Form.Field placeholder='Fecha orden' control='input' />
 
           <br/> <br/>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 

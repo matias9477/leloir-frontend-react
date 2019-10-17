@@ -13,7 +13,7 @@ const SelectedPaciente = props => {
                     Tipo Paciente: {titleCase(props.selected.tipoPaciente)} <br/>
                     Nombre: {props.selected.nombre} {checkAtributo(props.selected.apellido)} <br/>
                     {checkAtributo(props.selected.nroDocumento) ? `${props.selected.tipoDocumento}: ${props.selected.nroDocumento}`: null}
-                    {checkAtributo(props.selected.tipoAnimal) ? `TipoAnimal: ${titleCase(props.selected.tipoAnimal)}` : null} <br/>
+                    {checkAtributo(props.selected.tipoAnimal) ? `Tipo de Animal: ${titleCase(props.selected.tipoAnimal)}` : null} <br/>
                     {checkAtributo(props.selected.propietario) ? `Propietario: ${props.selected.propietario}`: null}
                     {checkAtributo(props.selected.obraSocial) ? `Obra social: ${props.selected.obraSocial}`: null}
                 </p>
