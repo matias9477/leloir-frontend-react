@@ -17,9 +17,9 @@ class DiarioPracticas extends Component {
         };
     }
 
-    showModal = (id) => {
+    showModal = (analysis) => {
         this.setState({ show: true,
-                        currentAnalysis: id 
+                        currentAnalysis: analysis 
                     });
     };
 
@@ -43,7 +43,7 @@ class DiarioPracticas extends Component {
     };
 
     renderCards = (pendientes) => (
-        <Card.Group itemsPerRow={2}>
+        <Card.Group stackable itemsPerRow={2}>
 
             {pendientes.map((analisis) => (
                 <Card fluid>
@@ -51,10 +51,14 @@ class DiarioPracticas extends Component {
                         <Card.Header>{analisis.paciente}</Card.Header>
                         <Card.Meta>{analisis.diasPendiente === 0 ? 'Hoy' : analisis.diasPendiente === 1 ? 'Ayer' :
                             <div>Hace {analisis.diasPendiente} dias</div>}</Card.Meta>
-                        <Card.Description>
+                        <Card.Description textAlign='left'>
                             Determinacion
-                        <List bulleted>
-                                {analisis.determinaciones.map(nombre => <List.Item><strong>{nombre}</strong></List.Item>)}
+                            <List>
+                            {analisis.determinaciones.map(nombre =>
+                                <List.Item>
+                                    <List.Icon name='lab' />
+                                    <List.Content><strong>{nombre}</strong></List.Content>
+                               </List.Item>)}
                             </List>
                         </Card.Description>
                     </Card.Content>
@@ -87,14 +91,18 @@ class DiarioPracticas extends Component {
         </Card.Group>
     )
 
+
     renderAnalysisInputModal = (currentAnalysis) =>{
 
-        return (<Form>       
+        return (<Form onSubmit={this.handleSubmit} >       
          {currentAnalysis.determinaciones.map(nombre => 
-        <Form.Field required label={nombre} control='input'
+        <Form.Field inline required label={nombre} control='input'
             placeholder='Ingrese resultado...' 
             />
         )}
+        <br/>
+        <br/>
+            <Button color='green' type='submit'>Guardar</Button>
         </Form>)
     };
 
@@ -112,7 +120,7 @@ class DiarioPracticas extends Component {
                             {this.state.currentAnalysis ? this.renderAnalysisInputModal(this.state.currentAnalysis) 
                                 : <CircularProgress size={50}/>}
                         </div>
-                    <Button>Guardar</Button>
+
                 </Modal>
 
             </div>

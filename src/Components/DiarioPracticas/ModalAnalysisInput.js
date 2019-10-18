@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css';
-import { Button } from 'semantic-ui-react';
+import { Button, Segment, Divider  } from 'semantic-ui-react';
 
 export const Modal = ({ handleClose, show, children }) => {
     
@@ -8,10 +8,15 @@ export const Modal = ({ handleClose, show, children }) => {
   
     return (
       <div className={showHideClassName}>
-        <section className="modal-main">
-          {children}
+        <Segment className="modal-main">
+        <br/>
+        <h2>Complete los resultados de las siguientes determinaciones:</h2>
+         
+          <Divider section />
+             {children}    
+          <br/>
           <Button  color='red' onClick={handleClose}>Cerrar sin guardar cambios</Button>
-        </section>
+        </Segment>
       </div>
     );
   };
