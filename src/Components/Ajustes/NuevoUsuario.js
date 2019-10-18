@@ -7,7 +7,8 @@ import axios from "axios";
 
 import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
-import { titleCase, validateNombre, validateRequiredStringNum, validateRequiredMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
+import { titleCase, validateNombre, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
+import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
 
 class NuevoUsuario extends Component {
     constructor(props) {
@@ -64,6 +65,7 @@ class NuevoUsuario extends Component {
             errorUsuario: true,
             errorMail: true,
             errorContraseña: true,
+
         });
     }
 
@@ -273,11 +275,10 @@ class NuevoUsuario extends Component {
         const errorSexo = validateRequiredCombos(this.state.signUpRequest.empleado.sexo.nombre);
         const errorNacionalidad = validateRequiredCombos(this.state.signUpRequest.empleado.nacionalidad.nombre);
         const errorMail = validateRequiredMail(this.state.signUpRequest.email);
-        const errorUsuario = validateRequiredStringNum(this.state.signUpRequest.username);
+        const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
-        
 
-        if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña ) {
+        if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña) {
 
             let data = this.state.signUpRequest;
             axios.post('/auth/signup', data
@@ -287,7 +288,7 @@ class NuevoUsuario extends Component {
                 alert('No se ha podido registrar el usuario.');
             });
 
-          } else {
+        } else {
             alert('Verifique los datos ingresados.');
             this.setState({
               errorNombre,
@@ -384,14 +385,14 @@ class NuevoUsuario extends Component {
                     <Form.Group>
                         <Form.Field required label='Nombre Usuario' control='input'
                             width={6}
-                            className= {this.state.errorUsuario === true ? null : 'error'}
+                            className= {(this.state.errorUsuario === true) ? null : 'error'}
                             placeholder='No debe contener espacios'
                             value={this.state.signUpRequest.username}
                             onChange={this.cambioNombreUsuario}
                         />
                         <Form.Field required label='Email' control='input'
                             width={10}
-                            className= {this.state.errorMail === true ? null : 'error'}
+                            className= {(this.state.errorMail === true) ? null : 'error'}
                             placeholder='ejemplo@leloir.com'
                             value={this.state.signUpRequest.email}
                             onChange={this.cambioEmail}
