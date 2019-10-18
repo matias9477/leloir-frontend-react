@@ -8,7 +8,7 @@ const handleClick = (id) => {
 };
 
 const CardExampleGroups = (pendientes) => (
-    <Card.Group itemsPerRow={2}>
+    <Card.Group stackable itemsPerRow={2} >
 
         {pendientes.map((analisis) => (
             <Card fluid>
@@ -16,10 +16,14 @@ const CardExampleGroups = (pendientes) => (
                     <Card.Header>{analisis.paciente}</Card.Header>
                     <Card.Meta>{analisis.diasPendiente === 0 ? 'Hoy' : analisis.diasPendiente === 1 ? 'Ayer' :
                         <div>Hace {analisis.diasPendiente} dias</div>}</Card.Meta>
-                    <Card.Description>
+                    <Card.Description textAlign='left'>
                         Determinacion
-                        <List bulleted>
-                            {analisis.determinaciones.map(nombre => <List.Item><strong>{nombre}</strong></List.Item>)}
+                        <List>
+                            {analisis.determinaciones.map(nombre =>
+                                <List.Item>
+                                    <List.Icon name='lab' />
+                                    <List.Content><strong>{nombre}</strong></List.Content>
+                                </List.Item>)}
                         </List>
                     </Card.Description>
                 </Card.Content>
