@@ -6,7 +6,6 @@ import { Modal } from './ModalAnalysisInput';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 
-
 class DiarioPracticas extends Component {
 
     constructor(props) {
