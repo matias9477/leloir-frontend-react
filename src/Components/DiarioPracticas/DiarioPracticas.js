@@ -33,7 +33,8 @@ class DiarioPracticas extends Component {
     }
 
     getAllPendientes = () => {
-        axios.get("https://matiasturra.free.beeceptor.com/analisis/pendientes").then((response) => {
+         axios.get("https://matiasturra.free.beeceptor.com/analisis/pendientes").then((response) => {
+            
             this.setState({
                 pendientes: Object.values(response.data).flat(),
             });
