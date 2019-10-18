@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {addDays} from 'date-fns';
-import {Button, Form, Header} from 'semantic-ui-react'
-import {empleadoTypes, signUpRequestType} from "../../Types";
+import {Button, Form} from 'semantic-ui-react'
 import axios from "axios";
-import {urlDocs, urlObrasSoc, urlPaises, urlSexos} from "../../Constants/URLs";
-import {titleCase} from "../../Services/MetodosDeValidacion";
-import {bool, number, oneOf, shape, string} from "prop-types";
+
+import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
+import { titleCase, validateNombre, validateRequiredStringNum, validateRequiredMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
 
 class NuevoUsuario extends Component {
     constructor(props) {
@@ -49,9 +48,22 @@ class NuevoUsuario extends Component {
                 }
             },
 
+            pass2: '',
+
             documentos: [],
             paises: [],
             sexos: [],
+
+            errorNombre: true,
+            errorApellido: true,
+            errorTipoDoc: true,
+            errorNroDoc: true,
+            errorSexo: true,
+            errorNacionalidad: true,
+            errorFechaNac: true,
+            errorUsuario: true,
+            errorMail: true,
+            errorContraseña: true,
         });
     }
 
@@ -248,15 +260,48 @@ class NuevoUsuario extends Component {
         }))
     };
 
+    cambioPass2 = (e) => {
+        this.setState({ pass2: e.target.value })
+    }
 
     handleNuevoUsuarioClick = () => {
-        let data = this.state.signUpRequest;
-        axios.post('/auth/signup', data
-        ).then((response) => {
-            alert('Se creo usuario correctamente');
-        }, (error) => {
-            alert('No se ha podido registrar el paciente.');
-        });
+        const errorNombre = validateNombre(this.state.signUpRequest.empleado.nombre);
+        const errorApellido = validateNombre(this.state.signUpRequest.empleado.apellido);
+        const errorTipoDoc = validateRequiredCombos(this.state.signUpRequest.empleado.tipoDocumento.nombre);
+        const errorNroDoc = validateNroDocumento(this.state.signUpRequest.empleado.nroDocumento, this.state.signUpRequest.empleado.tipoDocumento.nombre);
+        const errorFechaNac = validateFechaNacimiento(this.state.signUpRequest.empleado.fechaNacimiento);
+        const errorSexo = validateRequiredCombos(this.state.signUpRequest.empleado.sexo.nombre);
+        const errorNacionalidad = validateRequiredCombos(this.state.signUpRequest.empleado.nacionalidad.nombre);
+        const errorMail = validateRequiredMail(this.state.signUpRequest.email);
+        const errorUsuario = validateRequiredStringNum(this.state.signUpRequest.username);
+        const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
+        
+
+        if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña ) {
+
+            let data = this.state.signUpRequest;
+            axios.post('/auth/signup', data
+            ).then((response) => {
+                alert('Se creo usuario correctamente');
+            }, (error) => {
+                alert('No se ha podido registrar el usuario.');
+            });
+
+          } else {
+            alert('Verifique los datos ingresados.');
+            this.setState({
+              errorNombre,
+              errorApellido,
+              errorTipoDoc,
+              errorNroDoc, 
+              errorFechaNac,
+              errorSexo, 
+              errorNacionalidad,
+              errorMail,
+              errorUsuario,
+              errorContraseña,
+            })
+          } 
     };
 
     render() {
@@ -267,45 +312,44 @@ class NuevoUsuario extends Component {
                 <Form>
                     <Form.Group widths='equal'>
                         <Form.Field required label='Nombre' control='input'
-                                    placeholder='Nombre'
-                                    value={this.state.signUpRequest.empleado.nombre}
-                                    onChange={this.cambioNombre}
-
+                            placeholder='Nombre'
+                            className= {this.state.errorNombre === true ? null : 'error'}
+                            value={this.state.signUpRequest.empleado.nombre}
+                            onChange={this.cambioNombre}
                         />
-
                         <Form.Field required label='Apellido' control='input'
-                                    placeholder='Apellido'
-                                    value={this.state.signUpRequest.empleado.apellido}
-                                    onChange={this.cambioApellido}
-
+                            placeholder='Apellido'
+                            className= {this.state.errorApellido === true ? null : 'error'}
+                            value={this.state.signUpRequest.empleado.apellido}
+                            onChange={this.cambioApellido}
                         />
                     </Form.Group>
 
                     <Form.Group>
                         <Form.Field required label='Tipo documento' control='select' placeholder='Tipo documento'
-                                    width={5}
-                                    value={this.state.signUpRequest.empleado.tipoDocumento.nombre}
-                                    onChange={this.cambioTipoDoc}
-
+                            width={5}
+                            className= {this.state.errorTipoDoc === true ? null : 'error'}
+                            value={this.state.signUpRequest.empleado.tipoDocumento.nombre}
+                            onChange={this.cambioTipoDoc}
                         >
                             <option value={null}></option>
                             {this.state.documentos.map(item => (
                                 <option key={item.key}>{item.display}</option>))}
                         </Form.Field>
-
                         <Form.Field required label='Número de Documento' control='input'
-                                    width={11}
-                                    placeholder='Número de documento'
-                                    value={this.state.signUpRequest.empleado.nroDoc}
-                                    onChange={this.cambioNroDocumento}
-
+                            width={11}
+                            placeholder='Número de documento'
+                            className= {this.state.errorNroDoc === true ? null : 'error'}
+                            value={this.state.signUpRequest.empleado.nroDoc}
+                            onChange={this.cambioNroDocumento}
                         />
                     </Form.Group>
 
                     <Form.Field required label='Sexo' control='select'
-                                placeholder='Sexo'
-                                value={this.state.signUpRequest.empleado.sexo.nombre}
-                                onChange={this.cambioSexo}
+                        placeholder='Sexo'
+                        className= {this.state.errorSexo === true ? null : 'error'}
+                        value={this.state.signUpRequest.empleado.sexo.nombre}
+                        onChange={this.cambioSexo}
                     >
                         <option value={null}></option>
                         {this.state.sexos.map(item => (
@@ -313,9 +357,10 @@ class NuevoUsuario extends Component {
                     </Form.Field>
 
                     <Form.Field required label='Nacionalidad' control='select'
-                                placeholder='Nacionalidad'
-                                value={this.state.signUpRequest.empleado.nacionalidad.nombreBonito}
-                                onChange={this.cambioNacionalidad}
+                        placeholder='Nacionalidad'
+                        className= {this.state.errorNacionalidad === true ? null : 'error'}
+                        value={this.state.signUpRequest.empleado.nacionalidad.nombreBonito}
+                        onChange={this.cambioNacionalidad}
                     >
                         <option value={null}></option>
                         {this.state.paises.map(item => (
@@ -323,14 +368,14 @@ class NuevoUsuario extends Component {
                     </Form.Field>
 
 
-                    <Form.Field required>
+                    <Form.Field required className= {this.state.errorFechaNac === true ? null : 'error'}>
                         <label>Fecha de Nacimiento</label>
                         <DatePicker placeholderText="Fecha de Nacimiento"
-                                    selected={this.state.signUpRequest.empleado.fechaNacimiento}
-                                    onChange={this.cambioFechaNacimiento}
-                                    peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"
-                                    maxDate={addDays(new Date(), 0)}
-                                    dateFormat="yyyy-MM-dd">
+                            selected={this.state.signUpRequest.empleado.fechaNacimiento}
+                            onChange={this.cambioFechaNacimiento}
+                            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"
+                            maxDate={addDays(new Date(), 0)}
+                            dateFormat="yyyy-MM-dd">
                         </DatePicker>
                     </Form.Field>
 
@@ -338,36 +383,35 @@ class NuevoUsuario extends Component {
 
                     <Form.Group>
                         <Form.Field required label='Nombre Usuario' control='input'
-                                    width={6}
-                                    placeholder='No debe contener espacios'
-                                    value={this.state.signUpRequest.username}
-                                    onChange={this.cambioNombreUsuario}
-
+                            width={6}
+                            className= {this.state.errorUsuario === true ? null : 'error'}
+                            placeholder='No debe contener espacios'
+                            value={this.state.signUpRequest.username}
+                            onChange={this.cambioNombreUsuario}
                         />
                         <Form.Field required label='Email' control='input'
-                                    width={10}
-                                    placeholder='ejemplo@leloir.com'
-                                    value={this.state.signUpRequest.email}
-                                    onChange={this.cambioEmail}
-
+                            width={10}
+                            className= {this.state.errorMail === true ? null : 'error'}
+                            placeholder='ejemplo@leloir.com'
+                            value={this.state.signUpRequest.email}
+                            onChange={this.cambioEmail}
                         />
-
                     </Form.Group>
 
                     <Form.Group>
                         <Form.Field type='password' required label='Contraseña' control='input'
-                                    width={8}
-                                    placeholder='8 caracteres minimo'
-                                    value={this.state.signUpRequest.empleado.nroDoc}
-                                    onChange={this.cambioPassword}
-
+                            width={8}
+                            placeholder='8 caracteres minimo'
+                            className= {this.state.errorContraseña === true ? null : 'error'}
+                            value={this.state.signUpRequest.empleado.nroDoc}
+                            onChange={this.cambioPassword}
                         />
 
                         <Form.Field type='password' required label='Repita Contraseña' control='input'
-                                    width={8}
-                                    value={this.state.signUpRequest.empleado.nroDoc}
-
-
+                            width={8}
+                            className= {this.state.errorContraseña === true ? null : 'error'}
+                            value={this.state.pass2}
+                            onChange={this.cambioPass2}
                         />
                     </Form.Group>
 
