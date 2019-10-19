@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import MenuLateral from "../MenuOpciones";
-import { Button, Card, List, Form} from 'semantic-ui-react';
+import {Button, Card, Form, List} from 'semantic-ui-react';
 import axios from "axios";
-import { Modal } from './ModalAnalysisInput';
+import {Modal} from './ModalAnalysisInput';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {urlAnalisisPendientes} from "../../Constants/URLs";
 
 
 class DiarioPracticas extends Component {
@@ -18,13 +19,14 @@ class DiarioPracticas extends Component {
     }
 
     showModal = (analysis) => {
-        this.setState({ show: true,
-                        currentAnalysis: analysis 
-                    });
+        this.setState({
+            show: true,
+            currentAnalysis: analysis
+        });
     };
 
     hideModal = () => {
-        this.setState({ show: false });
+        this.setState({show: false});
     };
 
     componentDidMount() {
@@ -33,8 +35,8 @@ class DiarioPracticas extends Component {
     }
 
     getAllPendientes = () => {
-         axios.get("https://matiasturra.free.beeceptor.com/analisis/pendientes").then((response) => {
-            
+        axios.get(urlAnalisisPendientes).then((response) => {
+
             this.setState({
                 pendientes: Object.values(response.data).flat(),
             });
@@ -50,16 +52,15 @@ class DiarioPracticas extends Component {
                 <Card fluid>
                     <Card.Content>
                         <Card.Header>{analisis.paciente}</Card.Header>
-                        <Card.Meta>{analisis.diasPendiente === 0 ? 'Hoy' : analisis.diasPendiente === 1 ? 'Ayer' :
-                            <div>Hace {analisis.diasPendiente} dias</div>}</Card.Meta>
+                        <Card.Meta>{analisis.diasPendiente}</Card.Meta>
                         <Card.Description textAlign='left'>
                             Determinacion
                             <List>
-                            {analisis.determinaciones.map(nombre =>
-                                <List.Item>
-                                    <List.Icon name='lab' />
-                                    <List.Content><strong>{nombre}</strong></List.Content>
-                               </List.Item>)}
+                                {analisis.determinaciones.map(nombre =>
+                                    <List.Item>
+                                        <List.Icon name='lab'/>
+                                        <List.Content><strong>{nombre}</strong></List.Content>
+                                    </List.Item>)}
                             </List>
                         </Card.Description>
                     </Card.Content>
@@ -70,39 +71,39 @@ class DiarioPracticas extends Component {
                                 <div className='ui two buttons'>
                                     <Button basic color='green'>
                                         Emitir Analisis
-                                </Button>
+                                    </Button>
                                     <Button basic color='blue'
-                                        onClick={() => this.showModal(analisis)}>
+                                            onClick={() => this.showModal(analisis)}>
                                         Modificar Resultados
-                                </Button>
+                                    </Button>
                                 </div>
                             ) : (
-                                    <div className='ui two buttons'>
-                                        <Button basic color='blue'
+                                <div className='ui two buttons'>
+                                    <Button basic color='blue'
                                             onClick={() => this.showModal(analisis)}>
-                                            Cargar Resultados
-                                </Button>
-                                    </div>
-                                )
+                                        Cargar Resultados
+                                    </Button>
+                                </div>
+                            )
 
                         }
                     </Card.Content>
                 </Card>
             ))}
         </Card.Group>
-    )
+    );
 
 
-    renderAnalysisInputModal = (currentAnalysis) =>{
+    renderAnalysisInputModal = (currentAnalysis) => {
 
-        return (<Form onSubmit={this.handleSubmit} >       
-         {currentAnalysis.determinaciones.map(nombre => 
-        <Form.Field inline required label={nombre} control='input'
-            placeholder='Ingrese resultado...' 
-            />
-        )}
-        <br/>
-        <br/>
+        return (<Form onSubmit={this.handleSubmit}>
+            {currentAnalysis.determinaciones.map(nombre =>
+                <Form.Field inline required label={nombre} control='input'
+                            placeholder='Ingrese resultado...'
+                />
+            )}
+            <br/>
+            <br/>
             <Button color='green' type='submit'>Guardar</Button>
         </Form>)
     };
@@ -111,16 +112,16 @@ class DiarioPracticas extends Component {
     render() {
         return (
             <div className='union'>
-                <MenuLateral />
+                <MenuLateral/>
                 <div className='tablaListadoHistorico'>
                     {this.renderCards(this.state.pendientes)}
                 </div>
 
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                        <div>
-                            {this.state.currentAnalysis ? this.renderAnalysisInputModal(this.state.currentAnalysis) 
-                                : <CircularProgress size={50}/>}
-                        </div>
+                    <div>
+                        {this.state.currentAnalysis ? this.renderAnalysisInputModal(this.state.currentAnalysis)
+                            : <CircularProgress size={50}/>}
+                    </div>
 
                 </Modal>
 
