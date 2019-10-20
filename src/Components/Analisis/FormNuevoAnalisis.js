@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Grid, Radio, Container } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -22,10 +22,6 @@ class FormNuevoAnalisis extends Component {
 
         selectedPaciente: '',
         selectedDeterminaciones: [],
-
-        checkOrdenMedica: false,
-        doctorsName: '',
-        ordenDate: '',
 
         errorPaciente: true,
         errorDeterminaciones: true,
@@ -70,102 +66,14 @@ class FormNuevoAnalisis extends Component {
   
   handleUpdateClick = (api) => {
     var data = {
-      "costo": 0,
-      "derivacion": null,
-      "estado": {
-        "estadoId": 3,
-        "nombre": "EN PREPARACION",
-        "descripcion": null
-      },
-      "determinaciones": [
-        {
-          "analisis_determinacion_id": 0,
-          "determinacion": {
-            "bitAlta": true,
-            "codigoPractica": 0,
-            "descripcionPractica": "string",
-            "unidadBioquimica": 0,
-            "unidadMedida": "string"
-          },
-          "resultado": 0
-        }
-      ],
-      "ordenMedica": {
-        "descripcion": "string",
-        "fecha": "2019-10-13T21:25:51.159Z",
-        "ordenMedicaId": 0
-      },
-      "paciente": {
-        "bitAlta": this.state.selectedPaciente.bitAlta,
-        "fechaAlta": this.state.selectedPaciente.fechaAlta,
-        "historial": this.state.selectedPaciente.historial,
-        "idPaciente": this.state.selectedPaciente.id,
-        "mail": this.state.selectedPaciente.mail,
-        "telefono": this.state.selectedPaciente.telefono
-      },
-      "secretaria": {
-        "empleadoId": 1,
-        "nombre": "Juan Carlos",
-        "apellido": "Simes",
-        "tipoDocumento": {
-          "idTipoDocumento": 2,
-          "nombre": "Pasaporte"
-        },
-        "nroDocumento": "89798",
-        "fechaNacimiento": "2018-08-08T00:00:00",
-        "fechaAlta": "2019-06-20T00:00:00",
-        "nacionalidad": {
-          "idPais": 10,
-          "iso": "AR",
-          "nombre": "ARGENTINA",
-          "nombreBonito": "Argentina",
-          "iso3": "ARG",
-          "codigoTelefono": 54
-        },
-        "sexo": {
-          "sexoId": 1,
-          "nombre": "Masculino"
-        },
-        "telefono": null,
-        "mail": null,
-        "usuarioId": null,
-        "rolId": null,
-        "bitAlta": true
-      },
-      "tecnico": {
-        "empleadoId": 1,
-        "nombre": "Juan Carlos",
-        "apellido": "Simes",
-        "tipoDocumento": {
-          "idTipoDocumento": 2,
-          "nombre": "Pasaporte"
-        },
-        "nroDocumento": "89798",
-        "fechaNacimiento": "2018-08-08T00:00:00",
-        "fechaAlta": "2019-06-20T00:00:00",
-        "nacionalidad": {
-          "idPais": 10,
-          "iso": "AR",
-          "nombre": "ARGENTINA",
-          "nombreBonito": "Argentina",
-          "iso3": "ARG",
-          "codigoTelefono": 54
-        },
-        "sexo": {
-          "sexoId": 1,
-          "nombre": "Masculino"
-        },
-        "telefono": null,
-        "mail": null,
-        "usuarioId": null,
-        "rolId": null,
-        "bitAlta": true
-      },
+      "idPaciente": this.state.selectedPaciente.id,
+      "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
     };
 
     axios.post(api, data).then((response) => {
         alert('Se registro el análisis con éxito.'); 
-        //this.vaciadoCampos();
+        this.props.history.push("/analisis");
+        
       }, (error) => {
           alert('No se ha podido registrar el análisis.');
       })
@@ -197,6 +105,19 @@ class FormNuevoAnalisis extends Component {
   getOptionLabelDeterminaciones = option => `${option.codigoPractica} ${option.descripcionPractica}`;
 
   getOptionValueDeterminaciones = option => option.codigoPractica;
+
+  searchDeterminaciones(){
+    const nodess = this.state.selectedDeterminaciones.map(({codigoPractica}) => ({ codigoPractica}));
+    return nodess;
+  }
+
+  listIdDets(dets) {
+    let list = [];
+    for (let i=0; i<dets.length; i+=1) {
+     list.push(dets[i].codigoPractica);
+    }
+    return list;
+  }
 
 
   render() {

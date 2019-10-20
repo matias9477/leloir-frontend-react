@@ -5,9 +5,10 @@ import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
 
 import MenuOpciones from '../MenuOpciones';
-import { urlObrasSoc } from './../../Constants/URLs';
+import { urlAnalisis } from './../../Constants/URLs';
 import { nroPorPagina } from "../../Constants/utils";
-import { nullTo, titleCase} from '../../Services/MetodosDeValidacion';
+import { titleCase} from '../../Services/MetodosDeValidacion';
+import { getHumanDate } from '../../Services/MetodosPaciente';
 import './../styles.css';
 
 export default class TablaObraSocial extends React.Component {
@@ -34,16 +35,16 @@ export default class TablaObraSocial extends React.Component {
     }
 
     getAnalisis = () => {
-        axios.get(urlObrasSoc).then(resolve => {
+        axios.get(urlAnalisis).then(resolve => {
             this.setState({
                 analisis: Object.values(resolve.data).flat(),
                 analisisFiltrados: Object.values(resolve.data).flat(),
                 totalCount: (Object.values(resolve.data).flat()).length,
             });
 
-            var filtro = orderBy(this.state.analisisFiltrados, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
+            var filtro = orderBy(this.state.analisisFiltrados, [(analisis) => analisis.bitActivo, (analisis) => analisis.analisisId
             ], ["desc", "desc"]);
-            var arr = orderBy(this.state.analisis, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
+            var arr = orderBy(this.state.analisis, [(analisis) => analisis.bitActivo, (analisis) => analisis.idanalisis
                 ], ["desc", "desc"]);
 
             this.setState({
@@ -53,24 +54,6 @@ export default class TablaObraSocial extends React.Component {
 
             }, (error) => {
                 console.log('Error', error.message);
-            })
-    }
-
-    bitInverse = obraSocial => {
-        axios.put(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`).then(response => {
-            if (obraSocial.bitActivo) {
-                alert(`Se ha dado de baja el análisis ${obraSocial.razonSocial} con éxito.`);
-                this.getAnalisis()
-            } else {
-                alert(`Se ha dado de alta el análisis ${obraSocial.razonSocial} con éxito.`);
-                this.getAnalisis()
-            }    
-            }, (error) => {
-                if (obraSocial.bitActivo) {
-                    alert(`No se ha podido dar de baja el análisis ${obraSocial.razonSocial}. Intentelo nuevamente.`)
-                } else {
-                    alert(`No se ha podido dar de alta el análisis. ${obraSocial.razonSocial} Intentelo nuevamente.`)
-                }
             })
     }
 
@@ -139,23 +122,22 @@ export default class TablaObraSocial extends React.Component {
         });  
     } 
 
-    estado(bitActivo){
-        if(bitActivo){
-            return "Dar de baja"
-        }
-        else {
-            return "Dar de alta"
-        }
-    }
-
     handleSearch(valor){
         this.setState({
             filtro: valor.target.value,
         });
 
-        const an = this.state.analisis.filter(function (muestra) {
-            return (muestra.razonSocial=== undefined ? null : titleCase(muestra.razonSocial).includes(titleCase(valor.target.value)) ||
-                (muestra.idObraSocial=== undefined ? null : muestra.idObraSocial.toString().includes(valor.target.value)))
+        const an = this.state.analisis.filter(function (analisis) {
+            return (analisis.analisisId === undefined ? null : analisis.analisisId.toString().includes(valor.target.value) ||
+
+                (analisis.paciente.nombre === undefined ? null : titleCase(analisis.paciente.nombre).includes(titleCase(valor.target.value))) ||
+
+                (analisis.paciente.apellido === undefined ? null : titleCase(analisis.paciente.apellido).includes(titleCase(valor.target.value))) ||
+
+                (analisis.paciente.estado === undefined ? null : titleCase(analisis.paciente.estado.nombre).includes(titleCase(valor.target.value))) ||
+                
+                (analisis.paciente.createdAt === undefined ? null : analisis.createdAt.toString().includes(valor.target.value))
+                )
           });
 
         this.setState({
@@ -194,37 +176,34 @@ export default class TablaObraSocial extends React.Component {
                     <table className="ui single line table" >
                     <thead className='centerAlignment'>
                         <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("idObraSocial")} >Id</th>
-                            <th onClick={() => this.handleColumnHeaderClick("razonSocial")} >Fecha</th>
-                            <th onClick={() => this.handleColumnHeaderClick("cuit")} >Paciente</th>
-                            <th onClick={() => this.handleColumnHeaderClick("telefono")} >Estado</th>
-                            <th onClick={() => this.handleColumnHeaderClick("bitActivo")} >Opciones </th>
+                            <th onClick={() => this.handleColumnHeaderClick("analisisId")} >Id</th>
+                            <th onClick={() => this.handleColumnHeaderClick("createdAt")} >Fecha</th>
+                            <th onClick={() => this.handleColumnHeaderClick("paciente.nombre")} >Paciente</th>
+                            <th onClick={() => this.handleColumnHeaderClick("estado.nombre")} >Estado</th>
+                            <th>Opciones </th>
                         </tr>
                     </thead>
                     
                     <tbody className='centerAlignment'>
                     
                         {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (analisis, index) => (
-                        <tr key={index} value={analisis} className={ analisis.bitActivo ? null : "listadosBaja"} > 
+                        <tr key={index} value={analisis}> 
                             <td data-label="Id">
-                                {analisis.idObraSocial}
+                                {analisis.analisisId}
+                            </td>
+                            <td data-label="Fecha">
+                                {getHumanDate(analisis.createdAt)}
                             </td>
                             <td data-label="Nombre">
-                                {analisis.razonSocial}
-                            </td>
-                            <td data-label="Cuit">
-                                {nullTo(analisis.cuit)}
+                            {analisis.paciente.nombre}&nbsp;&nbsp;{analisis.paciente.apellido}
                             </td>
                             <td data-label="Telefono">
-                                {nullTo(analisis.telefono)}
+                                {analisis.estado.nombre}
                             </td>
                             <td>
                                 <Dropdown item icon='ellipsis horizontal' simple>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item onClick={() => window.confirm(this.mensajeConfirmacion(analisis)) ? this.bitInverse(analisis): null} >
-                                            {this.estado(analisis.bitActivo)}
-                                        </Dropdown.Item>
-                                        <Dropdown.Item as= {Link} to={`/obras_sociales/consulta/${analisis.idObraSocial}`} exact='true'>
+                                        <Dropdown.Item as= {Link} to={`/analisis/consulta/${analisis.analisisId}`} exact='true'>
                                             Ver/Modificar
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
