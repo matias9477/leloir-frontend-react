@@ -26,13 +26,17 @@ export function validateRequiredMail(mail){
 }
 
 function getUserAvailability(user){
-    axios.get('/user/checkUsernameAvailability', { params: {username: user} }).then(resolve => {
-        console.log(resolve.data.available)
-        return resolve.data.available
+    var aux="";
+    axios.get('/user/checkUsernameAvailability', { params: { username: user } }).then(resolve => {
+        
+        aux = resolve.data.available;
+        console.log(aux);
+        return aux;
+        
+
     }, (error) => {
         console.log('Error validacion user', error.message);
     })
-    
 };
 
 
@@ -46,4 +50,5 @@ export function validateRequiredUser(nombre){
     } else {
         return false
     }
+
 }

@@ -15,3 +15,6 @@
    export const urlSignIn = "/auth/signin";
 
    export const urlLoggedUser = '/user/me';
+   export const urlSignIn = "/auth/signin"
+
+   export const urlAnalisis = '/analisis/all'

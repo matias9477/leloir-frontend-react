@@ -85,6 +85,11 @@ body{
     margin-right: 25px;
     margin-left: 25px;
 }
+.centeredPosition {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
 
 .afluence{
     position: left;
