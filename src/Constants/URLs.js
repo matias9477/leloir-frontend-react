@@ -15,3 +15,4 @@
    export const urlSignIn = "/auth/signin";
 
    export const urlAnalisisPendientes = "/analisis/pendientes";
+   export const urlGetAnalisis= "/analisis/id/";

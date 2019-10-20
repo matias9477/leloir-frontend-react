@@ -4,7 +4,7 @@ import {Button, Card, Form, List} from 'semantic-ui-react';
 import axios from "axios";
 import {Modal} from './ModalAnalysisInput';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {urlAnalisisPendientes} from "../../Constants/URLs";
+import {urlAnalisisPendientes, urlGetAnalisis} from "../../Constants/URLs";
 
 
 class DiarioPracticas extends Component {
@@ -18,10 +18,10 @@ class DiarioPracticas extends Component {
         };
     }
 
-    showModal = (analysis) => {
+    showModal = (idAnalisis) => {
         this.setState({
             show: true,
-            currentAnalysis: analysis
+            currentAnalisisID: idAnalisis
         });
     };
 
@@ -66,21 +66,20 @@ class DiarioPracticas extends Component {
                     </Card.Content>
                     <Card.Content extra>
                         {
-
                             analisis.resultadosCargados ? (
                                 <div className='ui two buttons'>
                                     <Button basic color='green'>
                                         Emitir Analisis
                                     </Button>
                                     <Button basic color='blue'
-                                            onClick={() => this.showModal(analisis)}>
+                                            onClick={() => this.showModal(analisis.idAnalisis)}>
                                         Modificar Resultados
                                     </Button>
                                 </div>
                             ) : (
                                 <div className='ui two buttons'>
                                     <Button basic color='blue'
-                                            onClick={() => this.showModal(analisis)}>
+                                            onClick={() => this.showModal(analisis.idAnalisis)}>
                                         Cargar Resultados
                                     </Button>
                                 </div>
@@ -94,20 +93,31 @@ class DiarioPracticas extends Component {
     );
 
 
-    renderAnalysisInputModal = (currentAnalysis) => {
+    renderAnalysisInputModal = (currentAnalisisID) => {
+        axios.get(urlGetAnalisis + currentAnalisisID).then(resolve => {
+            this.setState({currentAnalysis:resolve.data.analisisId});
+            return (<Form onSubmit={() => this.handleSubmit(currentAnalisisID, resolve)}>
+                {resolve.data.determinaciones.map(detalleAnalisis =>
+                    <Form.Field inline required label={detalleAnalisis.determinacion.descripcionPractica}
+                                control='input'
+                                placeholder='Ingrese resultado...'
+                    />
+                )}
+                <br/>
+                <br/>
+                <Button color='green' type='submit'>Guardar</Button>
+            </Form>)
+        }, (error) => {
+            console.log('Error get tipo', error.message);
+            return (<div> Error!</div>)
+        });
 
-        return (<Form onSubmit={this.handleSubmit}>
-            {currentAnalysis.determinaciones.map(nombre =>
-                <Form.Field inline required label={nombre} control='input'
-                            placeholder='Ingrese resultado...'
-                />
-            )}
-            <br/>
-            <br/>
-            <Button color='green' type='submit'>Guardar</Button>
-        </Form>)
+
     };
 
+    handleSubmit(currentAnalisisID, analisis) {
+        console.log(currentAnalisisID)
+    }
 
     render() {
         return (
