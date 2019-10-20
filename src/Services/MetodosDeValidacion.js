@@ -30,7 +30,7 @@ export function nullTo(nro){
 }
 
 export function validateRequiredCombos(valor){
-  if (valor.length === 0 || valor === ''){
+  if (valor === null || valor.length === 0 || valor === ''){
       return false
   }
   return true
@@ -107,10 +107,10 @@ export function validateFechaNacimiento(fechaNacimiento) {
 }
 
 export function checkAtributo(atributo){
-  if (atributo !== undefined){
+  if(atributo !== undefined){
       return atributo;
   } 
-  else {
+  else{
       return '';
   }
 }

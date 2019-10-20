@@ -16,3 +16,5 @@
 
    export const urlAnalisisPendientes = "/analisis/pendientes";
    export const urlGetAnalisis= "/analisis/id/";
+
+   export const urlAnalisis = '/analisis/all';

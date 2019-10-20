@@ -186,7 +186,15 @@ class AltaPersona extends Component {
         alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
         this.vaciadoCampos();
       }, (error) => {
-        alert('No se ha podido registrar el paciente.');
+        if (error.response.status === 500){
+          alert('Ya existe un paciente con ese número de documento. Revise los datos ingresados.');
+          this.setState({
+            errorNroDoc: false,
+          })
+        } else {
+          alert('No se ha podido registrar el paciente.');
+        }
+      
     });
 
   }

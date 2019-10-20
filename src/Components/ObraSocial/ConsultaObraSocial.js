@@ -180,7 +180,7 @@ class ConsultaObraSocial extends Component {
     const { razonSocial, cuit, telefono, mail, valorUb} = this.state;
 
     const errorRazonSocial = validateNombre(razonSocial);
-    const errorCuit = validateOnlyNumbersRequired(cuit);
+    const errorCuit = validateOnlyNumbers(cuit);
     const errorTelefono = validateOnlyNumbers(telefono);
     const errorMail = validateMail(mail);
     const errorValorUb = validateOnlyNumbers(valorUb);
