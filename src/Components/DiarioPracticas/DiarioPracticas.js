@@ -3,7 +3,6 @@ import MenuLateral from "../MenuOpciones";
 import {Button, Card, Form, List} from 'semantic-ui-react';
 import axios from "axios";
 import {Modal} from './ModalAnalysisInput';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import {urlAnalisisPendientes, urlGetAnalisis} from "../../Constants/URLs";
 
 
@@ -14,7 +13,8 @@ class DiarioPracticas extends Component {
         this.state = {
             pendientes: [],
             show: false,
-            currentAnalysis: null,
+            currentAnalisisID: null,
+            currentAnalisis: null,
         };
     }
 
@@ -26,17 +26,20 @@ class DiarioPracticas extends Component {
     };
 
     hideModal = () => {
-        this.setState({show: false});
+        this.setState({
+            show: false,
+            currentAnalisisID: null,
+            currentAnalisis: null,
+
+        });
     };
 
     componentDidMount() {
         this.getAllPendientes()
-        //uncomment this to use API
     }
 
     getAllPendientes = () => {
         axios.get(urlAnalisisPendientes).then((response) => {
-
             this.setState({
                 pendientes: Object.values(response.data).flat(),
             });
@@ -45,10 +48,10 @@ class DiarioPracticas extends Component {
         })
     };
 
-    renderCards = (pendientes) => (
+    renderCards = () => (
         <Card.Group stackable itemsPerRow={2}>
 
-            {pendientes.map((analisis) => (
+            {this.state.pendientes.map((analisis) => (
                 <Card fluid>
                     <Card.Content>
                         <Card.Header>{analisis.paciente}</Card.Header>
@@ -93,11 +96,18 @@ class DiarioPracticas extends Component {
     );
 
 
-    renderAnalysisInputModal = (currentAnalisisID) => {
-        axios.get(urlGetAnalisis + currentAnalisisID).then(resolve => {
-            this.setState({currentAnalysis:resolve.data.analisisId});
-            return (<Form onSubmit={() => this.handleSubmit(currentAnalisisID, resolve)}>
-                {resolve.data.determinaciones.map(detalleAnalisis =>
+    renderAnalysisInputModal = () => {
+        if (this.state.currentAnalisisID != null) {
+            axios.get(urlGetAnalisis + this.state.currentAnalisisID).then(resolve => {
+                this.setState({currentAnalisis: resolve.data})
+            }, (error) => {
+                console.log('Error get tipo', error.message);
+                return (<div><h1> Error!</h1></div>)
+            });
+        }
+        if (this.state.currentAnalisis != null) {
+            return (<Form onSubmit={() => this.handleSubmit(this.state.currentAnalisisID, this.state.currentAnalisis)}>
+                {this.state.currentAnalisis.determinaciones.map(detalleAnalisis =>
                     <Form.Field inline required label={detalleAnalisis.determinacion.descripcionPractica}
                                 control='input'
                                 placeholder='Ingrese resultado...'
@@ -107,16 +117,12 @@ class DiarioPracticas extends Component {
                 <br/>
                 <Button color='green' type='submit'>Guardar</Button>
             </Form>)
-        }, (error) => {
-            console.log('Error get tipo', error.message);
-            return (<div> Error!</div>)
-        });
-
-
+        }
     };
 
-    handleSubmit(currentAnalisisID, analisis) {
+    handleSubmit(currentAnalisisID, e) {
         console.log(currentAnalisisID)
+        console.log(e.target)
     }
 
     render() {
@@ -124,13 +130,12 @@ class DiarioPracticas extends Component {
             <div className='union'>
                 <MenuLateral/>
                 <div className='tablaListadoHistorico'>
-                    {this.renderCards(this.state.pendientes)}
+                    {this.renderCards()}
                 </div>
 
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                     <div>
-                        {this.state.currentAnalysis ? this.renderAnalysisInputModal(this.state.currentAnalysis)
-                            : <CircularProgress size={50}/>}
+                        {this.renderAnalysisInputModal()}
                     </div>
 
                 </Modal>
