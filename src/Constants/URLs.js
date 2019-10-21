@@ -18,3 +18,4 @@
    export const urlGetAnalisis= "/analisis/id/";
 
    export const urlAnalisis = '/analisis/all';
+   export const urlCargarResultados = '/analisis/cargar-resultados/';

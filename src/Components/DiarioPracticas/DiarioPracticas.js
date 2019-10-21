@@ -3,7 +3,7 @@ import MenuLateral from "../MenuOpciones";
 import {Button, Card, Form, List} from 'semantic-ui-react';
 import axios from "axios";
 import {Modal} from './ModalAnalysisInput';
-import {urlAnalisisPendientes, urlGetAnalisis} from "../../Constants/URLs";
+import {urlAnalisisPendientes, urlCargarResultados, urlGetAnalisis} from "../../Constants/URLs";
 
 
 class DiarioPracticas extends Component {
@@ -96,7 +96,7 @@ class DiarioPracticas extends Component {
     );
 
 
-    renderAnalysisInputModal = () => {
+    renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
         if (this.state.currentAnalisisID != null) {
             axios.get(urlGetAnalisis + this.state.currentAnalisisID).then(resolve => {
                 this.setState({currentAnalisis: resolve.data})
@@ -120,9 +120,16 @@ class DiarioPracticas extends Component {
         }
     };
 
-    handleSubmit(currentAnalisisID, e) {
-        console.log(currentAnalisisID)
-        console.log(e.target)
+    handleSubmit(currentAnalisisID, e) { //No se como tomar los datos del form y pasarselos al metodo
+        console.log(currentAnalisisID);
+        console.log(e.target);
+        let data = [
+            {
+                "idDeterminacion": 0,
+                "resultado": 0
+            }
+        ]; //Tiene que ser de este formato la carga de resultados, es lo que se agrega en los form input
+        axios.post(urlCargarResultados + currentAnalisisID,)
     }
 
     render() {
@@ -137,9 +144,7 @@ class DiarioPracticas extends Component {
                     <div>
                         {this.renderAnalysisInputModal()}
                     </div>
-
                 </Modal>
-
             </div>
         );
     }
