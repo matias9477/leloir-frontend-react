@@ -255,7 +255,7 @@ class NuevoUsuario extends Component {
         ).then((response) => {
             alert('Se creo usuario correctamente');
         }, (error) => {
-            alert('No se ha podido registrar el paciente.');
+            alert('No se ha podido registrar el usuario. Intente nuevamente.');
         });
     };
 
