@@ -23,6 +23,7 @@ class DiarioPracticas extends Component {
             show: true,
             currentAnalisisID: idAnalisis
         });
+        this.getAnalisis(idAnalisis)
     };
 
     hideModal = () => {
@@ -95,16 +96,20 @@ class DiarioPracticas extends Component {
         </Card.Group>
     );
 
-
-    renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
-        if (this.state.currentAnalisisID != null) {
-            axios.get(urlGetAnalisis + this.state.currentAnalisisID).then(resolve => {
+    getAnalisis = (idAnalisis) => {
+        if (idAnalisis != null) {
+            axios.get(urlGetAnalisis + idAnalisis).then(resolve => {
                 this.setState({currentAnalisis: resolve.data})
             }, (error) => {
                 console.log('Error get tipo', error.message);
                 return (<div><h1> Error!</h1></div>)
             });
         }
+    }
+
+
+    renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
+        
         if (this.state.currentAnalisis != null) {
             return (<Form onSubmit={() => this.handleSubmit(this.state.currentAnalisisID, this.state.currentAnalisis)}>
                 {this.state.currentAnalisis.determinaciones.map(detalleAnalisis =>
