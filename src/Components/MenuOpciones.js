@@ -20,7 +20,7 @@ export default class MenuOpciones extends Component {
 
 
             <div className="Menu">
-                <Menu inverted>
+                <Menu inverted fixed='top'>
                     <Menu.Item 
                         name='home'
                         as={Link} to='/'

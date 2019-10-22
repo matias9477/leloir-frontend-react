@@ -4,6 +4,7 @@ import {Button, Card, Form, List} from 'semantic-ui-react';
 import axios from "axios";
 import {Modal} from './ModalAnalysisInput';
 import {urlAnalisisPendientes, urlCargarResultados, urlGetAnalisis} from "../../Constants/URLs";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 class DiarioPracticas extends Component {
@@ -15,6 +16,7 @@ class DiarioPracticas extends Component {
             show: false,
             currentAnalisisID: null,
             currentAnalisis: null,
+            resultados: [],
         };
     }
 
@@ -31,6 +33,7 @@ class DiarioPracticas extends Component {
             show: false,
             currentAnalisisID: null,
             currentAnalisis: null,
+            resultados: [],
 
         });
     };
@@ -99,24 +102,58 @@ class DiarioPracticas extends Component {
     getAnalisis = (idAnalisis) => {
         if (idAnalisis != null) {
             axios.get(urlGetAnalisis + idAnalisis).then(resolve => {
-                this.setState({currentAnalisis: resolve.data})
+                resolve.data.determinaciones.map(detalleanalisis => {
+                    this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado);
+                });
+                this.setState({currentAnalisis: resolve.data});
             }, (error) => {
                 console.log('Error get tipo', error.message);
                 return (<div><h1> Error!</h1></div>)
             });
         }
-    }
+    };
+
+    addResultado = (codigopractica, descripcionpractica, resultado) => {
+        this.setState(prevState => ({
+                resultados: [
+                    ...prevState.resultados,
+                    {idDeterminacion: codigopractica, descripcionPractica: descripcionpractica, resultado: resultado}
+                ]
+
+            }
+        ))
+    };
+
+    handleCambioResultado = (e) => {
+        if (["idDeterminacion", "descripcionPractica", "resultado"].includes(e.target.className)) {
+            let resultados = [...this.state.resultados];
+            resultados[e.target.dataset.id][e.target.className] = e.target.value.toUpperCase();
+            this.setState({resultados}, () => console.log(this.state.resultados))
+        } else {
+            this.setState({[e.target.name]: e.target.value.toUpperCase()})
+        }
+    };
 
 
     renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
-        
         if (this.state.currentAnalisis != null) {
-            return (<Form onSubmit={() => this.handleSubmit(this.state.currentAnalisisID, this.state.currentAnalisis)}>
-                {this.state.currentAnalisis.determinaciones.map(detalleAnalisis =>
-                    <Form.Field inline required label={detalleAnalisis.determinacion.descripcionPractica}
-                                control='input'
-                                placeholder='Ingrese resultado...'
-                    />
+            return (<Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado} >
+                {this.state.resultados.map((detalleAnalisis, idx) => {
+                        let determinacionId = `det-${idx}`;
+                        return (
+                            <div key={idx}>
+                                <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
+                                <input
+                                    type="text"
+                                    name={determinacionId}
+                                    data-id={idx}
+                                    id={determinacionId}
+                                    value={this.state.resultados[idx].resultado}
+                                    className="resultado"
+                                />
+                            </div>
+                        )
+                    }
                 )}
                 <br/>
                 <br/>
@@ -125,17 +162,20 @@ class DiarioPracticas extends Component {
         }
     };
 
-    handleSubmit(currentAnalisisID, e) { //No se como tomar los datos del form y pasarselos al metodo
-        console.log(currentAnalisisID);
-        console.log(e.target);
-        let data = [
-            {
-                "idDeterminacion": 0,
-                "resultado": 0
-            }
-        ]; //Tiene que ser de este formato la carga de resultados, es lo que se agrega en los form input
-        axios.post(urlCargarResultados + currentAnalisisID,)
-    }
+    handleSubmit = (e) => {
+        let data = this.state.resultados;
+        data.map(resultado => delete resultado.descripcionPractica);
+        console.log(data);
+        axios.post(urlCargarResultados + this.state.currentAnalisisID,data).then(resolve => {
+            this.getAllPendientes();
+            this.setState({
+                show:false,
+            })
+        }, (error) => {
+            console.log('Error submit', error.message);
+        });
+
+    };
 
     render() {
         return (
@@ -147,7 +187,8 @@ class DiarioPracticas extends Component {
 
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                     <div>
-                        {this.renderAnalysisInputModal()}
+                        {this.state.currentAnalisis ? this.renderAnalysisInputModal() :
+                            <CircularProgress className={'centeredPosition'} size={50}/>}
                     </div>
                 </Modal>
             </div>
