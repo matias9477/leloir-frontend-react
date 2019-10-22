@@ -22,6 +22,7 @@ import FormNuevoAnalisis from './Components/Analisis/FormNuevoAnalisis';
 import AjustesContainer from "./Components/Ajustes/AjustesContainer";
 import TablaMuestra from './Components/Muestra/TablaMuestra';
 import TablaAnalisis from './Components/Analisis/TablaAnalisis';
+import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
 
 
 ReactDOM.render(
@@ -41,8 +42,9 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/determinaciones/consulta/:codigoPractica" component={FormConsultaDeterminacion}/>
         <AuthenticatedRoute exact path="/analisis" component={TablaAnalisis}/>
         <AuthenticatedRoute exact path="/analisis/add" component={FormNuevoAnalisis}/>
+        <AuthenticatedRoute exact path="/analisis/consulta/:id" component={ConsultaAnalisis}/>
         <AuthenticatedRoute exact path="/muestras" component={TablaMuestra}/>
-        <AuthenticatedRoute exact patj="/muestras" component={AltaMuestra}/>
+        <AuthenticatedRoute exact path="/muestras" component={AltaMuestra}/>
         <AuthenticatedRoute exact path="/Logout" component={LogoutContainer}/>
         <AuthenticatedRoute exact path="/ajustes" component={AjustesContainer}/>
         </Switch>
