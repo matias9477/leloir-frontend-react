@@ -104,6 +104,7 @@ class DiarioPracticas extends Component {
             axios.get(urlGetAnalisis + idAnalisis).then(resolve => {
                 resolve.data.determinaciones.map(detalleanalisis => {
                     this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado);
+                    return true; //para sacar el warning
                 });
                 this.setState({currentAnalisis: resolve.data});
             }, (error) => {
@@ -137,13 +138,14 @@ class DiarioPracticas extends Component {
 
     renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
         if (this.state.currentAnalisis != null) {
-            return (<Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado} >
+            return (
+            <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado} >
                 {this.state.resultados.map((detalleAnalisis, idx) => {
                         let determinacionId = `det-${idx}`;
                         return (
                             <div key={idx}>
                                 <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
-                                <input
+                                 <input
                                     type="text"
                                     name={determinacionId}
                                     data-id={idx}
@@ -167,14 +169,13 @@ class DiarioPracticas extends Component {
         data.map(resultado => delete resultado.descripcionPractica);
         console.log(data);
         axios.post(urlCargarResultados + this.state.currentAnalisisID,data).then(resolve => {
-            this.getAllPendientes();
-            this.setState({
-                show:false,
-            })
+
+
         }, (error) => {
             console.log('Error submit', error.message);
         });
-
+        this.hideModal();
+        this.getAllPendientes();
     };
 
     render() {
@@ -187,6 +188,7 @@ class DiarioPracticas extends Component {
 
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                     <div>
+                        <br/>
                         {this.state.currentAnalisis ? this.renderAnalysisInputModal() :
                             <CircularProgress className={'centeredPosition'} size={50}/>}
                     </div>

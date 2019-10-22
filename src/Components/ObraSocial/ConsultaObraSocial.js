@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {Link} from 'react-router-dom';
 
 import MenuOpciones from '../MenuOpciones';
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail, validateOnlyNumbersRequired  } from '../../Services/MetodosDeValidacion';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
 class ConsultaObraSocial extends Component {
