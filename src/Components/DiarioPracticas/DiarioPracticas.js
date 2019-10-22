@@ -151,6 +151,7 @@ class DiarioPracticas extends Component {
                                     data-id={idx}
                                     id={determinacionId}
                                     value={this.state.resultados[idx].resultado}
+                                    placeholder="Ingrese resultado..."
                                     className="resultado"
                                 />
                             </div>
@@ -166,9 +167,15 @@ class DiarioPracticas extends Component {
 
     handleSubmit = (e) => {
         let data = this.state.resultados;
+        let filteredData = data.filter(function(resultado) {
+            if(resultado!=null){
+                return resultado;
+            }
+        })
+
         data.map(resultado => delete resultado.descripcionPractica);
-        console.log(data);
-        axios.post(urlCargarResultados + this.state.currentAnalisisID,data).then(resolve => {
+        console.log(filteredData);
+        axios.post(urlCargarResultados + this.state.currentAnalisisID,filteredData).then(resolve => {
 
 
         }, (error) => {
