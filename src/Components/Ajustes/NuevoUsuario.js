@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {addDays} from 'date-fns';
-import {Button, Form, Header} from 'semantic-ui-react'
-import {empleadoTypes, signUpRequestType} from "../../Types";
+import {Button, Form} from 'semantic-ui-react'
 import axios from "axios";
-import {urlDocs, urlObrasSoc, urlPaises, urlSexos} from "../../Constants/URLs";
-import {titleCase} from "../../Services/MetodosDeValidacion";
-import {bool, number, oneOf, shape, string} from "prop-types";
+import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
 
 class NuevoUsuario extends Component {
