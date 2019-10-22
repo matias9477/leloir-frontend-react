@@ -6,17 +6,11 @@
    export const urlTiposAnimales = "/tipos-animales/all";
 
    export const urlObraSocial = "obras_sociales/id/";
-   export const urlMuestras = "/muestras/all";
    export const urlDeterminaciones = "/determinaciones/all";
-   export const urlTiposAnimales = "/tipos-animales/all"
-
-   export const urlObraSocial = "obras_sociales/id/"
 
    export const urlMuestras = "/muestras/all"
    export const urlTiposMuestras = "/tipos_muestras/all"
    export const urlMuestrasAdd = '/muestras/add';
-
-   export const urlDeterminaciones = "/determinaciones/all"
 
    export const urlPacientes = "/pacientes/all";
 

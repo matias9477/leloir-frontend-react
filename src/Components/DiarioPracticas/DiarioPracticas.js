@@ -174,7 +174,6 @@ class DiarioPracticas extends Component {
         })
 
         data.map(resultado => delete resultado.descripcionPractica);
-        console.log(filteredData);
         axios.post(urlCargarResultados + this.state.currentAnalisisID,filteredData).then(resolve => {
 
 

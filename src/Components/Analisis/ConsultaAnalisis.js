@@ -7,7 +7,7 @@ import Select from 'react-select';
 import MenuOpciones from '../MenuOpciones';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
-import { urlAnalisisId, urlTiposMuestras, urlMuestras, urlMuestrasAdd } from "../../Constants/URLs";
+import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd } from "../../Constants/URLs";
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
@@ -43,7 +43,7 @@ class ConsultaAnalisis extends Component {
     }
 
     getAnalisis = () => {
-        axios.get(urlAnalisisId + this.props.match.params.id).then(resolve => {
+        axios.get(urlGetAnalisis + this.props.match.params.id).then(resolve => {
           this.setState({
             analisis: resolve.data,
           });
