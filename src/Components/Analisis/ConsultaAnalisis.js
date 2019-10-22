@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Input } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, Table } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Select from 'react-select';
 
 import MenuOpciones from '../MenuOpciones';
 import { getHumanDate } from '../../Services/MetodosPaciente';
-import { checkAtributo, nullTo } from '../../Services/MetodosDeValidacion';
+import { checkAtributo, nullTo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
+import { urlAnalisisId, urlTiposMuestras, urlMuestras, urlMuestrasAdd } from "../../Constants/URLs";
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
@@ -14,21 +15,51 @@ class ConsultaAnalisis extends Component {
         super(props);
         this.state = ({        
             analisis: '',
+            tipos: [],
+            muestras: [],
+
+            show: false,
+
+            tipo: '',
+
+            errorTipo: true,
           })
     }
 
     componentDidMount() {
-        const api = "/analisis/id/" + this.props.match.params.id ;
-        this.handleUpdateClick(api);
+        this.getAnalisis();
+        this.comboTipos();
+        this.getMuestras();
     }
 
-    handleUpdateClick = (api) => {
-        axios.get(api).then(resolve => {
+    comboTipos = () =>{
+        axios.get(urlTiposMuestras).then(resolve => {
+            this.setState({
+                tipos: Object.values(resolve.data).flat(),
+            });
+        }, (error) => {
+            console.log('Error combo tipos muestras', error.message);
+        })
+    }
+
+    getAnalisis = () => {
+        axios.get(urlAnalisisId + this.props.match.params.id).then(resolve => {
           this.setState({
             analisis: resolve.data,
           });
         }, (error) => {
-            console.log('Error fetch paciente: ', error.message);
+            console.log('Error fetch analisis: ', error.message);
+        })
+    
+    }
+
+    getMuestras = () => {
+        axios.get(urlMuestras).then(resolve => {
+          this.setState({
+            muestras: Object.values(resolve.data).flat(),
+          });
+        }, (error) => {
+            console.log('Error fetch muestras: ', error.message);
         })
     
     }
@@ -43,10 +74,98 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+    dataMuestra = (api) => {
+        var data = {
+            "analisisId": this.props.match.params.id,
+            "bitActivo": true,
+            "estadoId":  1,
+            "tipoMuestraId": this.state.tipo.tipoMuestraId,
+        };
+
+        axios.post(api, data).then((response) => {
+            alert('Se generó la muestra con éxito.');
+            this.setState({tipo: ''});
+        }, (error) => {
+            alert('No se ha podido generar la muestra.');
+        })
+        
+
+    };
+
+    postMuestra = () =>{
+        const errorTipo = validateRequiredCombos(this.state.tipo);
+
+        if (errorTipo) {
+            this.dataMuestra(urlMuestrasAdd);            
+        } else {
+            alert("Revise los datos ingresados.");
+            this.setState({
+                errorTipo
+            })
+        }
+    }
+
+    cambioTipo = (e) => {
+        this.setState( {
+            tipo: e.target.value
+        })
+    }
+
+    showMuestras = () => {
+       
+        const muestras = [];
+
+        for(var i = 0; i<this.state.muestras.length; i++){
+            if(this.state.muestras[i].analisisId.toString() === this.props.match.params.id){
+                muestras.push(this.state.muestras[i])
+            }
+        }
+
+        return muestras;
+
+    }
+
+    getOptionLabelTipoMuestra = option => option.nombre;
+
+    getOptionValueTipoMuestra = option => option.tipoMuestraId;
+
+    handleChangeTipo = tipo => {
+        this.setState({ tipo })
+      }
+
+    createMuestra = () => {
+        return(
+            <div>
+                <Grid width='equal'>
+                    <Grid.Column width={10}>
+                        <Select
+                            name='tipo muestra'
+                            value={this.state.tipo}
+                            onChange={this.handleChangeTipo}
+                            placeholder= "Seleccione tipo muestra..."
+                            isClearable={true}
+                            options={this.state.tipos}
+                            getOptionValue={this.getOptionValueTipoMuestra}
+                            getOptionLabel={this.getOptionLabelTipoMuestra}
+                        />
+
+                    </Grid.Column>
+
+                    <Grid.Column width={6}>
+                        <Button primary size='small' floated='center' onClick={this.postMuestra} >
+                            Registrar muestra
+                        </Button>  
+                    </Grid.Column>
+                </Grid>
+                
+            </div>
+        )
+    }
+
 
     render() {
-        console.log(this.props.match.params.id)
-        console.log(this.state.analisis)
+        var m = this.showMuestras();
+
         return (
           <div className='union'>
             <MenuOpciones/>
@@ -57,7 +176,8 @@ class ConsultaAnalisis extends Component {
                 <Button className='boton' as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
                     <Icon name='arrow alternate circle left' /> Volver
                 </Button>
-
+                
+                <br/>
                 <Header as='h2'>Análisis</Header>
 
                 <Form.Group widths='equal'>
@@ -75,19 +195,59 @@ class ConsultaAnalisis extends Component {
                     <Form.Field label='Número de documento' value={this.state.analisis ? nullTo(this.state.analisis.paciente.nroDocumento) : ''} control='input' /> 
                 </Form.Group> 
 
+                <br/>
                 <Header>Determinaciones</Header>
                 {this.state.analisis.determinaciones.map(determinacion => (
                     <Form.Field label={determinacion.determinacion.descripcionPractica + ' ' + determinacion.determinacion.codigoPractica} value={determinacion.resultado} control='input' placeholder='Ingrese resultado...'/>
                 ))}
-
+                
+                <br/>
                 <Header>Muestras</Header>
-                
-        
-                <br/> <br/>
-                <Button primary size='small' >
-                    Añadir muestra
-                </Button>  
-                
+
+                {m.length === 0 ? <div>No existen muestras para este análisis
+                    <br/>
+                    <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({show: true}) }
+                    >
+                        <Icon name='plus' /> Añadir muestra
+                    </Button>
+                </div>: 
+
+                <Table compact>
+                    <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell>Id</Table.HeaderCell>
+                        <Table.HeaderCell>Tipo</Table.HeaderCell>
+                        <Table.HeaderCell>Estado</Table.HeaderCell>
+                    </Table.Row>
+                    </Table.Header>
+                    
+                    <Table.Body>
+                    {m.map(muestra => (
+                    <Table.Row>
+                        <Table.Cell>{muestra.idMuestra}</Table.Cell>
+                        <Table.Cell>{muestra.tipoMuestra}</Table.Cell>
+                        <Table.Cell>{muestra.estado}</Table.Cell>
+                    </Table.Row>
+                    ))}
+                    </Table.Body>
+
+                    <Table.Footer fullWidth>
+                        <Table.Row>
+                            <Table.HeaderCell />
+                            <Table.HeaderCell colSpan='4'>
+                            <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({show: true}) }
+                            >
+                                <Icon name='plus' /> Añadir muestra
+                            </Button>
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Footer>
+                </Table>
+                }                
+
+                <br/><br/>
+                {this.state.show ? this.createMuestra() : null}
+                <br/><br/>
             </Form>
             : null }
             }
@@ -96,6 +256,11 @@ class ConsultaAnalisis extends Component {
           </div>
         );
       }
+ 
+}
+
+const styleMuestras = {
+    backgroundColor: 'white',
 }
 
 export default ConsultaAnalisis;
