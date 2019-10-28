@@ -52,9 +52,48 @@ class DiarioPracticas extends Component {
         })
     };
 
+    renderButtons = (estado, idAnalisis) => {
+        switch (estado) {
+            case "EN_PROCESO":
+                return (
+                    <div className='ui two buttons'>
+                        <Button basic color='green'>
+                            Revisar Analisis
+                        </Button>
+                        <Button basic color='blue'
+                                onClick={() => this.showModal(idAnalisis)}>
+                            Modificar Resultados
+                        </Button>
+                    </div>
+                );
+            case "PREPARADO":
+                return (
+                    <div className='ui two buttons'>
+                        <Button basic color='green'>
+                            Emitir Analisis
+                        </Button>
+                        <Button basic color='blue'
+                                onClick={() => this.showModal(idAnalisis)}>
+                            Modificar Resultados
+                        </Button>
+                    </div>
+                );
+            case "NUEVO":
+                return (
+                    <div className='ui two buttons'>
+                        <Button basic color='blue'
+                                onClick={() => this.showModal(idAnalisis)}>
+                            Cargar Resultados
+                        </Button>
+                    </div>
+                );
+            default:
+                return null
+        }
+    };
+
     renderCards = () => (
         <Card.Group stackable itemsPerRow={2}>
-
             {this.state.pendientes.map((analisis) => (
                 <Card fluid>
                     <Card.Content>
@@ -72,27 +111,7 @@ class DiarioPracticas extends Component {
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>
-                        {
-                            analisis.resultadosCargados ? (
-                                <div className='ui two buttons'>
-                                    <Button basic color='green'>
-                                        Emitir Analisis
-                                    </Button>
-                                    <Button basic color='blue'
-                                            onClick={() => this.showModal(analisis.idAnalisis)}>
-                                        Modificar Resultados
-                                    </Button>
-                                </div>
-                            ) : (
-                                <div className='ui two buttons'>
-                                    <Button basic color='blue'
-                                            onClick={() => this.showModal(analisis.idAnalisis)}>
-                                        Cargar Resultados
-                                    </Button>
-                                </div>
-                            )
-
-                        }
+                        {this.renderButtons(analisis.estadoAnalisis, analisis.idAnalisis)}
                     </Card.Content>
                 </Card>
             ))}
@@ -129,7 +148,7 @@ class DiarioPracticas extends Component {
         if (["idDeterminacion", "descripcionPractica", "resultado"].includes(e.target.className)) {
             let resultados = [...this.state.resultados];
             resultados[e.target.dataset.id][e.target.className] = e.target.value.toUpperCase();
-            this.setState({resultados}, () => console.log(this.state.resultados))
+            this.setState({resultados: resultados})
         } else {
             this.setState({[e.target.name]: e.target.value.toUpperCase()})
         }
@@ -139,42 +158,42 @@ class DiarioPracticas extends Component {
     renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
         if (this.state.currentAnalisis != null) {
             return (
-            <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado} >
-                {this.state.resultados.map((detalleAnalisis, idx) => {
-                        let determinacionId = `det-${idx}`;
-                        return (
-                            <div key={idx}>
-                                <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
-                                 <input
-                                    type="text"
-                                    name={determinacionId}
-                                    data-id={idx}
-                                    id={determinacionId}
-                                    value={this.state.resultados[idx].resultado}
-                                    placeholder="Ingrese resultado..."
-                                    className="resultado"
-                                />
-                            </div>
-                        )
-                    }
-                )}
-                <br/>
-                <br/>
-                <Button color='green' type='submit'>Guardar</Button>
-            </Form>)
+                <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado}>
+                    {this.state.resultados.map((detalleAnalisis, idx) => {
+                            let determinacionId = `det-${idx}`;
+                            return (
+                                <div key={idx}>
+                                    <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
+                                    <input
+                                        type="text"
+                                        name={determinacionId}
+                                        data-id={idx}
+                                        id={determinacionId}
+                                        value={this.state.resultados[idx].resultado}
+                                        placeholder="Ingrese resultado..."
+                                        className="resultado"
+                                    />
+                                </div>
+                            )
+                        }
+                    )}
+                    <br/>
+                    <br/>
+                    <Button color='green' type='submit'>Guardar</Button>
+                </Form>)
         }
     };
 
     handleSubmit = (e) => {
         let data = this.state.resultados;
-        let filteredData = data.filter(function(resultado) {
-            if(resultado!=null){
+        let filteredData = data.filter(function (resultado) {
+            if (resultado != null) {
                 return resultado;
             }
-        })
+        });
 
         data.map(resultado => delete resultado.descripcionPractica);
-        axios.post(urlCargarResultados + this.state.currentAnalisisID,filteredData).then(resolve => {
+        axios.post(urlCargarResultados + this.state.currentAnalisisID, filteredData).then(resolve => {
 
 
         }, (error) => {
@@ -189,7 +208,8 @@ class DiarioPracticas extends Component {
             <div className='union'>
                 <MenuLateral/>
                 <div className='tablaListadoHistorico'>
-                    {this.renderCards()}
+                    {this.state.pendientes.length === 0 ?
+                        <CircularProgress className={'centeredPosition'} size={50}/> : this.renderCards()}
                 </div>
 
                 <Modal show={this.state.show} handleClose={this.hideModal}>
