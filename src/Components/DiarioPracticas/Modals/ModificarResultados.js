@@ -119,7 +119,7 @@ class ModificarResultados extends Component {
         });
 
         data.map(resultado => delete resultado.descripcionPractica);
-        axios.post(urlCargarResultados + this.state.currentAnalisisID, filteredData).then(resolve => {
+        axios.post(urlCargarResultados + this.props.idAnalisis, filteredData).then(resolve => {
 
 
         }, (error) => {
