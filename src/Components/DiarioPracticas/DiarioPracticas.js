@@ -5,6 +5,7 @@ import axios from "axios";
 import {Modal} from './ModalAnalysisInput';
 import {urlAnalisisPendientes, urlCargarResultados, urlGetAnalisis} from "../../Constants/URLs";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Segment from "semantic-ui-react/dist/commonjs/elements/Segment";
 
 
 class DiarioPracticas extends Component {
@@ -16,14 +17,16 @@ class DiarioPracticas extends Component {
             show: false,
             currentAnalisisID: null,
             currentAnalisis: null,
+            currentModal: null,
             resultados: [],
         };
     }
 
-    showModal = (idAnalisis) => {
+    showModal = (idAnalisis, modal) => {
         this.setState({
             show: true,
-            currentAnalisisID: idAnalisis
+            currentAnalisisID: idAnalisis,
+            currentModal: modal,
         });
         this.getAnalisis(idAnalisis)
     };
@@ -33,6 +36,7 @@ class DiarioPracticas extends Component {
             show: false,
             currentAnalisisID: null,
             currentAnalisis: null,
+            currentModal: null,
             resultados: [],
 
         });
@@ -57,11 +61,12 @@ class DiarioPracticas extends Component {
             case "EN_PROCESO":
                 return (
                     <div className='ui two buttons'>
-                        <Button basic color='green'>
+                        <Button basic color='green'
+                                onClick={() => this.showModal(idAnalisis, "REVISAR")}>
                             Revisar Analisis
                         </Button>
                         <Button basic color='blue'
-                                onClick={() => this.showModal(idAnalisis)}>
+                                onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
                             Modificar Resultados
                         </Button>
                     </div>
@@ -69,11 +74,12 @@ class DiarioPracticas extends Component {
             case "PREPARADO":
                 return (
                     <div className='ui two buttons'>
-                        <Button basic color='green'>
+                        <Button basic color='green'
+                                onClick={() => this.showModal(idAnalisis, "EMITIR")}>
                             Emitir Analisis
                         </Button>
                         <Button basic color='blue'
-                                onClick={() => this.showModal(idAnalisis)}>
+                                onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
                             Modificar Resultados
                         </Button>
                     </div>
@@ -82,7 +88,7 @@ class DiarioPracticas extends Component {
                 return (
                     <div className='ui two buttons'>
                         <Button basic color='blue'
-                                onClick={() => this.showModal(idAnalisis)}>
+                                onClick={() => this.showModal(idAnalisis, estado)}>
                             Cargar Resultados
                         </Button>
                     </div>
@@ -155,14 +161,14 @@ class DiarioPracticas extends Component {
     };
 
 
-    renderAnalysisInputModal = () => { //Este es el metodo que al parecer se ejecuta en un ciclo mientras este abierto el modal
+    renderModificacionResultadosModal = () => {
         if (this.state.currentAnalisis != null) {
             return (
                 <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado}>
                     {this.state.resultados.map((detalleAnalisis, idx) => {
                             let determinacionId = `det-${idx}`;
                             return (
-                                <div key={idx}>
+                                <div key={idx} class="block">
                                     <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
                                     <input
                                         type="text"
@@ -181,6 +187,29 @@ class DiarioPracticas extends Component {
                     <br/>
                     <Button color='green' type='submit'>Guardar</Button>
                 </Form>)
+        }
+    };
+
+    handleModalContent = () => {
+        switch (this.state.currentModal) {
+            case "MODIFICAR":
+                return (
+                    this.renderModificacionResultadosModal()
+                );
+            case "REVISAR":
+                return (
+                    <Segment>
+                        <h1>woa REVISAR</h1>
+                    </Segment>
+                );
+            case "EMITIR":
+                return (
+                    <Segment>
+                        <h1>woa EMITIR</h1>
+                    </Segment>
+                );
+            default:
+                return null
         }
     };
 
@@ -215,7 +244,7 @@ class DiarioPracticas extends Component {
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                     <div>
                         <br/>
-                        {this.state.currentAnalisis ? this.renderAnalysisInputModal() :
+                        {this.state.currentAnalisis ? this.handleModalContent() :
                             <CircularProgress className={'centeredPosition'} size={50}/>}
                     </div>
                 </Modal>

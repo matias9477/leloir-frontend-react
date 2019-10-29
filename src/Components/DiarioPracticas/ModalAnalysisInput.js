@@ -18,7 +18,7 @@ export const Modal = ({handleClose, show, children}) => {
                 </Segment>
 
                 <br/>
-                <Button color='red' onClick={handleClose}>Cerrar sin guardar cambios</Button>
+                <Button floated='right' color='red' onClick={handleClose}>Cerrar sin guardar cambios</Button>
             </Segment>
         </div>
     );
