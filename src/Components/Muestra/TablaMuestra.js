@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react';
+import { Header, Pagination, Input, Dropdown } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import { orderBy } from 'lodash';
 
@@ -174,10 +174,6 @@ export default class TablaMuestra extends React.Component {
 
                     <Header as='h2'>Muestras</Header>
 
-                    <Button as= {Link} to='/muestras/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                        <Icon name='lab' /> Nueva Muestra
-                    </Button>
-
                     <br></br>
                     <br></br>
                     <br></br>
@@ -217,7 +213,7 @@ export default class TablaMuestra extends React.Component {
                                     {muestra.tipoMuestra}
                                 </td>
                                 <td data-label="Fecha Alta">
-                                    {muestra.fechaAlta}
+                                    {muestra.fecha}
                                 </td>
                                 <td data-label="Estado">
                                     {muestra.estado}
