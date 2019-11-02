@@ -10,9 +10,7 @@ export const Modal = ({handleClose, show, children}) => {
         <div className={showHideClassName}>
             <Segment className="modal-main">
                 <br/>
-                <h2>Complete los resultados de las siguientes determinaciones:</h2>
 
-                <Divider section/>
                 <Segment>
                     {children}
                 </Segment>

@@ -6,7 +6,7 @@ import {Button, Divider, Form, Segment} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
 
-class ModificarResultados extends Component {
+class RevisarResultados extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -80,16 +80,17 @@ class ModificarResultados extends Component {
                             let determinacionId = `det-${idx}`;
                             return (
                                 <div key={idx} class="block">
-                                    <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
+                                    <label htmlFor={determinacionId}></label>
+                                    {detalleAnalisis.descripcionPractica} : <b>{this.state.resultados[idx].resultado}</b>
                                     <input
-                                        type="text"
+                                        align="left"
+                                        type="checkbox"
                                         name={determinacionId}
                                         data-id={idx}
                                         id={determinacionId}
                                         value={this.state.resultados[idx].resultado}
-                                        placeholder="Ingrese resultado..."
                                         className="resultado"
-                                    />
+                                    /> <br/>
                                 </div>
                             )
                         }
@@ -124,7 +125,7 @@ class ModificarResultados extends Component {
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
                     <div>
-                        <h2>Complete los resultados de las siguientes determinaciones</h2>
+                        <h2>Revise los resultados de las siguientes determinaciones</h2>
 
                         <Divider section/>
 
@@ -138,8 +139,8 @@ class ModificarResultados extends Component {
     }
 }
 
-ModificarResultados.propTypes = {
+RevisarResultados.propTypes = {
     idAnalisis: PropTypes.number,
 };
 
-export default ModificarResultados;
+export default RevisarResultados;
