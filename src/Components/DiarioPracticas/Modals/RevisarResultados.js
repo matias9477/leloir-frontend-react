@@ -5,6 +5,8 @@ import {urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
 import {Button, Divider, Form, Segment} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
+import Grid from "semantic-ui-react/dist/commonjs/collections/Grid";
+import Container from "semantic-ui-react/dist/commonjs/elements/Container";
 
 class RevisarResultados extends Component {
     constructor(props) {
@@ -76,25 +78,61 @@ class RevisarResultados extends Component {
         if (this.state.currentAnalisis != null) {
             return (
                 <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado}>
-                    {this.state.resultados.map((detalleAnalisis, idx) => {
-                            let determinacionId = `det-${idx}`;
-                            return (
-                                <div key={idx} class="block">
-                                    <label htmlFor={determinacionId}></label>
-                                    {detalleAnalisis.descripcionPractica} : <b>{this.state.resultados[idx].resultado}</b>
-                                    <input
-                                        align="left"
-                                        type="checkbox"
-                                        name={determinacionId}
-                                        data-id={idx}
-                                        id={determinacionId}
-                                        value={this.state.resultados[idx].resultado}
-                                        className="resultado"
-                                    /> <br/>
-                                </div>
-                            )
-                        }
-                    )}
+                    <Grid columns={4} textAlign='left'>
+                        <Grid.Row>
+                            <Grid.Column width={10}>
+                                <Container text>
+                                    Determinacion
+                                </Container>
+                            </Grid.Column>
+                            <Grid.Column width={4}>
+                                <Container text>
+                                    Resultado
+                                </Container>
+                            </Grid.Column>
+                        </Grid.Row>
+                        {this.state.resultados.map((detalleAnalisis, idx) => {
+                                let determinacionId = `det-${idx}`;
+                                let texto = [detalleAnalisis.descripcionPractica, ":", this.state.resultados[idx].resultado].join(" ");
+
+                                return (
+                                    <Grid.Row verticalAlign='middle'>
+                                        {/*<div key={idx}>*/}
+                                        <Grid.Column width={10}>
+                                            {/*<label htmlFor={determinacionId}/>*/}
+                                            <Container text>
+                                                {detalleAnalisis.descripcionPractica}
+                                            </Container>
+                                        </Grid.Column>
+                                        <Grid.Column width={3}>
+                                            {/*<label htmlFor={determinacionId}/>*/}
+                                            <Container text>
+                                                <b>{this.state.resultados[idx].resultado}</b>
+                                            </Container>
+                                        </Grid.Column>
+                                        <Grid.Column width={3}>
+                                            <Button.Group>
+                                                <Button
+                                                        active={false}
+                                                        color={false ? 'red' : null}>
+                                                    Repetir
+                                                </Button>
+                                                <Button.Or text='o'/>
+                                                <Button
+                                                        active={false}
+                                                        color={false ? 'green' : null}>
+                                                    Aprobar
+                                                </Button>
+                                            </Button.Group>
+                                        </Grid.Column>
+
+                                        {/*</div>*/}
+                                    </Grid.Row>
+
+                                )
+                            }
+                        )}
+                    </Grid>
                     <br/>
                     <br/>
                     <Button color='green' type='submit'>Guardar</Button>
