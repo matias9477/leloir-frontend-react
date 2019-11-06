@@ -1,16 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import { orderBy } from 'lodash';
-import { oneOfType } from "prop-types";
+import {Button, Dropdown, Header, Icon, Input, Pagination} from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
+import {orderBy} from 'lodash';
 
 import MenuOpciones from '../MenuOpciones';
-import { titleCase, nullTo } from '../../Services/MetodosDeValidacion';
+import {nullTo, titleCase} from '../../Services/MetodosDeValidacion';
 import './../styles.css';
-import { animalType, institucionType, pacientesArrayType, personaType } from "../../Types";
 import {nroPorPagina} from "../../Constants/utils";
-import { urlPacientes } from '../../Constants/URLs';
+import {urlPacientes} from '../../Constants/URLs';
 
 export default class TablaPaciente extends React.Component {
     constructor(props) {
@@ -278,8 +276,3 @@ export default class TablaPaciente extends React.Component {
 
 }
 
-TablaPaciente.propTypes = {
-    pacientes: pacientesArrayType,
-    pacientesFiltrados: pacientesArrayType,
-    paciente: oneOfType([personaType, animalType, institucionType])
-};
