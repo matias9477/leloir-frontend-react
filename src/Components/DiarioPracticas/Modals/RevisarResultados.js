@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import {urlAprobarResultados, urlGetAnalisis} from "../../../Constants/URLs";
-import {Button, Divider, Form } from "semantic-ui-react";
+import {Button, Divider, Form} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
 import Grid from "semantic-ui-react/dist/commonjs/collections/Grid";

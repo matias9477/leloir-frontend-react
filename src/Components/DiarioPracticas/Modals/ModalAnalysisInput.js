@@ -8,7 +8,7 @@ export const Modal = ({handleClose, show, children}) => {
 
     return (
         <div className={showHideClassName}>
-            <Segment raised className="modal-main">
+            <Segment raised compact className="modal-main">
                 <br/>
 
                 <Segment>

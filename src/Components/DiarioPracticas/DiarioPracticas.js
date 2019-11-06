@@ -139,7 +139,6 @@ class DiarioPracticas extends Component {
         switch (this.state.currentModal) {
             case "MODIFICAR":
                 return (
-                    // this.renderModificacionResultadosModal()
                     <ModificarResultados show={this.state.show}
                                          callback={this.hideModalCallback}
                                          idAnalisis={this.state.currentAnalisisID}/>
@@ -151,11 +150,7 @@ class DiarioPracticas extends Component {
                                        idAnalisis={this.state.currentAnalisisID}/>
                 );
             case "EMITIR":
-                return (
-                    <Segment>
-                        <h1>woa EMITIR</h1>
-                    </Segment>
-                );
+                return null;
             default:
                 return null
         }
