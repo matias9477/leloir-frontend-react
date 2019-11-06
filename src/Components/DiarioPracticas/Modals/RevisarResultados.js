@@ -165,8 +165,6 @@ class RevisarResultados extends Component {
         data.map(resultado => delete resultado.descripcionPractica);
         data.map(resultado => delete resultado.resultado);
 
-        console.log(data);
-
         axios.post(urlAprobarResultados + this.props.idAnalisis, filteredData).then(resolve => {
             return true
         }, (error) => {
