@@ -4,8 +4,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Form, Header } from 'semantic-ui-react'
-import {urlDocs, urlPlanes, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getPlanesByObraSocial, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
+import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
+import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
 
@@ -160,6 +160,7 @@ class AltaPersona extends Component {
         "telefono": emptyToNull(this.state.telefono),
         "mail": emptyToNull(this.state.mail),
         "obraSocial": null,
+        "plan": null,
         "historial": null,
         "bitAlta": true
     };
@@ -196,6 +197,11 @@ class AltaPersona extends Component {
           "domicilio": getDomicilioObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
           "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
+        },
+        "plan":{
+            "idPlan":getIdPlan(this.state.plan,this.state.planes),
+            "nombre":this.state.plan,
+            "bitActivo": true,
         },
         "historial": null,
         "bitAlta": true

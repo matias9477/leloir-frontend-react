@@ -148,3 +148,9 @@
     }
   }
 
+  export const getIdPlan = (plan, planes) =>{
+    for(let i=0; i<planes.length; i++){
+      if(plan === planes[i].nomber)
+      return planes[i].nombre;
+    }
+  }
