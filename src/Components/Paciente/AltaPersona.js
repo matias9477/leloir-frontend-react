@@ -63,6 +63,7 @@ class AltaPersona extends Component {
     this.comboTiposDocs();
     this.comboSexos();
     this.comboPaises();
+    this.comboPlanes();
   }  
 
   comboSexos = () =>{
@@ -99,6 +100,7 @@ class AltaPersona extends Component {
   }
 
   comboPlanes = () =>{
+    if(this.state.planes.length === 0){
     axios.get('/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
          this.setState({
            planes: Object.values(resolve.data).flat(),
@@ -106,6 +108,7 @@ class AltaPersona extends Component {
         }, (error) => {
             console.log('Error combo planes: ', error.message);
         })
+      }
   }
 
   comboTiposDocs = () =>{
@@ -117,6 +120,10 @@ class AltaPersona extends Component {
         console.log('Error combo tipo documentos', error.message);
     })
 
+  }
+
+  componentDidUpdate(){
+    this.comboPlanes();
   }
 
   componentDidMount() {
@@ -330,9 +337,9 @@ class AltaPersona extends Component {
   cambioObraSocial(e){
       this.setState( {
           obraSocial: e.target.value,
+          planes: [],
           modObraSocial: false
         })
-        this.comboPlanes();
   }  
   
   cambioPlan(e){
