@@ -5,6 +5,7 @@ import {urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
 import {Button, Divider, Form, Segment} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
+import Label from "semantic-ui-react/dist/commonjs/elements/Label";
 
 class ModificarResultados extends Component {
     constructor(props) {
@@ -111,8 +112,7 @@ class ModificarResultados extends Component {
 
         data.map(resultado => delete resultado.descripcionPractica);
         axios.post(urlCargarResultados + this.props.idAnalisis, filteredData).then(resolve => {
-
-
+                return true
         }, (error) => {
             console.log('Error submit', error.message);
         });

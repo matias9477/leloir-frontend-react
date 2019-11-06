@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import {urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
+import {urlAprobarResultados, urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
 import {Button, Divider, Form, Segment} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
@@ -41,7 +41,12 @@ class RevisarResultados extends Component {
         if (idAnalisis != null) {
             axios.get((urlGetAnalisis + idAnalisis)).then(resolve => {
                 resolve.data.determinaciones.map(detalleanalisis => {
-                    this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado);
+                    let repetir = null;
+                    if (detalleanalisis.estadoDetalleAnalisis.nombre === 'APROBADO') repetir = false;
+                    else {
+                        if (detalleanalisis.estadoDetalleAnalisis.nombre === 'REPETIR') repetir = true;
+                    }
+                    this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado, repetir);
                     return true;
                 });
                 this.setState({currentAnalisis: resolve.data});
@@ -52,24 +57,31 @@ class RevisarResultados extends Component {
         }
     };
 
-    addResultado = (codigopractica, descripcionpractica, resultado) => {
+    addResultado = (codigopractica, descripcionpractica, resultado, repetir) => {
         this.setState(prevState => ({
                 resultados: [
                     ...prevState.resultados,
-                    {idDeterminacion: codigopractica, descripcionPractica: descripcionpractica, resultado: resultado}
+                    {
+                        codigoPracticaDeterminaciones: codigopractica,
+                        descripcionPractica: descripcionpractica,
+                        resultado: resultado,
+                        repetir: repetir
+                    }
                 ]
 
             }
         ))
     };
 
-    handleCambioResultado = (e) => {
-        if (["idDeterminacion", "descripcionPractica", "resultado"].includes(e.target.className)) {
+    handleButtons = (idx, state) => {
+        if (this.state.resultados[idx].repetir === state) {
             let resultados = [...this.state.resultados];
-            resultados[e.target.dataset.id][e.target.className] = e.target.value.toUpperCase();
+            resultados[idx].repetir = null;
             this.setState({resultados: resultados})
         } else {
-            this.setState({[e.target.name]: e.target.value.toUpperCase()})
+            let resultados = [...this.state.resultados];
+            resultados[idx].repetir = state;
+            this.setState({resultados: resultados})
         }
     };
 
@@ -77,7 +89,7 @@ class RevisarResultados extends Component {
     renderModificacionResultadosModal = () => {
         if (this.state.currentAnalisis != null) {
             return (
-                <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado}>
+                <Form>
                     <Grid columns={4} textAlign='left'>
                         <Grid.Row>
                             <Grid.Column width={10}>
@@ -93,7 +105,6 @@ class RevisarResultados extends Component {
                         </Grid.Row>
                         {this.state.resultados.map((detalleAnalisis, idx) => {
                                 let determinacionId = `det-${idx}`;
-                                let texto = [detalleAnalisis.descripcionPractica, ":", this.state.resultados[idx].resultado].join(" ");
 
                                 return (
                                     <Grid.Row verticalAlign='middle'>
@@ -113,14 +124,16 @@ class RevisarResultados extends Component {
                                         <Grid.Column width={3}>
                                             <Button.Group>
                                                 <Button
-                                                        active={false}
-                                                        color={false ? 'red' : null}>
+                                                    active={this.state.resultados[idx].repetir}
+                                                    color={this.state.resultados[idx].repetir ? 'red' : null}
+                                                    onClick={() => this.handleButtons(idx, true)}>
                                                     Repetir
                                                 </Button>
                                                 <Button.Or text='o'/>
                                                 <Button
-                                                        active={false}
-                                                        color={false ? 'green' : null}>
+                                                    active={this.state.resultados[idx].repetir === false}
+                                                    color={this.state.resultados[idx].repetir === false ? 'green' : null}
+                                                    onClick={() => this.handleButtons(idx, false)}>
                                                     Aprobar
                                                 </Button>
                                             </Button.Group>
@@ -135,23 +148,29 @@ class RevisarResultados extends Component {
                     </Grid>
                     <br/>
                     <br/>
-                    <Button color='green' type='submit'>Guardar</Button>
-                </Form>)
+                    <Button color='green'
+                            type='submit'
+                            onClick={this.handleSubmit}>Guardar</Button>
+                </Form>
+            )
         }
     };
 
     handleSubmit = (e) => {
         let data = this.state.resultados;
-        let filteredData = data.filter(function (resultado) {
-            if (resultado != null) {
-                return resultado;
+        let filteredData = data.filter(function (repetir) {
+            if (repetir != null) {
+                return repetir;
             }
         });
 
         data.map(resultado => delete resultado.descripcionPractica);
-        axios.post(urlCargarResultados + this.props.idAnalisis, filteredData).then(resolve => {
+        data.map(resultado => delete resultado.resultado);
 
+        console.log(data);
 
+        axios.post(urlAprobarResultados + this.props.idAnalisis, filteredData).then(resolve => {
+            return true
         }, (error) => {
             console.log('Error submit', error.message);
         });

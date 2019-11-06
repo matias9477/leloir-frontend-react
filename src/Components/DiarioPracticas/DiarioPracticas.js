@@ -7,6 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Segment from "semantic-ui-react/dist/commonjs/elements/Segment";
 import ModificarResultados from "./Modals/ModificarResultados";
 import RevisarResultados from "./Modals/RevisarResultados";
+import Label from "semantic-ui-react/dist/commonjs/elements/Label";
 
 
 class DiarioPracticas extends Component {
@@ -73,7 +74,7 @@ class DiarioPracticas extends Component {
             case "PREPARADO":
                 return (
                     <div className='ui two buttons'>
-                        <Button basic color='green'
+                        <Button color='green'
                                 onClick={() => this.showModal(idAnalisis, "EMITIR")}>
                             Emitir Analisis
                         </Button>
@@ -100,7 +101,7 @@ class DiarioPracticas extends Component {
     renderCards = () => (
         <Card.Group stackable itemsPerRow={2}>
             {this.state.pendientes.map((analisis) => (
-                <Card fluid>
+                <Card fluid raised centered>
                     <Card.Content>
                         <Card.Header>{analisis.paciente}</Card.Header>
                         <Card.Meta>{analisis.diasPendiente}</Card.Meta>
