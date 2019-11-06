@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import {urlAprobarResultados, urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
-import {Button, Divider, Form, Segment} from "semantic-ui-react";
+import {urlAprobarResultados, urlGetAnalisis} from "../../../Constants/URLs";
+import {Button, Divider, Form } from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
 import Grid from "semantic-ui-react/dist/commonjs/collections/Grid";
@@ -104,19 +104,18 @@ class RevisarResultados extends Component {
                             </Grid.Column>
                         </Grid.Row>
                         {this.state.resultados.map((detalleAnalisis, idx) => {
-                                let determinacionId = `det-${idx}`;
 
                                 return (
                                     <Grid.Row verticalAlign='middle'>
-                                        {/*<div key={idx}>*/}
+
                                         <Grid.Column width={10}>
-                                            {/*<label htmlFor={determinacionId}/>*/}
+
                                             <Container text>
                                                 {detalleAnalisis.descripcionPractica}
                                             </Container>
                                         </Grid.Column>
                                         <Grid.Column width={3}>
-                                            {/*<label htmlFor={determinacionId}/>*/}
+
                                             <Container text>
                                                 <b>{this.state.resultados[idx].resultado}</b>
                                             </Container>
@@ -139,7 +138,6 @@ class RevisarResultados extends Component {
                                             </Button.Group>
                                         </Grid.Column>
 
-                                        {/*</div>*/}
                                     </Grid.Row>
 
                                 )

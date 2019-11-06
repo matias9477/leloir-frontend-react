@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles.css';
-import {Button, Segment, Divider} from 'semantic-ui-react';
+import {Button, Segment} from 'semantic-ui-react';
 
 export const Modal = ({handleClose, show, children}) => {
 

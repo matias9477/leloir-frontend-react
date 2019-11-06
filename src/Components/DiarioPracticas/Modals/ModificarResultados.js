@@ -2,10 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import {urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
-import {Button, Divider, Form, Segment} from "semantic-ui-react";
+import {Button, Divider, Form} from "semantic-ui-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Modal} from "./ModalAnalysisInput";
-import Label from "semantic-ui-react/dist/commonjs/elements/Label";
 
 class ModificarResultados extends Component {
     constructor(props) {

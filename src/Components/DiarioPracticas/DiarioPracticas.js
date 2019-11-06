@@ -60,7 +60,8 @@ class DiarioPracticas extends Component {
         switch (estado) {
             case "EN_PROCESO":
                 return (
-                    <div className='ui two buttons'>
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
                         <Button basic color='green'
                                 onClick={() => this.showModal(idAnalisis, "REVISAR")}>
                             Revisar Analisis
@@ -70,31 +71,41 @@ class DiarioPracticas extends Component {
                             Modificar Resultados
                         </Button>
                     </div>
+                    </Card.Content>
                 );
             case "PREPARADO":
                 return (
-                    <div className='ui two buttons'>
-                        <Button color='green'
-                                onClick={() => this.showModal(idAnalisis, "EMITIR")}>
-                            Emitir Analisis
-                        </Button>
-                        <Button basic color='blue'
-                                onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
-                            Modificar Resultados
-                        </Button>
-                    </div>
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
+                            <Button color='green'
+                                    onClick={() => this.showModal(idAnalisis, "EMITIR")}>
+                                Emitir Analisis
+                            </Button>
+                            <Button basic color='blue'
+                                    onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
+                                Modificar Resultados
+                            </Button>
+                        </div>
+                    </Card.Content>
+
                 );
             case "NUEVO":
                 return (
+                    <Card.Content extra>
                     <div className='ui two buttons'>
                         <Button basic color='blue'
                                 onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
                             Cargar Resultados
                         </Button>
                     </div>
+                    </Card.Content>
                 );
             default:
-                return null
+                return (
+                    <Label as='a' attached='bottom'>
+                        {estado}
+                    </Label>
+                )
         }
     };
 
@@ -116,9 +127,9 @@ class DiarioPracticas extends Component {
                             </List>
                         </Card.Description>
                     </Card.Content>
-                    <Card.Content extra>
+
                         {this.renderButtons(analisis.estadoAnalisis, analisis.idAnalisis)}
-                    </Card.Content>
+
                 </Card>
             ))}
         </Card.Group>
