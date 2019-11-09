@@ -199,7 +199,7 @@ class AltaPersona extends Component {
           "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
         },
         "plan":{
-            "idPlan":getIdPlan(this.state.plan,this.state.planes),
+            "planId":getIdPlan(this.state.plan,this.state.planes),
             "nombre":this.state.plan,
             "bitActivo": true,
         },
