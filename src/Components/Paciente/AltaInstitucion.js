@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form } from 'semantic-ui-react';
-
+import {withRouter} from 'react-router-dom';
 import { getCurrentDate } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
 import './../styles.css';
@@ -49,6 +49,7 @@ class AltaInstitucion extends Component {
       ).then((response) => {
         alert('Se registro el paciente ' + titleCase(this.state.nombre) + ' con éxito.'); 
         this.vaciadoCampos();
+        this.props.history.push("/pacientes");
       }, (error) => {
         alert('No se ha podido registrar el paciente.');
     });
@@ -169,4 +170,4 @@ class AltaInstitucion extends Component {
 }
 
 
-export default AltaInstitucion;
+export default withRouter(AltaInstitucion);

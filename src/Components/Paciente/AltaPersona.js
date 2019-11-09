@@ -3,6 +3,7 @@ import axios from 'axios'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import {withRouter} from 'react-router-dom';
 import { Button, Form, Header } from 'semantic-ui-react'
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
 import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
@@ -211,7 +212,7 @@ class AltaPersona extends Component {
     axios.post(api, data
       ).then((response) => {
         alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
-        this.vaciadoCampos();
+        this.props.history.push("/pacientes");
       }, (error) => {
         if (error.response.status === 500){
           alert('Ya existe un paciente con ese número de documento. Revise los datos ingresados.');
@@ -468,7 +469,7 @@ class AltaPersona extends Component {
           </Form.Group>
           <br/>
 
-          <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Paciente</Button >
+          <Button primary type="submit" onClick={this.getPaciente} className="boton" > Registrar Paciente</Button >
 
         </Form>
       </div>
@@ -479,4 +480,4 @@ class AltaPersona extends Component {
 }
 
 
-export default AltaPersona;
+export default withRouter( AltaPersona);
