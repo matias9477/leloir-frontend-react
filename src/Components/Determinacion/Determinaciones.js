@@ -4,12 +4,10 @@ import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-rea
 import {Link} from "react-router-dom";
 
 import MenuLateral from "../MenuOpciones";
-import { titleCase } from './../../Services/MetodosDeValidacion';
-import { urlDeterminaciones } from "../../Constants/URLs"
-import { orderBy } from "lodash";
-import { arrayOf, number, oneOf, shape, string } from "prop-types";
-import { determinacionType } from "../../Types";
-import { nroPorPagina } from "../../Constants/utils";
+import {titleCase} from './../../Services/MetodosDeValidacion';
+import {urlDeterminaciones} from "../../Constants/URLs"
+import {orderBy} from "lodash";
+import {nroPorPagina} from "../../Constants/utils";
 import './../styles.css';
 
 class Determinaciones extends Component {
@@ -250,17 +248,5 @@ class Determinaciones extends Component {
     }
 }
 
-Determinaciones.propTypes = {
-    determinacion: determinacionType,
-    determinaciones: arrayOf(determinacionType),
-    determinacionesFiltrados: arrayOf(determinacionType),
-    limit: number,
-    activePage: number,
-    totalCount: number,
-    filtro: string,
-    sortParams: shape({
-        direction: oneOf(['asc', 'desc'])
-    })
-};
 
 export default Determinaciones;

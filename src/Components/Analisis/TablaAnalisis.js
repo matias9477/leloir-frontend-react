@@ -198,7 +198,7 @@ export default class TablaObraSocial extends React.Component {
                             {analisis.paciente.nombre}&nbsp;&nbsp;{analisis.paciente.apellido}
                             </td>
                             <td data-label="Telefono">
-                                {analisis.estado.nombre}
+                                {analisis.estadoAnalisis.nombre}
                             </td>
                             <td>
                                 <Dropdown item icon='ellipsis horizontal' simple>

@@ -8,8 +8,8 @@
    export const urlObraSocial = "obras_sociales/id/";
    export const urlDeterminaciones = "/determinaciones/all";
 
-   export const urlMuestras = "/muestras/all"
-   export const urlTiposMuestras = "/tipos_muestras/all"
+   export const urlMuestras = "/muestras/all";
+   export const urlTiposMuestras = "/tipos_muestras/all";
    export const urlMuestrasAdd = '/muestras/add';
 
    export const urlPacientes = "/pacientes/all";
@@ -24,3 +24,4 @@
 
    export const urlAnalisis = '/analisis/all';
    export const urlCargarResultados = '/analisis/cargar-resultados/';
+   export const urlAprobarResultados = '/analisis/aprobar-resultados/';
