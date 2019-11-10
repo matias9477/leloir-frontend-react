@@ -30,9 +30,7 @@ function getUserAvailability(user){
     axios.get('/user/checkUsernameAvailability', { params: { username: user } }).then(resolve => {
         
         aux = resolve.data.available;
-        console.log(aux);
         return aux;
-        
 
     }, (error) => {
         console.log('Error validacion user', error.message);
@@ -41,8 +39,7 @@ function getUserAvailability(user){
 
 
 export function validateRequiredUser(nombre){
-    const us = getUserAvailability(nombre);
-    console.log(us)
+    // var us = getUserAvailability(nombre);
     if (nombre === ''){
         return false
     } else if ((hasNumbers(nombre) || (typeof(nombre) === 'string') )){

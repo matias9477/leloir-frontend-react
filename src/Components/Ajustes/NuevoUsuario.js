@@ -7,7 +7,7 @@ import axios from "axios";
 
 import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
-import { titleCase, validateNombre, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
+import { validateNombre, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
 import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
 
 class NuevoUsuario extends Component {
@@ -54,6 +54,8 @@ class NuevoUsuario extends Component {
             documentos: [],
             paises: [],
             sexos: [],
+
+            disponibilidadUs: true,
 
             errorNombre: true,
             errorApellido: true,
@@ -266,6 +268,17 @@ class NuevoUsuario extends Component {
         this.setState({ pass2: e.target.value })
     }
 
+    getUserAvailability(user){
+        axios.get('/user/checkUsernameAvailability', { params: { username: user } }).then(resolve => {
+            this.setState({
+                disponibilidadUs: resolve.data.available
+            })
+    
+        }, (error) => {
+            console.log('Error validacion user', error.message);
+        })
+    };
+
     handleNuevoUsuarioClick = () => {
         const errorNombre = validateNombre(this.state.signUpRequest.empleado.nombre);
         const errorApellido = validateNombre(this.state.signUpRequest.empleado.apellido);
@@ -275,8 +288,13 @@ class NuevoUsuario extends Component {
         const errorSexo = validateRequiredCombos(this.state.signUpRequest.empleado.sexo.nombre);
         const errorNacionalidad = validateRequiredCombos(this.state.signUpRequest.empleado.nacionalidad.nombre);
         const errorMail = validateRequiredMail(this.state.signUpRequest.email);
+        
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
+        var errorDisponibildiad = this.getUserAvailability(this.state.signUpRequest.username);
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
+       
+        console.log("error nombre us")
+        console.log(errorDisponibildiad)
 
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña) {
 
