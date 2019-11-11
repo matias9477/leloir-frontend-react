@@ -18,7 +18,7 @@ export function validateRequiredMail(mail){
     
     if (mail === '' || mail === null){
       return false
-    } else if ( validMail.test(mail) && getEmailAvailability(mail) ) {
+    } else if ( validMail.test(mail)) {
       return true
     } else {
       return false

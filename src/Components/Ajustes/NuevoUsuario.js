@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {addDays} from 'date-fns';
-import {Button, Form} from 'semantic-ui-react'
+import {Button, Form, label, Label} from 'semantic-ui-react'
 import axios from "axios";
 import Select from 'react-select';
 
@@ -256,6 +256,17 @@ class NuevoUsuario extends Component {
                 email: nuevoEmail
             }
         }))
+
+        this.setState(prevState => ({
+            ...prevState,
+            signUpRequest: {
+                ...prevState.signUpRequest,
+                empleado: {
+                    ...prevState.signUpRequest.empleado,
+                    mail: nuevoEmail,
+                }
+            }
+        }))
     };
 
     cambioPassword = (e) => {
@@ -272,6 +283,17 @@ class NuevoUsuario extends Component {
     cambioPass2 = (e) => {
         this.setState({ pass2: e.target.value })
     }
+    
+    cambioRol = (e) => {
+        let nuevoRol = e;
+        this.setState(prevState => ({
+            ...prevState,
+            signUpRequest: {
+                ...prevState.signUpRequest,
+                nombreRol: nuevoRol
+            }
+        }))
+    };
 
     getUserAvailability(user){
         axios.get('/user/checkUsernameAvailability', { params: { username: user } }).then(resolve => {
@@ -295,18 +317,25 @@ class NuevoUsuario extends Component {
         const errorMail = validateRequiredMail(this.state.signUpRequest.email);
         
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
-        var errorDisponibildiad = this.getUserAvailability(this.state.signUpRequest.username);
+        var errorDisponibilidad = this.getUserAvailability(this.state.signUpRequest.username);
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
-       
-        console.log("error nombre us")
-        console.log(errorDisponibildiad)
 
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña) {
 
+            var nuevoRol = this.state.signUpRequest.nombreRol.value;
+            console.log(nuevoRol)
+            this.setState(prevState => ({
+                ...prevState,
+                signUpRequest: {
+                    ...prevState.signUpRequest,
+                    nombreRol: nuevoRol
+                }
+            }))
+            
             let data = this.state.signUpRequest;
             axios.post('/auth/signup', data
             ).then((response) => {
-                alert('Se creo usuario correctamente');
+                alert(`Se creo el usuario ${this.state.signUpRequest.username} correctamente.`);
             }, (error) => {
                 alert('No se ha podido registrar el usuario.');
             });
@@ -326,17 +355,6 @@ class NuevoUsuario extends Component {
               errorContraseña,
             })
           } 
-    };
-
-    cambioRol = (e) => {
-        let nuevoRol = e;
-        this.setState(prevState => ({
-            ...prevState,
-            signUpRequest: {
-                ...prevState.signUpRequest,
-                nombreRol: nuevoRol
-            }
-        }))
     };
 
     getOptionLabelRol = option => option.text;
@@ -454,6 +472,7 @@ class NuevoUsuario extends Component {
                         />
                     </Form.Group>
                     
+                    <Form.Field required label='rol'/>
                     <Select
                         name='roles'
                         value={this.state.signUpRequest.nombreRol}
