@@ -48,8 +48,16 @@ const SelectedPaciente = props => {
                             : null}
 
                     </List>
+
+                
             </Container>
         }
+
+                
+                <Header as='h4' style={HeaderStyle}>Analisis pendientes del paciente: </Header>
+                {props.pendientes ? 
+                    props.pendientes[0].paciente
+                    : null}
     </div>    
     );
 };

@@ -4,7 +4,7 @@ import { Form, Header, Icon, Button, Grid } from 'semantic-ui-react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
 
-import { urlPacientes } from '../../../Constants/URLs';
+import { urlPacientes, urlAnalisisPendientes } from '../../../Constants/URLs';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
 import SelectedPaciente from './PacienteEnAtencion';
 import './LPSecretaria.css';
@@ -35,6 +35,20 @@ class Atencion extends Component {
     handleChangeListPacientes = selectedPaciente => {
       this.setState({ selectedPaciente })
     }
+
+    getAnalisisPendientes = () =>{
+        const paciente = this.find();
+        if(paciente!==false){
+                axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
+                    console.log(Object.values(resolve.data).flat())
+                    return Object.values(resolve.data).flat();
+
+                }, (error) => {
+                    console.log('Error en la búsqueda de analisis pendientes: ',error.message);
+                })
+        }
+        else return null;
+    };
 
     find = () => {
         const next = this.props.nextPaciente.text;
@@ -103,7 +117,7 @@ class Atencion extends Component {
                     {this.find() === false ? this.patientNotFound() : 
                         <div>
                             
-                            <SelectedPaciente selected={this.find()}/>
+                            <SelectedPaciente selected={this.find()} pendientes={this.getAnalisisPendientes()}/>
 
                         </div>
                         }
