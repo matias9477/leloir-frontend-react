@@ -17,6 +17,8 @@
    export const urlSignUp = "/auth/signup";
    export const urlSignIn = "/auth/signin";
 
+   export const urlLoggedUser = '/user/me';
+
    export const urlAnalisisPendientes = "/analisis/pendientes";
    export const urlGetAnalisis= "/analisis/id/";
 

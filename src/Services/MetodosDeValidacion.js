@@ -30,7 +30,7 @@ export function nullTo(nro){
 }
 
 export function validateRequiredCombos(valor){
-  if (valor === null || valor.length === 0 || valor === ''){
+  if (valor === undefined || valor === null || valor.length === 0 || valor === ''){
       return false
   }
   return true
@@ -86,6 +86,18 @@ export function validateMail(mail){
   } 
 }
 
+export function validateRequiredMail(mail){
+  const validMail = /\S+@\S+\.\S+/;
+  
+  if (mail === '' || mail === null){
+    return false
+  } else if ( validMail.test(mail) ) {
+    return true
+  } else {
+    return false
+  } 
+}
+
 export function validateNroDocumento(nroDoc, tipoDoc){
   if (nroDoc === ''){
     return false
@@ -112,5 +124,15 @@ export function checkAtributo(atributo){
   } 
   else{
       return '';
+  }
+}
+
+export function validateContraseña(contra1, contra2){
+  if (contra1 === '' || contra2 === ''){
+    return false
+  } else if ((contra1 === contra2) && (hasNumbers(contra1) || (typeof(contra1) === 'string') || hasNumbers(contra2) || (typeof(contra2) === 'string')) ){
+    return true
+  } else {
+    return false
   }
 }
