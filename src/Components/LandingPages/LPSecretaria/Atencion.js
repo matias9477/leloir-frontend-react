@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 
 import { urlPacientes } from '../../../Constants/URLs';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
-import SelectedPaciente from './../../Analisis/SelectedPaciente';
+import SelectedPaciente from './PacienteEnAtencion';
 import './LPSecretaria.css';
 
 class Atencion extends Component {
@@ -97,17 +97,18 @@ class Atencion extends Component {
         return (
             <div>
                 <Header as='h2'>Atención</Header>
+                <div className="DatosDelPaciente">
                 <Form className='formAtencion'>
                     <Form.Field label='Paciente' value={this.props.nextPaciente.text} control='input' />
                     {this.find() === false ? this.patientNotFound() : 
                         <div>
-                            Paciente encontrado
+                            
                             <SelectedPaciente selected={this.find()}/>
 
                         </div>
                         }
                 </Form>
-               
+               </div>
             </div>
         );
     }
