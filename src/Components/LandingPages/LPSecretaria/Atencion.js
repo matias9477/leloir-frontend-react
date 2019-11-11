@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 
 import { urlPacientes } from '../../../Constants/URLs';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
+import SelectedPaciente from './../../Analisis/SelectedPaciente';
 import './LPSecretaria.css';
 
 class Atencion extends Component {
@@ -100,6 +101,7 @@ class Atencion extends Component {
                     <Form.Field label='Paciente' value={this.props.next.text} control='input' />
                     {this.find() === '' ? this.patientNotFound() : "Paciente encontrado"}
                 </Form>
+                <SelectedPaciente selected={this.state.foundPatient}/>
 
             </div>
         );

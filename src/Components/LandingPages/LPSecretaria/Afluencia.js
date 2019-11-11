@@ -6,6 +6,7 @@ import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import './LPSecretaria.css';
 
+
 class Afluencia extends Component {
     constructor(props) {
         super(props);
@@ -87,6 +88,7 @@ class Afluencia extends Component {
 
                     <Grid.Column width={11}>
                         <Atencion next={this.state.next}/>
+
                     </Grid.Column>
                 </Grid>
 
