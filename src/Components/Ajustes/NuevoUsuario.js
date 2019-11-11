@@ -4,11 +4,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {addDays} from 'date-fns';
 import {Button, Form} from 'semantic-ui-react'
 import axios from "axios";
+import Select from 'react-select';
 
 import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
 import { validateNombre, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
 import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
+
+const roles = [
+    { key: 'Secretaria', value: 'SECRETARIA', text: 'Secretaria' },
+]
 
 class NuevoUsuario extends Component {
     constructor(props) {
@@ -323,6 +328,21 @@ class NuevoUsuario extends Component {
           } 
     };
 
+    cambioRol = (e) => {
+        let nuevoRol = e;
+        this.setState(prevState => ({
+            ...prevState,
+            signUpRequest: {
+                ...prevState.signUpRequest,
+                nombreRol: nuevoRol
+            }
+        }))
+    };
+
+    getOptionLabelRol = option => option.text;
+
+    getOptionRol = option => option.value;
+
     render() {
         return (
             <div>
@@ -433,6 +453,19 @@ class NuevoUsuario extends Component {
                             onChange={this.cambioPass2}
                         />
                     </Form.Group>
+                    
+                    <Select
+                        name='roles'
+                        value={this.state.signUpRequest.nombreRol}
+                        onChange={this.cambioRol}
+                        placeholder= "Seleccione un rol..."
+                        isClearable={true}
+                        options={roles}
+                        getOptionValue={this.getOptionValueRol}
+                        getOptionLabel={this.getOptionLabelRol}
+                    />
+
+                    <br/><br/>
 
                     <Button primary type="submit" onClick={this.handleNuevoUsuarioClick} className="boton"> Crear
                         Usuario</Button>
