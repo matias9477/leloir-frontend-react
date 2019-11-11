@@ -40,6 +40,14 @@
     return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
   }
 
+  export const verificarExistenciaPlan = (pl) => {
+    if (pl === null){
+      return null;
+    } else{
+      return pl.nombre;
+    }
+  }
+
   export const verificarExistenciaObraSocial = (os) => {
     if (os === null){
       return null;

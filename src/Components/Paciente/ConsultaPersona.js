@@ -7,7 +7,7 @@ import { Button, Form } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import './../styles.css';
-import { getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate } from './../../Services/MetodosPaciente';
+import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente';
 import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
 import { urlDocs, urlObrasSoc, urlPaises, urlSexos } from '../../Constants/URLs';
 import { emptyToNull, titleCase,  validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
@@ -37,6 +37,7 @@ class ConsultaPersona extends Component {
         telefono:'',
         mail:'',
         obraSocial:'',
+        plan:'',
         bitAlta: '',
         estado: '',
 
@@ -50,11 +51,13 @@ class ConsultaPersona extends Component {
         errorTelefono: true,
         errorMail: true,
         errorObraSocial: true,
-      
+        errorPlan:true,
+
         documentos:[],
         paises: [],
         obrasSociales:[],
         sexos:[],
+        planes:[],
         
       })
     this.cambioId = this.cambioId.bind(this);
@@ -70,6 +73,7 @@ class ConsultaPersona extends Component {
     this.cambioMail = this.cambioMail.bind(this);
     this.cambioObraSocial = this.cambioObraSocial.bind(this);
     this.cambioBitAlta = this.cambioBitAlta.bind(this);
+    this.cambioPlan = this.cambioPlan.bind(this);
   }
 
   fillCombos = () =>{
@@ -77,6 +81,7 @@ class ConsultaPersona extends Component {
     this.comboTiposDocs();
     this.comboSexos();
     this.comboPaises();
+    this.comboPlanes();
   }  
   
   comboSexos = () =>{
@@ -112,6 +117,18 @@ class ConsultaPersona extends Component {
 
   }
 
+  comboPlanes = () =>{
+    if(this.state.planes.length === 0){
+    axios.get('/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
+         this.setState({
+           planes: Object.values(resolve.data).flat(),
+         });
+        }, (error) => {
+            console.log('Error combo planes: ', error.message);
+        })
+      }
+  }
+
   comboTiposDocs = () =>{
     axios.get(urlDocs).then(resolve => {
       this.setState({
@@ -121,6 +138,10 @@ class ConsultaPersona extends Component {
         console.log('Error combo paises', error.message);
     })
 
+  }
+
+  componentDidUpdate(){
+    this.comboPlanes();
   }
 
   componentDidMount() {
@@ -159,6 +180,7 @@ class ConsultaPersona extends Component {
       errorTelefono: true,
       errorMail: true,
       errorObraSocial: true,
+      errorPlan: true,
     })
     if (this.state.cambios){
       const api = "/pacientes/id/" + this.props.id ;
@@ -212,6 +234,7 @@ class ConsultaPersona extends Component {
           "nombre": titleCase(this.state.nombre),
           "nroDocumento": this.state.nroDoc,
           "obraSocial": null,
+          "plan":null,
           "sexo": {
             "sexoId": getSexoId(this.state.sexo, this.state.sexos),
             "nombre": this.state.sexo,
@@ -250,6 +273,11 @@ class ConsultaPersona extends Component {
               "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
               "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
             },
+            "plan":{
+              "planId":getIdPlan(this.state.plan,this.state.planes),
+              "nombre":this.state.plan,
+              "bitActivo": true,
+          },
             "sexo": {
               "sexoId": getSexoId(this.state.sexo, this.state.sexos),
               "nombre": this.state.sexo,
@@ -319,6 +347,7 @@ class ConsultaPersona extends Component {
         telefono: paciente.data.telefono,
         mail: paciente.data.mail,
         obraSocial: verificarExistenciaObraSocial(paciente.data.obraSocial),
+        plan: verificarExistenciaPlan(paciente.data.plan),
         bitAlta: paciente.data.bitAlta,    
         isbottonPressed: false,
         estado: paciente.data.bitAlta,
@@ -332,6 +361,7 @@ class ConsultaPersona extends Component {
         errorTelefono: true,
         errorMail: true,
         errorObraSocial: true,
+        errorPlan:true,
       });
     }, (error) => {
         console.log('Error fetch paciente: ', error.message);
@@ -418,11 +448,17 @@ class ConsultaPersona extends Component {
   }
 
   cambioObraSocial(e){
-      this.setState( {
-          obraSocial: e.target.value,
-          cambios: true,
+    this.setState( {
+        obraSocial: e.target.value,
+        planes: []
       })
-  }
+}  
+
+cambioPlan(e){
+  this.setState({
+    plan: e.target.value
+  })
+}
 
   cambioBitAlta(e){
     this.setState({
@@ -535,6 +571,7 @@ class ConsultaPersona extends Component {
             />
           </Form.Group>
 
+          <Form.Group widths='equal'> 
           <Form.Field  label='Obra Social' control='select' 
           disabled={this.state.modificacion} 
           value={this.state.obraSocial} 
@@ -544,8 +581,18 @@ class ConsultaPersona extends Component {
             <option value={null}>  </option>
             {this.state.obrasSociales.map(item => (
             <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-          </Form.Field> 
+          </Form.Field>
 
+          <Form.Field  label='Plan' control='select' 
+          disabled={this.state.modificacion} 
+          value={this.state.plan} 
+          onChange={this.cambioPlan}  
+          >
+            <option value={null}>  </option>
+            {this.state.planes.map(item => (
+            <option key={item.planId}>{item.nombre}</option>))}
+          </Form.Field> 
+          </Form.Group>
           <br/>
 
           {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
