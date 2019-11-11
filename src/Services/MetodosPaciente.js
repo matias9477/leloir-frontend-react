@@ -40,6 +40,14 @@
     return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
   }
 
+  export const verificarExistenciaPlan = (pl) => {
+    if (pl === null){
+      return null;
+    } else{
+      return pl.nombre;
+    }
+  }
+
   export const verificarExistenciaObraSocial = (os) => {
     if (os === null){
       return null;
@@ -113,6 +121,13 @@
     }
   }
 
+  export const getIdPlan = (plan, planes) => {
+    for(let i=0; i < planes.length; i++){
+      if(plan === planes[i].nombre)
+      return planes[i].planId;
+    }
+  }
+
   export const getCuitObraSocial = (obraSocial, obrasSociales) => {
     for(let i=0; i < obrasSociales.length; i++){
       if (obraSocial === obrasSociales[i].razonSocial)
@@ -147,4 +162,5 @@
         return sexos[i].sexoId;
     }
   }
+
 

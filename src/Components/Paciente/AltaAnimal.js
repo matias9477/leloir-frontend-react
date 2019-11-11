@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import {withRouter} from 'react-router-dom';
 import { Button, Header, Form } from 'semantic-ui-react';
 import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion';
@@ -69,6 +70,7 @@ class AltaAnimal extends Component {
         ).then((response) => {
           alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.'); 
           this.vaciadoCampos();
+          this.props.history.push("/pacientes");
         }, (error) => {
           alert('No se ha podido registrar el paciente.');
       });
@@ -207,4 +209,4 @@ class AltaAnimal extends Component {
 }
 
 
-export default AltaAnimal;
+export default withRouter(AltaAnimal);
