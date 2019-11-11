@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {addDays} from 'date-fns';
-import {Button, Form, label, Label} from 'semantic-ui-react'
+import {Button, Form} from 'semantic-ui-react'
 import axios from "axios";
 import Select from 'react-select';
 
@@ -23,7 +23,7 @@ class NuevoUsuario extends Component {
                 username: '',
                 email: '',
                 password: '',
-                nombreRol: 'SECRETARIA',
+                nombreRol: '',
                 empleado: {
                     apellido: '',
                     bitAlta: true,
@@ -53,6 +53,8 @@ class NuevoUsuario extends Component {
                     usuarioId: 0
                 }
             },
+
+            rol: '', //necesario para q ande el select
 
             pass2: '',
 
@@ -290,9 +292,11 @@ class NuevoUsuario extends Component {
             ...prevState,
             signUpRequest: {
                 ...prevState.signUpRequest,
-                nombreRol: nuevoRol
+                nombreRol: nuevoRol.value
             }
         }))
+
+        this.setState({rol: e})
     };
 
     getUserAvailability(user){
@@ -322,16 +326,6 @@ class NuevoUsuario extends Component {
 
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña) {
 
-            var nuevoRol = this.state.signUpRequest.nombreRol.value;
-            console.log(nuevoRol)
-            this.setState(prevState => ({
-                ...prevState,
-                signUpRequest: {
-                    ...prevState.signUpRequest,
-                    nombreRol: nuevoRol
-                }
-            }))
-            
             let data = this.state.signUpRequest;
             axios.post('/auth/signup', data
             ).then((response) => {
@@ -339,6 +333,69 @@ class NuevoUsuario extends Component {
             }, (error) => {
                 alert('No se ha podido registrar el usuario.');
             });
+
+            this.setState(prevState => ({
+                ...prevState,
+                signUpRequest: {
+                    ...prevState.signUpRequest,
+                    username: '',
+                    email: '',
+                    password: '',
+                    nombreRol: '',
+                    empleado: {
+                        ...prevState.signUpRequest.empleado,
+                        apellido: '',
+                        bitAlta: true,
+                        fechaAlta: getCurrentDate(),
+                        fechaNacimiento: '',
+                        mail: '',
+                        nacionalidad: {
+                            codigoTelefono: 0,
+                            idPais: 0,
+                            iso: '',
+                            iso3: '',
+                            nombre: '',
+                            nombreBonito: ''
+                        },
+                        nombre: '',
+                        nroDocumento: '',
+                        rolId: 0,
+                        sexo: {
+                            nombre: '',
+                            sexoId: 0
+                        },
+                        telefono: 0,
+                        tipoDocumento: {
+                            idTipoDocumento: 0,
+                            nombre: ''
+                        },
+                        usuarioId: 0
+                    }
+                
+                },
+
+                rol: '', 
+    
+                pass2: '',
+    
+                documentos: [],
+                paises: [],
+                sexos: [],
+    
+                disponibilidadUs: true,
+    
+                errorNombre: true,
+                errorApellido: true,
+                errorTipoDoc: true,
+                errorNroDoc: true,
+                errorSexo: true,
+                errorNacionalidad: true,
+                errorFechaNac: true,
+                errorUsuario: true,
+                errorMail: true,
+                errorContraseña: true,
+
+            }))        
 
         } else {
             alert('Verifique los datos ingresados.');
@@ -460,7 +517,7 @@ class NuevoUsuario extends Component {
                             width={8}
                             placeholder='8 caracteres minimo'
                             className= {this.state.errorContraseña === true ? null : 'error'}
-                            value={this.state.signUpRequest.empleado.nroDoc}
+                            value={this.state.password}
                             onChange={this.cambioPassword}
                         />
 
@@ -475,7 +532,7 @@ class NuevoUsuario extends Component {
                     <Form.Field required label='rol'/>
                     <Select
                         name='roles'
-                        value={this.state.signUpRequest.nombreRol}
+                        value={this.state.rol}
                         onChange={this.cambioRol}
                         placeholder= "Seleccione un rol..."
                         isClearable={true}
