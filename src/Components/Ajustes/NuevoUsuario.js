@@ -74,7 +74,7 @@ class NuevoUsuario extends Component {
             errorUsuario: true,
             errorMail: true,
             errorContraseña: true,
-
+            errorRol: true,
         });
     }
 
@@ -288,6 +288,9 @@ class NuevoUsuario extends Component {
     
     cambioRol = (e) => {
         let nuevoRol = e;
+        if (nuevoRol === null){
+            nuevoRol = '';
+        }
         this.setState(prevState => ({
             ...prevState,
             signUpRequest: {
@@ -319,12 +322,13 @@ class NuevoUsuario extends Component {
         const errorSexo = validateRequiredCombos(this.state.signUpRequest.empleado.sexo.nombre);
         const errorNacionalidad = validateRequiredCombos(this.state.signUpRequest.empleado.nacionalidad.nombre);
         const errorMail = validateRequiredMail(this.state.signUpRequest.email);
+        const errorRol = validateRequiredCombos(this.state.signUpRequest.nombreRol);
         
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
         var errorDisponibilidad = this.getUserAvailability(this.state.signUpRequest.username);
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
 
-        if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña) {
+        if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña && errorRol) {
 
             let data = this.state.signUpRequest;
             axios.post('/auth/signup', data
@@ -410,6 +414,7 @@ class NuevoUsuario extends Component {
               errorMail,
               errorUsuario,
               errorContraseña,
+              errorRol,
             })
           } 
     };
@@ -529,9 +534,28 @@ class NuevoUsuario extends Component {
                         />
                     </Form.Group>
                     
-                    <Form.Field required label='rol'/>
+                    <Form.Field required label='Rol' className= {this.state.errorRol === true ? null : 'error'}/>
+                
                     <Select
                         name='roles'
+                        styles={{ 
+                            // singleValue: base => ({ ...base, color: '#F0A7A7' }),
+
+                            indicatorsContainer: base => ({
+                            ...base,
+                            background: '#FDF1F1',
+                            }),
+
+                            valueContainer: base => ({
+                              ...base,
+                              background: '#FDF1F1',
+                              borderStyle: '#FBEBEB',
+                              margin: 0,
+                              width: '100%',
+                            }),
+
+                        }}
+
                         value={this.state.rol}
                         onChange={this.cambioRol}
                         placeholder= "Seleccione un rol..."
@@ -551,6 +575,6 @@ class NuevoUsuario extends Component {
         );
     }
 }
-
+  
 
 export default NuevoUsuario;
