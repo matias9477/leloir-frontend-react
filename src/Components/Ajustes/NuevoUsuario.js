@@ -302,34 +302,6 @@ class NuevoUsuario extends Component {
         this.setState({rol: e})
     };
 
-    //opcion 1
-
-    getUserAvailability(user){
-        axios.get('/user/checkUsernameAvailability', { 
-            params: { 
-                username: user 
-            }}).then(resolve => {
-            
-                this.setState({
-                disponibilidadUs: resolve.data.available
-            })
-    
-        }, (error) => {
-            console.log('Error validacion user', error.message);
-        })
-    };
-
-    //opcion 2
-    getUserAvailability2= async (user) => {
-        try {
-          const response = await axios.get(`/user/checkUsernameAvailability?username=${user}`);
-            return response.data;
-        
-        } catch (error) {
-          console.error(error);
-        }
-    }
-
     handleNuevoUsuarioClick = () => {
         const errorNombre = validateNombre(this.state.signUpRequest.empleado.nombre);
         const errorApellido = validateNombre(this.state.signUpRequest.empleado.apellido);
@@ -343,12 +315,6 @@ class NuevoUsuario extends Component {
         
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
         
-        // var errorDisponibilidad = this.getUserAvailability(this.state.signUpRequest.username);
-
-        var errorDisponibilidad = this.getUserAvailability2(this.state.signUpRequest.username);
-
-        console.log(errorDisponibilidad)
-        
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
 
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña && errorRol) {
@@ -356,7 +322,7 @@ class NuevoUsuario extends Component {
             let data = this.state.signUpRequest;
             axios.post('/auth/signup', data
             ).then((response) => {
-                alert(`Se creo el usuario ${this.state.signUpRequest.username} correctamente.`);
+                alert(`Se creo el usuario correctamente.`);
             }, (error) => {
                 alert('No se ha podido registrar el usuario.');
             });
@@ -421,7 +387,7 @@ class NuevoUsuario extends Component {
                 errorUsuario: true,
                 errorMail: true,
                 errorContraseña: true,
-
+                errorRol: true,
             }))        
 
         } else {
