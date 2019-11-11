@@ -87,7 +87,7 @@ class Afluencia extends Component {
                     </Grid.Column>
 
                     <Grid.Column width={11}>
-                        <Atencion next={this.state.next}/>
+                        <Atencion nextPaciente={this.state.next}/>
 
                     </Grid.Column>
                 </Grid>

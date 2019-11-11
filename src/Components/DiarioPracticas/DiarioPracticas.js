@@ -4,7 +4,6 @@ import {Button, Card, List} from 'semantic-ui-react';
 import axios from "axios";
 import {urlAnalisisPendientes} from "../../Constants/URLs";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Segment from "semantic-ui-react/dist/commonjs/elements/Segment";
 import ModificarResultados from "./Modals/ModificarResultados";
 import RevisarResultados from "./Modals/RevisarResultados";
 import Label from "semantic-ui-react/dist/commonjs/elements/Label";

@@ -15,9 +15,7 @@ class Atencion extends Component {
         this.state = ({
             patients: [],
             selectedPaciente: '',
-            foundPatient: '',
         });
-        this.find = this.find.bind(this);
     }
 
     componentDidMount(){
@@ -33,39 +31,36 @@ class Atencion extends Component {
             console.log('Error en carga de pacientes: ', error.message);
         })
     };
-
-    searchPacientes(){
-        const nodess = this.state.patients.map(({nombre, apellido, nroDocumento, id}) => ({value:`${nombre} ${checkAtributo(apellido)}`, label: `${nombre} ${checkAtributo(apellido)} ${' '} ${checkAtributo(nroDocumento)}`, key: id}));
-        return nodess;
-    }
   
     handleChangeListPacientes = selectedPaciente => {
       this.setState({ selectedPaciente })
     }
 
-    find(){
-        const next = this.props.next.text ;
-        const next2 = this.props.next.text + ' ' ;
+    find = () => {
+        const next = this.props.nextPaciente.text;
 
-        if(this.props.next !== undefined || this.props.next !== ''){
+        if (next !== undefined || next !== ''){
           
             function isPatient(element, index, array) {
-                return (element.value === next || element.value === next2);
+                return (element.nombre === next || (element.nombre + ' ' + element.apellido) === next);
             }
 
-            if (this.searchPacientes().find(isPatient) !== undefined){
-                const a = this.searchPacientes().find(isPatient)
-                return a;
+            if (this.state.patients.find(isPatient) !== undefined){
+                return this.state.patients.find(isPatient);
             }
-        else {
-            return '';
-        }
+            else {
+                return false;
+            }
             
         }
     }
 
+    getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
+
+    getOptionValuePatient = option => option.id;
+
     patientNotFound(){
-        if(this.props.next !== ""){ 
+        if(this.props.nextPaciente !== ""){ 
             return (
                 <div>Paciente no encontrado 
                 <br/><br/><br/>
@@ -73,14 +68,19 @@ class Atencion extends Component {
                     <Grid.Column>
                         <Header as='h5'>Busque el paciente o Registrelo</Header>
                         <Select
+                            name='pacientes'
                             value={this.state.selectedPaciente}
-                            options={this.searchPacientes()}
                             onChange={this.handleChangeListPacientes}
                             placeholder= "Busque un paciente..."
                             isClearable={true}
+                            options={this.state.patients}
+                            getOptionValue={this.getOptionValuePatient}
+                            getOptionLabel={this.getOptionLabelPatient}
                         />
+
                     </Grid.Column>
                     <Grid.Column width={5}>
+                        <br/>
                         <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
                             <Icon name='user' /> Nuevo Paciente
                         </Button>
@@ -98,11 +98,16 @@ class Atencion extends Component {
             <div>
                 <Header as='h2'>Atención</Header>
                 <Form className='formAtencion'>
-                    <Form.Field label='Paciente' value={this.props.next.text} control='input' />
-                    {this.find() === '' ? this.patientNotFound() : "Paciente encontrado"}
-                </Form>
-                <SelectedPaciente selected={this.state.foundPatient}/>
+                    <Form.Field label='Paciente' value={this.props.nextPaciente.text} control='input' />
+                    {this.find() === false ? this.patientNotFound() : 
+                        <div>
+                            Paciente encontrado
+                            <SelectedPaciente selected={this.find()}/>
 
+                        </div>
+                        }
+                </Form>
+               
             </div>
         );
     }
