@@ -302,9 +302,15 @@ class NuevoUsuario extends Component {
         this.setState({rol: e})
     };
 
+    //opcion 1
+
     getUserAvailability(user){
-        axios.get('/user/checkUsernameAvailability', { params: { username: user } }).then(resolve => {
-            this.setState({
+        axios.get('/user/checkUsernameAvailability', { 
+            params: { 
+                username: user 
+            }}).then(resolve => {
+            
+                this.setState({
                 disponibilidadUs: resolve.data.available
             })
     
@@ -312,6 +318,17 @@ class NuevoUsuario extends Component {
             console.log('Error validacion user', error.message);
         })
     };
+
+    //opcion 2
+    getUserAvailability2= async (user) => {
+        try {
+          const response = await axios.get(`/user/checkUsernameAvailability?username=${user}`);
+            return response.data;
+        
+        } catch (error) {
+          console.error(error);
+        }
+    }
 
     handleNuevoUsuarioClick = () => {
         const errorNombre = validateNombre(this.state.signUpRequest.empleado.nombre);
@@ -325,7 +342,13 @@ class NuevoUsuario extends Component {
         const errorRol = validateRequiredCombos(this.state.signUpRequest.nombreRol);
         
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
-        var errorDisponibilidad = this.getUserAvailability(this.state.signUpRequest.username);
+        
+        // var errorDisponibilidad = this.getUserAvailability(this.state.signUpRequest.username);
+
+        var errorDisponibilidad = this.getUserAvailability2(this.state.signUpRequest.username);
+
+        console.log(errorDisponibilidad)
+        
         const errorContraseña = validateContraseña(this.state.signUpRequest.password, this.state.pass2)
 
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña && errorRol) {
@@ -379,7 +402,7 @@ class NuevoUsuario extends Component {
                 },
 
                 rol: '', 
-    
+                password: '',
                 pass2: '',
     
                 documentos: [],
@@ -459,7 +482,7 @@ class NuevoUsuario extends Component {
                             width={11}
                             placeholder='Número de documento'
                             className= {this.state.errorNroDoc === true ? null : 'error'}
-                            value={this.state.signUpRequest.empleado.nroDoc}
+                            value={this.state.signUpRequest.empleado.nroDocumento}
                             onChange={this.cambioNroDocumento}
                         />
                     </Form.Group>
@@ -485,7 +508,6 @@ class NuevoUsuario extends Component {
                         {this.state.paises.map(item => (
                             <option key={item.key}>{item.display}</option>))}
                     </Form.Field>
-
 
                     <Form.Field required className= {this.state.errorFechaNac === true ? null : 'error'}>
                         <label>Fecha de Nacimiento</label>
@@ -538,24 +560,7 @@ class NuevoUsuario extends Component {
                 
                     <Select
                         name='roles'
-                        styles={{ 
-                            // singleValue: base => ({ ...base, color: '#F0A7A7' }),
-
-                            indicatorsContainer: base => ({
-                            ...base,
-                            background: '#FDF1F1',
-                            }),
-
-                            valueContainer: base => ({
-                              ...base,
-                              background: '#FDF1F1',
-                              borderStyle: '#FBEBEB',
-                              margin: 0,
-                              width: '100%',
-                            }),
-
-                        }}
-
+                        styles={this.state.errorRol === true ? '' : styleErrorSelect}
                         value={this.state.rol}
                         onChange={this.cambioRol}
                         placeholder= "Seleccione un rol..."
@@ -567,13 +572,30 @@ class NuevoUsuario extends Component {
 
                     <br/><br/>
 
-                    <Button primary type="submit" onClick={this.handleNuevoUsuarioClick} className="boton"> Crear
-                        Usuario</Button>
+                    <Button primary type="submit" onClick={this.handleNuevoUsuarioClick} className="boton"> Crear Usuario</Button>
 
                 </Form>
             </div>
         );
     }
+}
+
+const styleErrorSelect = { 
+    // singleValue: base => ({ ...base, color: '#F0A7A7' }),
+
+    indicatorsContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    }),
+
+    valueContainer: base => ({
+      ...base,
+      background: '#FDF1F1',
+      borderStyle: '#FBEBEB',
+      margin: 0,
+      width: '100%',
+    }),
+
 }
   
 

@@ -30,7 +30,7 @@ export function nullTo(nro){
 }
 
 export function validateRequiredCombos(valor){
-  if (valor === null || valor.length === 0 || valor === ''){
+  if (valor === undefined || valor === null || valor.length === 0 || valor === ''){
       return false
   }
   return true
