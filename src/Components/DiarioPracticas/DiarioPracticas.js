@@ -17,9 +17,7 @@ class DiarioPracticas extends Component {
             pendientes: [],
             show: false,
             currentAnalisisID: null,
-            // currentAnalisis: null,
             currentModal: null,
-            // resultados: [],
         };
     }
 
