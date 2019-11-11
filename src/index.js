@@ -23,6 +23,7 @@ import TablaMuestra from './Components/Muestra/TablaMuestra';
 import DiarioPracticasContainer from "./Components/DiarioPracticas/DiarioPracticasContainer";
 import TablaAnalisis from './Components/Analisis/TablaAnalisis';
 import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
+import iFramePBI from './Components/Reportes/iFramePBI';
 
 
 ReactDOM.render(
@@ -64,6 +65,7 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/muestras" component={TablaMuestra}/>
         <AuthenticatedRoute exact path="/Logout" component={LogoutContainer}/>
         <AuthenticatedRoute exact path="/ajustes" component={AjustesContainer}/>
+        <AuthenticatedRoute exact path="/reportes" component={iFramePBI}/>
         </Switch>
     </Router>
 

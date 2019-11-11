@@ -76,6 +76,13 @@ export default class MenuOpciones extends Component {
                         onClick={this.handleItemClick}
                     />
 
+                    <Menu.Item
+                        name='Reportes'
+                        as={Link} to='/reportes'
+                        active={activeItem === 'Reportes'}
+                        onClick={this.handleItemClick}
+                    />
+
                     <Menu.Menu position='right'>
                         <Menu.Item
                             as={Link} to='/ajustes'
