@@ -182,7 +182,7 @@ class ConsultaAnalisis extends Component {
 
                         <Form.Field label='Fecha Creación' value={this.state.analisis ? getHumanDate(this.state.analisis.createdAt) : ''} control='input' />
 
-                        <Form.Field label='Estado' value={this.state.analisis ? this.state.analisis.estado.nombre : ''} control='input' />
+                        <Form.Field label='Estado' value={this.state.analisis ? this.state.analisis.estadoAnalisis.nombre : ''} control='input' />
 
                         <Form.Input label='Nombre' iconPosition='left' value={this.state.analisis ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
                             <Icon name={this.getIconTipo(this.state.analisis ? this.state.analisis.paciente.type : '')}/>
