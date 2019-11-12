@@ -1,28 +1,34 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Grid, Table, Segment } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, Table, Segment, Card, List, Label } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 
 import MenuOpciones from '../MenuOpciones';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
-import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd } from "../../Constants/URLs";
+import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs";
+import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
+import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados';
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
     constructor(props) {
         super(props);
-        this.state = ({        
+        this.state = ({  
+            idAnalisis: this.props.match.params.id,      
             analisis: '',
             tipos: [],
             muestras: [],
 
-            show: false,
+            showMuestra: false,
 
             tipo: '',
 
             errorTipo: true,
+
+            show: false,
+            currentModal: null,
           })
     }
 
@@ -43,7 +49,7 @@ class ConsultaAnalisis extends Component {
     }
 
     getAnalisis = () => {
-        axios.get(urlGetAnalisis + this.props.match.params.id).then(resolve => {
+        axios.get(urlGetAnalisis + this.state.idAnalisis).then(resolve => {
           this.setState({
             analisis: resolve.data,
           });
@@ -76,7 +82,7 @@ class ConsultaAnalisis extends Component {
 
     dataMuestra = (api) => {
         var data = {
-            "analisisId": this.props.match.params.id,
+            "analisisId": this.state.idAnalisis,
             "bitActivo": true,
             "estadoId":  1,
             "tipoMuestraId": this.state.tipo.tipoMuestraId,
@@ -111,7 +117,7 @@ class ConsultaAnalisis extends Component {
         const muestras = [];
 
         for(var i = 0; i<this.state.muestras.length; i++){
-            if(this.state.muestras[i].analisisId.toString() === this.props.match.params.id){
+            if(this.state.muestras[i].analisisId.toString() === this.state.idAnalisis){
                 muestras.push(this.state.muestras[i])
             }
         }
@@ -182,9 +188,9 @@ class ConsultaAnalisis extends Component {
 
                         <Form.Field label='Fecha Creación' value={this.state.analisis ? getHumanDate(this.state.analisis.createdAt) : ''} control='input' />
 
-                        <Form.Field label='Estado' value={this.state.analisis ? this.state.analisis.estado.nombre : ''} control='input' />
+                        <Form.Field label='Estado' value={this.state.analisis ? this.state.analisis.estadoAnalisis.nombre : ''} control='input' />
 
-                        <Form.Input label='Nombre' iconPosition='left' value={this.state.analisis ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
+                        <Form.Input label='Nombre' iconPosition='left' value={this.state.analisis !== undefined ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
                             <Icon name={this.getIconTipo(this.state.analisis ? this.state.analisis.paciente.type : '')}/>
                             <input/>
                         </Form.Input>
@@ -203,16 +209,12 @@ class ConsultaAnalisis extends Component {
                         </div>
                         : null}
 
-                        
-
                     </Grid.Column>
-
 
                     <Grid.Column width={5} divided>
                         <Header>Determinaciones</Header>
-                        {this.state.analisis.determinaciones.map(determinacion => (
-                            <Form.Field label={determinacion.determinacion.descripcionPractica + ' ' + determinacion.determinacion.codigoPractica} value={determinacion.resultado} control='input' placeholder='Ingrese resultado...'/>
-                        ))}
+                        {this.renderCard()}
+                        {this.handleModalContent()}
                           
                     </Grid.Column>
 
@@ -221,7 +223,7 @@ class ConsultaAnalisis extends Component {
 
                         {m.length === 0 ? <div>No existen muestras para este análisis
                             <br/><br/>
-                            <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({show: true}) }
+                            <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showModal: true}) }
                             >
                                 <Icon name='plus' /> Añadir muestra
                             </Button>
@@ -250,7 +252,7 @@ class ConsultaAnalisis extends Component {
                                 <Table.Row>
                                     <Table.HeaderCell />
                                     <Table.HeaderCell colSpan='4'>
-                                    <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({show: true}) }
+                                    <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showModal: true}) }
                                     >
                                         <Icon name='plus' /> Añadir muestra
                                     </Button>
@@ -261,27 +263,153 @@ class ConsultaAnalisis extends Component {
                         }                
 
                         <br/><br/>
-                        {this.state.show ? this.createMuestra() : null}
+                        {this.state.showModal ? this.createMuestra() : null}
                         <br/><br/>
                     </Grid.Column>
                 
                 </Grid>
                 
                 </Segment>
-
-                
-                
                 
                 <br/>
                 
             </Form>
             : null }
             }
-    
-            
+     
           </div>
         );
-      }
+    }
+
+    emitirAnalisis = () => {
+        axios.get(urlEmitirAnalisis + this.state.idAnalisis, {responseType: 'blob',}).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            const index1 = response.headers['content-disposition'].indexOf("name=\"") + 6;
+            const index2 = response.headers['content-disposition'].indexOf("\"", 18);
+            link.href = url;
+            link.setAttribute('download', response.headers['content-disposition'].substring(index1, index2)); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            this.getAllPendientes()
+        }, (error) => {
+            console.log('Error', error.message);
+        })
+    };
+
+    showModal = (modal) => {
+        this.setState({
+            show: true,
+            // currentAnalisisID: idAnalisis,
+            currentModal: modal
+
+        });
+    };
+
+    hideModalCallback = () => {
+        this.setState({
+            // currentAnalisisID: null,
+            show: false,
+            currentModal: null,
+        });
+    };
+
+    renderButtons = (estado) => {
+        switch (estado) {
+            case "EN_PROCESO":
+                return (
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
+                            <Button basic color='green'
+                                    onClick={() => this.showModal(this.state.idAnalisis, "REVISAR")}>
+                                Revisar Analisis
+                            </Button>
+                            <Button basic color='blue'
+                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                Modificar Resultados
+                            </Button>
+                        </div>
+                    </Card.Content>
+                );
+            case "PREPARADO":
+                return (
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
+                            <Button color='green'
+                                    onClick={() => this.emitirAnalisis(this.state.idAnalisis)}>
+                                Emitir Analisis
+                            </Button>
+                            <Button basic color='blue'
+                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                Modificar Resultados
+                            </Button>
+                        </div>
+                    </Card.Content>
+
+                );
+            case "NUEVO":
+                return (
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
+                            <Button basic color='blue'
+                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                Cargar Resultados
+                            </Button>
+                        </div>
+                    </Card.Content>
+                );
+            default:
+                return (
+                    <Label as='a' attached='bottom'>
+                        {estado}
+                    </Label>
+                )
+        }
+    };
+
+    renderCard = () => (
+                <Card fluid raised centered>
+                    <Card.Content>
+                        <Card.Description textAlign='left'>
+                            Determinaciones:
+
+                            <List>
+                            {this.state.analisis.determinaciones.map(nombre =>
+                                <List.Item>
+                                    <List.Icon name='lab'/>
+                                    <List.Content><strong>{nombre.determinacion.descripcionPractica}</strong></List.Content>
+                                </List.Item>
+                            )}
+                            </List>
+
+                        </Card.Description>
+                    </Card.Content>
+
+                    {this.renderButtons(this.state.analisis.estadoAnalisis.nombre, this.state.idAnalisis)}
+
+                </Card>
+    );
+
+    handleModalContent() {
+        switch (this.state.currentModal) {
+            case "MODIFICAR":
+                return (
+                    <ModificarResultados show={this.state.show}
+                                         callback={this.hideModalCallback}
+                                         idAnalisis={this.state.idAnalisis}/>
+                );
+            case "REVISAR":
+                return (
+                    <RevisarResultados show={this.state.show}
+                                       callback={this.hideModalCallback}
+                                       idAnalisis={this.state.idAnalisis}/>
+                );
+            default:
+                return null
+        }
+    };
+
+
  
 }
 

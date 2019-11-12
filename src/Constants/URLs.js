@@ -12,6 +12,7 @@ export const urlTiposMuestras = "/tipos_muestras/all";
 export const urlMuestrasAdd = '/muestras/add';
 
 export const urlPacientes = "/pacientes/all";
+export const urlPacientesEnAlta = "/pacientes/all-en-alta";
 
 export const urlSignUp = "/auth/signup";
 export const urlSignIn = "/auth/signin";

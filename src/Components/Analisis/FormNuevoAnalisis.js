@@ -6,7 +6,7 @@ import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import MenuOpciones from '../MenuOpciones';
-import { urlDeterminaciones } from '../../Constants/URLs';
+import { urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
@@ -46,8 +46,7 @@ class FormNuevoAnalisis extends Component {
   };
 
   getAllPacientes = () => {
-    const urlPacientes = "/pacientes/all";
-    axios.get(urlPacientes).then(resolve => {
+    axios.get(urlPacientesEnAlta).then(resolve => {
         this.setState({
             pacientes: Object.values(resolve.data).flat(),
         });
