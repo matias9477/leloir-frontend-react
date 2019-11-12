@@ -4,7 +4,7 @@ import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import MenuOpciones from '../MenuOpciones';
 import { urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
@@ -17,6 +17,9 @@ class FormNuevoAnalisis extends Component {
     this.state = ({
         determinaciones: [],
         pacientes: [],
+        obrasSociales: [],
+        planes: [],
+        precio:'',
 
         loading: true,
 
@@ -27,11 +30,39 @@ class FormNuevoAnalisis extends Component {
         errorDeterminaciones: true,
       })
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
+      this.getPrecioAnalisis = this.getPrecioAnalisis.bind(this);
     }
 
   componentDidMount(){
     this.getDeteminaciones();
     this.getAllPacientes();
+    this.getAllObrasSociales();
+  }
+
+  getAllObrasSociales(){
+    axios.get("/obras_sociales/all").then(resolve => {
+      this.setState({
+        obrasSociales: Object.values(resolve.data).flat(),
+      });
+    }, (error) => {
+      console.log('Error en la carga de obras sociales: ',error.message);
+    })
+  }
+
+  getAllPlanes(){
+    if(this.state.planes.length === 0 && this.state.selectedDeterminaciones.length !==0){
+    axios.get("/obras_sociales/planes/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)).then(resolve => {
+      this.setState({
+        obrasSociales: Object.values(resolve.data).flat(),
+      });
+    }, (error) => {
+      console.log('Error en la carga de obras sociales: ',error.message);
+    })
+  } 
+  }
+  
+  componentDidUpdate(){
+    this.getAllPlanes();
   }
 
   getDeteminaciones = () => {
@@ -96,6 +127,10 @@ class FormNuevoAnalisis extends Component {
       })
     }    
   }
+
+  getPrecioAnalisis(){
+    window.confirm(`El precio del análisis es 215`);
+}
 
   getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
 
@@ -162,6 +197,7 @@ class FormNuevoAnalisis extends Component {
           />
 
           <br/> <br/>
+          <Button primary size='small' onClick={this.getPrecioAnalisis}>Consultar Precio</Button>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
             Registrar Análisis
           </Button>  
