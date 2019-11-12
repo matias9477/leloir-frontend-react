@@ -213,11 +213,6 @@ class ConsultaAnalisis extends Component {
 
                     <Grid.Column width={5} divided>
                         <Header>Determinaciones</Header>
-                        {/* {this.state.analisis.determinaciones.map(determinacion => (
-                            <Form.Field label={determinacion.determinacion.descripcionPractica + ' ' + determinacion.determinacion.codigoPractica} value={determinacion.resultado} control='input' placeholder='Ingrese resultado...'/>
-                        ))}
-                        <Button>Cargar</Button> */}
-
                         {this.renderCard()}
                         {this.handleModalContent()}
                           
