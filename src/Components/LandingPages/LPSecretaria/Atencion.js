@@ -4,8 +4,10 @@ import { Form, Header, Icon, Button, Grid } from 'semantic-ui-react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
 
-import { urlPacientes } from '../../../Constants/URLs';
+import { urlPacientes, urlAnalisisPendientes } from '../../../Constants/URLs';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
+import SelectedPaciente from './PacienteEnAtencion';
+import AnalisisPendientes from './AnalisisPendientesAtencion';
 import './LPSecretaria.css';
 
 class Atencion extends Component {
@@ -14,14 +16,14 @@ class Atencion extends Component {
         this.state = ({
             patients: [],
             selectedPaciente: '',
-            foundPatient: '',
+            analisisPendientes:[],
         });
-        this.find = this.find.bind(this);
     }
 
     componentDidMount(){
         this.getAllPacientes();
     }
+
 
     getAllPacientes = () => {
         axios.get(urlPacientes).then(resolve => {
@@ -32,39 +34,50 @@ class Atencion extends Component {
             console.log('Error en carga de pacientes: ', error.message);
         })
     };
-
-    searchPacientes(){
-        const nodess = this.state.patients.map(({nombre, apellido, nroDocumento, id}) => ({value:`${nombre} ${checkAtributo(apellido)}`, label: `${nombre} ${checkAtributo(apellido)} ${' '} ${checkAtributo(nroDocumento)}`, key: id}));
-        return nodess;
-    }
   
     handleChangeListPacientes = selectedPaciente => {
       this.setState({ selectedPaciente })
     }
 
-    find(){
-        const next = this.props.next.text ;
-        const next2 = this.props.next.text + ' ' ;
+    getAnalisisPendientes = () =>{
+        const paciente = this.find();
+        if(paciente!==false && this.state.analisisPendientes.length === 0){
+                axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
+                    this.setState({
+                        analisisPendientes : Object.values(resolve.data).flat(),
+                    })
+                }, (error) => {
+                    console.log('Error en la búsqueda de analisis pendientes: ',error.message);
+                })
+        }
+    };
 
-        if(this.props.next !== undefined || this.props.next !== ''){
+    find = () => {
+        const next = this.props.nextPaciente.text;
+
+        if (next !== undefined || next !== ''){
           
             function isPatient(element, index, array) {
-                return (element.value === next || element.value === next2);
+                return (element.nombre === next || (element.nombre + ' ' + element.apellido) === next);
             }
 
-            if (this.searchPacientes().find(isPatient) !== undefined){
-                const a = this.searchPacientes().find(isPatient)
-                return a;
+            if (this.state.patients.find(isPatient) !== undefined){
+                return this.state.patients.find(isPatient);
             }
-        else {
-            return '';
-        }
+            else {
+                return false;
+            }
             
         }
     }
 
+    getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
+
+    getOptionValuePatient = option => option.id;
+
     patientNotFound(){
-        if(this.props.next !== ""){ 
+        if(this.props.nextPaciente !== ""){ 
+            this.vaciadoAnalisisPendientes();
             return (
                 <div>Paciente no encontrado 
                 <br/><br/><br/>
@@ -72,14 +85,19 @@ class Atencion extends Component {
                     <Grid.Column>
                         <Header as='h5'>Busque el paciente o Registrelo</Header>
                         <Select
+                            name='pacientes'
                             value={this.state.selectedPaciente}
-                            options={this.searchPacientes()}
                             onChange={this.handleChangeListPacientes}
                             placeholder= "Busque un paciente..."
                             isClearable={true}
+                            options={this.state.patients}
+                            getOptionValue={this.getOptionValuePatient}
+                            getOptionLabel={this.getOptionLabelPatient}
                         />
+
                     </Grid.Column>
                     <Grid.Column width={5}>
+                        <br/>
                         <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
                             <Icon name='user' /> Nuevo Paciente
                         </Button>
@@ -91,16 +109,37 @@ class Atencion extends Component {
         
     }
 
+    vaciadoAnalisisPendientes(){
+        if(this.state.analisisPendientes.length !== 0){
+        this.setState({
+            analisisPendientes:[],
+        })
+    }
+    }
 
     render() {
+        console.log(this.state.analisisPendientes);
         return (
             <div>
                 <Header as='h2'>Atención</Header>
+                <div className="DatosDelPaciente">
                 <Form className='formAtencion'>
-                    <Form.Field label='Paciente' value={this.props.next.text} control='input' />
-                    {this.find() === '' ? this.patientNotFound() : "Paciente encontrado"}
-                </Form>
+                    <Form.Field label='Paciente' value={this.props.nextPaciente.text} control='input' />
+                    {this.find() === false ? this.patientNotFound() : 
+                        <div>
+                            
+                            <SelectedPaciente selected={this.find()} />
+                            {this.getAnalisisPendientes()}
 
+                        </div>
+                        }
+                    {this.state.analisisPendientes.length>0 ?
+                        <div>
+                            <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
+                        </div>
+                    :   null}    
+                </Form>
+               </div>
             </div>
         );
     }

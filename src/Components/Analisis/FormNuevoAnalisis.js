@@ -106,11 +106,6 @@ class FormNuevoAnalisis extends Component {
 
   getOptionValueDeterminaciones = option => option.codigoPractica;
 
-  searchDeterminaciones(){
-    const nodess = this.state.selectedDeterminaciones.map(({codigoPractica}) => ({ codigoPractica}));
-    return nodess;
-  }
-
   listIdDets(dets) {
     let list = [];
     for (let i=0; i<dets.length; i+=1) {
