@@ -41,9 +41,8 @@ class Atencion extends Component {
 
     getAnalisisPendientes = () =>{
         const paciente = this.find();
-        if(paciente!==false){
+        if(paciente!==false && this.state.analisisPendientes.length === 0){
                 axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
-                    console.log(Object.values(resolve.data).flat())
                     this.setState({
                         analisisPendientes : Object.values(resolve.data).flat(),
                     })
@@ -78,6 +77,7 @@ class Atencion extends Component {
 
     patientNotFound(){
         if(this.props.nextPaciente !== ""){ 
+            this.vaciadoAnalisisPendientes();
             return (
                 <div>Paciente no encontrado 
                 <br/><br/><br/>
@@ -109,6 +109,13 @@ class Atencion extends Component {
         
     }
 
+    vaciadoAnalisisPendientes(){
+        if(this.state.analisisPendientes.length !== 0){
+        this.setState({
+            analisisPendientes:[],
+        })
+    }
+    }
 
     render() {
         console.log(this.state.analisisPendientes);
