@@ -164,10 +164,6 @@ export default class TablaObraSocial extends React.Component {
         })
     }
 
-    renderTabla = () =>{
-
-    }
-
 
     render(){
         return(
