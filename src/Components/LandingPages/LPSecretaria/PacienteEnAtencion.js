@@ -2,48 +2,48 @@ import React from 'react';
 import { Header, Container, List } from 'semantic-ui-react';
 import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion';
 
-const SelectedPaciente = props => {
+const SelectedPaciente = ({selected}) => {
     return (
         <div>
-            {(props.selected === '' || props.selected === null) ? null : 
+            {(selected === '' || selected === null) ? null : 
             <Container style={Style} text>
                 <Header as='h4' style={HeaderStyle}>Información del paciente en atención </Header>
   
                     <List>
                         <List.Item>
-                            <List.Content>Número de paciente: {props.selected.id}</List.Content>
+                            <List.Content>Número de paciente: {selected.id}</List.Content>
                         </List.Item>
 
                         <List.Item>
-                            <List.Content>Tipo Paciente: {titleCase(props.selected.tipoPaciente)}</List.Content>
+                            <List.Content>Tipo Paciente: {titleCase(selected.tipoPaciente)}</List.Content>
                         </List.Item>
 
                         <List.Item>
-                            <List.Content>Nombre: {props.selected.nombre} {checkAtributo(props.selected.apellido)}</List.Content>
+                            <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
                         </List.Item>
 
-                        {checkAtributo(props.selected.nroDocumento) ? 
+                        {checkAtributo(selected.nroDocumento) ? 
                                 <List.Item>
-                                        <List.Content>{props.selected.tipoDocumento}: {props.selected.nroDocumento}</List.Content>
+                                        <List.Content>{selected.tipoDocumento}: {selected.nroDocumento}</List.Content>
                                 </List.Item>
                             : null}
 
-                        {checkAtributo(props.selected.tipoAnimal) ?
+                        {checkAtributo(selected.tipoAnimal) ?
                                 <List.Item>
-                                            <List.Content>Tipo de Animal: {titleCase(props.selected.tipoAnimal)}</List.Content>
+                                            <List.Content>Tipo de Animal: {titleCase(selected.tipoAnimal)}</List.Content>
                                 </List.Item>
                             : null} 
                         
 
-                        {checkAtributo(props.selected.propietario) ?
+                        {checkAtributo(selected.propietario) ?
                                 <List.Item>
-                                            <List.Content>Propietario: {props.selected.propietario}</List.Content>
+                                            <List.Content>Propietario: {selected.propietario}</List.Content>
                                 </List.Item>
                             : null}
 
-                        {checkAtributo(props.selected.obraSocial) ?
+                        {checkAtributo(selected.obraSocial) ?
                                 <List.Item>
-                                            <List.Content>Obra social: {props.selected.obraSocial}</List.Content>
+                                            <List.Content>Obra social: {selected.obraSocial}</List.Content>
                                 </List.Item>
                             : null}
 
@@ -53,11 +53,6 @@ const SelectedPaciente = props => {
             </Container>
         }
 
-                
-                <Header as='h4' style={HeaderStyle}>Analisis pendientes del paciente: </Header>
-                {props.pendientes ? 
-                    props.pendientes[0].paciente
-                    : null}
     </div>    
     );
 };

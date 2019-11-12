@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import { urlPacientes, urlAnalisisPendientes } from '../../../Constants/URLs';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
 import SelectedPaciente from './PacienteEnAtencion';
+import AnalisisPendientes from './AnalisisPendientesAtencion';
 import './LPSecretaria.css';
 
 class Atencion extends Component {
@@ -15,12 +16,14 @@ class Atencion extends Component {
         this.state = ({
             patients: [],
             selectedPaciente: '',
+            analisisPendientes:[],
         });
     }
 
     componentDidMount(){
         this.getAllPacientes();
     }
+
 
     getAllPacientes = () => {
         axios.get(urlPacientes).then(resolve => {
@@ -41,13 +44,13 @@ class Atencion extends Component {
         if(paciente!==false){
                 axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
                     console.log(Object.values(resolve.data).flat())
-                    return Object.values(resolve.data).flat();
-
+                    this.setState({
+                        analisisPendientes : Object.values(resolve.data).flat(),
+                    })
                 }, (error) => {
                     console.log('Error en la búsqueda de analisis pendientes: ',error.message);
                 })
         }
-        else return null;
     };
 
     find = () => {
@@ -108,6 +111,7 @@ class Atencion extends Component {
 
 
     render() {
+        console.log(this.state.analisisPendientes);
         return (
             <div>
                 <Header as='h2'>Atención</Header>
@@ -117,10 +121,16 @@ class Atencion extends Component {
                     {this.find() === false ? this.patientNotFound() : 
                         <div>
                             
-                            <SelectedPaciente selected={this.find()} pendientes={this.getAnalisisPendientes()}/>
+                            <SelectedPaciente selected={this.find()} />
+                            {this.getAnalisisPendientes()}
 
                         </div>
                         }
+                    {this.state.analisisPendientes.length>0 ?
+                        <div>
+                            <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
+                        </div>
+                    :   null}    
                 </Form>
                </div>
             </div>
