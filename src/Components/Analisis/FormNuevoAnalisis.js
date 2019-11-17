@@ -6,7 +6,7 @@ import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import MenuOpciones from '../MenuOpciones';
-import { urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
+import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
@@ -29,41 +29,41 @@ class FormNuevoAnalisis extends Component {
         errorPaciente: true,
         errorDeterminaciones: true,
       })
+      this.getPrecio = this.getPrecio.bind(this);
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
-      this.getPrecioAnalisis = this.getPrecioAnalisis.bind(this);
     }
 
   componentDidMount(){
     this.getDeteminaciones();
     this.getAllPacientes();
-    this.getAllObrasSociales();
+    this.getAllObraSocial();
   }
 
-  getAllObrasSociales(){
-    axios.get("/obras_sociales/all").then(resolve => {
-      this.setState({
-        obrasSociales: Object.values(resolve.data).flat(),
-      });
-    }, (error) => {
-      console.log('Error en la carga de obras sociales: ',error.message);
-    })
-  }
-
-  getAllPlanes(){
-    if(this.state.planes.length === 0 && this.state.selectedDeterminaciones.length !==0){
-    axios.get("/obras_sociales/planes/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)).then(resolve => {
-      this.setState({
-        obrasSociales: Object.values(resolve.data).flat(),
-      });
-    }, (error) => {
-      console.log('Error en la carga de obras sociales: ',error.message);
-    })
-  } 
-  }
-  
   componentDidUpdate(){
     this.getAllPlanes();
   }
+  getAllObraSocial = () =>{
+    axios.get(urlObrasSoc).then((response) => {
+      this.setState({
+        obrasSociales: Object.values(response.data).flat(),
+      });
+  }, (error) => {
+      console.log('Error en carga de obras sociales: ', error.message);
+  })
+  };
+
+  getAllPlanes = () =>{
+    if(this.state.planes.length === 0){
+    axios.get(urlPlanesXObra+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)).then((response) => {
+      this.setState({
+        planes: Object.values(response.data).flat(),
+      });
+  }, (error) => {
+      console.log('Error en carga de planes: ', error.message);
+  })
+}
+  };
+
 
   getDeteminaciones = () => {
     axios.get(urlDeterminaciones).then((response) => {
@@ -94,6 +94,18 @@ class FormNuevoAnalisis extends Component {
     this.setState({ selectedDeterminaciones })
   }
   
+  getPrecio(){
+    const api = "/precio/obraSocialId/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)+"/planId/"+getIdPlan(this.state.selectedPaciente.plan,this.state.planes)+"/determinaciones/"+ this.listIdDets(this.state.selectedDeterminaciones);
+    axios.get(api)
+    .then(resolve =>{
+      this.setState({
+        precio: Object.values(resolve.data).flat(),
+      });
+    }, (error) => {
+      console.log('error al buscar precio de analisis')
+    })
+  }
+
   handleUpdateClick = (api) => {
     var data = {
       "idPaciente": this.state.selectedPaciente.id,
@@ -128,9 +140,6 @@ class FormNuevoAnalisis extends Component {
     }    
   }
 
-  getPrecioAnalisis(){
-    window.confirm(`El precio del análisis es 215`);
-}
 
   getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
 
@@ -197,7 +206,9 @@ class FormNuevoAnalisis extends Component {
           />
 
           <br/> <br/>
-          <Button primary size='small' onClick={this.getPrecioAnalisis}>Consultar Precio</Button>
+          <Button primary size='small' onClick={this.getPrecio}> 
+            Obtener precio
+          </Button>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
             Registrar Análisis
           </Button>  

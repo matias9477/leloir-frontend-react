@@ -26,3 +26,4 @@ export const urlEmitirAnalisis = "/analisis/emitir-analisis/";
 export const urlAnalisis = '/analisis/all';
 export const urlCargarResultados = '/analisis/cargar-resultados/';
 export const urlAprobarResultados = '/analisis/aprobar-resultados/';
+export const urlPlanesXObra = '/obras_sociales/planes/';
