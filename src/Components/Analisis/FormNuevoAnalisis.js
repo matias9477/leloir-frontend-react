@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, FormGroup, GridColumn } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -21,6 +21,7 @@ class FormNuevoAnalisis extends Component {
         planes: [],
         precio:'',
 
+        mod: false,
         loading: true,
 
         selectedPaciente: '',
@@ -41,6 +42,9 @@ class FormNuevoAnalisis extends Component {
 
   componentDidUpdate(){
     this.getAllPlanes();
+    if(this.state.mod == true){
+    this.getPrecio();
+    }
   }
   getAllObraSocial = () =>{
     axios.get(urlObrasSoc).then((response) => {
@@ -92,6 +96,12 @@ class FormNuevoAnalisis extends Component {
 
   handleChangeListDeterminaciones = selectedDeterminaciones => {
     this.setState({ selectedDeterminaciones })
+    if(this.state.mod ==false){
+      this.setState({
+        mod:true
+      })
+    }
+  
   }
   
   getPrecio(){
@@ -99,7 +109,8 @@ class FormNuevoAnalisis extends Component {
     axios.get(api)
     .then(resolve =>{
       this.setState({
-        precio: Object.values(resolve.data).flat(),
+        precio: resolve.data,
+        mod:false
       });
     }, (error) => {
       console.log('error al buscar precio de analisis')
@@ -110,6 +121,7 @@ class FormNuevoAnalisis extends Component {
     var data = {
       "idPaciente": this.state.selectedPaciente.id,
       "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
+      "precio": this.state.precio,
     };
 
     axios.post(api, data).then((response) => {
@@ -127,7 +139,6 @@ class FormNuevoAnalisis extends Component {
 
     const errorPaciente = validateRequiredCombos(selectedPaciente);
     const errorDeterminaciones = validateRequiredCombos(selectedDeterminaciones);
-    
     if ( errorPaciente && errorDeterminaciones ) {
       const api = '/analisis/add';
       this.handleUpdateClick(api);
@@ -204,11 +215,21 @@ class FormNuevoAnalisis extends Component {
             getOptionValue={this.getOptionValueDeterminaciones}
             getOptionLabel={this.getOptionLabelDeterminaciones}
           />
+          
+          <Header as={'h5'}>Precio:</Header>
+          <Grid>
+          
+            <GridColumn width={12}>
+          
+          <Form.Field control='input' 
+            placeholder='Precio' 
+            value={this.state.precio}   
+            />
+            </GridColumn>
+          
+            </Grid>
 
           <br/> <br/>
-          <Button primary size='small' onClick={this.getPrecio}> 
-            Obtener precio
-          </Button>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
             Registrar Análisis
           </Button>  
