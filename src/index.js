@@ -1,5 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux'
+import generateStore from './Redux/store'
+
+
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './index.css';
 import App from './App';
@@ -26,8 +30,14 @@ import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
 import iFramePBI from './Components/Reportes/iFramePBI';
 
 
+//se crea el store con los reducers indicados
+let store = generateStore();
+
+
+
 ReactDOM.render(
     //aca va a ir el provider del store de redux, envolviendo el siguiente Router
+    <Provider store={store}>
     <Router>
         <Switch>
             <AuthenticatedRoute exact path="/" component={App}/>
@@ -68,7 +78,7 @@ ReactDOM.render(
         <AuthenticatedRoute exact path="/reportes" component={iFramePBI}/>
         </Switch>
     </Router>
-
+    </Provider>
 
     , document.getElementById('root'));
 registerServiceWorker();
