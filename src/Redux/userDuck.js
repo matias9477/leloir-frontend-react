@@ -1,11 +1,13 @@
-import {AuthenticationService} from '../Services/AuthenticationService'
-import {Redirect} from 'react-router-dom';
+import AuthenticationService from '../Services/AuthenticationService'
 
 //constant
 let initialData = {
     loggedIn:false,
-    fetching:false
+    fetching:false,
+    hasLoginFailed:false
 }
+
+
 let LOGIN = "LOGIN"
 let LOGIN_SUCCESS = "LOGIN_SUCCESS"
 let LOGIN_ERROR = "LOGIN_ERROR"
@@ -18,7 +20,7 @@ export default function reducer(state = initialData,action){
         case LOGIN:
             return {...state, fetching:true}
         case LOGIN_ERROR:
-            return {...state, fetching: false, error:action.payload}
+            return {...state, fetching: false, error:action.payload, hasLoginFailed:true}
         case LOGIN_SUCCESS:
             return {...state, fetching:false, ...action.payload, loggedIn:true}
         case LOGOUT:
@@ -38,12 +40,33 @@ function saveStorage(storage){
 
 
 //action
+export let loginAction = (username, password) => (dispatch, getState) =>{
+    dispatch({
+        type: LOGIN
+    })
+    return AuthenticationService.executeJwtAuthenticationService(username, password)
+    .then((response) =>{
+        AuthenticationService.registerSuccessfulLoginForJwt(username, response.data.tokenType, response.data.accessToken)
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: response.data
+        }
+    )
+       // this.props.history.push('/')
+    }).catch(e=>{
+        console.log(e)
+        dispatch({
+            type:LOGIN_ERROR,
+            payload:e.message
+        })
+    })
+}
 
 export let logoutAction = () => (dispatch) =>{
 
     if (AuthenticationService.isUserLoggedIn()){
         AuthenticationService.logout();
-        <Redirect to="/login" />
+        //<Redirect to="/login" />
     }
     dispatch({
         type: LOGOUT
