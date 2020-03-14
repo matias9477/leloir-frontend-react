@@ -22,12 +22,11 @@ export default function reducer(state = initialData,action){
         case LOGIN_ERROR:
             return {...state, fetching: false, error:action.payload, hasLoginFailed:true}
         case LOGIN_SUCCESS:
-            return {...state, fetching:false, ...action.payload, loggedIn:true}
+            return {...state, fetching:false, ...action.payload, loggedIn:true, hasLoginFailed:false}
         case LOGOUT:
             return {...initialData}
         default:   
             return state
-
     }
 }
 
@@ -52,7 +51,6 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
             payload: response.data
         }
     )
-       // this.props.history.push('/')
     }).catch(e=>{
         console.log(e)
         dispatch({

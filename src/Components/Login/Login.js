@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-//import AuthenticationService from '../../Services/AuthenticationService'
 import {Button, Form, Label, Icon} from 'semantic-ui-react'
 import './../styles.css'
 import {withRouter} from 'react-router-dom'
@@ -45,17 +44,7 @@ class LoginComponent extends Component {
         if(usernameOrEmail && password){
             this.props.loginAction(usernameOrEmail, password)
         }
-        
-
-        // AuthenticationService
-        //     .executeJwtAuthenticationService(this.state.usernameOrEmail, this.state.password)
-        //     .then((response) => {
-        //         AuthenticationService.registerSuccessfulLoginForJwt(this.state.usernameOrEmail, response.data.tokenType, response.data.accessToken);
-        //         this.props.history.push(`/`)
-        //     }).catch(() => {
-        //     this.setState({showSuccessMessage: false});
-        //     this.setState({hasLoginFailed: true})
-        // })
+        if(!this.props.hasLoginFailed){this.props.history.push('/')}
     }
 
     render() {
@@ -93,9 +82,9 @@ const errorStyle = {
 
   function mapState(state){
       return {
-          fetching:state.fetching,
-          loggedIn:state.loggedIn,
-          hasLoginFailed:state.hasLoginFailed
+          fetching:state.user.fetching,
+          loggedIn:state.user.loggedIn,
+          hasLoginFailed:state.user.hasLoginFailed
       }
   }
 

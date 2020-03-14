@@ -20,12 +20,6 @@ export default function generateStore(){
     let store = createStore(rootReducer, 
         composeEnhancers(applyMiddleware(thunk))
     )
-     getPatientsAction()(store.dispatch, store.getState)
-     loginAction()(store.dispatch, store.getState)
-    //aca le pasamos a la función las actions y por parametro a la función que devuelven las actions el dispatch y si es necesario el getState
-    //ej
-    // getCharactersAction()(store.dispatch, store.getState)
-    // restoreSessionAction()(store.dispatch)
 
     return store;
 }
