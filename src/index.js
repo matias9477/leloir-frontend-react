@@ -20,5 +20,5 @@ let WithStore = () => <Provider store={store}> <WithRouter/> </Provider>
 
 
 
-ReactDOM.render(<WithRouter /> , document.getElementById('root'));
+ReactDOM.render(<WithStore /> , document.getElementById('root'));
 registerServiceWorker();
