@@ -44,7 +44,6 @@ class LoginComponent extends Component {
         if(usernameOrEmail && password){
             this.props.loginAction(usernameOrEmail, password)
         }
-        if(!this.props.hasLoginFailed){this.props.history.push('/')}
     }
 
     render() {

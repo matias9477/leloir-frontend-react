@@ -7,7 +7,6 @@ let initialData = {
     hasLoginFailed:false
 }
 
-
 let LOGIN = "LOGIN"
 let LOGIN_SUCCESS = "LOGIN_SUCCESS"
 let LOGIN_ERROR = "LOGIN_ERROR"
@@ -51,6 +50,7 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
         }
     )
     saveStorage("user", response.data)
+    window.location.href = '/'
     }).catch(e=>{
         console.log(e)
         dispatch({
@@ -64,10 +64,9 @@ export let logoutAction = () => (dispatch) =>{
 
     if (AuthenticationService.isUserLoggedIn()){
         AuthenticationService.logout();
-        //<Redirect to="/login" />
     }
     dispatch({
         type: LOGOUT
     })
-    localStorage.removeItem('storage')
+    localStorage.clear();
 }
