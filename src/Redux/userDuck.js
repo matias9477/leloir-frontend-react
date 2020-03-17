@@ -32,9 +32,8 @@ export default function reducer(state = initialData,action){
 
 //aux para guardar cosas en localstorage
 //sirve para respaldar el storage de redux, podemos guardar en localstorage todo lo que queremos guardar aunque se f5 la pagina
-function saveStorage(storage){
-    localStorage.storage = JSON.stringify(storage); //esto se hace porque no puedo pasar objetos jeje
-
+function saveStorage(name, data){
+    localStorage.setItem(name, JSON.stringify(data));
 }
 
 
@@ -51,6 +50,7 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
             payload: response.data
         }
     )
+    saveStorage("user", response.data)
     }).catch(e=>{
         console.log(e)
         dispatch({
