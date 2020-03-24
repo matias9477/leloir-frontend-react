@@ -3,7 +3,7 @@ import {Button, Form, Label, Icon} from 'semantic-ui-react'
 import './../styles.css'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {loginAction,logoutAction} from '../../Redux/userDuck'
+import {loginAction} from '../../Redux/userDuck'
 
 class LoginComponent extends Component {
 
@@ -33,11 +33,6 @@ class LoginComponent extends Component {
         })
     }
 
-    redirectLoginSuccessful() {
-        this.props.history.push('/');
-    }
-
-
     loginClicked(e) {
         e.preventDefault();
         const { usernameOrEmail, password } = this.state
@@ -45,6 +40,7 @@ class LoginComponent extends Component {
             this.props.loginAction(usernameOrEmail, password)
         }
     }
+
 
     render() {
         const { hasLoginFailed } = this.props; 
@@ -76,15 +72,16 @@ class LoginComponent extends Component {
 const errorStyle = {
     marginTop: '15px',
     backgroundColor: 'white',
-  };
+};
 
 
-  function mapState(state){
-      return {
-          fetching:state.user.fetching,
-          loggedIn:state.user.loggedIn,
-          hasLoginFailed:state.user.hasLoginFailed
-      }
-  }
+function mapState(state){
+    return {
+        fetching:state.user.fetching,
+        loggedIn:state.user.loggedIn,
+        hasLoginFailed:state.user.hasLoginFailed
+    }
+}
 
-export default connect(mapState,{loginAction, logoutAction})(withRouter(LoginComponent))
+
+export default connect(mapState,{loginAction})(withRouter(LoginComponent))
