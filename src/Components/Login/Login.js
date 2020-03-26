@@ -4,6 +4,7 @@ import './../styles.css'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {loginAction} from '../../Redux/userDuck'
+import {Link} from 'react-router-dom';
 
 class LoginComponent extends Component {
 
@@ -57,7 +58,9 @@ class LoginComponent extends Component {
                 className={hasLoginFailed ? 'error' : null}
                 />
 
-                <Button content='Iniciar Sesión' primary onClick={this.loginClicked}/>
+                <Button as= {Link} to={{pathname: '/'}} exact='true' primary onClick={this.loginClicked}>
+                    Iniciar Sesión
+                </Button>
                 
                 {hasLoginFailed ?
                 <Label style={errorStyle}>

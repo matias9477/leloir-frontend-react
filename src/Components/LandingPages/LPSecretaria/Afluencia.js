@@ -6,12 +6,13 @@ import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import './LPSecretaria.css';
 
+let array = JSON.parse(localStorage.getItem('Afluence')) || []
 
 class Afluencia extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            patients: [],
+            patients: JSON.parse(localStorage.getItem('Afluence')) || [],
             next: '',
         });
         this.addPatient = this.addPatient.bind(this);
@@ -25,7 +26,7 @@ class Afluencia extends Component {
                 text: titleCase(this._inputElement.value),
                 key: Date.now()
             };
-
+            
             this.setState((prevState) =>{
                 return {
                     patients: prevState.patients.concat(newPacient)
@@ -33,6 +34,9 @@ class Afluencia extends Component {
             });
             this._inputElement.value = "";
         }
+
+        array.push(newPacient) 
+        this.saveStorage('Afluence', array)
 
         e.preventDefault();
     }
@@ -50,8 +54,15 @@ class Afluencia extends Component {
     }
 
     next(){
+        array.shift()
+        this.saveStorage('Afluence', array)
+        this.saveStorage('Current', this.state.patients[0])
         this.setState({ next: this.state.patients[0] })
         this.deletePatient(this.state.patients[0].key)        
+    }
+
+    saveStorage(name, data){
+        localStorage.setItem(name, JSON.stringify(data))
     }
 
     render() {

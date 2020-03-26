@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import AuthenticationService from '../../Services/AuthenticationService';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {logoutAction} from '../../Redux/userDuck'

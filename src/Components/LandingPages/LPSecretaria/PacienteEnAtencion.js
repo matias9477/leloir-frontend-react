@@ -1,6 +1,8 @@
 import React from 'react';
-import { Header, Container, List } from 'semantic-ui-react';
+import { Header, Container, List, Button } from 'semantic-ui-react';
 import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion';
+import axios from 'axios'
+import './LPSecretaria.css'
 
 const SelectedPaciente = ({selected}) => {
     return (
@@ -46,8 +48,16 @@ const SelectedPaciente = ({selected}) => {
                                             <List.Content>Obra social: {selected.obraSocial}</List.Content>
                                 </List.Item>
                             : null}
-
                     </List>
+                    
+                    {!selected.bitAlta ?
+                        <h4 className='PatientNotFound'>ESTE PACIENTE SE ENCUENTRA ELIMINADO</h4>
+                    : null}
+
+                    {(!selected.bitAlta) ? <Button onClick={(e) => { 
+                    if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + nombre(selected) + '?')) {  
+                    alta(selected)
+                    } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
 
                 
             </Container>
@@ -56,6 +66,29 @@ const SelectedPaciente = ({selected}) => {
     </div>    
     );
 };
+
+function nombre(selected){
+    let nombre = selected.nombre
+    if (!(selected.apellido === undefined)){
+        nombre = selected.nombre + ' ' + selected.apellido
+    }
+    return(
+        nombre
+    )
+}
+
+function alta(selected){
+    axios.put(`/pacientes/switch-alta/${selected.id}`).then(response => {
+        alert("Se ha dado de alta al paciente con éxito.");
+        // f5
+    }, (error) => {
+        // if(this.state.bitAlta) {
+        //     alert(`No se ha podido dar de alta al paciente ${this.state.nombre} ${this.state.apellido}. Intentelo nuevamente.`)
+        //   }
+        alert(`No se ha podido dar de alta al paciente ${selected.nombre} ${selected.apellido}. Intentelo nuevamente.`)
+    })
+
+  }
 
 const Style = {
     marginTop: '15px',
