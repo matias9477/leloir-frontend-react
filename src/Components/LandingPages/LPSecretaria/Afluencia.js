@@ -55,7 +55,12 @@ class Afluencia extends Component {
 
     next(){
         array.shift()
-        this.saveStorage('Afluence', array)
+        if (array === [] || array.length === 0){
+            localStorage.removeItem('Afluence')
+        } else {
+            this.saveStorage('Afluence', array)
+        }
+        
         this.saveStorage('Current', this.state.patients[0])
         this.setState({ next: this.state.patients[0] })
         this.deletePatient(this.state.patients[0].key)        

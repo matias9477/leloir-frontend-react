@@ -1,57 +1,67 @@
-import React from 'react';
-import { Header, Container, List, Button } from 'semantic-ui-react';
-import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion';
+import React from 'react'
+import { Header, Container, List, Button, Grid } from 'semantic-ui-react'
+import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
 import axios from 'axios'
+import {Link} from 'react-router-dom';
 import './LPSecretaria.css'
 
 const SelectedPaciente = ({selected}) => {
     return (
         <div>
             {(selected === '' || selected === null) ? null : 
-            <Container style={Style} text>
-                <Header as='h4' style={HeaderStyle}>Información del paciente en atención </Header>
-  
-                    <List>
-                        <List.Item>
-                            <List.Content>Número de paciente: {selected.id}</List.Content>
-                        </List.Item>
+            <Container className='dataPacienteEnAtencion' text>
+                <Header as='h4' className= 'hStyle'>PACIENTE EN ATENCIÓN</Header>
 
-                        <List.Item>
-                            <List.Content>Tipo Paciente: {titleCase(selected.tipoPaciente)}</List.Content>
-                        </List.Item>
-
-                        <List.Item>
-                            <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
-                        </List.Item>
-
-                        {checkAtributo(selected.nroDocumento) ? 
+                <Grid width='equal'>
+                        <Grid.Column width={11}>
+                    
+                            <List>
                                 <List.Item>
-                                        <List.Content>{selected.tipoDocumento}: {selected.nroDocumento}</List.Content>
+                                    <List.Content>Número de paciente: {selected.id}</List.Content>
                                 </List.Item>
-                            : null}
 
-                        {checkAtributo(selected.tipoAnimal) ?
                                 <List.Item>
-                                            <List.Content>Tipo de Animal: {titleCase(selected.tipoAnimal)}</List.Content>
+                                    <List.Content>Tipo Paciente: {titleCase(selected.tipoPaciente)}</List.Content>
                                 </List.Item>
-                            : null} 
-                        
 
-                        {checkAtributo(selected.propietario) ?
                                 <List.Item>
-                                            <List.Content>Propietario: {selected.propietario}</List.Content>
+                                    <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
                                 </List.Item>
-                            : null}
 
-                        {checkAtributo(selected.obraSocial) ?
-                                <List.Item>
-                                            <List.Content>Obra social: {selected.obraSocial}</List.Content>
-                                </List.Item>
-                            : null}
-                    </List>
+                                {checkAtributo(selected.nroDocumento) ? 
+                                        <List.Item>
+                                                <List.Content>{selected.tipoDocumento}: {selected.nroDocumento}</List.Content>
+                                        </List.Item>
+                                    : null}
+
+                                {checkAtributo(selected.tipoAnimal) ?
+                                        <List.Item>
+                                                    <List.Content>Tipo de Animal: {titleCase(selected.tipoAnimal)}</List.Content>
+                                        </List.Item>
+                                    : null} 
+                                
+
+                                {checkAtributo(selected.propietario) ?
+                                        <List.Item>
+                                                    <List.Content>Propietario: {selected.propietario}</List.Content>
+                                        </List.Item>
+                                    : null}
+
+                                {checkAtributo(selected.obraSocial) ?
+                                        <List.Item>
+                                                    <List.Content>Obra social: {selected.obraSocial}</List.Content>
+                                        </List.Item>
+                                    : null}
+                            </List>
+                        </Grid.Column>
+                        <Grid.Column >
+                            <Button as= {Link} to={{pathname: `/pacientes/consulta/${selected.id}`, state: { prevPath: window.location.pathname }}} primary >Ver Paciente</Button>
+                        </Grid.Column>
+
+                    </Grid>
                     
                     {!selected.bitAlta ?
-                        <h4 className='PatientNotFound'>ESTE PACIENTE SE ENCUENTRA ELIMINADO</h4>
+                        <h4 className='PatientNotFound'>ESTE PACIENTE SE ENCUENTRA DADO DE BAJA</h4>
                     : null}
 
                     {(!selected.bitAlta) ? <Button onClick={(e) => { 
@@ -88,17 +98,7 @@ function alta(selected){
         alert(`No se ha podido dar de alta al paciente ${selected.nombre} ${selected.apellido}. Intentelo nuevamente.`)
     })
 
-  }
-
-const Style = {
-    marginTop: '15px',
-    backgroundColor: '#e8f6ff',
-    padding: '8px',
-    fontSize: 'small',
-};
-
-const HeaderStyle = {
-    textDecorationLine: 'underline'
 }
+
 
 export default SelectedPaciente;

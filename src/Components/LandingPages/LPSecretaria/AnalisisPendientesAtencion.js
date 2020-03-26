@@ -1,16 +1,15 @@
 import React from 'react';
 import { Header, Container, List, Divider, Button, Grid } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
+import './LPSecretaria.css'
 
 const AnalisisPendientes = ({pendientes}) => {
     return (
         <div>
             {pendientes!==null && pendientes!==undefined ? 
             
-            <Container style={Style} text>                    
-                <Header as='h4' style={HeaderStyle}>Analisis pendientes del paciente: 
-                    <Divider/>
-                </Header>
+            <Container className='dataPacienteEnAtencion' text>                    
+                <Header as='h4' className= 'hStyle'>ANÁLISIS PENDIENTE DEL PACIENTE</Header>
                                         
                     {pendientes.map(pendiente =>{
                         return <div>
@@ -32,7 +31,7 @@ const AnalisisPendientes = ({pendientes}) => {
                                 </Grid.Column>
                                 <Grid.Column >
                                         
-                                    <Button as= {Link} to={{pathname: `/analisis/consulta/${pendiente.idAnalisis}`, state: { prevPath: window.location.pathname }}} >Ver análisis</Button>
+                                    <Button as= {Link} to={{pathname: `/analisis/consulta/${pendiente.idAnalisis}`, state: { prevPath: window.location.pathname }}} primary >Ver análisis</Button>
                                 </Grid.Column>
                                         
                             </Grid>
@@ -45,17 +44,6 @@ const AnalisisPendientes = ({pendientes}) => {
             
         </div>
         );
-    }
-
-    const Style = {
-        marginTop: '15px',
-        backgroundColor: '#e8f6ff',
-        padding: '8px',
-        fontSize: 'small',
-    };
-    
-    const HeaderStyle = {
-        textDecorationLine: 'underline'
     }
 
 export default AnalisisPendientes;

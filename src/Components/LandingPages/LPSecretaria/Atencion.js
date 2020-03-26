@@ -44,7 +44,6 @@ class Atencion extends Component {
         if (data != null){
              localStorage.setItem(name, JSON.stringify(data))
         }
-        console.log(localStorage)
     }
 
     getAnalisisPendientes = () =>{
@@ -97,7 +96,6 @@ class Atencion extends Component {
                         <br></br>
                         <Select
                             name='pacientes'
-                            value={this.state.selectedPaciente}
                             onChange={this.handleChangeListPacientes}
                             placeholder= "Busque un paciente..."
                             isClearable={false}
@@ -118,6 +116,21 @@ class Atencion extends Component {
             )
         }
         
+    }
+
+    patientFound(){
+        return(
+            <div>
+                <SelectedPaciente selected={this.find()} />
+                {this.getAnalisisPendientes()}
+
+                {this.state.analisisPendientes.length>0 ?
+                            <div>
+                                <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
+                            </div>
+                : null}
+            </div>
+        )
     }
 
     vaciadoAnalisisPendientes(){
@@ -141,31 +154,29 @@ class Atencion extends Component {
         )
     }
 
+    clearCurrent(){
+        localStorage.removeItem('Current')
+    }
+
     render() {
         return (
-            <div>
+            <div className="DatosDelPaciente">
                 <Header as='h2'>Atención</Header>
-                <div className="DatosDelPaciente">
-                {localStorage.Current != null ? 
+                
+                {(localStorage.Current !== undefined) ? 
+             
                     <Form className='formAtencion'>
                         <h4>Paciente</h4>
                         <Form.Field value={this.name()} control='input' />
+
+                        <Button onClick={this.clearCurrent}>X</Button>
                         
-                        {this.find() === false ? this.patientNotFound() : 
-                            <div>
-                                <SelectedPaciente selected={this.find()} />
-                                {this.getAnalisisPendientes()}
-                            </div>
+                        {this.find() === false ? this.patientNotFound() : this.patientFound()
                         }
-                        
-                        {this.state.analisisPendientes.length>0 ?
-                            <div>
-                                <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
-                            </div>
-                        :   null}    
                     </Form>
-                : null}
-               </div>
+                : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
+                }
+               
             </div>
         );
     }

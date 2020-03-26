@@ -248,7 +248,7 @@ export default class TablaPaciente extends React.Component {
                                                 onClick={() => window.confirm(this.mensajeConfirmacion(paciente)) ? this.bitInverse(paciente) : null}>
                                                 {this.estado(paciente.bitAlta)}
                                             </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to={`/pacientes/consulta/${paciente.id}`}
+                                            <Dropdown.Item as={Link} to={{pathname: `/pacientes/consulta/${paciente.id}`, state: { prevPath: window.location.pathname }}}
                                                            exact='true'>
                                                 Ver/Modificar
                                             </Dropdown.Item>

@@ -51,6 +51,7 @@ class AltaAnimal extends Component {
   }
 
   handleUpdateClick = (api) => {
+    const url = this.props.location.state.prevPath;
     var data = {
         "type": "com.leloir.backend.domain.Animal",
         "bitAlta": true,
@@ -70,7 +71,7 @@ class AltaAnimal extends Component {
         ).then((response) => {
           alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.'); 
           this.vaciadoCampos();
-          this.props.history.push("/pacientes");
+          this.props.history.push(url);
         }, (error) => {
           alert('No se ha podido registrar el paciente.');
       });

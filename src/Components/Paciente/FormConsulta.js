@@ -46,12 +46,13 @@ class FormConsulta extends Component {
 
   
   render() {
+    var prevURL = this.props.location.state.prevPath || '/pacientes'
     return (
       <div className='union'>
         <MenuOpciones/>
         <div className="FormAlta">
             <Container className='btnHeader'>
-              <Button className='boton' as= {Link} to='/pacientes' floated='left' icon labelPosition='left' primary size='small'>
+              <Button className='boton' as= {Link} to={prevURL} floated='left' icon labelPosition='left' primary size='small'>
                 <Icon name='arrow alternate circle left' /> Volver
               </Button>
               <br></br>

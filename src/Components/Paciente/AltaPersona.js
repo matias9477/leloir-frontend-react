@@ -133,6 +133,7 @@ class AltaPersona extends Component {
   }
 
   handleUpdateClick = (api) => {
+    const url = this.props.location.state.prevPath;
     var data;
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
@@ -212,7 +213,7 @@ class AltaPersona extends Component {
     axios.post(api, data
       ).then((response) => {
         alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
-        this.props.history.push("/analisis/add");
+        this.props.history.push(url);
       }, (error) => {
         if (error.response.status === 500){
           alert('Ya existe un paciente con ese número de documento. Revise los datos ingresados.');

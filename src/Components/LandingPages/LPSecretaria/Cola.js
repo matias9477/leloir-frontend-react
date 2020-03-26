@@ -19,7 +19,11 @@ class Cola extends Component {
         let patients = JSON.parse(localStorage.Afluence)
        
         let filtered = patients.filter(function(value, index, arr){ return value.key !== key})
-        this.saveStorage('Afluence', filtered)
+        if (filtered === []){
+            localStorage.removeItem('Afluence')
+        } else{
+            this.saveStorage('Afluence', filtered)
+        }
 
         this.props.delete(key);
     }
