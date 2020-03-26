@@ -203,7 +203,7 @@ export default class TablaObraSocial extends React.Component {
                             <td>
                                 <Dropdown item icon='ellipsis horizontal' simple>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item as= {Link} to={`/analisis/consulta/${analisis.analisisId}`} exact='true'>
+                                        <Dropdown.Item as= {Link} to={{pathname: `/analisis/consulta/${analisis.analisisId}`, state: { prevPath: window.location.pathname }}} exact='true'>
                                             Ver/Modificar
                                         </Dropdown.Item>
                                     </Dropdown.Menu>

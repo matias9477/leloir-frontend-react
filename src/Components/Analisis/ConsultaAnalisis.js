@@ -166,7 +166,7 @@ class ConsultaAnalisis extends Component {
 
     render() {
         var m = this.showMuestras();
-
+        var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
           <div className='union'>
             <MenuOpciones/>
@@ -174,7 +174,7 @@ class ConsultaAnalisis extends Component {
             {this.state.analisis ?
             
             <Form  className="analisisConsulta">
-                <Button className='boton' as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+                <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                     <Icon name='arrow alternate circle left' /> Volver
                 </Button>
                 
