@@ -69,7 +69,8 @@ class Atencion extends Component {
             }
 
             if (this.state.patients.find(isPatient) !== undefined){
-                return this.state.patients.find(isPatient);
+                this.saveStorage('Current', this.state.patients.find(isPatient))
+                return this.state.patients.find(isPatient)
             }
             else {
                 return false;
@@ -156,6 +157,7 @@ class Atencion extends Component {
 
     clearCurrent(){
         localStorage.removeItem('Current')
+        window.location.reload(true)
     }
 
     render() {
@@ -167,13 +169,22 @@ class Atencion extends Component {
              
                     <Form className='formAtencion'>
                         <h4>Paciente</h4>
-                        <Form.Field value={this.name()} control='input' />
+                        <Grid columns='equal'>
+                            <Grid.Column width={11}> 
+                                <Form.Field value={this.name()} control='input' />
+                            </Grid.Column>
+                            { localStorage.Afluence === undefined ?
+                             <Grid.Column>
+                             <Button onClick={() => this.clearCurrent()}>Finalizar atención</Button>
+                            </Grid.Column> : null
+                            }
+                           
+                        </Grid>
 
-                        <Button onClick={this.clearCurrent}>X</Button>
-                        
                         {this.find() === false ? this.patientNotFound() : this.patientFound()
                         }
                     </Form>
+                    
                 : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
                 }
                
