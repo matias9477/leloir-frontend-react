@@ -113,17 +113,9 @@ class TablaPaciente extends React.Component {
             limit: data.value,
             activePage: 1,
         });
-        return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
+        return this.handleSearch(this.state.filtro,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
-
-    loadData(from, to) {
-        return (this.state.pacientesFiltrados.slice(from, to))
-
-        //ASI ANDA DE ENTRADA PERO NO FILTRA
-        // let pacientesFiltrados=this.props.patients
-        // return (pacientesFiltrados.slice(from, to))
-    }
-
+    
     onChangePage = (e, {activePage}) => {
         if (activePage === this.state.activePage) {
             return null;
@@ -131,10 +123,10 @@ class TablaPaciente extends React.Component {
             this.setState({
                 activePage,
             });
-            return (this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit)))
+            return (this.handleSearch(this.state.filtro,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit)))
         }
     };
-
+    
     handleColumnHeaderClick(sortKey) {
         const {
             pacientesFiltrados,
@@ -151,7 +143,7 @@ class TablaPaciente extends React.Component {
             }
         });
     }
-
+    
     estado(bitAlta) {
         if (bitAlta) {
             return "Dar de baja"
@@ -159,24 +151,53 @@ class TablaPaciente extends React.Component {
             return "Dar de alta"
         }
     }
-
-    handleSearch(valor) {     
+    
+    
+    // filtratePatients = (valor) =>{
+        
+    //     return (this.props.patients.filter(function (paciente) {
+    //         return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(valor.target.value))) || 
+    //             (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(valor.target.value))) ||
+    //             (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
+    //             ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(valor.target.value)));
+    //     }))
+    //     }
+    
+        // loadData(from, to) {
+        //     return (this.state.pacientesFiltrados.slice(from, to))
+    
+        //     //ASI ANDA DE ENTRADA PERO NO FILTRA
+        //     // let pacientesFiltrados=this.props.patients
+        //     // return (pacientesFiltrados.slice(from, to))
+        // }
+    
+    handleSearch(valor, from, to) {     
         //TODO: cambiar el search para que sea por caracter
-        this.setState({
-            filtro: valor.target.value,
+        
+        if(this.state.filtro===""){
+        return this.props.patients.slice(from, to)
+        }
+        else{
+            // this.setState({
+            //     filtro: valor.target.value,
+            // });
+
+            //FIXME: No funciona el filtrado porque es una pija
+            
+        const pacientesFiltrados = this.props.patients.filter(function (paciente) {
+            return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(this.state.filtro))) || 
+                (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(this.state.filtro))) ||
+                (paciente.id === undefined ? null : paciente.id.toString().includes(this.state.filtro)) ||
+                ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(this.state.filtro)));
         });
 
-        const pac = this.props.patients.filter(function (paciente) {
-            return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(valor.target.value))) || 
-                (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(valor.target.value))) ||
-                (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
-                ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(valor.target.value)));
-        });
-
         this.setState({
-            pacientesFiltrados: pac,
-            totalCount: pac.length,
+            // pacientesFiltrados: pac,
+            totalCount: pacientesFiltrados.length,
         })
+
+        return pacientesFiltrados.slice(from,to)
+        }
     }
 
     getIconTipo(tipo){
@@ -190,9 +211,10 @@ class TablaPaciente extends React.Component {
     }
 
 
+
+
     render() {
-        console.log(this.props.patients.length)
-        console.log(this.state.pacientesFiltrados)
+        console.log("filtro: " + this.state.filtro)
         return (
             <div className='union'>
                 <MenuOpciones/>
@@ -214,8 +236,16 @@ class TablaPaciente extends React.Component {
 
                     <div className='union'>
                         <div className="ui icon input">
-                            <Input value={this.state.filtro} onChange={this.handleSearch}
-                                   placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
+                            <Input value={this.state.filtro} 
+                            onChange={(filtro)=>
+                                this.setState({
+                                    filtro: filtro.target.value
+                                })
+                            
+                            }
+                                
+                                   placeholder='Ingrese búsqueda...' icon={{name: 'search'}} value="Temporalmente deshabilitado" disabled/>
+                                   {/* TODO cuando funcione el filtrado sacar el value y el disabled de arriba */}
 
                         </div>
                         {this.cantidadPorPagina()}
@@ -234,7 +264,7 @@ class TablaPaciente extends React.Component {
 
                         <tbody className='centerAlignment'>
 
-                        {(this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((paciente, index) => (
+                        {(this.handleSearch(this.state.filtro,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((paciente, index) => (
                             <tr key={index} paciente={paciente} className={paciente.bitAlta ? null : "listadosBaja"}>
                                 <td data-label="Número Paciente">
                                     {paciente.id}
