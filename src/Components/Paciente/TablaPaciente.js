@@ -1,20 +1,22 @@
-import React from 'react';
-import axios from 'axios';
-import {Button, Dropdown, Header, Icon, Input, Pagination} from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import {orderBy} from 'lodash';
+import React from 'react'
+import axios from 'axios'
+import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { orderBy } from 'lodash'
+import { connect } from 'react-redux'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
-import MenuOpciones from '../MenuOpciones';
-import {nullTo, titleCase} from '../../Services/MetodosDeValidacion';
-import './../styles.css';
-import {nroPorPagina} from "../../Constants/utils";
-import {urlPacientes} from '../../Constants/URLs';
+import MenuOpciones from '../MenuOpciones'
+import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
+import {nroPorPagina} from "../../Constants/utils"
+import {urlPacientes} from '../../Constants/URLs'
+import { getPatientsAction } from './../../Redux/patientsDuck'
+import './../styles.css'
 
-export default class TablaPaciente extends React.Component {
+class TablaPaciente extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pacientes: [],
             limit: nroPorPagina[1].value,
             activePage: 1,
             totalCount: 0,
@@ -24,39 +26,34 @@ export default class TablaPaciente extends React.Component {
             filtro: '',
             pacientesFiltrados: [],
         };
+        //TODO: cambiar a arrow function para eliminar el bind
         this.cambioLimite = this.cambioLimite.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
-        this.getAllPacientes();
+        this.getAllPacientes()
+        
     }
 
     getAllPacientes = () => {
-        axios.get(urlPacientes).then(resolve => {
-            this.setState({
-                pacientes: Object.values(resolve.data).flat(),
-                pacientesFiltrados: Object.values(resolve.data).flat(),
-                totalCount: (Object.values(resolve.data).flat()).length,
-            });
+        this.props.getPatientsAction()
 
-            const filtro = orderBy(this.state.pacientesFiltrados, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
-            ], ["desc", "desc"]);
-            const pacientes = orderBy(this.state.pacientes, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
-            ], ["desc", "desc"]);
+        //TODO: arreglar filtros de columna
+        // const filtro = orderBy(this.state.pacientesFiltrados, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+        // ], ["desc", "desc"]);
+        // const pacientes = orderBy(this.props.patients, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
+        // ], ["desc", "desc"]);
 
-            this.setState({
-                pacientesFiltrados: filtro,
-                pacientes: pacientes,
-            })
-
-        }, (error) => {
-            console.log('Error', error.message);
-        })
+        // this.setState({
+        //     pacientesFiltrados: filtro,
+        //     pacientes: pacientes,
+        // })
     };
 
-    bitInverse = paciente => {
+
+    bitInverse = paciente => { //TODO: cambiar url por import
         const urlPacientes = `/pacientes/switch-alta/${paciente.id}`;
         
         axios.put(urlPacientes).then(response => {
@@ -85,7 +82,7 @@ export default class TablaPaciente extends React.Component {
             return '';
         }
     }
-
+    //TODO: poner todos los nombres en ingles
     mensajeConfirmacion(paciente) {
         if (paciente.bitAlta) {
             return (`¿Esta seguro que quiere eliminar al paciente ${paciente.nombre} ${this.checkApellido(paciente.apellido)}?`);
@@ -121,6 +118,10 @@ export default class TablaPaciente extends React.Component {
 
     loadData(from, to) {
         return (this.state.pacientesFiltrados.slice(from, to))
+
+        //ASI ANDA DE ENTRADA PERO NO FILTRA
+        // let pacientesFiltrados=this.props.patients
+        // return (pacientesFiltrados.slice(from, to))
     }
 
     onChangePage = (e, {activePage}) => {
@@ -158,13 +159,14 @@ export default class TablaPaciente extends React.Component {
             return "Dar de alta"
         }
     }
-    
-    handleSearch(valor) {
+
+    handleSearch(valor) {     
+        //TODO: cambiar el search para que sea por caracter
         this.setState({
             filtro: valor.target.value,
         });
 
-        const pac = this.state.pacientes.filter(function (paciente) {
+        const pac = this.props.patients.filter(function (paciente) {
             return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(valor.target.value))) || 
                 (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(valor.target.value))) ||
                 (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
@@ -189,11 +191,16 @@ export default class TablaPaciente extends React.Component {
 
 
     render() {
+        console.log(this.props.patients.length)
+        console.log(this.state.pacientesFiltrados)
         return (
             <div className='union'>
                 <MenuOpciones/>
 
+                {this.props.fetching === true ? <CircularProgress size={50}/> : 
+
                 <div className='tablaListadoHistorico'>
+                    
 
                     <Header as='h2'>Pacientes</Header>
 
@@ -265,14 +272,26 @@ export default class TablaPaciente extends React.Component {
                     
                     <Pagination
                         activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
+                        totalPages={Math.ceil((this.props.patients.length) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
                         
                 </div>      
-            </div>
+    }
+    </div>
         )
     }
 
 }
+
+
+
+const mapStateToProps = state =>({
+    fetching: state.patients.fetching,
+    patients: state.patients.patients
+})
+
+
+export default connect(mapStateToProps,{getPatientsAction})(TablaPaciente)
+
 

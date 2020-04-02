@@ -45,13 +45,13 @@ export let getPatientsAction = () => (dispatch, getState) =>{
     .then(res=>{
         dispatch({
             type: GET_PATIENTS_SUCCESS,
-            payload: res.data,
+            payload: Object.values(res.data).flat(),
         })
     })
     .catch(err=>{
         dispatch({
             type: GET_PATIENTS_ERROR,
-            payload: err.response.message
+            payload: err.message
         })
     })
 }
