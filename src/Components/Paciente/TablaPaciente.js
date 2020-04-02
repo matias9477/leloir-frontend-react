@@ -215,11 +215,21 @@ class TablaPaciente extends React.Component {
 
     render() {
         console.log("filtro: " + this.state.filtro)
+        const { fetching } = this.props
+
         return (
             <div className='union'>
                 <MenuOpciones/>
 
-                {this.props.fetching === true ? <CircularProgress size={50}/> : 
+                {fetching ? 
+                <div className='tablaListadoHistorico'>
+                <Header as='h2'>Pacientes</Header>
+                <CircularProgress size='60px'></CircularProgress> 
+                </div>
+                :
+                
+            
+           
 
                 <div className='tablaListadoHistorico'>
                     
@@ -250,6 +260,9 @@ class TablaPaciente extends React.Component {
                         </div>
                         {this.cantidadPorPagina()}
                     </div>
+
+
+                     
 
                     <table className="ui single line striped table">
                         <thead className='centerAlignment'>
@@ -305,14 +318,19 @@ class TablaPaciente extends React.Component {
                         totalPages={Math.ceil((this.props.patients.length) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
-                        
+
+                    
+
                 </div>      
+            
+            
+                        }
     }
     </div>
         )
-    }
+    
 
-}
+}}
 
 
 
