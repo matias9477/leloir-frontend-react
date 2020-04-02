@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Valter from '../../Valter'
 
 import MenuOpciones from '../MenuOpciones'
 import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
@@ -224,7 +225,9 @@ class TablaPaciente extends React.Component {
                 {fetching ? 
                 <div className='tablaListadoHistorico'>
                 <Header as='h2'>Pacientes</Header>
-                <CircularProgress size='60px'></CircularProgress> 
+                {/* TODO: sacar este comment y comentar a valter
+                <CircularProgress size='60px'></CircularProgress>  */}
+                <Valter/>
                 </div>
                 :
                 
