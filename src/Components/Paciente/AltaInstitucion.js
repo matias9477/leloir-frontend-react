@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
-import { postInstitucionAction } from '../../Redux/patientsDuck'
+import { addPatientAction } from '../../Redux/patientsDuck'
 import './../styles.css'
 
 class AltaInstitucion extends Component {
@@ -42,9 +42,10 @@ class AltaInstitucion extends Component {
         "fax": null
     }
 
-    this.props.postInstitucionAction(data)
+    this.props.addPatientAction(data)
+    this.vaciadoCampos()
 
-    //TODO: redireccionamiento when success
+    //TODO: redireccionamiento when success. debe redireccionar al previous path const url = this.props.location.state.prevPath;
   }
 
   getPaciente = (e) => {
@@ -161,4 +162,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{postInstitucionAction})(AltaInstitucion)
+export default connect(mapStateToProps,{addPatientAction})(AltaInstitucion)
