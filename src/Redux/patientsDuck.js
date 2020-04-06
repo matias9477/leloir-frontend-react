@@ -125,10 +125,15 @@ export let addPatientAction = (data) => (dispatch, getState) =>{
             type: ADD_PATIENT_ERROR,
             payload: err.message
         })
-        alert(`No se ha podido registrar al paciente ${checkName(data)}. Por favor intente nuevamente.`)
+        if (err.message === 'Request failed with status code 500') {
+            alert(`Ya existe un paciente con número de documento igual a ${data.nroDocumento}.`)
+        } else {
+            alert(`No se ha podido registrar al paciente ${checkName(data)}. Por favor intente nuevamente.`)
+        }
     })
 }
 
+//funciones de soporte
 let checkName = (patient) => {
     let name = patient.nombre
     if(patient.apellido !== undefined){
