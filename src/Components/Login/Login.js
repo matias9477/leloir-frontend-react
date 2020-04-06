@@ -4,7 +4,8 @@ import './../styles.css'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {loginAction} from '../../Redux/userDuck'
-import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 class LoginComponent extends Component {
 
@@ -13,28 +14,22 @@ class LoginComponent extends Component {
         this.state = {
             usernameOrEmail: '',
             password: '',
-            showSuccessMessage: false,
-            open: false,
         };
-
-        this.cambioUsuario = this.cambioUsuario.bind(this);
-        this.cambioPass = this.cambioPass.bind(this);
-        this.loginClicked = this.loginClicked.bind(this);
     }
 
-    cambioUsuario(e) {
+    cambioUsuario = (e) =>{
         this.setState({
             usernameOrEmail: e.target.value
         })
     }
 
-    cambioPass(e) {
+    cambioPass = (e) => {
         this.setState({
             password: e.target.value
         })
     }
 
-    loginClicked(e) {
+    loginClicked = (e) => {
         e.preventDefault();
         const { usernameOrEmail, password } = this.state
         if(usernameOrEmail && password){
@@ -44,30 +39,35 @@ class LoginComponent extends Component {
 
 
     render() {
-        const { hasLoginFailed } = this.props; 
+        const { hasLoginFailed, fetching } = this.props
         return (
-            <Form className='login'>
-                <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
-                onChange={this.cambioUsuario}
-                className={hasLoginFailed ? 'error' : null}
-                />
+            <div>
+                {fetching === true ? <CircularProgress size={50}/> : 
+                    <Form className='login' >
+                        <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
+                        onChange={this.cambioUsuario}
+                        className={hasLoginFailed ? 'error' : null}
+                        />
 
-                <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' 
-                placeholder='Contraseña'
-                onChange={this.cambioPass}
-                className={hasLoginFailed ? 'error' : null}
-                />
-
-                <Button as= {Link} to={{pathname: '/'}} exact='true' primary onClick={this.loginClicked}>
-                    Iniciar Sesión
-                </Button>
-                
-                {hasLoginFailed ?
-                <Label style={errorStyle}>
-                    <Icon name='warning circle' color='red' /> Usuario y/o contraseña errónea. Revise los datos ingresados.
-                </Label> : null }
-            </Form>
-
+                        <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' 
+                        placeholder='Contraseña'
+                        onChange={this.cambioPass}
+                        className={hasLoginFailed ? 'error' : null}
+                        />
+                        
+                        <Link to='/'>
+                            <Button exact='true' primary onClick={this.loginClicked}>
+                                Iniciar Sesión
+                            </Button>
+                        </Link>
+                        
+                        {hasLoginFailed ?
+                        <Label style={errorStyle}>
+                            <Icon name='warning circle' color='red' /> Usuario y/o contraseña errónea. Revise los datos ingresados.
+                        </Label> : null }
+                    </Form>
+                }
+            </div>
         )
     }
 }
@@ -78,7 +78,7 @@ const errorStyle = {
 };
 
 
-function mapState(state){
+function mapStateToProps(state){
     return {
         fetching:state.user.fetching,
         loggedIn:state.user.loggedIn,
@@ -87,4 +87,4 @@ function mapState(state){
 }
 
 
-export default connect(mapState,{loginAction})(withRouter(LoginComponent))
+export default connect(mapStateToProps,{loginAction})(withRouter(LoginComponent))
