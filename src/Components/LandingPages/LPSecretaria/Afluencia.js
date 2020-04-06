@@ -6,21 +6,18 @@ import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import './LPSecretaria.css';
 
-let array = JSON.parse(localStorage.getItem('Afluence')) || []
+let array = JSON.parse(localStorage.getItem('afluence')) || []
 
 class Afluencia extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            patients: JSON.parse(localStorage.getItem('Afluence')) || [],
+            patients: JSON.parse(localStorage.getItem('afluence')) || [],
             next: '',
         });
-        this.addPatient = this.addPatient.bind(this);
-        this.deletePatient = this.deletePatient.bind(this);
-        this.next = this.next.bind(this);
     }
 
-    addPatient(e){
+    addPatient = (e) =>{
         if(this._inputElement.value !== "") {
             var newPacient = {
                 text: titleCase(this._inputElement.value),
@@ -36,12 +33,12 @@ class Afluencia extends Component {
         }
 
         array.push(newPacient) 
-        this.saveStorage('Afluence', array)
+        this.saveStorage('afluence', array)
 
         e.preventDefault();
     }
 
-    deletePatient(key){
+    deletePatient = (key) =>{
         var filteredPatients = this.state.patients.filter(
             function (patient) {
             return (patient.key !== key)
@@ -53,15 +50,15 @@ class Afluencia extends Component {
 
     }
 
-    next(){
+    next = () =>{
         array.shift()
         if (array === [] || array.length === 0){
-            localStorage.removeItem('Afluence')
+            localStorage.removeItem('afluence')
         } else {
-            this.saveStorage('Afluence', array)
+            this.saveStorage('afluence', array)
         }
         
-        this.saveStorage('Current', this.state.patients[0])
+        this.saveStorage('current', this.state.patients[0])
         this.setState({ next: this.state.patients[0] })
         this.deletePatient(this.state.patients[0].key)        
     }

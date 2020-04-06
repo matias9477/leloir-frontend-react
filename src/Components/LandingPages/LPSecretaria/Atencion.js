@@ -37,7 +37,7 @@ class Atencion extends Component {
   
     handleChangeListPacientes = selectedPaciente => {
         this.setState({ selectedPaciente })
-        this.saveStorage('Current', selectedPaciente)
+        this.saveStorage('current', selectedPaciente)
     }
 
     saveStorage(name, data){
@@ -60,7 +60,7 @@ class Atencion extends Component {
     };
 
     find = () => {
-        const next = JSON.parse(localStorage.Current).text || this.name()
+        const next = JSON.parse(localStorage.current).text || this.name()
 
         if (next !== undefined || next !== ''){
           
@@ -69,7 +69,7 @@ class Atencion extends Component {
             }
 
             if (this.state.patients.find(isPatient) !== undefined){
-                this.saveStorage('Current', this.state.patients.find(isPatient))
+                this.saveStorage('current', this.state.patients.find(isPatient))
                 return this.state.patients.find(isPatient)
             }
             else {
@@ -84,7 +84,7 @@ class Atencion extends Component {
     getOptionValuePatient = option => option.id;
 
     patientNotFound(){
-        if(localStorage.Current !== "" || localStorage.Current != null){ 
+        if(localStorage.current !== "" || localStorage.current != null){ 
             this.vaciadoAnalisisPendientes();
             return (
                 <div> 
@@ -144,19 +144,19 @@ class Atencion extends Component {
 
     name(){
         let name
-        if(JSON.parse(localStorage.Current).apellido !== undefined){
-            name = JSON.parse(localStorage.Current).nombre + ' ' + JSON.parse(localStorage.Current).apellido
+        if(JSON.parse(localStorage.current).apellido !== undefined){
+            name = JSON.parse(localStorage.current).nombre + ' ' + JSON.parse(localStorage.current).apellido
         }
         else {
-            name = JSON.parse(localStorage.Current).nombre
+            name = JSON.parse(localStorage.current).nombre
         }
         return(
-            JSON.parse(localStorage.Current).text || name
+            JSON.parse(localStorage.current).text || name
         )
     }
 
     clearCurrent(){
-        localStorage.removeItem('Current')
+        localStorage.removeItem('current')
         window.location.reload(true)
     }
 
@@ -165,7 +165,7 @@ class Atencion extends Component {
             <div className="DatosDelPaciente">
                 <Header as='h2'>Atención</Header>
                 
-                {(localStorage.Current !== undefined) ? 
+                {(localStorage.current !== undefined) ? 
              
                     <Form className='formAtencion'>
                         <h4>Paciente</h4>
@@ -173,7 +173,7 @@ class Atencion extends Component {
                             <Grid.Column width={11}> 
                                 <Form.Field value={this.name()} control='input' />
                             </Grid.Column>
-                            { localStorage.Afluence === undefined ?
+                            { localStorage.afluence === undefined ?
                              <Grid.Column>
                              <Button onClick={() => this.clearCurrent()}>Finalizar atención</Button>
                             </Grid.Column> : null
