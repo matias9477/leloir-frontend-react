@@ -25,11 +25,6 @@ class AltaInstitucion extends Component {
         errorFax: true,
         
       })
-    this.getPaciente = this.getPaciente.bind(this);
-    this.cambioNombre = this.cambioNombre.bind(this);
-    this.cambioTelefono = this.cambioTelefono.bind(this);
-    this.cambioMail = this.cambioMail.bind(this);
-    this.cambioFax = this.cambioFax.bind(this);
   }
   
   handleUpdateClick = (api) => {
@@ -56,7 +51,7 @@ class AltaInstitucion extends Component {
     });
   }
 
-  getPaciente(e){
+  getPaciente = (e) => {
     e.preventDefault();
 
     const { nombre, mail, telefono, fax } = this.state;
@@ -93,25 +88,25 @@ class AltaInstitucion extends Component {
     })
   }
  
-  cambioNombre(e) {
+  cambioNombre = (e) => {
     this.setState( {
       nombre: e.target.value
     })
   }
 
-  cambioFax(e) {
+  cambioFax = (e) => {
     this.setState( {
       fax: e.target.value
     })
   }  
 
-  cambioTelefono(e){
+  cambioTelefono = (e) =>{
     this.setState( {
         telefono: e.target.value
     })
   }
 
-  cambioMail(e){
+  cambioMail = (e) =>{
     this.setState( {
         mail: e.target.value
     })
