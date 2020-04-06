@@ -1,11 +1,8 @@
 import axios from 'axios'
-import {urlPacientes} from '../Constants/URLs'
-
+import {urlPacientes, urlSwitchAltaPaciente} from '../Constants/URLs'
 
 
 //constants
-
-//
 let initialData = {
     fetching: false,
     patients: [],
@@ -18,8 +15,9 @@ let GET_PATIENTS_SUCCESS = "GET_PATIENTS_SUCCESS"
 let GET_PATIENTS_ERROR = "GET_PATIENTS_ERROR"
 let GET_PATIENTS_FROM_STORE = "GET_PATIENTS_FROM_STORE"
 
-
-
+let BIT_INVERSE = 'BIT_INVERSE'
+let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
+let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
 
 
 //reducer
@@ -33,7 +31,12 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, patients: action.payload, upToDate:true}
         case GET_PATIENTS_FROM_STORE:
             return {...state, fetching: false, patients: action.payload}
-
+        case BIT_INVERSE:
+            return {...state, fetching:true}
+        case BIT_INVERSE_ERROR:
+            return {...state, fetching:false, error:action.payload,  upToDate:true}
+        case BIT_INVERSE_SUCCESS:
+            return {...state, fetching:false, upToDate:false}
         default:
             return state
     }
@@ -70,3 +73,27 @@ export let getPatientsAction = () => (dispatch, getState) =>{
         })
     }
 }
+
+export let bitInverseAction = (paciente) => (dispatch, getState) =>{
+   
+    dispatch({
+        type: BIT_INVERSE,
+    })
+
+    return axios.put(`${urlSwitchAltaPaciente}${paciente.id}`)
+    .then(res=>{
+        dispatch({
+            type: BIT_INVERSE_SUCCESS,
+        })
+        return dispatch(getPatientsAction(), alert('La operación se ha realizado con exito'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: BIT_INVERSE_ERROR,
+            payload: err.message
+        })
+        alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
+    })
+    
+}
+
