@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Form, Icon, Grid } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, FormGroup, GridColumn } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import MenuOpciones from '../MenuOpciones';
-import { urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
+import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
@@ -17,7 +17,11 @@ class FormNuevoAnalisis extends Component {
     this.state = ({
         determinaciones: [],
         pacientes: [],
+        obrasSociales: [],
+        planes: [],
+        precio:'',
 
+        mod: false,
         loading: true,
 
         selectedPaciente: '',
@@ -26,13 +30,44 @@ class FormNuevoAnalisis extends Component {
         errorPaciente: true,
         errorDeterminaciones: true,
       })
+      this.getPrecio = this.getPrecio.bind(this);
       this.nuevoAnalisis = this.nuevoAnalisis.bind(this);
     }
 
   componentDidMount(){
     this.getDeteminaciones();
     this.getAllPacientes();
+    this.getAllObraSocial();
   }
+
+  componentDidUpdate(){
+    this.getAllPlanes();
+    if(this.state.mod == true){
+    this.getPrecio();
+    }
+  }
+  getAllObraSocial = () =>{
+    axios.get(urlObrasSoc).then((response) => {
+      this.setState({
+        obrasSociales: Object.values(response.data).flat(),
+      });
+  }, (error) => {
+      console.log('Error en carga de obras sociales: ', error.message);
+  })
+  };
+
+  getAllPlanes = () =>{
+    if(this.state.planes.length === 0){
+    axios.get(urlPlanesXObra+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)).then((response) => {
+      this.setState({
+        planes: Object.values(response.data).flat(),
+      });
+  }, (error) => {
+      console.log('Error en carga de planes: ', error.message);
+  })
+}
+  };
+
 
   getDeteminaciones = () => {
     axios.get(urlDeterminaciones).then((response) => {
@@ -61,12 +96,32 @@ class FormNuevoAnalisis extends Component {
 
   handleChangeListDeterminaciones = selectedDeterminaciones => {
     this.setState({ selectedDeterminaciones })
+    if(this.state.mod ==false){
+      this.setState({
+        mod:true
+      })
+    }
+  
   }
   
+  getPrecio(){
+    const api = "/precio/obraSocialId/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)+"/planId/"+getIdPlan(this.state.selectedPaciente.plan,this.state.planes)+"/determinaciones/"+ this.listIdDets(this.state.selectedDeterminaciones);
+    axios.get(api)
+    .then(resolve =>{
+      this.setState({
+        precio: resolve.data,
+        mod:false
+      });
+    }, (error) => {
+      console.log('error al buscar precio de analisis')
+    })
+  }
+
   handleUpdateClick = (api) => {
     var data = {
       "idPaciente": this.state.selectedPaciente.id,
       "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
+      "precio": this.state.precio,
     };
 
     axios.post(api, data).then((response) => {
@@ -84,7 +139,6 @@ class FormNuevoAnalisis extends Component {
 
     const errorPaciente = validateRequiredCombos(selectedPaciente);
     const errorDeterminaciones = validateRequiredCombos(selectedDeterminaciones);
-    
     if ( errorPaciente && errorDeterminaciones ) {
       const api = '/analisis/add';
       this.handleUpdateClick(api);
@@ -96,6 +150,7 @@ class FormNuevoAnalisis extends Component {
       })
     }    
   }
+
 
   getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`;
 
@@ -160,6 +215,19 @@ class FormNuevoAnalisis extends Component {
             getOptionValue={this.getOptionValueDeterminaciones}
             getOptionLabel={this.getOptionLabelDeterminaciones}
           />
+          
+          <Header as={'h5'}>Precio:</Header>
+          <Grid>
+          
+            <GridColumn width={12}>
+          
+          <Form.Field control='input' 
+            placeholder='Precio' 
+            value={this.state.precio}   
+            />
+            </GridColumn>
+          
+            </Grid>
 
           <br/> <br/>
           <Button primary size='small' onClick={this.nuevoAnalisis}> 
