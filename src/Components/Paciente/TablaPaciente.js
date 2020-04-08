@@ -9,7 +9,7 @@ import Valter from '../../Valter'
 import MenuOpciones from '../MenuOpciones'
 import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
 import {nroPorPagina} from "../../Constants/utils"
-import { getPatientsAction, bitInverseAction } from './../../Redux/patientsDuck'
+import { getPatientsAction, switchAltaAction } from './../../Redux/patientsDuck'
 import './../styles.css'
 
 class TablaPaciente extends React.Component {
@@ -49,7 +49,7 @@ class TablaPaciente extends React.Component {
 
 
     bitInverse = paciente => { 
-        this.props.bitInverseAction(paciente)
+        this.props.switchAltaAction(paciente.id)
     }
 
     checkName(patient){
@@ -299,6 +299,6 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{getPatientsAction, bitInverseAction})(TablaPaciente)
+export default connect(mapStateToProps,{getPatientsAction, switchAltaAction})(TablaPaciente)
 
 

@@ -50,7 +50,7 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
         }
     )
     saveStorage("user", response.data)
-    window.location.href = '/'
+    //window.location.href = '/'
     }).catch(e=>{
         console.log(e)
         dispatch({

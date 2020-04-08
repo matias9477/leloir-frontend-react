@@ -1,12 +1,14 @@
 import axios from 'axios'
-import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente } from '../Constants/URLs'
+import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente } from '../Constants/URLs'
 
 
 //constants
 let initialData = {
     fetching: false,
     patients: [],
-    upToDate: false,
+    upToDateAllPatients: false,
+    upToDatePatientById: false,
+    patient: ''
 }
 
 
@@ -23,6 +25,16 @@ let ADD_PATIENT = 'ADD_PATIENT'
 let ADD_PATIENT_SUCCESS = 'ADD_PATIENT_SUCCESS'
 let ADD_PATIENT_ERROR = 'ADD_PATIENT_ERROR'
 
+let GET_PATIENT_BY_ID = "GET_PATIENT_BY_ID"
+let GET_PATIENT_BY_ID_SUCCESS = "GET_PATIENT_BY_ID_SUCCESS"
+let GET_PATIENT_BY_ID_ERROR = "GET_PATIENT_BY_ID_ERROR"
+let GET_PATIENT_BY_ID_FROM_STORE = "GET_PATIENT_BY_ID_FROM_STORE"
+
+let ALTER_PACIENTE = "ALTER_PACIENTE"
+let ALTER_PACIENTE_SUCCESS = "ALTER_PACIENTE_SUCCESS"
+let ALTER_PACIENTE_ERROR = "ALTER_PACIENTE_ERROR"
+
+
 
 //reducer
 export default function reducer(state = initialData, action){
@@ -32,23 +44,39 @@ export default function reducer(state = initialData, action){
         case GET_PATIENTS_ERROR:
             return {...state, fetching:false, error:action.payload}
         case GET_PATIENTS_SUCCESS:
-            return {...state, fetching:false, patients: action.payload, upToDate:true}
+            return {...state, fetching:false, patients: action.payload, upToDateAllPatients:true}
         case GET_PATIENTS_FROM_STORE:
             return {...state, fetching: false, patients: action.payload}
 
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
-            return {...state, fetching:false, error:action.payload, upToDate:true}
+            return {...state, fetching:false, error:action.payload, upToDateAllPatients:true}
         case BIT_INVERSE_SUCCESS:
-            return {...state, fetching:false, upToDate:false}
+            return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false}
 
         case ADD_PATIENT:
             return {...state, fetching:true}
         case ADD_PATIENT_ERROR:
-            return {...state, fetching:false, error:action.payload, upToDate:true}
+            return {...state, fetching:false, error:action.payload, upToDateAllPatients:true}
         case ADD_PATIENT_SUCCESS:
-            return {...state, fetching:false, upToDate:false}
+            return {...state, fetching:false, upToDateAllPatients:false}
+
+        case GET_PATIENT_BY_ID:
+            return {...state, fetching:true}
+        case GET_PATIENT_BY_ID_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_PATIENT_BY_ID_SUCCESS:
+            return {...state, fetching:false, patient: action.payload, upToDatePatientById:true}
+        case GET_PATIENT_BY_ID_FROM_STORE:
+            return {...state, fetching: false, patient: action.payload}
+
+        case ALTER_PACIENTE:
+            return {...state, fetching: true}
+        case ALTER_PACIENTE_SUCCESS:
+            return {...state, fetching: false, upToDateAllPatients: false, upToDatePatientById: false}
+        case ALTER_PACIENTE_ERROR: 
+            return {...state, fetching: false, error: action.payload}
 
         default:
             return state
@@ -62,7 +90,7 @@ export let getPatientsAction = () => (dispatch, getState) =>{
     //HOW TO usar el estado para poner una condición para las httprequest
     const state = getState()
 
-    if(state.patients.upToDate){
+    if(state.patients.upToDateAllPatients){
         dispatch({
             type: GET_PATIENTS_FROM_STORE,
             payload: state.patients.patients,
@@ -87,17 +115,25 @@ export let getPatientsAction = () => (dispatch, getState) =>{
     }
 }
 
-export let bitInverseAction = (paciente) => (dispatch, getState) =>{
+export let switchAltaAction = (id) => (dispatch, getState) =>{
+    const url = window.document.location.pathname
+
     dispatch({
         type: BIT_INVERSE,
     })
 
-    return axios.put(`${urlSwitchAltaPaciente}${paciente.id}`)
+    return axios.put(`${urlSwitchAltaPaciente}${id}`)
     .then(res=>{
         dispatch({
             type: BIT_INVERSE_SUCCESS,
         })
-        return dispatch(getPatientsAction(), alert('La operación se ha realizado con éxito.'))
+        if (url === '/pacientes'){
+            return dispatch(getPatientsAction(), alert('La operación se ha realizado con éxito.'))
+        }
+        else {
+            return dispatch(getPatientByIdAction(id), alert('La operación se ha realizado con éxito.'))
+        }
+        
     })
     .catch(err=>{
         dispatch({
@@ -132,6 +168,49 @@ export let addPatientAction = (data) => (dispatch, getState) =>{
         }
     })
 }
+
+export let getPatientByIdAction = (id) => (dispatch, getState) => {
+ 
+        dispatch({
+            type: GET_PATIENT_BY_ID,
+        })
+        return axios.get(`${urlGetPacienteById}${id}`)
+        .then(res=>{
+            dispatch({
+                type: GET_PATIENT_BY_ID_SUCCESS,
+                payload: res.data,
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_PATIENT_BY_ID_ERROR,
+                payload: err.message
+            })
+        })
+}
+
+export let alterPatientAction = (id, data) => (dispatch, getState) =>{
+    dispatch({
+        type: ALTER_PACIENTE,
+    })
+
+    return axios.put(`${urlAlterPaciente}${id}`, data)
+    .then(res=>{
+        dispatch({
+            type: ALTER_PACIENTE_SUCCESS,
+        })
+        return dispatch(getPatientByIdAction(id), alert('Se ha modificado el paciente con éxito.'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ALTER_PACIENTE_ERROR,
+            payload: err.message
+        })
+        alert('No se ha podido modificar el paciente. Por favor intente nuevamente.')
+    })
+}
+
+
 
 //funciones de soporte
 let checkName = (patient) => {

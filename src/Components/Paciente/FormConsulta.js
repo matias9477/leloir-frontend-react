@@ -1,26 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import axios from 'axios'
 import { Button, Header, Icon, Container } from 'semantic-ui-react'
-import './../styles.css';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
-import ConsultaPersona from './ConsultaPersona'; 
-import ConsultaAnimal from './ConsultaAnimal'; 
-import ConsultaInstitucion from './ConsultaInstitucion'; 
+import MenuOpciones from '../MenuOpciones'
+import ConsultaPersona from './ConsultaPersona'
+import ConsultaAnimal from './ConsultaAnimal'
+import ConsultaInstitucion from './ConsultaInstitucion'
+import { getPatientByIdAction } from '../../Redux/patientsDuck'
+import './../styles.css'
 
 class FormConsulta extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = ({        
         id: this.props.match.params.id,
         tipo: '',        
       })
   }
 
-  
   componentWillMount() {
     this.getTipo()
+    this.props.getPatientByIdAction(this.props.match.params.id)
   }
 
   getTipo(){
@@ -35,13 +37,18 @@ class FormConsulta extends Component {
   }
 
   getInfo(){
-    if (this.state.tipo === 'com.leloir.backend.domain.Animal'){
-      return <ConsultaAnimal id={this.props.match.params.id}/>
-    } else if (this.state.tipo === 'com.leloir.backend.domain.Persona'){
-      return <ConsultaPersona id={this.props.match.params.id}/>
-    } else if (this.state.tipo === 'com.leloir.backend.domain.Institucion'){
-      return <ConsultaInstitucion id={this.props.match.params.id}/>
+    if(typeof(this.props.patient === 'object')){
+      if (this.state.tipo === 'com.leloir.backend.domain.Animal'){
+      // return <ConsultaAnimal id={this.props.match.params.id}/>
+        return <ConsultaAnimal patient={this.props.patient}/>
+
+      } else if (this.state.tipo === 'com.leloir.backend.domain.Persona'){
+        return <ConsultaPersona id={this.props.match.params.id}/>
+      } else if (this.state.tipo === 'com.leloir.backend.domain.Institucion'){
+        return <ConsultaInstitucion id={this.props.match.params.id}/>
+      }
     }
+    
   }
 
   
@@ -68,4 +75,10 @@ class FormConsulta extends Component {
 
 }
 
-export default FormConsulta;
+const mapStateToProps = (state, props) =>({
+  patient: state.patients.patient,
+})
+
+
+export default connect(mapStateToProps,{getPatientByIdAction})(FormConsulta)
+

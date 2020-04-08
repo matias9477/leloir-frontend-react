@@ -1,6 +1,6 @@
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux'
-import patientsReducer, {getPatientsAction} from './patientsDuck'
-import userReducer, {loginAction} from './userDuck'
+import patientsReducer from './patientsDuck'
+import userReducer from './userDuck'
 
 import thunk from 'redux-thunk';
 

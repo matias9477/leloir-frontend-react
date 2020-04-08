@@ -39,6 +39,7 @@ class LoginComponent extends Component {
         const { usernameOrEmail, password } = this.state
         if(usernameOrEmail && password){
             this.props.loginAction(usernameOrEmail, password)
+            this.props.history.push('/')
         }
     }
 
@@ -87,4 +88,4 @@ function mapState(state){
 }
 
 
-export default connect(mapState,{loginAction})(withRouter(LoginComponent))
+export default withRouter(connect(mapState,{loginAction})(LoginComponent))
