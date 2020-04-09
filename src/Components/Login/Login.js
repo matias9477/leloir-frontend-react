@@ -87,4 +87,4 @@ function mapStateToProps(state){
 }
 
 
-export default withRouter(connect(mapStateToProps,{loginAction})(withRouter(LoginComponent)))
+export default withRouter(connect(mapStateToProps,{loginAction})(LoginComponent))

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, , urlPacienteByNombre } from '../Constants/URLs'
+import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre } from '../Constants/URLs'
 
 
 //constants
@@ -183,22 +183,22 @@ export let addPatientAction = (data) => (dispatch, getState) =>{
 
 export let getPatientByIdAction = (id) => (dispatch, getState) => {
 
+    dispatch({
+        type: GET_PATIENT_BY_ID,
+    })
+    return axios.get(`${urlGetPacienteById}${id}`)
+    .then(res=>{
         dispatch({
-            type: GET_PATIENT_BY_ID,
+            type: GET_PATIENT_BY_ID_SUCCESS,
+            payload: res.data,
         })
-        return axios.get(`${urlGetPacienteById}${id}`)
-        .then(res=>{
-            dispatch({
-                type: GET_PATIENT_BY_ID_SUCCESS,
-                payload: res.data,
-            })
+    })
+    .catch(err=>{
+        dispatch({
+            type: GET_PATIENT_BY_ID_ERROR,
+            payload: err.message
         })
-        .catch(err=>{
-            dispatch({
-                type: GET_PATIENT_BY_ID_ERROR,
-                payload: err.message
-            })
-        })
+    })
 }
 
 export let alterPatientAction = (id, data) => (dispatch, getState) =>{
@@ -239,6 +239,7 @@ export let getPatientByNombreAction = (nombre) => (dispatch, getState) => {
                 payload: err.message
             })
         })
+}
 
 
 //funciones de soporte
