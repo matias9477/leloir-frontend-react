@@ -3,8 +3,7 @@ import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-r
 import { Link } from 'react-router-dom'
 import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Valter from '../../Valter'
+import SyncLoader from "react-spinners/SyncLoader"
 
 import MenuOpciones from '../MenuOpciones'
 import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
@@ -29,24 +28,17 @@ class TablaPaciente extends React.Component {
 
     componentDidMount() {
         this.getAllPacientes()
-        
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+          totalCount: nextProps.patients.length
+        })
+     }
 
     getAllPacientes = () => {
         this.props.getPatientsAction()
-
-        //TODO: arreglar filtros de columna
-        // const filter = orderBy(this.state.filteredPatients, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
-        // ], ["desc", "desc"]);
-        // const pacientes = orderBy(this.props.patients, [(paciente) => paciente.bitAlta, (paciente) => paciente.id
-        // ], ["desc", "desc"]);
-
-        // this.setState({
-        //     filteredPatients: filter,
-        //     pacientes: pacientes,
-        // })
-    };
-
+    }
 
     bitInverse = paciente => { 
         this.props.switchAltaAction(paciente.id)
@@ -90,7 +82,7 @@ class TablaPaciente extends React.Component {
             limit: data.value,
             activePage: 1,
         });
-        return this.handleSearch(this.state.filter,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
     
     onChangePage = (e, {activePage}) => {
@@ -100,11 +92,11 @@ class TablaPaciente extends React.Component {
             this.setState({
                 activePage,
             });
-            return (this.handleSearch(this.state.filter,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit)))
+            return (this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit)))
         }
     }
     
-    handleColumnHeaderClick(sortKey) {
+    handleColumnHeaderClick(sortKey) { //FIXME: sorting columns
         const {
             filteredPatients,
             sortParams: {direction}
@@ -129,32 +121,10 @@ class TablaPaciente extends React.Component {
         }
     }
     
-    
-    // filtratePatients = (valor) =>{
-        
-    //     return (this.props.patients.filter(function (paciente) {
-    //         return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(valor.target.value))) || 
-    //             (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(valor.target.value))) ||
-    //             (paciente.id === undefined ? null : paciente.id.toString().includes(valor.target.value)) ||
-    //             ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(valor.target.value)));
-    //     }))
-    //     }
-    
-        // loadData(from, to) {
-        //     return (this.state.filteredPatients.slice(from, to))
-    
-        //     //ASI ANDA DE ENTRADA PERO NO FILTRA
-        //     // let filteredPatients=this.props.patients
-        //     // return (filteredPatients.slice(from, to))
-        // }
-    
-    handleSearch = (valor, from, to) =>{     
-        //TODO: cambiar el search para que sea por caracter
-        
-        if(this.state.filter===""){
+    handleSearch = (from, to) =>{     
+        if(this.state.filter===""){            
             return this.props.patients.slice(from, to)
-        }
-        else {
+        } else {
             if (this.state.activePage !== 1) {
                 this.setState({
                     activePage: 1
@@ -170,9 +140,11 @@ class TablaPaciente extends React.Component {
             (p.nroDocumento===undefined ? null : p.nroDocumento.toString().includes(filter)) 
             )
 
-            // this.setState({
-            //     totalCount: filteredPatients.length,
-            // }) //FIXME: modificar totalcount para que se cambie el paginator (nro de pags)
+            if (this.state.totalCount !== filteredPatients.length) {
+                this.setState({
+                    totalCount: filteredPatients.length,
+                })
+            }
 
             return filteredPatients.slice(from,to)
         }
@@ -207,10 +179,13 @@ class TablaPaciente extends React.Component {
                     <br></br>
 
                     {fetching ? <div className='tablaListadoHistorico'>
-                        {/* TODO: sacar este comment y comentar a valter
-                        <CircularProgress size='60px'></CircularProgress>  */}
-                        <Valter/>
-                        </div>   :
+                        <SyncLoader
+                        size={10}
+                        margin={5}
+                        color={"black"}
+                        loading={fetching}
+                        />
+                        </div> :
 
                         <div>
                             <div className='union'>
@@ -240,7 +215,7 @@ class TablaPaciente extends React.Component {
 
                                 <tbody className='centerAlignment'>
 
-                                {(this.handleSearch(this.state.filter,((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((paciente, index) => (
+                                {(this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))).map((paciente, index) => (
                                     <tr key={index} paciente={paciente} className={paciente.bitAlta ? null : "listadosBaja"}>
                                         <td data-label="Número Paciente">
                                             {paciente.id}
@@ -278,7 +253,7 @@ class TablaPaciente extends React.Component {
                         
                             <Pagination
                                 activePage={this.state.activePage}
-                                totalPages={Math.ceil((this.props.patients.length) / this.state.limit)}
+                                totalPages={this.state.filter === '' ? Math.ceil((this.props.patients.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
                                 onPageChange={this.onChangePage}
                             />
 
