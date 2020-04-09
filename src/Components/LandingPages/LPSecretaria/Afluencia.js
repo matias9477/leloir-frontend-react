@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Icon, Form, Grid } from 'semantic-ui-react';
+import {connect} from 'react-redux'
 
 import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
+import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
 import './LPSecretaria.css';
 
 let array = JSON.parse(localStorage.getItem('afluence')) || []
@@ -13,7 +15,6 @@ class Afluencia extends Component {
         super(props);
         this.state = ({
             patients: JSON.parse(localStorage.getItem('afluence')) || [],
-            next: '',
         });
     }
 
@@ -57,9 +58,8 @@ class Afluencia extends Component {
         } else {
             this.saveStorage('afluence', array)
         }
+        this.props.getPatientByNombreAction(this.state.patients[0].text)
         
-        this.saveStorage('current', this.state.patients[0])
-        this.setState({ next: this.state.patients[0] })
         this.deletePatient(this.state.patients[0].key)        
     }
 
@@ -100,7 +100,7 @@ class Afluencia extends Component {
                     </Grid.Column>
 
                     <Grid.Column width={11}>
-                        <Atencion nextPaciente={this.state.next}/>
+                        <Atencion currentPatient={this.props.patientLanding}/>
 
                     </Grid.Column>
                 </Grid>
@@ -110,4 +110,12 @@ class Afluencia extends Component {
     }
 }
 
-export default Afluencia;
+function mapStateToProps(state){
+    return {
+        fetching: state.patients.fetching,
+        patientLanding: state.patients.patientLanding
+    }
+}
+
+
+export default connect(mapStateToProps, {getPatientByNombreAction})(Afluencia)
