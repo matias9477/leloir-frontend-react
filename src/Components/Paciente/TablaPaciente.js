@@ -154,9 +154,13 @@ class TablaPaciente extends React.Component {
         if(this.state.filter===""){
             return this.props.patients.slice(from, to)
         }
-        else{
-            
-            console.log(this.state.filter)
+        else {
+            if (this.state.activePage !== 1) {
+                this.setState({
+                    activePage: 1
+                })
+            }
+
             let {filter} = this.state
 
             const filteredPatients = this.props.patients.filter(p => p.nombre.includes(titleCase(filter)) || 
