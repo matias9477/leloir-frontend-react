@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form } from 'semantic-ui-react';
-import {withRouter} from 'react-router-dom';
-import { getCurrentDate } from '../../Services/MetodosPaciente';
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
-import './../styles.css';
+import React, { Component } from 'react'
+import 'react-datepicker/dist/react-datepicker.css'
+import { Button, Header, Form } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import { getCurrentDate } from '../../Services/MetodosPaciente'
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
+import { addPatientAction } from '../../Redux/patientsDuck'
+import './../styles.css'
 
 class AltaInstitucion extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = ({
         nombre: '',
         telefono:'',
@@ -25,15 +27,9 @@ class AltaInstitucion extends Component {
         errorFax: true,
         
       })
-    this.getPaciente = this.getPaciente.bind(this);
-    this.cambioNombre = this.cambioNombre.bind(this);
-    this.cambioTelefono = this.cambioTelefono.bind(this);
-    this.cambioMail = this.cambioMail.bind(this);
-    this.cambioFax = this.cambioFax.bind(this);
   }
   
-  handleUpdateClick = (api) => {
-    const url = this.props.location.state.prevPath;
+  handleUpdateClick = () => {
     var data = {
         "type": "com.leloir.backend.domain.Institucion",
         "fechaAlta": getCurrentDate(),
@@ -44,31 +40,26 @@ class AltaInstitucion extends Component {
         "nombre": titleCase(this.state.nombre),
         "direccion": null,
         "fax": null
-    };
+    }
 
-    axios.post(api, data
-      ).then((response) => {
-        alert('Se registro el paciente ' + titleCase(this.state.nombre) + ' con éxito.'); 
-        this.vaciadoCampos();
-        this.props.history.push(url);
-      }, (error) => {
-        alert('No se ha podido registrar el paciente.');
-    });
+    this.props.addPatientAction(data)
+    this.vaciadoCampos()
+
+    //TODO: redireccionamiento when success. debe redireccionar al previous path const url = this.props.location.state.prevPath;
   }
 
-  getPaciente(e){
-    e.preventDefault();
+  getPaciente = (e) => {
+    e.preventDefault()
 
-    const { nombre, mail, telefono, fax } = this.state;
+    const { nombre, mail, telefono, fax } = this.state
     
-    const errorNombre = validateNombre(nombre);
-    const errorTelefono = validateOnlyNumbers(telefono);
-    const errorFax = validateOnlyNumbers(fax);
-    const errorMail = validateMail(mail);
+    const errorNombre = validateNombre(nombre)
+    const errorTelefono = validateOnlyNumbers(telefono)
+    const errorFax = validateOnlyNumbers(fax)
+    const errorMail = validateMail(mail)
 
     if ( errorNombre && errorMail && errorTelefono && errorFax ) {
-      const api = '/pacientes/add';
-      this.handleUpdateClick(api);
+      this.handleUpdateClick()
     } else {
       alert("Verifique los datos ingresados.")
       this.setState({
@@ -93,25 +84,25 @@ class AltaInstitucion extends Component {
     })
   }
  
-  cambioNombre(e) {
+  cambioNombre = (e) => {
     this.setState( {
       nombre: e.target.value
     })
   }
 
-  cambioFax(e) {
+  cambioFax = (e) => {
     this.setState( {
       fax: e.target.value
     })
   }  
 
-  cambioTelefono(e){
+  cambioTelefono = (e) =>{
     this.setState( {
         telefono: e.target.value
     })
   }
 
-  cambioMail(e){
+  cambioMail = (e) =>{
     this.setState( {
         mail: e.target.value
     })
@@ -157,18 +148,18 @@ class AltaInstitucion extends Component {
 
           <br/>
           
-          <Button primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
+          <Button as= {Link} to={'/pacientes'} primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 
         </Form>  
       </div>
 
-    );
+    )
   }
-
-
-
-
 }
 
+const mapStateToProps = state =>({
+  fetching: state.patients.fetching,
+})
 
-export default withRouter(AltaInstitucion);
+
+export default connect(mapStateToProps,{addPatientAction})(AltaInstitucion)

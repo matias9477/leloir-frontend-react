@@ -13,6 +13,10 @@ export const urlMuestrasAdd = '/muestras/add';
 
 export const urlPacientes = "/pacientes/all";
 export const urlPacientesEnAlta = "/pacientes/all-en-alta";
+export const urlSwitchAltaPaciente = '/pacientes/switch-alta/'
+export const urlAltaPaciente = '/pacientes/add'
+export const urlGetPacienteById = '/pacientes/id/'
+export const urlAlterPaciente = '/pacientes/modificar/'
 export const urlPacienteByNombre = '/pacientes/nombre/';
 
 export const urlSignUp = "/auth/signup";
