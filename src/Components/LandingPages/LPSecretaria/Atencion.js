@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Header, Icon, Button, Grid } from 'semantic-ui-react';
+import { Form, Header, Icon, Button, Grid, Divider } from 'semantic-ui-react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
 
@@ -36,7 +36,14 @@ class Atencion extends Component {
     };
   
     handleChangeListPacientes = selectedPaciente => {
-      this.setState({ selectedPaciente })
+        this.setState({ selectedPaciente })
+        this.saveStorage('Current', selectedPaciente)
+    }
+
+    saveStorage(name, data){
+        if (data != null){
+             localStorage.setItem(name, JSON.stringify(data))
+        }
     }
 
     getAnalisisPendientes = () =>{
@@ -53,7 +60,7 @@ class Atencion extends Component {
     };
 
     find = () => {
-        const next = this.props.nextPaciente.text;
+        const next = JSON.parse(localStorage.Current).text || this.name()
 
         if (next !== undefined || next !== ''){
           
@@ -62,7 +69,8 @@ class Atencion extends Component {
             }
 
             if (this.state.patients.find(isPatient) !== undefined){
-                return this.state.patients.find(isPatient);
+                this.saveStorage('Current', this.state.patients.find(isPatient))
+                return this.state.patients.find(isPatient)
             }
             else {
                 return false;
@@ -76,20 +84,22 @@ class Atencion extends Component {
     getOptionValuePatient = option => option.id;
 
     patientNotFound(){
-        if(this.props.nextPaciente !== ""){ 
+        if(localStorage.Current !== "" || localStorage.Current != null){ 
             this.vaciadoAnalisisPendientes();
             return (
-                <div>Paciente no encontrado 
-                <br/><br/><br/>
+                <div> 
+                <subtitle className='PatientNotFound'> Paciente no encontrado </subtitle>
+                <Divider />
+                <h4>Búsque el paciente o regístrelo a continuación</h4>
+               
                 <Grid columns='equal'>
                     <Grid.Column>
-                        <Header as='h5'>Busque el paciente o Registrelo</Header>
+                        <br></br>
                         <Select
                             name='pacientes'
-                            value={this.state.selectedPaciente}
                             onChange={this.handleChangeListPacientes}
                             placeholder= "Busque un paciente..."
-                            isClearable={true}
+                            isClearable={false}
                             options={this.state.patients}
                             getOptionValue={this.getOptionValuePatient}
                             getOptionLabel={this.getOptionLabelPatient}
@@ -109,6 +119,21 @@ class Atencion extends Component {
         
     }
 
+    patientFound(){
+        return(
+            <div>
+                <SelectedPaciente selected={this.find()} />
+                {this.getAnalisisPendientes()}
+
+                {this.state.analisisPendientes.length>0 ?
+                            <div>
+                                <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
+                            </div>
+                : null}
+            </div>
+        )
+    }
+
     vaciadoAnalisisPendientes(){
         if(this.state.analisisPendientes.length !== 0){
         this.setState({
@@ -117,29 +142,52 @@ class Atencion extends Component {
     }
     }
 
-    render() {
-        console.log(this.state.analisisPendientes);
-        return (
-            <div>
-                <Header as='h2'>Atención</Header>
-                <div className="DatosDelPaciente">
-                <Form className='formAtencion'>
-                    <Form.Field label='Paciente' value={this.props.nextPaciente.text} control='input' />
-                    {this.find() === false ? this.patientNotFound() : 
-                        <div>
-                            
-                            <SelectedPaciente selected={this.find()} />
-                            {this.getAnalisisPendientes()}
+    name(){
+        let name
+        if(JSON.parse(localStorage.Current).apellido !== undefined){
+            name = JSON.parse(localStorage.Current).nombre + ' ' + JSON.parse(localStorage.Current).apellido
+        }
+        else {
+            name = JSON.parse(localStorage.Current).nombre
+        }
+        return(
+            JSON.parse(localStorage.Current).text || name
+        )
+    }
 
-                        </div>
+    clearCurrent(){
+        localStorage.removeItem('Current')
+        window.location.reload(true)
+    }
+
+    render() {
+        return (
+            <div className="DatosDelPaciente">
+                <Header as='h2'>Atención</Header>
+                
+                {(localStorage.Current !== undefined) ? 
+             
+                    <Form className='formAtencion'>
+                        <h4>Paciente</h4>
+                        <Grid columns='equal'>
+                            <Grid.Column width={11}> 
+                                <Form.Field value={this.name()} control='input' />
+                            </Grid.Column>
+                            { localStorage.Afluence === undefined ?
+                             <Grid.Column>
+                             <Button onClick={() => this.clearCurrent()}>Finalizar atención</Button>
+                            </Grid.Column> : null
+                            }
+                           
+                        </Grid>
+
+                        {this.find() === false ? this.patientNotFound() : this.patientFound()
                         }
-                    {this.state.analisisPendientes.length>0 ?
-                        <div>
-                            <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
-                        </div>
-                    :   null}    
-                </Form>
-               </div>
+                    </Form>
+                    
+                : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
+                }
+               
             </div>
         );
     }

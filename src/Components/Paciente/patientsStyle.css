@@ -1,0 +1,22 @@
+
+#headerConsulta {
+    text-align: center;
+    border: none;
+    font-weight: bold;
+    size: 90px;
+    padding: 0;
+}
+
+#divider {
+    margin-bottom: 35px;
+    margin-top: 0;
+    border-color: rgb(112, 106, 106);
+    border-block-end: none;
+    width: 75%;
+    display: inline-block;
+}
+
+#disabled {
+    pointer-events: none;
+}
+

@@ -7,8 +7,6 @@ class Cola extends Component {
 
     constructor(props){
         super(props);
-        this.state={
-        }
         this.createPatient = this.createPatient.bind(this);
     }
 
@@ -18,7 +16,20 @@ class Cola extends Component {
     }
 
     delete(key){
+        let patients = JSON.parse(localStorage.Afluence)
+       
+        let filtered = patients.filter(function(value, index, arr){ return value.key !== key})
+        if (filtered === []){
+            localStorage.removeItem('Afluence')
+        } else{
+            this.saveStorage('Afluence', filtered)
+        }
+
         this.props.delete(key);
+    }
+
+    saveStorage(name, data){
+        localStorage.setItem(name, JSON.stringify(data))
     }
 
     render(){

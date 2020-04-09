@@ -1,18 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import axios from 'axios'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import {withRouter} from 'react-router-dom';
+import DatePicker from 'react-datepicker'
+import { addDays } from 'date-fns'
+import {withRouter} from 'react-router-dom'
 import { Button, Form, Header } from 'semantic-ui-react'
-import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs';
-import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente';
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
-import './../styles.css';
+import { connect } from 'react-redux'
+import 'react-datepicker/dist/react-datepicker.css'
+
+import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs'
+import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
+import { addPatientAction } from '../../Redux/patientsDuck'
+import './../styles.css'
 
 class AltaPersona extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = ({
         nombre: '',
         apellido:'',
@@ -45,35 +48,23 @@ class AltaPersona extends Component {
         modObraSocial: true,
 
       })
-    this.getPaciente = this.getPaciente.bind(this);
-    this.cambioNombre = this.cambioNombre.bind(this);
-    this.cambioApellido = this.cambioApellido.bind(this);    
-    this.cambioTipoDoc = this.cambioTipoDoc.bind(this);
-    this.cambioNroDoc = this.cambioNroDoc.bind(this);
-    this.cambioFechaNacimiento = this.cambioFechaNacimiento.bind(this);
-    this.cambioSexo = this.cambioSexo.bind(this);
-    this.cambioNacionalidad = this.cambioNacionalidad.bind(this);
-    this.cambioTelefono = this.cambioTelefono.bind(this);
-    this.cambioMail = this.cambioMail.bind(this);
-    this.cambioObraSocial = this.cambioObraSocial.bind(this);
-    this.cambioPlan = this.cambioPlan.bind(this);
   }
   
   fillCombos = () =>{
-    this.comboObrasSociales();
-    this.comboTiposDocs();
-    this.comboSexos();
-    this.comboPaises();
-    this.comboPlanes();
+    this.comboObrasSociales()
+    this.comboTiposDocs()
+    this.comboSexos()
+    this.comboPaises()
+    this.comboPlanes()
   }  
 
   comboSexos = () =>{
     axios.get(urlSexos).then(resolve => {
       this.setState({
           sexos: Object.values(resolve.data).flat(),
-      });
+      })
     }, (error) => {
-        console.log('Error combo sexo', error.message);
+        console.log('Error combo sexo', error.message)
     })
 
   }
@@ -82,9 +73,9 @@ class AltaPersona extends Component {
     axios.get(urlPaises).then(resolve => {
       this.setState({
           paises: Object.values(resolve.data).flat(),
-      });
+      })
     }, (error) => {
-        console.log('Error combo paises', error.message);
+        console.log('Error combo paises', error.message)
     })
 
   }
@@ -93,21 +84,21 @@ class AltaPersona extends Component {
     axios.get(urlObrasSoc).then(resolve => {
       this.setState({
           obrasSociales: Object.values(resolve.data).flat(),
-      });
+      })
     }, (error) => {
-        console.log('Error combo obras sociales: ', error.message);
+        console.log('Error combo obras sociales: ', error.message)
     })
 
   }
 
   comboPlanes = () =>{
-    if(this.state.planes.length === 0){
+    if(this.state.planes.length === 0 && this.state.obraSocial !== ''){
     axios.get('/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
          this.setState({
            planes: Object.values(resolve.data).flat(),
-         });
+         })
         }, (error) => {
-            console.log('Error combo planes: ', error.message);
+            console.log('Error combo planes: ', error.message)
         })
       }
   }
@@ -116,24 +107,25 @@ class AltaPersona extends Component {
     axios.get(urlDocs).then(resolve => {
       this.setState({
           documentos: Object.values(resolve.data).flat(),
-      });
+      })
     }, (error) => {
-        console.log('Error combo tipo documentos', error.message);
+        console.log('Error combo tipo documentos', error.message)
     })
 
   }
 
   componentDidUpdate(){
-    this.comboPlanes();
+    this.comboPlanes()
   }
 
   componentDidMount() {
-    this.fillCombos();
+    this.fillCombos()
 
   }
 
   handleUpdateClick = (api) => {
-    var data;
+    // const url = this.props.location.state.prevPath
+    var data
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
         "type": "com.leloir.backend.domain.Persona",
@@ -164,7 +156,7 @@ class AltaPersona extends Component {
         "plan": null,
         "historial": null,
         "bitAlta": true
-    };
+    }
     } else {
       data = {
         "type": "com.leloir.backend.domain.Persona",
@@ -206,47 +198,33 @@ class AltaPersona extends Component {
         },
         "historial": null,
         "bitAlta": true
-    };
+    }
     }
 
-    axios.post(api, data
-      ).then((response) => {
-        alert('Se registro el paciente ' + titleCase(this.state.nombre) +' ' + titleCase(this.state.apellido) + ' con éxito.'); 
-        this.props.history.push("/analisis/add");
-      }, (error) => {
-        if (error.response.status === 500){
-          alert('Ya existe un paciente con ese número de documento. Revise los datos ingresados.');
-          this.setState({
-            errorNroDoc: false,
-          })
-        } else {
-          alert('No se ha podido registrar el paciente.');
-        }
-      
-    });
-
+    this.props.addPatientAction(data)
+    this.vaciadoCampos()
+    //TODO: implementar direccionamiento a prevpath after success
   }
 
-  getPaciente(e){
-    e.preventDefault();
+  getPaciente = (e) => {
+    e.preventDefault()
     
-    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad, mail, telefono } = this.state;
+    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad, mail, telefono } = this.state
 
-    const errorNombre = validateNombre(nombre);
-    const errorApellido = validateNombre(apellido);
-    const errorTipoDoc = validateRequiredCombos(tipoDoc);
-    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc);
-    const errorFechaNac = validateFechaNacimiento(fechaNacimiento);
-    const errorSexo = validateRequiredCombos(sexo);
-    const errorNac = validateRequiredCombos(nacionalidad);
-    const errorMail = validateMail(mail);
-    const errorTelefono = validateOnlyNumbers(telefono);
+    const errorNombre = validateNombre(nombre)
+    const errorApellido = validateNombre(apellido)
+    const errorTipoDoc = validateRequiredCombos(tipoDoc)
+    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc)
+    const errorFechaNac = validateFechaNacimiento(fechaNacimiento)
+    const errorSexo = validateRequiredCombos(sexo)
+    const errorNac = validateRequiredCombos(nacionalidad)
+    const errorMail = validateMail(mail)
+    const errorTelefono = validateOnlyNumbers(telefono)
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
-      const api = '/pacientes/add';
-      this.handleUpdateClick(api);
+      this.handleUpdateClick()
     } else {
-      alert('Verifique los datos ingresados.');
+      alert('Verifique los datos ingresados.')
       this.setState({
         errorNombre,
         errorApellido,
@@ -287,61 +265,61 @@ class AltaPersona extends Component {
     })
   }
  
-  cambioNombre(e) {
+  cambioNombre = (e) => {
     this.setState( {
       nombre: e.target.value
     })
   }
 
-  cambioApellido(e) {
+  cambioApellido = (e) => {
     this.setState( {
       apellido: e.target.value
     })
   }  
 
-  cambioTipoDoc(e){
+  cambioTipoDoc = (e) => {
     this.setState( {
         tipoDoc: e.target.value
     })
   } 
 
-  cambioNroDoc(e) {
+  cambioNroDoc = (e) => {
       this.setState( {
         nroDoc: e.target.value
       })
   }
 
-  cambioFechaNacimiento(e){
+  cambioFechaNacimiento = (e) =>{
     this.setState( {
         fechaNacimiento: e
     })
   }
 
-  cambioSexo(e){
+  cambioSexo = (e) =>{
       this.setState( {
           sexo: e.target.value
       })
   }
 
-  cambioNacionalidad(e){
+  cambioNacionalidad = (e) => {
       this.setState( {
           nacionalidad: e.target.value
       })
   }
 
-  cambioTelefono(e){
+  cambioTelefono = (e) => {
     this.setState( {
         telefono: e.target.value
     })
   }
 
-  cambioMail(e){
+  cambioMail = (e) => {
     this.setState( {
         mail: e.target.value
     })
   }
 
-  cambioObraSocial(e){
+  cambioObraSocial = (e) => {
       this.setState( {
           obraSocial: e.target.value,
           planes: [],
@@ -349,7 +327,7 @@ class AltaPersona extends Component {
         })
   }  
   
-  cambioPlan(e){
+  cambioPlan = (e) => {
     this.setState({
       plan: e.target.value
     })
@@ -474,10 +452,13 @@ class AltaPersona extends Component {
         </Form>
       </div>
 
-    );
+    )
   }
 
 }
 
+const mapStateToProps = state =>({
+  fetching: state.patients.fetching,
+})
 
-export default withRouter( AltaPersona);
+export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaPersona))
