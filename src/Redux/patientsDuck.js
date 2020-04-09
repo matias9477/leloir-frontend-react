@@ -206,7 +206,7 @@ export let alterPatientAction = (id, data) => (dispatch, getState) =>{
             type: ALTER_PACIENTE_ERROR,
             payload: err.message
         })
-        alert('No se ha podido modificar el paciente. Por favor intente nuevamente.')
+        return dispatch(getPatientByIdAction(id), alert('No se ha podido modificar el paciente. Por favor intente nuevamente.'))
     })
 }
 

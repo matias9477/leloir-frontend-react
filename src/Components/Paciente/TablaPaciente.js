@@ -152,28 +152,25 @@ class TablaPaciente extends React.Component {
         //TODO: cambiar el search para que sea por caracter
         
         if(this.state.filter===""){
-        return this.props.patients.slice(from, to)
+            return this.props.patients.slice(from, to)
         }
         else{
-            // this.setState({
-            //     filter: valor.target.value,
-            // });
-
-            //FIXME: No funciona el filtrado porque es una pija
             
-        const filteredPatients = this.props.patients.filter(function (paciente) {
-            return ((paciente.nombre === undefined ? null : titleCase(paciente.nombre).includes(titleCase(this.state.filter))) || 
-                (paciente.apellido === undefined ? null : titleCase(paciente.apellido).includes(titleCase(this.state.filter))) ||
-                (paciente.id === undefined ? null : paciente.id.toString().includes(this.state.filter)) ||
-                ((paciente.nroDocumento === undefined || paciente.nroDocumento === '-') ? null : paciente.nroDocumento.toString().includes(this.state.filter)));
-        });
+            console.log(this.state.filter)
+            let {filter} = this.state
 
-        this.setState({
-            // filteredPatients: pac,
-            totalCount: filteredPatients.length,
-        })
+            const filteredPatients = this.props.patients.filter(p => p.nombre.includes(titleCase(filter)) || 
+            p.id.toString().includes(filter) ||
+            (p.apellido===undefined ? null : p.apellido.includes(titleCase(filter))) ||
+            (p.apellido===undefined ? null : (p.nombre + ' ' + p.apellido).includes(titleCase(filter))) ||
+            (p.nroDocumento===undefined ? null : p.nroDocumento.toString().includes(filter)) 
+            )
 
-        return filteredPatients.slice(from,to)
+            // this.setState({
+            //     totalCount: filteredPatients.length,
+            // }) //FIXME: modificar totalcount para que se cambie el paginator (nro de pags)
+
+            return filteredPatients.slice(from,to)
         }
     }
 
@@ -220,8 +217,8 @@ class TablaPaciente extends React.Component {
                                             filter: filter.target.value
                                         })}
                                         
-                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} value="Temporalmente deshabilitado" disabled/>
-                                        {/* TODO cuando funcione el filtrado sacar el value y el disabled de arriba */}
+                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                        />
                                 </div>
                                 {this.patientsPerPage()}
                             </div>
@@ -295,7 +292,7 @@ class TablaPaciente extends React.Component {
 
 const mapStateToProps = state =>({
     fetching: state.patients.fetching,
-    patients: state.patients.patients,
+    patients: state.patients.patients.sort((a, b) => (a.id > b.id) ? -1 : 1),
 })
 
 
