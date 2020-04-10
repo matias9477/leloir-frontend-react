@@ -30,16 +30,6 @@ class Atencion extends Component {
     componentWillReceiveProps(nextProps) {
         this.saveStorage('current', nextProps.currentPatient.pacientes)
     }
-
-    // getAllPacientes = () => { //TODO: redux
-    //     axios.get(urlPacientes).then(resolve => {
-    //         this.setState({
-    //             patients: Object.values(resolve.data).flat(),
-    //         });
-    //     }, (error) => {
-    //         console.log('Error en carga de pacientes: ', error.message);
-    //     })
-    // }
   
     handleChangeListPacientes = selectedPaciente => {
         this.setState({ selectedPaciente })
