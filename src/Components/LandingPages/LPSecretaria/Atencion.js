@@ -1,42 +1,45 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Form, Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react';
-import Select from 'react-select';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { Form, Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react'
+import Select from 'react-select'
+import { Link } from 'react-router-dom'
+import {connect} from 'react-redux'
+import SyncLoader from "react-spinners/SyncLoader"
 
-import { urlPacientes, urlAnalisisPendientes } from '../../../Constants/URLs';
-import { checkAtributo } from '../../../Services/MetodosDeValidacion';
-import SelectedPaciente from './PacienteEnAtencion';
-import AnalisisPendientes from './AnalisisPendientesAtencion';
-import './LPSecretaria.css';
+import { urlAnalisisPendientes } from '../../../Constants/URLs'
+import { checkAtributo } from '../../../Services/MetodosDeValidacion'
+import SelectedPaciente from './PacienteEnAtencion'
+import AnalisisPendientes from './AnalisisPendientesAtencion'
+import { getPatientsAction } from '../../../Redux/patientsDuck'
+import './LPSecretaria.css'
 
 class Atencion extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            patients: [],
             selectedPaciente: '',
             analisisPendientes:[],
         });
     }
 
     componentDidMount(){
-        this.getAllPacientes()
+        // this.getAllPacientes()
+        this.props.getPatientsAction()
     }
 
     componentWillReceiveProps(nextProps) {
         this.saveStorage('current', nextProps.currentPatient.pacientes)
     }
 
-    getAllPacientes = () => { //TODO: redux
-        axios.get(urlPacientes).then(resolve => {
-            this.setState({
-                patients: Object.values(resolve.data).flat(),
-            });
-        }, (error) => {
-            console.log('Error en carga de pacientes: ', error.message);
-        })
-    };
+    // getAllPacientes = () => { //TODO: redux
+    //     axios.get(urlPacientes).then(resolve => {
+    //         this.setState({
+    //             patients: Object.values(resolve.data).flat(),
+    //         });
+    //     }, (error) => {
+    //         console.log('Error en carga de pacientes: ', error.message);
+    //     })
+    // }
   
     handleChangeListPacientes = selectedPaciente => {
         this.setState({ selectedPaciente })
@@ -109,7 +112,7 @@ class Atencion extends Component {
                                 onChange={this.handleChangeListPacientes}
                                 placeholder= "Busque un paciente..."
                                 isClearable={false}
-                                options={this.state.patients}
+                                options={this.props.patients}
                                 getOptionValue={this.getOptionValuePatient}
                                 getOptionLabel={this.getOptionLabelPatient}
                             />
@@ -155,7 +158,7 @@ class Atencion extends Component {
                     <List.Content floated='right'>
                         <Button style={{marginRight: '20px'}} onClick={() => this.handleOnClickMoreThan1Patient(patient)}>Elegir</Button>
                     </List.Content>
-          
+                    <Icon name={this.getIconTipo(patient.tipoPaciente)}/>
                     <List.Content>{this.checkName(patient)}</List.Content>
                 </List.Item>
                 <hr style={{margin: '0'}}/>
@@ -163,6 +166,16 @@ class Atencion extends Component {
             ))}
             </div>
         </Container>
+    }
+
+    getIconTipo(tipo){
+        if (tipo === 'ANIMAL'){
+            return 'paw'
+        } else if(tipo === 'PERSONA'){
+            return 'user'
+        } else if(tipo === 'INSTITUCION'){
+            return 'building'
+        }
     }
 
     handleOnClickMoreThan1Patient(patient){
@@ -201,10 +214,20 @@ class Atencion extends Component {
                            
                         </Grid>
 
-                        {JSON.parse(localStorage.current) !== undefined ? 
-                        (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                        JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-
+                        {this.props.fetching ?
+                            <SyncLoader
+                            css={{padding: '100px'}}
+                            size={10}
+                            margin={5}
+                            color={"black"}
+                            loading={this.props.fetching}
+                            /> :
+                        <div>
+                            {JSON.parse(localStorage.current) !== undefined ? 
+                            (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                            JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                        </div>
+                        }
                         
                         
                     </Form>
@@ -218,4 +241,12 @@ class Atencion extends Component {
 }
 
 
-export default (Atencion)
+function mapStateToProps(state){
+    return {
+        fetching: state.patients.fetching,
+        patients: state.patients.patients
+    }
+}
+
+
+export default connect(mapStateToProps, {getPatientsAction})(Atencion)

@@ -100,7 +100,7 @@ class Afluencia extends Component {
                     </Grid.Column>
 
                     <Grid.Column width={11}>
-                        <Atencion currentPatient={this.props.patientLanding}/>
+                        <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
 
                     </Grid.Column>
                 </Grid>
