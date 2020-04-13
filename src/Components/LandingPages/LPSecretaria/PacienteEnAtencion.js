@@ -70,7 +70,6 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                     {(!selected.bitAlta) ? <Button onClick={(e) => { 
                     if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + nombre(selected) + '?')) {  
                         darAlta(selected)
-                        // switchAltaAction(selected.id)
                     } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
 
                 
