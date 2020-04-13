@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Form, Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react'
+import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react'
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
@@ -23,7 +23,6 @@ class Atencion extends Component {
     }
 
     componentDidMount(){
-        // this.getAllPacientes()
         this.props.getPatientsAction()
     }
 
@@ -90,6 +89,7 @@ class Atencion extends Component {
             this.vaciadoAnalisisPendientes();
             return (
                 <div className='patientNotFound'> 
+                    <h4>{JSON.parse(localStorage.nombreCurrent)}</h4>
                     <subtitle  className='patientNotFoundMessage'> Paciente no encontrado </subtitle>
                     <Divider />
                     <h4>Búsque el paciente o regístrelo a continuación</h4>
@@ -128,11 +128,10 @@ class Atencion extends Component {
             <div> 
                 <SelectedPaciente selected={patient} />
             
-                {this.state.analisisPendientes.length>0 ?
-                            <div>
-                                <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
-                            </div>
-                : null}
+                {patient.bitAlta ? (this.state.analisisPendientes.length>0 ?
+                    <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
+                : <h4>El paciente no posee análisis pendientes</h4>) : null}
+                
             </div>
         )
     }
@@ -188,22 +187,12 @@ class Atencion extends Component {
 
     render() {
         return (
-            <div className="DatosDelPaciente">
+            <div className='atencion'>
                 <Header as='h2'>Atención</Header>
                 
                 {(localStorage.current !== undefined) ? 
              
-                    <Form className='formAtencion'>
-                        <Grid columns='equal'>
-                           
-                            {/* { localStorage.afluence === undefined ?
-                             <Grid.Column>
-                             <Button onClick={() => this.clearCurrent()}>Finalizar atención</Button>
-                            </Grid.Column> : null
-                            } */}
-                           
-                        </Grid>
-
+                    <Container >
                         {this.props.fetching ?
                             <SyncLoader
                             css={{padding: '100px'}}
@@ -220,7 +209,7 @@ class Atencion extends Component {
                         }
                         
                         
-                    </Form>
+                    </Container>
                     
                 : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
                 }

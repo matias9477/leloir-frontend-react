@@ -143,7 +143,7 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
             return dispatch(getPatientsAction(), alert('La operación se ha realizado con éxito.'))
         }
         else {
-            return dispatch(getPatientByIdAction(id || JSON.parse(localStorage.current)[0].id), alert('La operación se ha realizado con éxito.'))
+            return dispatch(getPatientByIdAction(id), alert('La operación se ha realizado con éxito.'))
         }
     })
     .catch(err=>{

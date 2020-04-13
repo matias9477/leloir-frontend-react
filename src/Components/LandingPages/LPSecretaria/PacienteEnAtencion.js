@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router-dom';
 
 import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
-import { switchAltaAction } from './../../../Redux/patientsDuck'
+import { switchAltaAction, getPatientByNombreAction } from './../../../Redux/patientsDuck'
 import './LPSecretaria.css'
 
-const SelectedPaciente = ({selected, switchAltaAction}) => {
+const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}) => {
     return (
         <div>
             {(selected === '' || selected === null) ? null : 
@@ -58,6 +58,7 @@ const SelectedPaciente = ({selected, switchAltaAction}) => {
                         </Grid.Column>
                         <Grid.Column >
                             <Button as= {Link} to={{pathname: `/pacientes/consulta/${selected.id}`, state: { prevPath: window.location.pathname }}} primary >Ver Paciente</Button>
+                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: '/analisis/add', state: { prevPath: window.location.pathname, paciente: selected }}} primary >Nuevo Análisis</Button>
                         </Grid.Column>
 
                     </Grid>
@@ -68,7 +69,8 @@ const SelectedPaciente = ({selected, switchAltaAction}) => {
 
                     {(!selected.bitAlta) ? <Button onClick={(e) => { 
                     if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + nombre(selected) + '?')) {  
-                        switchAltaAction(selected.id)
+                        darAlta(selected)
+                        // switchAltaAction(selected.id)
                     } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
 
                 
@@ -77,7 +79,15 @@ const SelectedPaciente = ({selected, switchAltaAction}) => {
 
     </div>    
     )
+
+    function darAlta(selected){
+        switchAltaAction(selected.id)
+        getPatientByNombreAction(nombre(JSON.parse(localStorage.current)[0]))
+    }
+
 }
+
+
 
 function nombre(selected){
     let nombre = selected.nombre
@@ -96,4 +106,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {switchAltaAction})(SelectedPaciente)
+export default connect(mapStateToProps, {switchAltaAction, getPatientByNombreAction})(SelectedPaciente)

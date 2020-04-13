@@ -59,7 +59,7 @@ class Afluencia extends Component {
             this.saveStorage('afluence', array)
         }
         this.props.getPatientByNombreAction(this.state.patients[0].text)
-        
+        this.saveStorage('nombreCurrent', this.state.patients[0].text)
         this.deletePatient(this.state.patients[0].key)        
     }
 
