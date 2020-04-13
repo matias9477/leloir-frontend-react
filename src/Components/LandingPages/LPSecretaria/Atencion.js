@@ -31,8 +31,17 @@ class Atencion extends Component {
     }
   
     handleChangeListPacientes = selectedPaciente => {
+        let aux = []
+        aux.push(selectedPaciente)
+        this.saveStorage('current', aux)
+
+        if (selectedPaciente.apellido === undefined) {
+            this.saveStorage('nombreCurrent', selectedPaciente.nombre)
+        } else {
+            this.saveStorage('nombreCurrent', selectedPaciente.nombre + ' ' + selectedPaciente.apellido)
+        }  
+
         this.setState({ selectedPaciente })
-        this.saveStorage('current', selectedPaciente)
     }
 
     saveStorage(name, data){

@@ -56,7 +56,7 @@ export default function reducer(state = initialData, action){
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
-            return {...state, fetching:false, error:action.payload, upToDateAllPatients:true}
+            return {...state, fetching:false, error:action.payload, upToDateAllPatients: false}
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false}
 
