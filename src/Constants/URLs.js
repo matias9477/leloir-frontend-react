@@ -17,7 +17,6 @@ export const urlSwitchAltaPaciente = '/pacientes/switch-alta/'
 export const urlAltaPaciente = '/pacientes/add'
 export const urlGetPacienteById = '/pacientes/id/'
 export const urlAlterPaciente = '/pacientes/modificar/'
-export const urlHistorial = '/historial/'
 
 export const urlSignUp = "/auth/signup";
 export const urlSignIn = "/auth/signin";
@@ -27,6 +26,7 @@ export const urlLoggedUser = '/user/me';
 export const urlAnalisisPendientes = "/analisis/pendientes";
 export const urlGetAnalisis = "/analisis/id/";
 export const urlEmitirAnalisis = "/analisis/emitir-analisis/";
+export const urlHistorial = '/analisis/historial/'
 
 export const urlAnalisis = '/analisis/all';
 export const urlCargarResultados = '/analisis/cargar-resultados/';

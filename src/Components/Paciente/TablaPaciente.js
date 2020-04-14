@@ -240,6 +240,11 @@ class TablaPaciente extends React.Component {
                                                                 exact='true'>
                                                         Ver/Modificar
                                                     </Dropdown.Item>
+                                                    {/* TODO: Esto es provisorio, despues hay que borrarlo o dejarlo vofi */}
+                                                    <Dropdown.Item as={Link} to={{pathname: `/pacientes/historial/${paciente.id}`, state: { prevPath: window.location.pathname }}}
+                                                                exact='true'>
+                                                                    Ver historial
+                                                    </Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
 

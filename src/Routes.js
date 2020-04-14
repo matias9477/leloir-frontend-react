@@ -21,6 +21,7 @@ import DiarioPracticasContainer from "./Components/DiarioPracticas/DiarioPractic
 import TablaAnalisis from './Components/Analisis/TablaAnalisis';
 import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
 import iFramePBI from './Components/Reportes/iFramePBI';
+import Historial from './Components/Paciente/Historial';
 
 
 export default function Routes() {
@@ -31,6 +32,7 @@ export default function Routes() {
             <AuthenticatedRoute exact path="/pacientes" component={TablaPaciente}/>
             <AuthenticatedRoute exact path="/pacientes/add" component={FormAlta}/>
             <AuthenticatedRoute exact path="/pacientes/consulta/:id" component={FormConsulta}/>
+            <AuthenticatedRoute exact path="/pacientes/historial/:id" component={Historial}/>
             <AuthenticatedRoute exact path="/obras_sociales" component={TablaObraSocial}/>
             <AuthenticatedRoute exact path="/obras_sociales/consulta/:id" component={ConsultaObraSocial}/>
             <AuthenticatedRoute exact path="/obras_sociales/add" component={AltaObraSocial}/>

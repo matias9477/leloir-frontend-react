@@ -221,7 +221,7 @@ export let alterPatientAction = (id, data) => (dispatch, getState) =>{
     })
 }
 
-export let getPatientHistory = (id) => (dispatch, getState) =>{
+export let getPatientHistoryAction = (id) => (dispatch, getState) =>{
     dispatch({
         type: GET_PATIENT_HISTORY,
     })
@@ -229,7 +229,7 @@ export let getPatientHistory = (id) => (dispatch, getState) =>{
     .then( res => {
         dispatch({
             type: GET_PATIENT_HISTORY_SUCCESS,
-            payload: res.data,
+            payload: Object.values(res.data).flat(),
         })
     }
 
