@@ -5,6 +5,7 @@ export const urlSexos = "/sexo/all";
 export const urlTiposAnimales = "/tipos-animales/all";
 
 export const urlObraSocial = "obras_sociales/id/";
+export const urlSwitchAltaObraSocial = 'obras_sociales/switch-alta/'
 export const urlDeterminaciones = "/determinaciones/all";
 
 export const urlMuestras = "/muestras/all";
