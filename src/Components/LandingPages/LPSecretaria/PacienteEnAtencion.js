@@ -1,11 +1,13 @@
 import React from 'react'
 import { Header, Container, List, Button, Grid } from 'semantic-ui-react'
-import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
-import axios from 'axios'
+import { connect } from 'react-redux'
 import {Link} from 'react-router-dom';
+
+import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
+import { switchAltaAction, getPatientByNombreAction } from './../../../Redux/patientsDuck'
 import './LPSecretaria.css'
 
-const SelectedPaciente = ({selected}) => {
+const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}) => {
     return (
         <div>
             {(selected === '' || selected === null) ? null : 
@@ -56,17 +58,18 @@ const SelectedPaciente = ({selected}) => {
                         </Grid.Column>
                         <Grid.Column >
                             <Button as= {Link} to={{pathname: `/pacientes/consulta/${selected.id}`, state: { prevPath: window.location.pathname }}} primary >Ver Paciente</Button>
+                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: '/analisis/add', state: { prevPath: window.location.pathname, paciente: selected }}} primary >Nuevo Análisis</Button>
                         </Grid.Column>
 
                     </Grid>
                     
                     {!selected.bitAlta ?
-                        <h4 className='PatientNotFound'>ESTE PACIENTE SE ENCUENTRA DADO DE BAJA</h4>
+                        <h4 className='patientNotFoundMessage'>ESTE PACIENTE SE ENCUENTRA DADO DE BAJA</h4> 
                     : null}
 
                     {(!selected.bitAlta) ? <Button onClick={(e) => { 
                     if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + nombre(selected) + '?')) {  
-                    alta(selected)
+                        darAlta(selected)
                     } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
 
                 
@@ -74,8 +77,16 @@ const SelectedPaciente = ({selected}) => {
         }
 
     </div>    
-    );
-};
+    )
+
+    function darAlta(selected){
+        switchAltaAction(selected.id)
+        getPatientByNombreAction(nombre(JSON.parse(localStorage.current)[0]))
+    }
+
+}
+
+
 
 function nombre(selected){
     let nombre = selected.nombre
@@ -87,18 +98,11 @@ function nombre(selected){
     )
 }
 
-function alta(selected){
-    axios.put(`/pacientes/switch-alta/${selected.id}`).then(response => {
-        alert("Se ha dado de alta al paciente con éxito.");
-        // f5
-    }, (error) => {
-        // if(this.state.bitAlta) {
-        //     alert(`No se ha podido dar de alta al paciente ${this.state.nombre} ${this.state.apellido}. Intentelo nuevamente.`)
-        //   }
-        alert(`No se ha podido dar de alta al paciente ${selected.nombre} ${selected.apellido}. Intentelo nuevamente.`)
-    })
 
+function mapStateToProps(state){
+    return{
+        fetching: state.patients.fetching,
+    }
 }
 
-
-export default SelectedPaciente;
+export default connect(mapStateToProps, {switchAltaAction, getPatientByNombreAction})(SelectedPaciente)

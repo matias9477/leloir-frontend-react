@@ -224,7 +224,7 @@ class TablaPaciente extends React.Component {
                                             <Icon name={this.getIconTipo(paciente.tipoPaciente)}/>
                                         </td>
                                         <td data-label="Nombre">
-                                            {paciente.nombre}&nbsp;&nbsp;{paciente.apellido}
+                                            {paciente.nombre}&nbsp;{paciente.apellido}
                                         </td>
                                         <td data-label="Número de Documento">
                                             {nullTo(paciente.nroDocumento)}
