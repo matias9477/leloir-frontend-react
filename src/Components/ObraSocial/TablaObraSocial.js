@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
-import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
@@ -19,10 +18,10 @@ class TablaObraSocial extends React.Component {
             activePage: 1,
             totalCount: 0,
             sortParams:{
-                direction: undefined
+                direction: 'desc'
             },  
             filter: '',
-            obrasSocialesFiltrados: [],
+            param: 'idObraSocial',
         }
       }
 
@@ -84,21 +83,24 @@ class TablaObraSocial extends React.Component {
         }        
     }
     
-    handleColumnHeaderClick(sortKey) { //FIXME: order de columna may-men
-        const {  
-          obrasSocialesFiltrados,  
-          sortParams: { direction }  
-        } = this.state;
-  
-        const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(obrasSocialesFiltrados, [sortKey], [sortDirection]);
-  
-        this.setState({  
-          obrasSocialesFiltrados: sortedCollection,  
-          sortParams: {  
-            direction: sortDirection  
-          }  
-        });  
+    handleColumnHeaderClick(sortKey) { 
+        this.setState({
+            param: sortKey
+        })
+
+        if (this.state.sortParams.direction === 'desc'){
+            this.setState({
+                sortParams: {
+                    direction: 'asc'
+                }
+            })
+        } else {
+            this.setState({
+                sortParams: {
+                    direction: 'desc'
+                }
+            })
+        }          
     } 
 
     actualState(bitActivo){
@@ -110,9 +112,21 @@ class TablaObraSocial extends React.Component {
         }
     }
 
+    filtado(array){
+        let { param } = this.state
+
+        if (this.state.sortParams.direction === 'desc'){
+            return array.sort((a, b) => (a[param] > b[param]) ? -1 : 1)
+        } else {
+            return array.sort((a, b) => (a[param] > b[param]) ? 1 : -1)
+        }           
+    }
+
     handleSearch = (from, to) =>{     
-        if(this.state.filter === ""){            
-            return this.props.obrasSociales.slice(from, to)
+
+        if(this.state.filter === ""){     
+            return this.filtado(this.props.obrasSociales).slice(from, to)
+
         } else {
             if (this.state.activePage !== 1) {
                 this.setState({
@@ -135,10 +149,9 @@ class TablaObraSocial extends React.Component {
                 })
             }
 
-            return filteredObrasSociales.slice(from,to)
+            return this.filtado(filteredObrasSociales).slice(from, to)
         }
     }
-
 
 
     render(){
@@ -248,7 +261,7 @@ class TablaObraSocial extends React.Component {
 
 const mapStateToProps = state =>({
     fetching: state.obrasSociales.fetching,
-    obrasSociales: state.obrasSociales.obrasSociales.sort((a, b) => (a.idObraSocial > b.idObraSocial) ? -1 : 1),
+    obrasSociales: state.obrasSociales.obrasSociales
 })
 
 
