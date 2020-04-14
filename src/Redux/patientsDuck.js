@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente } from '../Constants/URLs'
+import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre } from '../Constants/URLs'
 
 
 //constants
@@ -8,7 +8,8 @@ let initialData = {
     patients: [],
     upToDateAllPatients: false,
     upToDatePatientById: false,
-    patient: ''
+    patient: '',
+    patientLanding: [],
 }
 
 
@@ -34,6 +35,10 @@ let ALTER_PACIENTE = "ALTER_PACIENTE"
 let ALTER_PACIENTE_SUCCESS = "ALTER_PACIENTE_SUCCESS"
 let ALTER_PACIENTE_ERROR = "ALTER_PACIENTE_ERROR"
 
+let GET_PATIENT_BY_NOMBRE = "GET_PATIENT_BY_NOMBRE"
+let GET_PATIENT_BY_NOMBRE_SUCCESS = "GET_PATIENT_BY_NOMBRE_SUCCESS"
+let GET_PATIENT_BY_NOMBRE_ERROR = "GET_PATIENT_BY_NOMBRE_ERROR"
+
 
 
 //reducer
@@ -51,7 +56,7 @@ export default function reducer(state = initialData, action){
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
-            return {...state, fetching:false, error:action.payload, upToDateAllPatients:true}
+            return {...state, fetching:false, error:action.payload, upToDateAllPatients: false}
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false}
 
@@ -75,8 +80,15 @@ export default function reducer(state = initialData, action){
             return {...state, fetching: true}
         case ALTER_PACIENTE_SUCCESS:
             return {...state, fetching: false, upToDateAllPatients: false, upToDatePatientById: false}
-        case ALTER_PACIENTE_ERROR: 
+        case ALTER_PACIENTE_ERROR:
             return {...state, fetching: false, error: action.payload}
+
+        case GET_PATIENT_BY_NOMBRE:
+            return {...state, fetching:true}
+        case GET_PATIENT_BY_NOMBRE_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_PATIENT_BY_NOMBRE_SUCCESS:
+            return {...state, fetching:false, patientLanding: action.payload}
 
         default:
             return state
@@ -133,7 +145,6 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         else {
             return dispatch(getPatientByIdAction(id), alert('La operación se ha realizado con éxito.'))
         }
-        
     })
     .catch(err=>{
         dispatch({
@@ -170,23 +181,23 @@ export let addPatientAction = (data) => (dispatch, getState) =>{
 }
 
 export let getPatientByIdAction = (id) => (dispatch, getState) => {
- 
+
+    dispatch({
+        type: GET_PATIENT_BY_ID,
+    })
+    return axios.get(`${urlGetPacienteById}${id}`)
+    .then(res=>{
         dispatch({
-            type: GET_PATIENT_BY_ID,
+            type: GET_PATIENT_BY_ID_SUCCESS,
+            payload: res.data,
         })
-        return axios.get(`${urlGetPacienteById}${id}`)
-        .then(res=>{
-            dispatch({
-                type: GET_PATIENT_BY_ID_SUCCESS,
-                payload: res.data,
-            })
+    })
+    .catch(err=>{
+        dispatch({
+            type: GET_PATIENT_BY_ID_ERROR,
+            payload: err.message
         })
-        .catch(err=>{
-            dispatch({
-                type: GET_PATIENT_BY_ID_ERROR,
-                payload: err.message
-            })
-        })
+    })
 }
 
 export let alterPatientAction = (id, data) => (dispatch, getState) =>{
@@ -210,6 +221,24 @@ export let alterPatientAction = (id, data) => (dispatch, getState) =>{
     })
 }
 
+export let getPatientByNombreAction = (nombre) => (dispatch, getState) => {
+    dispatch({
+        type: GET_PATIENT_BY_NOMBRE,
+    })
+    return axios.get(`${urlPacienteByNombre}${nombre}`)
+        .then(res=>{
+            dispatch({
+                type: GET_PATIENT_BY_NOMBRE_SUCCESS,
+                payload: res.data,
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_PATIENT_BY_NOMBRE_ERROR,
+                payload: err.message
+            })
+        })
+}
 
 
 //funciones de soporte
@@ -217,7 +246,7 @@ let checkName = (patient) => {
     let name = patient.nombre
     if(patient.apellido !== undefined){
         name = name + ' ' + patient.apellido
-    } 
+    }
     return name
-} 
+}
 

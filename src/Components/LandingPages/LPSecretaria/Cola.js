@@ -16,13 +16,13 @@ class Cola extends Component {
     }
 
     delete(key){
-        let patients = JSON.parse(localStorage.Afluence)
+        let patients = JSON.parse(localStorage.afluence)
        
         let filtered = patients.filter(function(value, index, arr){ return value.key !== key})
         if (filtered === []){
-            localStorage.removeItem('Afluence')
+            localStorage.removeItem('afluence')
         } else{
-            this.saveStorage('Afluence', filtered)
+            this.saveStorage('afluence', filtered)
         }
 
         this.props.delete(key);
