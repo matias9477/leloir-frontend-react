@@ -1,80 +1,45 @@
-import React from 'react';
-import axios from 'axios';
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import { orderBy } from 'lodash';
+import React from 'react'
+import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
+import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
+import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones';
-import { urlObrasSoc } from './../../Constants/URLs';
-import { nroPorPagina } from "../../Constants/utils";
-import { nullTo, titleCase} from '../../Services/MetodosDeValidacion';
-import './../styles.css';
+import MenuOpciones from '../MenuOpciones'
+import { nroPorPagina } from "../../Constants/utils"
+import { nullTo } from '../../Services/MetodosDeValidacion'
+import { getObrasSocialesAction, switchAltaAction } from '../../Redux/obrasSocialesDuck'
+import './../styles.css'
 
-export default class TablaObraSocial extends React.Component {
+class TablaObraSocial extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          obrasSociales: [],
-          limit: nroPorPagina[1].value,
-          activePage: 1,
-          totalCount: 0,
-          sortParams:{
-              direction: undefined
-          },  
-          filtro: '',
-          obrasSocialesFiltrados: [],
+            limit: nroPorPagina[1].value,
+            activePage: 1,
+            totalCount: 0,
+            sortParams:{
+                direction: 'desc'
+            },  
+            filter: '',
+            param: 'idObraSocial',
         }
-        this.cambioLimite = this.cambioLimite.bind(this);
-        this.onChangePage = this.onChangePage.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
       }
 
     componentDidMount(){
-        this.fetchobrasSocialesAll();
+        this.props.getObrasSocialesAction()
     }
 
-    fetchobrasSocialesAll = () => {
-        axios.get(urlObrasSoc).then(resolve => {
-            this.setState({
-                obrasSociales: Object.values(resolve.data).flat(),
-                obrasSocialesFiltrados: Object.values(resolve.data).flat(),
-                totalCount: (Object.values(resolve.data).flat()).length,
-            });
-
-            var filtro = orderBy(this.state.obrasSocialesFiltrados, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
-            ], ["desc", "desc"]);
-            var arr = orderBy(this.state.obrasSociales, [(obraSocial) => obraSocial.bitActivo, (obraSocial) => obraSocial.idObraSocial
-                ], ["desc", "desc"]);
-
-            this.setState({
-                obrasSocialesFiltrados: filtro,
-                obrasSociales: arr,
-            })
-
-            }, (error) => {
-                console.log('Error', error.message);
-            })
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+          totalCount: nextProps.obrasSociales.length
+        })
     }
 
     bitInverse = obraSocial => {
-        axios.put(`obras_sociales/switch-alta/${obraSocial.idObraSocial}`).then(response => {
-            if (obraSocial.bitActivo) {
-                alert(`Se ha dado de baja la obra social ${obraSocial.razonSocial} con éxito.`);
-                this.fetchobrasSocialesAll()
-            } else {
-                alert(`Se ha dado de alta la obra social ${obraSocial.razonSocial} con éxito.`);
-                this.fetchobrasSocialesAll()
-            }    
-            }, (error) => {
-                if (obraSocial.bitActivo) {
-                    alert(`No se ha podido dar de baja la obra social ${obraSocial.razonSocial}. Intentelo nuevamente.`)
-                } else {
-                    alert(`No se ha podido dar de alta la obra social. ${obraSocial.razonSocial} Intentelo nuevamente.`)
-                }
-            })
+        this.props.switchAltaAction(obraSocial.idObraSocial)
     }
 
-    mensajeConfirmacion(obraSocial){
+    confirmationSwitchAltaMessage(obraSocial){
         if (obraSocial.bitActivo){
             return (`¿Esta seguro que quiere dar de baja la obra social ${obraSocial.razonSocial}?`)
         }
@@ -83,7 +48,7 @@ export default class TablaObraSocial extends React.Component {
         }
     }
 
-    cantidadPorPagina() {
+    obrasSocialesPerPage() {
         return (
             <div className='rightAlign'>
                 <span>
@@ -92,23 +57,19 @@ export default class TablaObraSocial extends React.Component {
                         inline
                         options={nroPorPagina}
                         value = {this.state.limit}
-                        onChange={this.cambioLimite} 
+                        onChange={this.limitChange} 
                     />
                 </span>
             </div>
         )
-    };
+    }
 
-    cambioLimite(e, data) {
+    limitChange = (e, data) => {
         this.setState({
             limit: data.value,
             activePage: 1,
-        });
-        return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
-    }
-
-    loadData(from, to){
-        return (this.state.obrasSocialesFiltrados.slice(from, to))
+        })
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))
     }
 
     onChangePage = (e, {activePage}) => {
@@ -118,28 +79,31 @@ export default class TablaObraSocial extends React.Component {
             this.setState({
                 activePage,
             })
-            return (this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
+            return (this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit)))
         }        
-    };
+    }
     
-    handleColumnHeaderClick(sortKey) {
-        const {  
-          obrasSocialesFiltrados,  
-          sortParams: { direction }  
-        } = this.state;
-  
-        const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(obrasSocialesFiltrados, [sortKey], [sortDirection]);
-  
-        this.setState({  
-          obrasSocialesFiltrados: sortedCollection,  
-          sortParams: {  
-            direction: sortDirection  
-          }  
-        });  
+    handleColumnHeaderClick(sortKey) { 
+        this.setState({
+            param: sortKey
+        })
+
+        if (this.state.sortParams.direction === 'desc'){
+            this.setState({
+                sortParams: {
+                    direction: 'asc'
+                }
+            })
+        } else {
+            this.setState({
+                sortParams: {
+                    direction: 'desc'
+                }
+            })
+        }          
     } 
 
-    estado(bitActivo){
+    actualState(bitActivo){
         if(bitActivo){
             return "Dar de baja"
         }
@@ -148,24 +112,50 @@ export default class TablaObraSocial extends React.Component {
         }
     }
 
-    handleSearch(valor){
-        this.setState({
-            filtro: valor.target.value,
-        });
+    filtado(array){
+        let { param } = this.state
 
-        const os = this.state.obrasSociales.filter(function (muestra) {
-            return (muestra.razonSocial=== undefined ? null : titleCase(muestra.razonSocial).includes(titleCase(valor.target.value)) ||
-                (muestra.idObraSocial=== undefined ? null : muestra.idObraSocial.toString().includes(valor.target.value)))
-          });
+        if (this.state.sortParams.direction === 'desc'){
+            return array.sort((a, b) => (a[param] > b[param]) ? -1 : 1)
+        } else {
+            return array.sort((a, b) => (a[param] > b[param]) ? 1 : -1)
+        }           
+    }
 
-        this.setState({
-            obrasSocialesFiltrados: os,
-            totalCount: os.length,
-        })
+    handleSearch = (from, to) =>{     
+
+        if(this.state.filter === ""){     
+            return this.filtado(this.props.obrasSociales).slice(from, to)
+
+        } else {
+            if (this.state.activePage !== 1) {
+                this.setState({
+                    activePage: 1
+                })
+            }
+
+            let {filter} = this.state
+
+            const filteredObrasSociales = this.props.obrasSociales.filter(os => 
+                os.razonSocial.toUpperCase().includes(filter.toUpperCase()) || 
+                os.idObraSocial.toString().includes(filter) ||
+                ((os.cuit===undefined || os.cuit===null) ? null : os.cuit.toString().includes(filter)) ||
+                ((os.telefono===undefined || os.telefono===null) ? null : os.telefono.toString().includes(filter)) 
+            )
+
+            if (this.state.totalCount !== filteredObrasSociales.length) {
+                this.setState({
+                    totalCount: filteredObrasSociales.length,
+                })
+            }
+
+            return this.filtado(filteredObrasSociales).slice(from, to)
+        }
     }
 
 
     render(){
+        const { fetching } = this.props
         return(
             <div className='union'>
                 <MenuOpciones/>
@@ -181,70 +171,100 @@ export default class TablaObraSocial extends React.Component {
                     <br></br>
                     <br></br>
                     <br></br>
+
+                    {fetching ? <div className='tablaListadoHistorico'>
+                        <SyncLoader
+                        size={10}
+                        margin={5}
+                        color={"black"}
+                        loading={fetching}
+                        />
+                        </div> :
+
+                        <div>
                    
-                    <div className='union'>
-                        <div className="ui icon input">
+                            <div className='union'>
+                                <div className="ui icon input">
 
-                            <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{ name: 'search' }}/>
+                                    <Input value={this.state.filter} 
+                                        onChange={(filter)=>
+                                            this.setState({
+                                                filter: filter.target.value
+                                            })}
+                                                
+                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                    />
+
+                                </div>
+                                {this.obrasSocialesPerPage()}
+                            </div> 
+
+                            <table className="ui single line table" >
+                            <thead className='centerAlignment'>
+                                <tr>
+                                    <th onClick={() => this.handleColumnHeaderClick("idObraSocial")}  >Id</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("razonSocial")} >Nombre</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("cuit")} >Cuit</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("telefono")} >Teléfono</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("bitActivo")} >Opciones </th>
+                                </tr>
+                            </thead>
                             
-                        </div>
-                        {this.cantidadPorPagina()}
-                    </div> 
-
-                    <table className="ui single line table" >
-                    <thead className='centerAlignment'>
-                        <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("idObraSocial")}  >Id</th>
-                            <th onClick={() => this.handleColumnHeaderClick("razonSocial")} >Nombre</th>
-                            <th onClick={() => this.handleColumnHeaderClick("cuit")} >Cuit</th>
-                            <th onClick={() => this.handleColumnHeaderClick("telefono")} >Teléfono</th>
-                            <th onClick={() => this.handleColumnHeaderClick("bitActivo")} >Opciones </th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody className='centerAlignment'>
-                    
-                        {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (obraSocial, index) => (
-                        <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "listadosBaja"} > 
-                            <td data-label="Id">
-                                {obraSocial.idObraSocial}
-                            </td>
-                            <td data-label="Nombre">
-                                {obraSocial.razonSocial}
-                            </td>
-                            <td data-label="Cuit">
-                                {nullTo(obraSocial.cuit)}
-                            </td>
-                            <td data-label="Telefono">
-                                {nullTo(obraSocial.telefono)}
-                            </td>
-                            <td>
-                                <Dropdown item icon='ellipsis horizontal' simple>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item onClick={() => window.confirm(this.mensajeConfirmacion(obraSocial)) ? this.bitInverse(obraSocial): null} >
-                                            {this.estado(obraSocial.bitActivo)}
-                                        </Dropdown.Item>
-                                        <Dropdown.Item as= {Link} to={`/obras_sociales/consulta/${obraSocial.idObraSocial}`} exact='true'>
-                                            Ver/Modificar
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                            <tbody className='centerAlignment'>
+                            
+                                {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (obraSocial, index) => (
+                                <tr key={index} value={obraSocial} className={ obraSocial.bitActivo ? null : "listadosBaja"} > 
+                                    <td data-label="Id">
+                                        {obraSocial.idObraSocial}
+                                    </td>
+                                    <td data-label="Nombre">
+                                        {obraSocial.razonSocial}
+                                    </td>
+                                    <td data-label="Cuit">
+                                        {nullTo(obraSocial.cuit)}
+                                    </td>
+                                    <td data-label="Telefono">
+                                        {nullTo(obraSocial.telefono)}
+                                    </td>
+                                    <td>
+                                        <Dropdown item icon='ellipsis horizontal' simple>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={() => window.confirm(this.confirmationSwitchAltaMessage(obraSocial)) ? this.bitInverse(obraSocial): null} >
+                                                    {this.actualState(obraSocial.bitActivo)}
+                                                </Dropdown.Item>
+                                                <Dropdown.Item as= {Link} to={`/obras_sociales/consulta/${obraSocial.idObraSocial}`} exact='true'>
+                                                    Ver/Modificar
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                        
+                                    </td>
+                                </tr>
+                                ))}
                                 
-                            </td>
-                        </tr>
-                        ))}
+                            </tbody>
                         
-                    </tbody>
-                
-                    </table>
-                    <Pagination
-                        activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
-                        onPageChange={this.onChangePage}
-                    />
+                            </table>
+                            <Pagination
+                                activePage={this.state.activePage}
+                                totalPages={this.state.filter === '' ? Math.ceil((this.props.obrasSociales.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
+                                onPageChange={this.onChangePage}
+                            />
+                    </div>
+                    }
                 </div>
             </div>
         )
     }
 
 }
+
+const mapStateToProps = state =>({
+    fetching: state.obrasSociales.fetching,
+    obrasSociales: state.obrasSociales.obrasSociales
+})
+
+
+export default connect(mapStateToProps,{getObrasSocialesAction, switchAltaAction})(TablaObraSocial)
+
+
