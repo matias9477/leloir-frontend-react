@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SyncLoader from "react-spinners/SyncLoader"
-import { Icon, Label, Menu, Table } from 'semantic-ui-react'
+import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
 import './../styles.css'
 import MenuOpciones from '../MenuOpciones'
@@ -21,21 +22,28 @@ class Historial extends Component {
 
     }
 
+    handleOnClick(){
+
+    }
+
     renderTable = (historial) =>(
         historial!==''  ?
         <Table celled>
             <Table.Header>
                 <Table.Row>
+                    
                     <Table.HeaderCell>ID</Table.HeaderCell>
                     <Table.HeaderCell>Pendiente</Table.HeaderCell>
                     <Table.HeaderCell>Determinaciones</Table.HeaderCell>
                     <Table.HeaderCell>Estado</Table.HeaderCell>
+                    <Table.HeaderCell />
                 </Table.Row>
             </Table.Header>
 
             <Table.Body>
                 {historial.map((analisis, index) => (
                     <Table.Row key={index}>
+                        
                         <Table.Cell>
                             {analisis.idAnalisis}
                         </Table.Cell>
@@ -51,6 +59,20 @@ class Historial extends Component {
                         <Table.Cell>
                             {analisis.estadoAnalisis}
                         </Table.Cell>
+                        <Table.Cell collapsing>
+                            <Button
+                                floated='right'
+                                icon
+                                labelPosition='left'
+                                primary
+                                size='tiny'
+                                as= {Link} to={{pathname:`/analisis/consulta/${analisis.idAnalisis}`, state: {prevPath: window.location.pathname}}}
+                              >
+                                  <Icon name='info'/>
+                                  Ver más
+                            </Button>
+                        </Table.Cell>
+                        
                     </Table.Row>
                 )
 
