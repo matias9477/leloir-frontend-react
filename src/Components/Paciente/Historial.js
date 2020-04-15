@@ -44,7 +44,6 @@ class Historial extends Component {
                             {analisis.determinaciones !== undefined ? analisis.determinaciones.map((deter)=>(
                                 <li>{deter}</li>
                             )) : null}
-                            {console.log(JSON.stringify(historial.determinaciones))}
                         </Table.Cell>
                         <Table.Cell>
                             {analisis.estadoAnalisis}
@@ -80,14 +79,7 @@ class Historial extends Component {
                 <MenuOpciones />
                 <div className='historialPaciente'>
                     <h1>{this.props.history.paciente}</h1>
-                    {fetching ?  <div className='tablaListadoHistorico'>
-                        <SyncLoader
-                        size={10}
-                        margin={5}
-                        color={"black"}
-                        loading={fetching}
-                        />
-                        </div> : this.renderTable(this.props.history)}
+                    {fetching ?  null : this.renderTable(this.props.history)}
                 </div>
                 
             </div>

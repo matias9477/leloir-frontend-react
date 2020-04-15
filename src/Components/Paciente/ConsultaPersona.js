@@ -5,7 +5,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { addDays } from 'date-fns'
 import { Button, Form, Divider, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import SyncLoader from "react-spinners/SyncLoader"
 import { connect } from 'react-redux'
 
 import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente'
@@ -357,12 +356,12 @@ class ConsultaPersona extends Component {
   }
 
   
-  render() {
+  render() { // TODO: sacar form de conuslta animal e institucion
     return (
       <div className='Formularios'>
-      {this.state.id === '' ? <CircularProgress size={50}/> :
-      <Container>
-        <Form size='huge'>                
+      {this.state.id === '' ? null :
+      <Container> 
+        {/* <Form size='huge'>                
             <Form.Field control='input' 
             value={this.state.nombre + ' ' + this.state.apellido
             } 
@@ -371,7 +370,7 @@ class ConsultaPersona extends Component {
             />
             <Divider id={'divider'}/>
             
-        </Form> 
+        </Form>  */}
         
         <Form>
             <Form.Group widths='equal' id='disabled'>

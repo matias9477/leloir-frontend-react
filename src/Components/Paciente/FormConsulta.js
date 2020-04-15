@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button, Icon, Container, Divider } from 'semantic-ui-react'
+import { Button, Icon, Container, Divider, Form } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import SyncLoader from "react-spinners/SyncLoader"
 
 import MenuOpciones from '../MenuOpciones'
 import ConsultaPersona from './ConsultaPersona'
@@ -11,6 +12,7 @@ import ConsultaInstitucion from './ConsultaInstitucion'
 import Historial from './Historial'
 import { getPatientByIdAction } from '../../Redux/patientsDuck'
 import './../styles.css'
+import './patientsStyle.css'
 
 class FormConsulta extends Component {
   constructor(props) {
@@ -54,6 +56,7 @@ class FormConsulta extends Component {
   
   render() {
     var prevURL = this.props.location.state.prevPath || '/pacientes'
+    const { fetching } = this.props
     return (
       <div className='union'>
         <MenuOpciones/>
@@ -65,15 +68,35 @@ class FormConsulta extends Component {
               </Button>
               <br></br>
             </Container>
+{/* 
+            {fetching ?   */}
+            <div>
+              <SyncLoader
+              size={10}
+              margin={5}
+              color={"black"}
+              loading={fetching}
+              />
+            </div> 
+            {/* :  */}
+                        
+              <Container>
+                <Form size='huge'>                
+                      <Form.Field control='input' 
+                        value={this.props.patient.apellido === undefined ? this.props.patient.nombre : this.props.patient.nombre + ' ' + this.props.patient.apellido} 
+                        id = {'headerConsulta'}
+                      />
+                      <Divider id={'divider'}/>
+                      
+                  </Form> 
 
-            <div className='patientExtended'>
-          
+                <div className='patientExtended'>
+                  {this.renderForm()}
+                  <Historial match={this.props.match}/>
+                </div>
 
-              {this.renderForm()}
-              <Historial match={this.props.match}/>
-
-
-             </div>
+              </Container>
+             {/* } */}
         
         </div>
 
@@ -88,6 +111,7 @@ class FormConsulta extends Component {
 
 const mapStateToProps = (state, props) =>({
   patient: state.patients.patient,
+  fetching: state.patients.fetching,
 })
 
 
