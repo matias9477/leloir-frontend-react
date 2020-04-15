@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SyncLoader from "react-spinners/SyncLoader"
-import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react'
+import { Icon, Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
 import './../styles.css'
@@ -15,25 +15,15 @@ class Historial extends Component {
         this.props.getPatientHistoryAction(this.props.match.params.id)
     }
 
-    renderComponent() {
-        return <div>
-            culo
-        </div>
-
-    }
-
-    handleOnClick(){
-
-    }
-
     renderTable = (historial) =>(
-        historial!==''  ?
+        (historial==='' || historial===[] || historial.length===0)  ?
+        <div> No se encontraron analisis para este paciente</div> :
         <Table celled>
             <Table.Header>
                 <Table.Row>
                     
                     <Table.HeaderCell>ID</Table.HeaderCell>
-                    <Table.HeaderCell>Pendiente</Table.HeaderCell>
+                    <Table.HeaderCell>Fecha</Table.HeaderCell>
                     <Table.HeaderCell>Determinaciones</Table.HeaderCell>
                     <Table.HeaderCell>Estado</Table.HeaderCell>
                     <Table.HeaderCell />
@@ -79,7 +69,7 @@ class Historial extends Component {
                 )}
             </Table.Body>
         </Table>
-        : <div> No se encontraron analisis para este paciente</div>
+        
     )
 
 
@@ -87,8 +77,9 @@ class Historial extends Component {
         const { fetching } = this.props
         return (
             <div className='union'>
-                {/* <MenuOpciones /> */}
+                <MenuOpciones />
                 <div className='historialPaciente'>
+                    <h1>{this.props.history.paciente}</h1>
                     {fetching ?  <div className='tablaListadoHistorico'>
                         <SyncLoader
                         size={10}

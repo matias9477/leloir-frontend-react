@@ -4,10 +4,22 @@ body{
 }
 
 .Formularios{
-    width: 70%;
+    width: 35%;
     margin-left: 150px;
     margin-right: 25px;
     margin-top: 40px;
+    align-items: center;
+}
+
+.patientExtended{
+    display: flex;
+    flex-direction: row;
+}
+
+.historialPaciente{
+    width: 50%;
+    margin: 90px 25px 25px;
+    align-items: center;
 }
 
 .altasYConsultas{ 
@@ -23,8 +35,9 @@ body{
 }
 
 .login{
-    width: 100%;
-    align-self: center;
+    width: 50%;
+    align-self: left; 
+    /* antes era 100% y center */
 }
 
 .boton{
@@ -67,6 +80,8 @@ body{
     width: 100%;
     margin: 90px 25px 25px;
 }
+
+
 
 .tablaDeterminaciones{
     width: 78%;

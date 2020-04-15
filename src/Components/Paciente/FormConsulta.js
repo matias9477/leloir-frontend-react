@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button, Icon, Container } from 'semantic-ui-react'
+import { Button, Icon, Container, Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -8,6 +8,7 @@ import MenuOpciones from '../MenuOpciones'
 import ConsultaPersona from './ConsultaPersona'
 import ConsultaAnimal from './ConsultaAnimal'
 import ConsultaInstitucion from './ConsultaInstitucion'
+import Historial from './Historial'
 import { getPatientByIdAction } from '../../Redux/patientsDuck'
 import './../styles.css'
 
@@ -26,6 +27,7 @@ class FormConsulta extends Component {
   }
 
   getTipo(){
+    //TODO: cambiar el hardcodeo de URLS
     axios.get("/pacientes/id/" + this.props.match.params.id).then(resolve => {
       this.setState({
           tipo: resolve.data.type,
@@ -36,7 +38,7 @@ class FormConsulta extends Component {
 
   }
 
-  getInfo(){
+  renderForm(){
     if(typeof(this.props.patient === 'object')){
       if (this.state.tipo === 'com.leloir.backend.domain.Animal'){
         return <ConsultaAnimal patient={this.props.patient}/>
@@ -55,6 +57,7 @@ class FormConsulta extends Component {
     return (
       <div className='union'>
         <MenuOpciones/>
+        
         <div className="FormAlta">
             <Container className='btnHeader'>
               <Button className='boton' as= {Link} to={prevURL} floated='left' icon labelPosition='left' primary size='small'>
@@ -62,8 +65,19 @@ class FormConsulta extends Component {
               </Button>
               <br></br>
             </Container>
-          {this.getInfo()}
+
+            <div className='patientExtended'>
+          
+
+              {this.renderForm()}
+              <Historial match={this.props.match}/>
+
+
+             </div>
+        
         </div>
+
+
       
       
       </div>

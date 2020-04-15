@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { addDays } from 'date-fns'
 import { Button, Form, Divider, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import SyncLoader from "react-spinners/SyncLoader"
 import { connect } from 'react-redux'
 
 import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente'
