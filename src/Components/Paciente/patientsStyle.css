@@ -18,5 +18,6 @@
 
 #disabled {
     pointer-events: none;
+    background-color: #f2f3f5 !important;
 }
 

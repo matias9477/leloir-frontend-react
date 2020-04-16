@@ -1,28 +1,19 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { Component } from 'react'
 import { Button, Header, Form, Icon, Container, Divider } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {Link} from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress'
+import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
+import MenuOpciones from '../MenuOpciones'
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
-import {urlSwitchAltaObraSocial} from '../../Constants/URLs'
-// import './../styles.css';
 import './obraSocialStyles.css'
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = ({
-        isbottonPressed:true,
-        modificacion: true,
-        cancelar: true,
-        valor:true,
-
         cambios: false,
-        estado: '',
 
         id:'',
         razonSocial: '',
@@ -62,7 +53,7 @@ class ConsultaObraSocial extends Component {
   }
 
   modificarObraSocial = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const { razonSocial, cuit, telefono, mail, valorUb} = this.state
 
@@ -151,7 +142,7 @@ class ConsultaObraSocial extends Component {
             </Button>
           </Container>
 
-          {this.props.obraSocial === '' ? <CircularProgress size={50}/> :
+          {this.props.fetching ? <CircularProgress size={50}/> :
 
             <Container>
               <Form size='huge'>                
@@ -230,7 +221,9 @@ class ConsultaObraSocial extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  obraSocial: state.obrasSociales.obraSocial
+  obraSocial: state.obrasSociales.obraSocial,
+  fetching: state.obrasSociales.fetching,
+
 })
 
-export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction })(ConsultaObraSocial);
+export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction })(ConsultaObraSocial)
