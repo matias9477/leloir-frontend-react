@@ -7,6 +7,8 @@ export const urlTiposAnimales = "/tipos-animales/all";
 export const urlObraSocial = "obras_sociales/id/";
 export const urlSwitchAltaObraSocial = 'obras_sociales/switch-alta/'
 export const urlDeterminaciones = "/determinaciones/all";
+export const urlAlterObraSocial = "/obras_sociales/modificar/"
+
 
 export const urlMuestras = "/muestras/all";
 export const urlTiposMuestras = "/tipos_muestras/all";
