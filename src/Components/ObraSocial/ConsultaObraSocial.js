@@ -3,8 +3,10 @@ import axios from 'axios';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {Link} from 'react-router-dom';
+import { connect } from 'react-redux'
 
 import MenuOpciones from '../MenuOpciones';
+import { switchAltaAction, alterObraSocialAction } from '../../Redux/ObrasSocialesDuck'
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
 import './../styles.css';
 
@@ -135,18 +137,7 @@ class ConsultaObraSocial extends Component {
   }
 
   alta(e){
-    axios.put(`/obras_sociales/switch-alta/${this.props.match.params.id}`).then(response => {
-      alert("Se ha dado de alta la orbra social con éxito.");
-        this.setState({estado: true})
-        
-        const api = "/obras_sociales/id/" + this.props.match.params.id ;
-        this.handleUpdateClick(api);
-      }, (error) => {
-          if(this.state.bitAlta) {
-              alert(`No se ha podido dar de alta la obra social ${this.state.razonSocial}. Intentelo nuevamente.`)
-            }
-      })
-  
+    this.props.switchAltaAction(this.state.id)
   }
 
   cancelar(e){
@@ -195,16 +186,9 @@ class ConsultaObraSocial extends Component {
           "valorUb": emptyToNull(this.state.valorUb),
           "bitActivo": true,
         }
+
+        this.props.alterObraSocialAction(this.state.id, data)
       
-      const urlModificar = "/obras_sociales/modificar/" + this.state.id;
-     
-      axios.put(urlModificar, data).then(response => {
-        alert('Se ha modificado la obra social con éxito.');
-      }, (error) => {
-          alert('No se ha podido modificar la obra social.');
-          const api = "/obras_sociales/id/" + this.props.match.params.id ;
-          this.handleUpdateClick(api);
-      })
   
       this.setState({
           modificacion: true,
@@ -250,7 +234,6 @@ class ConsultaObraSocial extends Component {
       });
     }, (error) => {
         alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 
-        console.log('Error fetch obra social: ', error.message);
     })
 
   }
@@ -312,4 +295,7 @@ class ConsultaObraSocial extends Component {
 
 }
 
-export default ConsultaObraSocial;
+const mapStateToProps = (state, props) => ({
+})
+
+export default connect(mapStateToProps,{switchAltaAction, alterObraSocialAction})(ConsultaObraSocial);
