@@ -26,7 +26,6 @@ export const urlLoggedUser = '/user/me';
 export const urlAnalisisPendientes = "/analisis/pendientes";
 export const urlGetAnalisis = "/analisis/id/";
 export const urlEmitirAnalisis = "/analisis/emitir-analisis/";
-export const urlHistorial = '/analisis/historial/'
 
 export const urlAnalisis = '/analisis/all';
 export const urlCargarResultados = '/analisis/cargar-resultados/';
