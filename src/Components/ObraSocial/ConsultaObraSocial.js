@@ -7,7 +7,8 @@ import { connect } from 'react-redux'
 
 import MenuOpciones from '../MenuOpciones';
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
+import {urlSwitchAltaObraSocial} from '../../Constants/URLs'
 // import './../styles.css';
 import './obraSocialStyles.css'
 
