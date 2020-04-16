@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Form, Icon, Container, Divider } from 'semantic-ui-react'
+import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
