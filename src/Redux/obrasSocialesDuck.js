@@ -1,11 +1,12 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAlterObraSocial, urlObraSocial } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAlterObraSocial, urlObraSocialById } from './../Constants/URLs'
 
 
 let initialData = {
     fetching: false,
     obrasSociales: [],
     upToDateObrasSociales: false,
+    obraSocial: '',
     upToDateObraSocialById: false,
 }
 
@@ -46,56 +47,23 @@ export default function reducer(state = initialData, action){
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateObrasSociales:false}
 
+        case GET_OBRA_SOCIAL_BY_ID:
+            return {...state, fetching:true}
+        case GET_OBRA_SOCIAL_BY_ID_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_OBRA_SOCIAL_BY_ID_SUCCESS:
+            return {...state, fetching:false, obraSocial: action.payload}
+
         case ALTER_OBRA_SOCIAL:
             return {...state, fetching:true}
         case ALTER_OBRA_SOCIAL_SUCCESS:
-            return {...state, fetching:}
+            return {...state, fetching:false, upToDateObrasSociales:false, upToDateObraSocialById:false}
         case ALTER_OBRA_SOCIAL_ERROR:
-            return {...state, fetching:}
+            return {...state, fetching:false, error:action.payload}
 
         default:
             return state
     }
-}
-
-
-export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
-    dispatch({
-        type: ALTER_OBRA_SOCIAL,
-    })
-    return axios.put(`${urlAlterObraSocial}${id}`,data)
-    .then(res=>{
-        dispatch({
-            type: ALTER_OBRA_SOCIAL_SUCCESS
-        })
-        return dispatch(getObraSocialByID(id), alert('Se ha modificado la obra social con éxito.'))
-    })
-    .catch(err=>{
-        dispatch({
-            type: ALTER_OBRA_SOCIAL_ERROR,
-            payload: err.message
-        })
-        return dispatch(getObraSocialByID(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
-    })
-}
-
-export let getObraSocialByID = id = (dispatch, getState) =>{
-    dispatch({
-        type: GET_OBRA_SOCIAL_BY_ID,
-    })
-    return axios.get(`${urlObraSocial}${id}`)
-    .then(res=>{
-        dispatch({
-            type: GET_OBRA_SOCIAL_BY_ID_SUCCESS,
-            payload: res.data,
-        })
-    })
-    .catch(err=>{
-        dispatch({
-            type: GET_OBRA_SOCIAL_BY_ID_ERROR,
-            payload: err.message
-        })
-    })
 }
 
 
@@ -129,6 +97,8 @@ export let getObrasSocialesAction = () => (dispatch, getState) =>{
 }
 
 export let switchAltaAction = (id) => (dispatch, getState) =>{
+    const url = window.document.location.pathname
+
     dispatch({
         type: BIT_INVERSE,
     })
@@ -138,7 +108,12 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         dispatch({
             type: BIT_INVERSE_SUCCESS,
         })
+        if (url === '/obras_sociales'){
             return dispatch(getObrasSocialesAction(), alert('La operación se ha realizado con éxito.'))
+        }
+        else {
+            return dispatch(getObraSocialByIdAction(id), alert('La operación se ha realizado con éxito.'))
+        }
     })
     .catch(err=>{
         dispatch({
@@ -148,4 +123,46 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
     })
 }
+
+export let getObraSocialByIdAction = (id) => (dispatch, getState) => {
+
+    dispatch({
+        type: GET_OBRA_SOCIAL_BY_ID,
+    })
+    return axios.get(`${urlObraSocialById}${id}`)
+    .then(res=>{
+        dispatch({
+            type: GET_OBRA_SOCIAL_BY_ID_SUCCESS,
+            payload: res.data,
+        })
+    })
+    .catch(err=>{
+        dispatch({
+            type: GET_OBRA_SOCIAL_BY_ID_ERROR,
+            payload: err.message
+        })
+    })
+}
+
+export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
+    console.log(urlAlterObraSocial)
+    dispatch({
+        type: ALTER_OBRA_SOCIAL,
+    })
+    return axios.put(`${urlAlterObraSocial}${id}`, data)
+    .then(res=>{
+        dispatch({
+            type: ALTER_OBRA_SOCIAL_SUCCESS
+        })
+        return dispatch(getObraSocialByIdAction(id), alert('Se ha modificado la obra social con éxito.'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ALTER_OBRA_SOCIAL_ERROR,
+            payload: err.message
+        })
+        return dispatch(getObraSocialByIdAction(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
+    })
+}
+
 
