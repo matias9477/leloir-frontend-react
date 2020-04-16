@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial } from './../Constants/URLs'
 
 
 let initialData = {
@@ -17,6 +17,11 @@ let BIT_INVERSE = 'BIT_INVERSE'
 let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
 let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
 
+let ADD_OBRA_SOCIAL = "ADD_OBRA_SOCIAL"
+let ADD_OBRA_SOCIAL_SUCCESS = "ADD_OBRA_SOCIAL_SUCCESS"
+let ADD_OBRA_SOCIAL_ERROR = "ADD_OBRA_SOCIAL_ERROR"
+
+
 
 
 export default function reducer(state = initialData, action){
@@ -29,14 +34,18 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, obrasSociales: action.payload, upToDateObrasSociales:true}
         case GET_OBRAS_SOCIALES_FROM_STORE:
             return {...state, fetching: false, obrasSociales: action.payload}
-
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateObrasSociales:true}
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateObrasSociales:false}
-
+        case ADD_OBRA_SOCIAL:
+            return {...state, fetching:true}
+        case ADD_OBRA_SOCIAL_SUCCESS:
+            return {...state, fetching:false, upToDateObrasSociales:false}
+        case ADD_OBRA_SOCIAL_ERROR:
+            return {...state, fetching:false, error:action.payload, upToDateObrasSociales:true}
         default:
             return state
     }
@@ -92,3 +101,25 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
     })
 }
 
+export let addObraSocialAction = (data) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_OBRA_SOCIAL,
+    })
+    return axios.post(urlAltaObraSocial, data)
+    .then(res =>{
+        dispatch({
+            type: ADD_OBRA_SOCIAL_SUCCESS,
+
+        })
+        alert(`Se ha registrado la obra social ${data.razonSocial} con exito`)
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_OBRA_SOCIAL_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar la obra social ${data.razonSocial}. Por favor intente nuevamente.`)
+
+    })
+
+}
