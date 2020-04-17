@@ -10,6 +10,7 @@ export const urlAlterObraSocial = "/obras_sociales/modificar/"
 export const urlPlanesXObra = '/obras_sociales/planes/';
 
 export const urlDeterminaciones = "/determinaciones/all";
+export const urlAltaObraSocial = "/obras_sociales/add"
 
 export const urlMuestras = "/muestras/all";
 export const urlTiposMuestras = "/tipos_muestras/all";
