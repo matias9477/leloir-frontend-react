@@ -1,11 +1,14 @@
 export const urlDocs = "/tipos_documento/all";
-export const urlObrasSoc = "/obras_sociales/all";
 export const urlPaises = "/paises/all";
 export const urlSexos = "/sexo/all";
 export const urlTiposAnimales = "/tipos-animales/all";
 
-export const urlObraSocial = "obras_sociales/id/";
-export const urlSwitchAltaObraSocial = 'obras_sociales/switch-alta/'
+export const urlObrasSoc = "/obras_sociales/all";
+export const urlObraSocialById = "/obras_sociales/id/";
+export const urlSwitchAltaObraSocial = "/obras_sociales/switch-alta/"
+export const urlAlterObraSocial = "/obras_sociales/modificar/"
+export const urlPlanesXObra = '/obras_sociales/planes/';
+
 export const urlDeterminaciones = "/determinaciones/all";
 export const urlAltaObraSocial = "/obras_sociales/add"
 
@@ -29,8 +32,6 @@ export const urlLoggedUser = '/user/me';
 export const urlAnalisisPendientes = "/analisis/pendientes";
 export const urlGetAnalisis = "/analisis/id/";
 export const urlEmitirAnalisis = "/analisis/emitir-analisis/";
-
 export const urlAnalisis = '/analisis/all';
 export const urlCargarResultados = '/analisis/cargar-resultados/';
 export const urlAprobarResultados = '/analisis/aprobar-resultados/';
-export const urlPlanesXObra = '/obras_sociales/planes/';

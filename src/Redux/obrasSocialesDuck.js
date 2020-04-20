@@ -1,11 +1,13 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById } from './../Constants/URLs'
 
 
 let initialData = {
     fetching: false,
     obrasSociales: [],
     upToDateObrasSociales: false,
+    obraSocial: '',
+    upToDateObraSocialById: false,
 }
 
 let GET_OBRAS_SOCIALES = "GET_OBRAS_SOCIALES"
@@ -21,6 +23,14 @@ let ADD_OBRA_SOCIAL = "ADD_OBRA_SOCIAL"
 let ADD_OBRA_SOCIAL_SUCCESS = "ADD_OBRA_SOCIAL_SUCCESS"
 let ADD_OBRA_SOCIAL_ERROR = "ADD_OBRA_SOCIAL_ERROR"
 
+let ALTER_OBRA_SOCIAL = 'ALTER_OBRA_SOCIAL'
+let ALTER_OBRA_SOCIAL_SUCCESS = 'ALTER_OBRA_SOCIAL_SUCCESS'
+let ALTER_OBRA_SOCIAL_ERROR = 'ALTER_OBRA_SOCIAL_ERROR'
+
+let GET_OBRA_SOCIAL_BY_ID = 'GET_OBRA_SOCIAL_BY_ID'
+let GET_OBRA_SOCIAL_BY_ID_ERROR = 'GET_OBRA_SOCIAL_BY_ID_ERROR'
+let GET_OBRA_SOCIAL_BY_ID_SUCCESS = 'GET_OBRA_SOCIAL_BY_ID_SUCCESS'
+
 
 
 
@@ -34,18 +44,35 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, obrasSociales: action.payload, upToDateObrasSociales:true}
         case GET_OBRAS_SOCIALES_FROM_STORE:
             return {...state, fetching: false, obrasSociales: action.payload}
+
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateObrasSociales:true}
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateObrasSociales:false}
+
         case ADD_OBRA_SOCIAL:
             return {...state, fetching:true}
         case ADD_OBRA_SOCIAL_SUCCESS:
             return {...state, fetching:false, upToDateObrasSociales:false}
         case ADD_OBRA_SOCIAL_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateObrasSociales:true}
+
+        case GET_OBRA_SOCIAL_BY_ID:
+            return {...state, fetching:true}
+        case GET_OBRA_SOCIAL_BY_ID_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_OBRA_SOCIAL_BY_ID_SUCCESS:
+            return {...state, fetching:false, obraSocial: action.payload}
+
+        case ALTER_OBRA_SOCIAL:
+            return {...state, fetching:true}
+        case ALTER_OBRA_SOCIAL_SUCCESS:
+            return {...state, fetching:false, upToDateObrasSociales:false, upToDateObraSocialById:false}
+        case ALTER_OBRA_SOCIAL_ERROR:
+            return {...state, fetching:false, error:action.payload}
+
         default:
             return state
     }
@@ -81,6 +108,8 @@ export let getObrasSocialesAction = () => (dispatch, getState) =>{
 }
 
 export let switchAltaAction = (id) => (dispatch, getState) =>{
+    const url = window.document.location.pathname
+
     dispatch({
         type: BIT_INVERSE,
     })
@@ -90,7 +119,12 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         dispatch({
             type: BIT_INVERSE_SUCCESS,
         })
+        if (url === '/obras_sociales'){
             return dispatch(getObrasSocialesAction(), alert('La operación se ha realizado con éxito.'))
+        }
+        else {
+            return dispatch(getObraSocialByIdAction(id), alert('La operación se ha realizado con éxito.'))
+        }
     })
     .catch(err=>{
         dispatch({
@@ -122,4 +156,46 @@ export let addObraSocialAction = (data) => (dispatch, getState) =>{
 
     })
 
+}
+
+
+export let getObraSocialByIdAction = (id) => (dispatch, getState) => {
+
+    dispatch({
+        type: GET_OBRA_SOCIAL_BY_ID,
+    })
+    return axios.get(`${urlObraSocialById}${id}`)
+        .then(res=>{
+            dispatch({
+                type: GET_OBRA_SOCIAL_BY_ID_SUCCESS,
+                payload: res.data,
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_OBRA_SOCIAL_BY_ID_ERROR,
+                payload: err.message
+            })
+        })
+}
+
+export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
+    console.log(urlAlterObraSocial)
+    dispatch({
+        type: ALTER_OBRA_SOCIAL,
+    })
+    return axios.put(`${urlAlterObraSocial}${id}`, data)
+        .then(res=>{
+            dispatch({
+                type: ALTER_OBRA_SOCIAL_SUCCESS
+            })
+            return dispatch(getObraSocialByIdAction(id), alert('Se ha modificado la obra social con éxito.'))
+        })
+        .catch(err=>{
+            dispatch({
+                type: ALTER_OBRA_SOCIAL_ERROR,
+                payload: err.message
+            })
+            return dispatch(getObraSocialByIdAction(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
+        })
 }
