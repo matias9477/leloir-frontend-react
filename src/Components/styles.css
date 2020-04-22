@@ -4,7 +4,7 @@ body{
 }
 
 .Formularios{
-    width: 35%;
+    width: 40%;
     margin-left: 150px;
     margin-right: 25px;
     margin-top: 40px;
@@ -35,9 +35,8 @@ body{
 }
 
 .login{
-    width: 50%;
-    align-self: left; 
-    /* antes era 100% y center */
+    width: 100%;
+    align-self: center; 
 }
 
 .boton{
