@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
-
-import MenuOpciones from '../MenuOpciones';
+import { connect } from 'react-redux';
+import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
+import { addObraSocialAction } from '../../Redux/obrasSocialesDuck';
+import MenuOpciones from '../MenuOpciones';
 import './../styles.css';
 
 class AltaObraSocial extends Component {
@@ -103,13 +104,9 @@ class AltaObraSocial extends Component {
       "bitActivo": true
     };
 
-    axios.post(api, data).then((response) => {
-        alert('Se registro la obra social ' + titleCase(this.state.razonSocial) + ' con éxito.'); 
-        this.vaciadoCampos();
-      }, (error) => {
-        alert('No se ha podido registrar la obra social.');
-      })
-    
+      this.props.addObraSocialAction(data)
+      //TODO: aca vaciaba si salia todo bien, si no te lo dejaba vofi como se hace ahora jeje saludos a la flia xdxdxdxd
+      this.vaciadoCampos()
   };
 
   nuevaObraSocial(e){
@@ -196,5 +193,9 @@ class AltaObraSocial extends Component {
 
 }
 
+const mapStateToProps = state =>({
+  fetching: state.obrasSociales.fetching,
+})
 
-export default AltaObraSocial;
+
+export default connect(mapStateToProps,{addObraSocialAction})(AltaObraSocial);

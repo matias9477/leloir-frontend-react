@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
 import { Button, Icon, Form, Grid } from 'semantic-ui-react';
+import {connect} from 'react-redux'
 
 import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
+import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
 import './LPSecretaria.css';
 
-let array = JSON.parse(localStorage.getItem('Afluence')) || []
+let array = JSON.parse(localStorage.getItem('afluence')) || []
 
 class Afluencia extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            patients: JSON.parse(localStorage.getItem('Afluence')) || [],
-            next: '',
+            patients: JSON.parse(localStorage.getItem('afluence')) || [],
         });
-        this.addPatient = this.addPatient.bind(this);
-        this.deletePatient = this.deletePatient.bind(this);
-        this.next = this.next.bind(this);
     }
 
-    addPatient(e){
+    addPatient = (e) =>{
         if(this._inputElement.value !== "") {
             var newPacient = {
                 text: titleCase(this._inputElement.value),
@@ -36,12 +34,12 @@ class Afluencia extends Component {
         }
 
         array.push(newPacient) 
-        this.saveStorage('Afluence', array)
+        this.saveStorage('afluence', array)
 
         e.preventDefault();
     }
 
-    deletePatient(key){
+    deletePatient = (key) =>{
         var filteredPatients = this.state.patients.filter(
             function (patient) {
             return (patient.key !== key)
@@ -53,16 +51,15 @@ class Afluencia extends Component {
 
     }
 
-    next(){
+    next = () =>{
         array.shift()
         if (array === [] || array.length === 0){
-            localStorage.removeItem('Afluence')
+            localStorage.removeItem('afluence')
         } else {
-            this.saveStorage('Afluence', array)
+            this.saveStorage('afluence', array)
         }
-        
-        this.saveStorage('Current', this.state.patients[0])
-        this.setState({ next: this.state.patients[0] })
+        this.props.getPatientByNombreAction(this.state.patients[0].text)
+        this.saveStorage('nombreCurrent', this.state.patients[0].text)
         this.deletePatient(this.state.patients[0].key)        
     }
 
@@ -103,7 +100,7 @@ class Afluencia extends Component {
                     </Grid.Column>
 
                     <Grid.Column width={11}>
-                        <Atencion nextPaciente={this.state.next}/>
+                        <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
 
                     </Grid.Column>
                 </Grid>
@@ -113,4 +110,12 @@ class Afluencia extends Component {
     }
 }
 
-export default Afluencia;
+function mapStateToProps(state){
+    return {
+        fetching: state.patients.fetching,
+        patientLanding: state.patients.patientLanding
+    }
+}
+
+
+export default connect(mapStateToProps, {getPatientByNombreAction})(Afluencia)

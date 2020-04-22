@@ -1,24 +1,19 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react'
+import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
-import './../styles.css';
+import MenuOpciones from '../MenuOpciones'
+import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
+import './obraSocialStyles.css'
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
-    super(props);
-    this.state = ({        
-        isbottonPressed:true,
-        modificacion: true,
-        cancelar: true,
-        valor:true,
-
+    super(props)
+    this.state = ({
         cambios: false,
-        estado: '',
 
         id:'',
         razonSocial: '',
@@ -26,166 +21,57 @@ class ConsultaObraSocial extends Component {
         mail:'',
         cuit:'',
         valorUb:'',
-        
+        bitAlta: '',
+
         errorRazonSocial: true,
         errorCuit: true,
         errorTelefono: true,
         errorMail: true,
         errorValorUb:true,
-        
-      })
-    this.cambioId = this.cambioId.bind(this);
-    this.cambioRazonSocial = this.cambioRazonSocial.bind(this);
-    this.cambioTelefono = this.cambioTelefono.bind(this);
-    this.cambioMail = this.cambioMail.bind(this);
-    this.cambioCuit = this.cambioCuit.bind(this);
-    this.cambioValorUb = this.cambioValorUb.bind(this);
+
+    })
   }
 
   componentDidMount() {
-    const api = "/obras_sociales/id/" + this.props.match.params.id;
-    this.handleUpdateClick(api);
+    this.props.getObraSocialByIdAction(this.props.match.params.id)
   }
 
-
-  renderForm() {
-    return (
-      <div className='Formularios'>
-      
-        <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
-            <Icon name='arrow alternate circle left' /> Volver
-          </Button>
-          <br></br>
-          <Header as='h3' dividing>Búsqueda y modificación</Header>
-        </Container>
-
-      {this.state.estado === '' ? <CircularProgress size={50}/> : 
-
-      <Form className='altasYConsultas'>
-          
-          <Form.Group widths='equal'>  
-            <Form.Field required label='Id' control='input' 
-            disabled={true}  width={5}
-            value={this.state.id} 
-            onChange={this.cambioId} />
-
-            <Form.Field required label='Razon Social' control='input' 
-            disabled={this.state.modificacion}  
-            value={this.state.razonSocial} 
-            onChange={this.cambioRazonSocial} 
-            className= {this.state.errorRazonSocial === true ? null : 'error'} 
-            />
-          </Form.Group>
-
-          <Form.Field  label='Cuit' maxLength={11} control='input'
-          disabled={this.state.modificacion}  
-          value={this.state.cuit} 
-          onChange={this.cambioCuit} 
-          className= {this.state.errorCuit === true ? null : 'error'} 
-          />
-
-
-          <Form.Group widths='equal'>        
-            <Form.Field  label='Telefono' control='input' 
-            disabled={this.state.modificacion} 
-            value={this.state.telefono || ''} 
-            onChange={this.cambioTelefono} 
-            className= {this.state.errorTelefono === true ? null : 'error'} 
-            />
-
-            <Form.Field  label='Mail' control='input' 
-            disabled={this.state.modificacion} 
-            value={this.state.mail || ''} 
-            onChange={this.cambioMail} 
-            className= {this.state.errorMail === true ? null : 'error'} 
-            />
-              <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
-                           disabled={this.state.modificacion}
-                           value={this.state.valorUb}
-                           onChange={this.cambioValorUb}
-                           className= {this.state.errorValorUb === true ? null : 'error'}
-              />
-          </Form.Group>
-
-          <br/>
-
-          {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button disabled={this.state.isbottonPressed} onClick={(e) => { 
-              this.habilitarModificacion(e)} }>Modificar</Button>  : null}
-
-          {(!this.state.estado) ? <Button onClick={(e) => { 
-            if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {  
-              this.alta(e)
-              } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
-            
-          {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => { 
-            if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {  
-              this.modificarObraSocial(e)
-              } else {e.preventDefault()} } } primary>
-            Aceptar
-          </Button> : null}           
-
-          {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => { 
-            this.cancelar(e)}} color='red'> Cancelar </Button>: null }     
-                   
-      </Form>  
-      }
-    </div>
-    );
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      id: nextProps.obraSocial.idObraSocial,
+      razonSocial: nextProps.obraSocial.razonSocial,
+      telefono: nextProps.obraSocial.telefono,
+      mail: nextProps.obraSocial.mail,
+      cuit: nextProps.obraSocial.cuit,
+      valorUb: nextProps.obraSocial.valorUb,
+      bitAlta: nextProps.obraSocial.bitActivo,
+    })
   }
 
   alta(e){
-    axios.put(`/obras_sociales/switch-alta/${this.props.match.params.id}`).then(response => {
-      alert("Se ha dado de alta la orbra social con éxito.");
-        this.setState({estado: true})
-        
-        const api = "/obras_sociales/id/" + this.props.match.params.id ;
-        this.handleUpdateClick(api);
-      }, (error) => {
-          if(this.state.bitAlta) {
-              alert(`No se ha podido dar de alta la obra social ${this.state.razonSocial}. Intentelo nuevamente.`)
-            }
-      })
-  
+    this.props.switchAltaAction(this.state.id)
   }
 
-  cancelar(e){
-    e.preventDefault();
-    this.setState({
-        modificacion: true,
-        cambios: false,
-        errorRazonSocial: true,
-        errorCuit: true,
-        errorMail: true,
-        errorTelefono: true,
-        errorValorUb: true,
-    })
-    if (this.state.cambios){
-      const api = "/obras_sociales/id/" + this.props.match.params.id ;
-      this.handleUpdateClick(api);
-    }
-  }
-
-  habilitarModificacion(e){
-    e.preventDefault();
-    this.setState ({
-      modificacion: false,
-      cancelar: false,
-    })
-  }
-  
   modificarObraSocial = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const { razonSocial, cuit, telefono, mail, valorUb} = this.state;
+    const { razonSocial, cuit, telefono, mail, valorUb} = this.state
 
-    const errorRazonSocial = validateNombre(razonSocial);
-    const errorCuit = validateOnlyNumbers(cuit);
-    const errorTelefono = validateOnlyNumbers(telefono);
-    const errorMail = validateMail(mail);
-    const errorValorUb = validateOnlyNumbers(valorUb);
-    
-    if ( errorRazonSocial && errorCuit && errorMail && errorTelefono ) {
+    const errorRazonSocial = validateNombre(razonSocial)
+    const errorCuit = validateOnlyNumbers(cuit)
+    const errorTelefono = validateOnlyNumbers(telefono)
+    const errorMail = validateMail(mail)
+    const errorValorUb = validateOnlyNumbers(valorUb)
+
+    this.setState({
+      errorRazonSocial,
+      errorCuit,
+      errorTelefono,
+      errorMail,
+      errorValorUb,
+    })
+
+    if ( errorRazonSocial && errorCuit && errorMail && errorTelefono && errorValorUb ) {
       var data = {
           "razonSocial": titleCase(this.state.razonSocial),
           "idObraSocial": this.state.id,
@@ -195,121 +81,149 @@ class ConsultaObraSocial extends Component {
           "valorUb": emptyToNull(this.state.valorUb),
           "bitActivo": true,
         }
-      
-      const urlModificar = "/obras_sociales/modificar/" + this.state.id;
-     
-      axios.put(urlModificar, data).then(response => {
-        alert('Se ha modificado la obra social con éxito.');
-      }, (error) => {
-          alert('No se ha podido modificar la obra social.');
-          const api = "/obras_sociales/id/" + this.props.match.params.id ;
-          this.handleUpdateClick(api);
-      })
-  
+
+      this.props.alterObraSocialAction(this.state.id, data)
+
       this.setState({
-          modificacion: true,
-          cancelar: true,
           cambios: false,
-          errorRazonSocial,
-          errorCuit,
-          errorTelefono,
-          errorMail,
-          errorValorUb,
       })
-      
+
     } else {
-      alert("Revise los datos ingresados.");
-      this.setState({
-          errorRazonSocial,
-          errorCuit,
-          errorTelefono,
-          errorMail,
-          errorValorUb,
-      })
-    }    
+      alert("Revise los datos ingresados.")
+    }
 
   }
-  
-    
-  handleUpdateClick = (api) => {
-    axios.get(api).then(obraSocial => {
-      this.setState({
-          id: obraSocial.data.idObraSocial,
-          razonSocial: obraSocial.data.razonSocial,
-          telefono: obraSocial.data.telefono,
-          mail: obraSocial.data.email,
-          cuit: obraSocial.data.cuit,
-          valorUb: obraSocial.data.valorUb,
-          isbottonPressed: false,
-          estado: obraSocial.data.bitActivo,
-          errorRazonSocial: true,
-          errorCuit: true,
-          errorTelefono: true,
-          errorMail: true,
-          errorValorUb: true,
-      });
-    }, (error) => {
-        alert('No se encontró la obra social. Revise la información e intente nuevamente.'); 
-        console.log('Error fetch obra social: ', error.message);
-    })
 
-  }
-  
-  cambioId(e) {
-    this.setState( {
-      id: e.target.value,
-      valor:false,
-    })
-  }
-
-  cambioRazonSocial(e) {
+  cambioRazonSocial = (e) => {
     this.setState( {
       razonSocial: e.target.value,
       cambios: true,
     })
   }
 
-  cambioTelefono(e){
+  cambioTelefono = (e) => {
     this.setState( {
         telefono: e.target.value,
         cambios: true,
     })
   }
 
-  cambioMail(e){
+  cambioMail = (e) => {
       this.setState( {
           mail: e.target.value,
           cambios: true,
       })
   }
-    cambioValorUb(e){
-        this.setState( {
-            valorUb: e.target.value,
-            cambios: true,
-        })
-    }
 
-  cambioCuit(e){
+  cambioValorUb = (e) => {
+      this.setState( {
+          valorUb: e.target.value,
+          cambios: true,
+      })
+  }
+
+  cambioCuit = (e) => {
       this.setState( {
           cuit: e.target.value,
           cambios: true,
       })
   }
 
-  
+
   render() {
     return (
       <div className='union'>
         <MenuOpciones/>
-        <div className="FormAlta">
-          {this.renderForm()}
+        <div className='Formularios'>
+
+          <Container className='btnHeader'>
+            <Button className='boton' as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
+              <Icon name='arrow alternate circle left' /> Volver
+            </Button>
+          </Container>
+
+          {this.props.fetching ? <CircularProgress size={50}/> :
+
+            <Container>
+              <Form size='huge'>                
+                <Form.Field control='input' 
+                value={this.state.razonSocial} 
+                id = 'headerConsulta'
+                className= {this.state.errorRazonSocial === true ? null : 'error'} 
+                />
+                <Divider id='divider'/>
+                
+              </Form>
+
+              <Form className='consulta'>
+
+              <Form.Group widths='equal'>
+                <Form.Field required label='Id' control='input'
+                id='disabled'  width={5}
+                value={this.state.id} />
+
+                <Form.Field required label='Razon Social' control='input'
+                value={this.state.razonSocial}
+                onChange={this.cambioRazonSocial}
+                className= {this.state.errorRazonSocial === true ? null : 'error'}
+                />
+              </Form.Group>
+
+              <Form.Field  label='Cuit' maxLength={11} control='input'
+              value={this.state.cuit}
+              onChange={this.cambioCuit}
+              className= {this.state.errorCuit === true ? null : 'error'}
+              />
+
+              <Form.Group widths='equal'>
+                <Form.Field  label='Telefono' control='input'
+                value={this.state.telefono || ''}
+                onChange={this.cambioTelefono}
+                className= {this.state.errorTelefono === true ? null : 'error'}
+                />
+
+                <Form.Field  label='Mail' control='input'
+                value={this.state.mail || ''}
+                onChange={this.cambioMail}
+                className= {this.state.errorMail === true ? null : 'error'}
+                />
+
+                <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
+                value={this.state.valorUb}
+                onChange={this.cambioValorUb}
+                className= {this.state.errorValorUb === true ? null : 'error'}
+                />
+              </Form.Group>
+
+              <br/>
+
+              {(!this.state.bitAlta) ? <Button onClick={(e) => {
+                if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {
+                  this.alta(e)
+                  } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
+
+              {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
+                if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {
+                  this.modificarObraSocial(e)
+                  } else {window.location.reload(true)} } } primary>
+                Modificar Obra Social
+              </Button> : null}
+
+            </Form>
+            </Container>
+          }
         </div>
-      
-      
-      </div>
-    );
+
+    </div>
+    )
   }
 
 }
 
-export default ConsultaObraSocial;
+const mapStateToProps = (state, props) => ({
+  obraSocial: state.obrasSociales.obraSocial,
+  fetching: state.obrasSociales.fetching,
+
+})
+
+export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction })(ConsultaObraSocial)

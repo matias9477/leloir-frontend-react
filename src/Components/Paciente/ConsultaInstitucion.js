@@ -135,12 +135,12 @@ class ConsultaInstitucion extends Component {
                 </Form>
                     
                 <Form>
-                    <Form.Group required widths='equal' id='disabled'>
-                        <Form.Field label='Número de Paciente' control='input' width={5}
+                    <Form.Group widths='equal'>
+                        <Form.Field required id='disabled' label='Número de Paciente' control='input' width={5}
                         value={this.state.id} 
                         />
 
-                        <Form.Field required label='Fecha alta' control='input' 
+                        <Form.Field required id='disabled' label='Fecha alta' control='input' 
                         value={this.state.fechaAlta} 
                         />
                     </Form.Group>

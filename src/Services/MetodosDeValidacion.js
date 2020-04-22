@@ -1,5 +1,5 @@
 export const emptyToNull = (v) => {
-    if (v === '' || v === null){
+    if (v === '' || v === null || v === undefined){
       return v=null;
     } else if (isFinite(String(v))){
       return v;
@@ -77,7 +77,7 @@ export function validateOnlyNumbersRequired(valor){
 export function validateMail(mail){
   const validMail = /\S+@\S+\.\S+/;
   
-  if (mail === '' || mail === null){
+  if (mail === '' || mail === null || mail === undefined){
     return true
   } else if ( validMail.test(mail) ) {
     return true
