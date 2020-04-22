@@ -92,7 +92,7 @@ class Historial extends Component {
 function mapStateToProps(state) {
     return {
         fetching: state.patients.fetching,
-        history: state.patients.history,
+        history: state.patients.history.sort((a,b) => (a.idAnalisis > b.idAnalisis) ? -1 : 1),
 
     };
 }
