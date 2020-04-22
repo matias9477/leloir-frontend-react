@@ -22,7 +22,8 @@ export const urlSwitchAltaPaciente = '/pacientes/switch-alta/'
 export const urlAltaPaciente = '/pacientes/add'
 export const urlGetPacienteById = '/pacientes/id/'
 export const urlAlterPaciente = '/pacientes/modificar/'
-export const urlPacienteByNombre = '/pacientes/nombre/';
+export const urlPacienteByNombre = '/pacientes/nombre/'
+export const urlHistorial = '/analisis/historial/'
 
 export const urlSignUp = "/auth/signup";
 export const urlSignIn = "/auth/signin";

@@ -124,7 +124,7 @@ class ConsultaInstitucion extends Component {
             <div className='Formularios'>
             {(this.state.id === '') ? <CircularProgress size={50}/> : 
             <Container>
-                <Form size='huge'>                
+                {/* <Form size='huge'>                
                     <Form.Field control='input' 
                     value={this.state.nombre} 
                     id = {'headerConsulta'}
@@ -132,7 +132,7 @@ class ConsultaInstitucion extends Component {
                     />
                     <Divider id={'divider'}/>
                     
-                </Form>
+                </Form> */}
                     
                 <Form>
                     <Form.Group widths='equal'>
