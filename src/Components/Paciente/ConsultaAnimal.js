@@ -165,17 +165,7 @@ class ConsultaAnimal extends Component {
     return(
       <div className='Formularios'>
       {(this.state.id === '') ? <CircularProgress size={50}/> : 
-       <Container>
-        {/* <Form size='huge'>                
-            <Form.Field control='input' 
-            value={this.state.nombre} 
-            id = 'headerConsulta'
-            className= {this.state.errorNombre === true ? null : 'error'} 
-            />
-            <Divider id={'divider'}/>
-            
-        </Form> */}
-        
+       <Container>        
         <Form>
           <Form.Group widths='equal'>
               <Form.Field required id='disabled' label='Número de Paciente' control='input' width={5}
