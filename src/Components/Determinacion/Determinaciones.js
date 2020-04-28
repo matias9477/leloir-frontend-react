@@ -4,7 +4,7 @@ import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-rea
 import {Link} from "react-router-dom";
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
-import { getDeterminacionesAction } from './../../Redux/determinacionesDuck'
+import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determinacionesDuck'
 import MenuOpciones from "../MenuOpciones";
 import {titleCase} from './../../Services/MetodosDeValidacion';
 import { urlConsultaDeterminacion } from "../../Constants/URLs"
@@ -141,24 +141,8 @@ class Determinaciones extends Component {
     }
 
     bitInverse = determinacion => {
-        axios.put(`/determinaciones/switch-alta/${determinacion.codigoPractica}`).then(response => {
-            if (determinacion.bitAlta) {
-                alert(`Se ha dado de baja la determinacion ${determinacion.descripcionPractica} con éxito.`);
-                this.getAllDeterminaciones()
-            } else {
-                alert(`Se ha dado de alta la determinacion ${determinacion.descripcionPractica} con éxito.`);
-                this.getAllDeterminaciones()
-            }
-            return response.data;
-        }, (error) => {
-            if (determinacion.bitAlta) {
-                alert(`No se ha podido dar de baja ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
-            } else {
-                alert(`No se ha podido dar de alta ${determinacion.descripcionPractica}. Intentelo nuevamente.`)
-            }
-            return Promise.reject({status: error.status, statusText: error.statusText});
-        });
-    };
+        this.props.switchAltaAction(determinacion.codigoPractica)
+    }
 
     mensajeConfirmacion(determinacion) {
         if (determinacion.bitAlta) {
@@ -280,4 +264,4 @@ const mapStateToProps = state =>({
     determinaciones: state.determinaciones.determinaciones
 })
 
-export default connect(mapStateToProps, { getDeterminacionesAction })(Determinaciones);
+export default connect(mapStateToProps, { getDeterminacionesAction, switchAltaAction })(Determinaciones);
