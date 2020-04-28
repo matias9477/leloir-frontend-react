@@ -1,17 +1,19 @@
-import React from 'react';
-import axios from 'axios';
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import { orderBy } from 'lodash';
+import React from 'react'
+import axios from 'axios'
+import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
+import {Link } from 'react-router-dom'
+import { orderBy } from 'lodash'
+import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
-import { urlAnalisis } from './../../Constants/URLs';
-import { nroPorPagina } from "../../Constants/utils";
-import { titleCase} from '../../Services/MetodosDeValidacion';
-import { getHumanDate } from '../../Services/MetodosPaciente';
-import './../styles.css';
+import MenuOpciones from '../MenuOpciones'
+import { urlAnalisis } from './../../Constants/URLs'
+import { nroPorPagina } from "../../Constants/utils"
+import { titleCase} from '../../Services/MetodosDeValidacion'
+import { getHumanDate } from '../../Services/MetodosPaciente'
+import { getAnalisisAction } from '../../Redux/analisisDuck'
+import './../styles.css'
 
-export default class TablaObraSocial extends React.Component {
+class TablaObraSocial extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -25,13 +27,11 @@ export default class TablaObraSocial extends React.Component {
           filtro: '',
           analisisFiltrados: [],
         }
-        this.cambioLimite = this.cambioLimite.bind(this);
-        this.onChangePage = this.onChangePage.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
       }
 
     componentDidMount(){
         this.getAnalisis();
+        this.props.getAnalisisAction()
     }
 
     getAnalisis = () => {
@@ -82,7 +82,7 @@ export default class TablaObraSocial extends React.Component {
         )
     };
 
-    cambioLimite(e, data) {
+    cambioLimite = (e, data) => {
         this.setState({
             limit: data.value,
             activePage: 1,
@@ -122,7 +122,7 @@ export default class TablaObraSocial extends React.Component {
         });  
     } 
 
-    handleSearch(valor){
+    handleSearch = (valor) => {
         this.setState({
             filtro: valor.target.value,
         });
@@ -227,3 +227,9 @@ export default class TablaObraSocial extends React.Component {
     }
 
 }
+const mapStateToProps = state => ({
+    fetching: state.analisis.fetching,
+    analisis: state.analisis.analisisAll
+})
+
+export default connect(mapStateToProps, { getAnalisisAction })(TablaObraSocial)
