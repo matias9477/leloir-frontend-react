@@ -8,9 +8,10 @@ export const urlObraSocialById = "/obras_sociales/id/";
 export const urlSwitchAltaObraSocial = "/obras_sociales/switch-alta/"
 export const urlAlterObraSocial = "/obras_sociales/modificar/"
 export const urlPlanesXObra = '/obras_sociales/planes/';
+export const urlAltaObraSocial = "/obras_sociales/add"
 
 export const urlDeterminaciones = "/determinaciones/all";
-export const urlAltaObraSocial = "/obras_sociales/add"
+export const urlAltaDeterminacion = "/determinaciones/add"
 
 export const urlMuestras = "/muestras/all";
 export const urlTiposMuestras = "/tipos_muestras/all";
