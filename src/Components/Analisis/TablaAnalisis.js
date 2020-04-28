@@ -12,7 +12,7 @@ import './../styles.css'
 
 class TablaObraSocial extends React.Component {
     constructor(props){
-        super(props);
+        super(props)
         this.state = {
             limit: nroPorPagina[1].value,
             activePage: 1,
@@ -55,13 +55,13 @@ class TablaObraSocial extends React.Component {
         this.setState({
             limit: data.value,
             activePage: 1,
-        });
-        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
+        })
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))
     }
 
     onChangePage = (e, {activePage}) => {
         if (activePage === this.state.activePage){
-            return null;
+            return null
         } else {
             this.setState({
                 activePage,
@@ -135,7 +135,6 @@ class TablaObraSocial extends React.Component {
 
 
     render(){
-        console.log(this.state.filter)
         const { fetching } = this.props
 
         return(
@@ -201,7 +200,7 @@ class TablaObraSocial extends React.Component {
                                         {getHumanDate(analisis.createdAt)}
                                     </td>
                                     <td data-label="Nombre">
-                                    {analisis.paciente.nombre}&nbsp;&nbsp;{analisis.paciente.apellido}
+                                    {analisis.paciente.nombre}&nbsp;{analisis.paciente.apellido}
                                     </td>
                                     <td data-label="Telefono">
                                         {analisis.estadoAnalisis.nombre}
