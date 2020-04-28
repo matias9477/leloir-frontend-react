@@ -12,6 +12,10 @@ export const urlAltaObraSocial = "/obras_sociales/add"
 
 export const urlDeterminaciones = "/determinaciones/all";
 export const urlAltaDeterminacion = "/determinaciones/add"
+export const urlSwitchAltaDeterminacion = "/determinaciones/switch-alta/"
+export const urlGetDeterminacionById = "/determinaciones/id/"
+export const urlConsultaDeterminacion = "/determinaciones/consulta/"
+
 
 export const urlMuestras = "/muestras/all";
 export const urlTiposMuestras = "/tipos_muestras/all";

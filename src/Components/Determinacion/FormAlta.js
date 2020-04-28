@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
 import {Button, Container, Form, Header, Icon} from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
-
+import { addDeterminacionAction } from './../../Redux/determinacionesDuck' 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
 import MenuOpciones from '../MenuOpciones';
@@ -77,7 +77,7 @@ class FormAlta extends Component {
         );
     }
 
-    handleUpdateClick = (api) => {
+    handleUpdateClick = () => {
         var data = {
             "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
@@ -86,13 +86,7 @@ class FormAlta extends Component {
             "unidadMedida": this.state.unidadMedida
         };
 
-        axios.post(api, data
-        ).then((response) => {
-            alert('Se registro la determinación ' + this.state.descripcionPractica + ' con éxito.');
-            this.vaciadoCampos();
-        }, (error) => {
-            alert('No se ha podido registrar la determinación.');
-        });
+        this.props.addDeterminacionAction(data)
     };
 
     fetchDeterminacion(e) {
@@ -105,8 +99,8 @@ class FormAlta extends Component {
         const errorDescripcionPractica = validateRequiredStringNum(descripcionPractica);
 
         if (errorCodigoPractica && errorUnidadBioquimica && errorDescripcionPractica) {
-            const api = '/determinaciones/add';
-            this.handleUpdateClick(api);
+            this.handleUpdateClick()
+            this.vaciadoCampos()
         } else {
             alert('Verificar datos ingresados.')
             this.setState({
@@ -167,5 +161,9 @@ class FormAlta extends Component {
 
 }
 
+const mapStateToProps = state =>({
+    fetching: state.determinaciones.fetching,
+})
 
-export default FormAlta;
+
+export default connect(mapStateToProps,{ addDeterminacionAction })(FormAlta);

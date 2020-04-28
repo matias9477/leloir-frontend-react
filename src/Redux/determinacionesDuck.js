@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {urlDeterminaciones, urlAltaDeterminacion} from '../Constants/URLs'
+import {urlDeterminaciones, urlAltaDeterminacion, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
 
 let initialData = {
     fetching: false,
