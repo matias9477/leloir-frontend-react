@@ -192,7 +192,12 @@ class Determinaciones extends Component {
                     <div className='union'>
                         <div className="ui icon input">
 
-                        <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
+                        <Input value={this.state.filtro} 
+                        onChange={(filter)=>
+                            this.setState({
+                                filter: filter.target.value
+                            })}
+                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
 
                         </div>
                         {this.cantidadPorPagina()}
@@ -205,7 +210,7 @@ class Determinaciones extends Component {
                             <th onClick={() => this.handleColumnHeaderClick("descripcionPractica")}>Descripción Práctica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadBioquimica")}>Unidad Bioquímica</th>
                             <th onClick={() => this.handleColumnHeaderClick("unidadMedida")}>Unidad Medida</th>
-                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
+                            <th>Opciones</th>
                         </tr>
                         </thead>
 
