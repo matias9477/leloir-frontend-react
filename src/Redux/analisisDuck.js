@@ -45,8 +45,7 @@ export let getAnalisisAction = () => (dispatch, getState) => {
         .then(res=>{
             dispatch({
                 type: GET_ANALISIS_SUCCESS,
-                payload: res.data
-                //payload: Object.values(res.data).flat(),
+                payload: Object.values(res.data).flat(),
             })
         })
         .catch(error=>{

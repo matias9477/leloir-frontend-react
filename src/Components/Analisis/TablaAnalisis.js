@@ -1,14 +1,11 @@
 import React from 'react'
-import axios from 'axios'
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
 import {Link } from 'react-router-dom'
-import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
+import SyncLoader from "react-spinners/SyncLoader"
 
 import MenuOpciones from '../MenuOpciones'
-import { urlAnalisis } from './../../Constants/URLs'
 import { nroPorPagina } from "../../Constants/utils"
-import { titleCase} from '../../Services/MetodosDeValidacion'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { getAnalisisAction } from '../../Redux/analisisDuck'
 import './../styles.css'
@@ -17,56 +14,28 @@ class TablaObraSocial extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          analisis: [],
-          limit: nroPorPagina[1].value,
-          activePage: 1,
-          totalCount: 0,
-          sortParams:{
-              direction: undefined
-          },  
-          filtro: '',
-          analisisFiltrados: [],
+            limit: nroPorPagina[1].value,
+            activePage: 1,
+            totalCount: 0,
+            sortParams:{
+                direction: 'desc'
+            },  
+            filter: '',
+            param: 'analisisId',
         }
       }
 
     componentDidMount(){
-        this.getAnalisis();
         this.props.getAnalisisAction()
     }
 
-    getAnalisis = () => {
-        axios.get(urlAnalisis).then(resolve => {
-            this.setState({
-                analisis: Object.values(resolve.data).flat(),
-                analisisFiltrados: Object.values(resolve.data).flat(),
-                totalCount: (Object.values(resolve.data).flat()).length,
-            });
-
-            var filtro = orderBy(this.state.analisisFiltrados, [(analisis) => analisis.bitActivo, (analisis) => analisis.analisisId
-            ], ["desc", "desc"]);
-            var arr = orderBy(this.state.analisis, [(analisis) => analisis.bitActivo, (analisis) => analisis.idanalisis
-                ], ["desc", "desc"]);
-
-            this.setState({
-                analisisFiltrados: filtro,
-                analisis: arr,
-            })
-
-            }, (error) => {
-                console.log('Error', error.message);
-            })
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+          totalCount: nextProps.analisis.length
+        })
     }
 
-    mensajeConfirmacion(analisis){
-        if (analisis.bitActivo){
-            return (`¿Esta seguro que quiere dar de baja el análisis ${analisis.razonSocial}?`)
-        }
-        else {
-            return (`¿Esta seguro que quiere dar de alta el análisis ${analisis.razonSocial}?`)
-        }
-    }
-
-    cantidadPorPagina() {
+    analisisPerPage() {
         return (
             <div className='rightAlign'>
                 <span>
@@ -75,23 +44,19 @@ class TablaObraSocial extends React.Component {
                         inline
                         options={nroPorPagina}
                         value = {this.state.limit}
-                        onChange={this.cambioLimite} 
+                        onChange={this.limitChange} 
                     />
                 </span>
             </div>
         )
-    };
+    }
 
-    cambioLimite = (e, data) => {
+    limitChange = (e, data) => {
         this.setState({
             limit: data.value,
             activePage: 1,
         });
-        return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
-    }
-
-    loadData(from, to){
-        return (this.state.analisisFiltrados.slice(from, to))
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
 
     onChangePage = (e, {activePage}) => {
@@ -101,53 +66,78 @@ class TablaObraSocial extends React.Component {
             this.setState({
                 activePage,
             })
-            return (this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
+            return (this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
         }        
-    };
+    }
     
-    handleColumnHeaderClick(sortKey) {
-        const {  
-          analisisFiltrados,  
-          sortParams: { direction }  
-        } = this.state;
-  
-        const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(analisisFiltrados, [sortKey], [sortDirection]);
-  
-        this.setState({  
-          analisisFiltrados: sortedCollection,  
-          sortParams: {  
-            direction: sortDirection  
-          }  
-        });  
+    handleColumnHeaderClick(sortKey) { 
+        this.setState({
+            param: sortKey
+        })
+
+        if (this.state.sortParams.direction === 'desc'){
+            this.setState({
+                sortParams: {
+                    direction: 'asc'
+                }
+            })
+        } else {
+            this.setState({
+                sortParams: {
+                    direction: 'desc'
+                }
+            })
+        }          
     } 
 
-    handleSearch = (valor) => {
-        this.setState({
-            filtro: valor.target.value,
-        });
+    filtado(array){
+        let { param } = this.state
 
-        const an = this.state.analisis.filter(function (analisis) {
-            return (analisis.analisisId === undefined ? null : analisis.analisisId.toString().includes(valor.target.value) ||
+        if (this.state.sortParams.direction === 'desc'){
+            return array.sort((a, b) => (a[param] > b[param]) ? -1 : 1)
+        } else {
+            return array.sort((a, b) => (a[param] > b[param]) ? 1 : -1)
+        }           
+    }
 
-                (analisis.paciente.nombre === undefined ? null : titleCase(analisis.paciente.nombre).includes(titleCase(valor.target.value))) ||
+    handleSearch = (from, to) => {
+        if (this.state.filter === ''){
+            return this.filtado(this.props.analisis).slice(from, to)
+        } else {
+            if (this.state.activePage !== 1) {
+                this.setState({
+                    activePage: 1
+                })
+            }
 
-                (analisis.paciente.apellido === undefined ? null : titleCase(analisis.paciente.apellido).includes(titleCase(valor.target.value))) ||
+            let {filter} = this.state
 
-                (analisis.paciente.estado === undefined ? null : titleCase(analisis.paciente.estado.nombre).includes(titleCase(valor.target.value))) ||
-                
-                (analisis.paciente.createdAt === undefined ? null : analisis.createdAt.toString().includes(valor.target.value))
-                )
-          });
+            const filteredAnalisis = this.props.analisis.filter(a =>
+                a.analisisId.toString().includes(filter) ||
+                a.paciente.nombre.toUpperCase().includes(filter.toUpperCase()) ||
+                (a.paciente.apellido===undefined ? null : a.paciente.apellido.toUpperCase().includes(filter.toUpperCase())) ||
+                (a.paciente.apellido===undefined ? null : (a.paciente.nombre + ' ' + a.paciente.apellido).toUpperCase().includes(filter.toUpperCase())) ||
+                a.estadoAnalisis.nombre.toUpperCase().includes(filter.toUpperCase()) ||
+                getHumanDate(a.createdAt).toString().includes(filter)
 
-        this.setState({
-            analisisFiltrados: an,
-            totalCount: an.length,
-        })
+            )
+
+            if (this.state.totalCount !== filteredAnalisis.length) {
+                this.setState({
+                    totalCount: filteredAnalisis.length,
+                })
+            }
+
+            return this.filtado(filteredAnalisis).slice(from, to)
+
+        }
     }
 
 
     render(){
+        console.log(this.state.filter)
+        const { fetching } = this.props
+
         return(
             <div className='union'>
                 <MenuOpciones/>
@@ -163,64 +153,83 @@ class TablaObraSocial extends React.Component {
                     <br></br>
                     <br></br>
                     <br></br>
-                   
-                    <div className='union'>
-                        <div className="ui icon input">
 
-                            <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{ name: 'search' }}/>
+                    {fetching ? <div className='tablaListadoHistorico'>
+                            <SyncLoader
+                            size={10}
+                            margin={5}
+                            color={"black"}
+                            loading={fetching}
+                            />
+                        </div> : 
+                        <div>
+                            <div className='union'>
+                                <div className="ui icon input">
+
+                                    <Input value={this.state.filter} 
+                                        onChange={(filter)=>
+                                            this.setState({
+                                                filter: filter.target.value
+                                            })}
+                                                
+                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                    />
+                                    
+                                </div>
+                                {this.analisisPerPage()}
+                            </div> 
+
+                            <table className="ui single line table" >
+                            <thead className='centerAlignment'>
+                                <tr>
+                                    <th onClick={() => this.handleColumnHeaderClick("analisisId")} >Id</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("createdAt")} >Fecha</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("paciente.nombre")} >Paciente</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("estado.nombre")} >Estado</th>
+                                    <th>Opciones </th>
+                                </tr>
+                            </thead>
                             
-                        </div>
-                        {this.cantidadPorPagina()}
-                    </div> 
-
-                    <table className="ui single line table" >
-                    <thead className='centerAlignment'>
-                        <tr>
-                            <th onClick={() => this.handleColumnHeaderClick("analisisId")} >Id</th>
-                            <th onClick={() => this.handleColumnHeaderClick("createdAt")} >Fecha</th>
-                            <th onClick={() => this.handleColumnHeaderClick("paciente.nombre")} >Paciente</th>
-                            <th onClick={() => this.handleColumnHeaderClick("estado.nombre")} >Estado</th>
-                            <th>Opciones </th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody className='centerAlignment'>
-                    
-                        {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (analisis, index) => (
-                        <tr key={index} value={analisis}> 
-                            <td data-label="Id">
-                                {analisis.analisisId}
-                            </td>
-                            <td data-label="Fecha">
-                                {getHumanDate(analisis.createdAt)}
-                            </td>
-                            <td data-label="Nombre">
-                            {analisis.paciente.nombre}&nbsp;&nbsp;{analisis.paciente.apellido}
-                            </td>
-                            <td data-label="Telefono">
-                                {analisis.estadoAnalisis.nombre}
-                            </td>
-                            <td>
-                                <Dropdown item icon='ellipsis horizontal' simple>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item as= {Link} to={{pathname: `/analisis/consulta/${analisis.analisisId}`, state: { prevPath: window.location.pathname }}} exact='true'>
-                                            Ver/Modificar
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                            <tbody className='centerAlignment'>
+                            
+                                {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (analisis, index) => (
+                                <tr key={index} value={analisis}> 
+                                    <td data-label="Id">
+                                        {analisis.analisisId}
+                                    </td>
+                                    <td data-label="Fecha">
+                                        {getHumanDate(analisis.createdAt)}
+                                    </td>
+                                    <td data-label="Nombre">
+                                    {analisis.paciente.nombre}&nbsp;&nbsp;{analisis.paciente.apellido}
+                                    </td>
+                                    <td data-label="Telefono">
+                                        {analisis.estadoAnalisis.nombre}
+                                    </td>
+                                    <td>
+                                        <Dropdown item icon='ellipsis horizontal' simple>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item as= {Link} to={{pathname: `/analisis/consulta/${analisis.analisisId}`, state: { prevPath: window.location.pathname }}} exact='true'>
+                                                    Ver/Modificar
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                        
+                                    </td>
+                                </tr>
+                                ))}
                                 
-                            </td>
-                        </tr>
-                        ))}
+                            </tbody>
                         
-                    </tbody>
-                
-                    </table>
-                    <Pagination
-                        activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
-                        onPageChange={this.onChangePage}
-                    />
+                            </table>
+                            <Pagination
+                                activePage={this.state.activePage}
+                                totalPages={this.state.filter === '' ? Math.ceil((this.props.analisis.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
+                                onPageChange={this.onChangePage}
+                            />
+                        </div>
+                    }
+                    
                 </div>
             </div>
         )
