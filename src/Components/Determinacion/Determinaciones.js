@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from 'axios'
 import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import { connect } from 'react-redux'
@@ -8,7 +7,6 @@ import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determ
 import MenuOpciones from "../MenuOpciones";
 import {titleCase} from './../../Services/MetodosDeValidacion';
 import { urlConsultaDeterminacion } from "../../Constants/URLs"
-import {orderBy} from "lodash";
 import {nroPorPagina} from "../../Constants/utils";
 import './../styles.css';
 
@@ -64,10 +62,6 @@ class Determinaciones extends Component {
         });
         return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
-
-    // loadData(from, to) {
-    //     return (this.state.determinacionesFiltrados.slice(from, to))
-    // }
 
     onChangePage = (e, {activePage}) => {
         if (activePage === this.state.activePage) {

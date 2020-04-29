@@ -6,7 +6,6 @@ let initialData = {
     determinaciones: [],
     upToDateAllDeterminaciones: false,
     determinacion: '',
-    upToDateObraSocialById: false,
 }
 
 let GET_DETERMINACIONES = "GET_DETERMINACIONES"
