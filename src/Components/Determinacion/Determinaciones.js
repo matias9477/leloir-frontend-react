@@ -135,7 +135,7 @@ class Determinaciones extends Component {
                     totalCount: filteredDeterminaciones.length,
                 })
             }
-            return filteredDeterminaciones.slice(from,to)
+            return this.filtrado(filteredDeterminaciones).slice(from,to)
         } 
 
     }
