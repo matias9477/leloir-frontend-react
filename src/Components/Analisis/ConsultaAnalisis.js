@@ -8,10 +8,10 @@ import { connect } from 'react-redux'
 import MenuOpciones from '../MenuOpciones'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
+import { urlGetAnalisis, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import { getTiposMuestrasAction } from '../../Redux/analisisDuck'
+import { getTiposMuestrasAction, getAnalisisByIdAction } from '../../Redux/analisisDuck'
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
@@ -35,27 +35,17 @@ class ConsultaAnalisis extends Component {
     }
 
     componentDidMount() {
-        this.getAnalisis();
         this.getMuestras();
 
         this.props.getTiposMuestrasAction()
+        this.props.getAnalisisByIdAction(this.state.idAnalisis)
     }
 
     componentWillReceiveProps(nextProp){
         this.setState({
-            tipos: nextProp.tiposMuestras
+            tipos: nextProp.tiposMuestras,
+            analisis: nextProp.analisis,
         })
-    }
-
-    getAnalisis = () => {
-        axios.get(urlGetAnalisis + this.state.idAnalisis).then(resolve => {
-          this.setState({
-            analisis: resolve.data,
-          });
-        }, (error) => {
-            console.log('Error fetch analisis: ', error.message);
-        })
-    
     }
 
     getMuestras = () => {
@@ -164,6 +154,7 @@ class ConsultaAnalisis extends Component {
 
 
     render() {
+        console.log(this.state.analisis)
         var m = this.showMuestras();
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
@@ -413,7 +404,8 @@ class ConsultaAnalisis extends Component {
 
 const mapStateToProps = state => ({
     fetching: state.analisis.fetching,
-    tiposMuestras: state.analisis.tiposMuestras
+    tiposMuestras: state.analisis.tiposMuestras,
+    analisis: state.analisis.analisisById,
 })
 
-export default connect(mapStateToProps, { getTiposMuestrasAction })(ConsultaAnalisis)
+export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction })(ConsultaAnalisis)

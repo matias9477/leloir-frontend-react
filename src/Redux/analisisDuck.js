@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlTiposMuestras } from './../Constants/URLs'
+import { urlAnalisis, urlTiposMuestras, urlGetAnalisis } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -7,6 +7,8 @@ let initialData = {
     upToDateAnalisisAll: false,
     tiposMuestras: [],
     upToDateTiposMuestras: false,
+    analisisById: '',
+
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -18,6 +20,10 @@ let GET_TIPOS_MUESTRAS = 'GET_TIPOS_MUESTRAS'
 let GET_TIPOS_MUESTRAS_SUCCESS = 'GET_TIPOS_MUESTRAS_SUCCESS'
 let GET_TIPOS_MUESTRAS_ERROR = 'GET_TIPOS_MUESTRAS_ERROR'
 let GET_TIPOS_MUESTRAS_FROM_STORE = 'GET_TIPOS_MUESTRAS_FROM_STORE'
+
+let GET_ANALISIS_BY_ID = 'GET_ANALISIS_BY_ID'
+let GET_ANALISIS_BY_SUCCESS = 'GET_ANALISIS_BY_SUCCESS'
+let GET_ANALISIS_BY_ERROR = 'GET_ANALISIS_BY_ERROR'
 
 export default function reducer(state = initialData, action){
     switch(action.type){
@@ -38,6 +44,13 @@ export default function reducer(state = initialData, action){
             return { ...state, fetching: false, error: action.payload, upToDateTiposMuestras: false }
         case GET_TIPOS_MUESTRAS_FROM_STORE:
             return { ...state, fetching:false, tiposMuestras: action.payload }
+
+        case GET_ANALISIS_BY_ID:
+            return { ...state, fetching: true }
+        case GET_ANALISIS_BY_SUCCESS:
+            return { ...state, fetching: false, analisisById: action.payload }
+        case GET_ANALISIS_BY_ERROR:
+            return { ...state, fetching: false, error: action.payload }
 
         default:
             return state
@@ -99,4 +112,25 @@ export let getTiposMuestrasAction = () => (dispatch, getState) => {
             })
         })
     }
+}
+
+export let getAnalisisByIdAction = (id) => (dispatch, getState) => {
+   
+    dispatch({
+        type: GET_ANALISIS_BY_ID,
+    })
+    return axios.get(urlGetAnalisis + id)
+    .then(res=>{
+        dispatch({
+            type: GET_ANALISIS_BY_SUCCESS,
+            payload: res.data,
+        })
+    })
+    .catch(error=>{
+        dispatch({
+            type: GET_ANALISIS_BY_ERROR,
+            payload: error.message
+        })
+    })
+
 }
