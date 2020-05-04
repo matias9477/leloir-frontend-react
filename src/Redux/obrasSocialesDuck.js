@@ -180,7 +180,6 @@ export let getObraSocialByIdAction = (id) => (dispatch, getState) => {
 }
 
 export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
-    console.log(urlAlterObraSocial)
     dispatch({
         type: ALTER_OBRA_SOCIAL,
     })
