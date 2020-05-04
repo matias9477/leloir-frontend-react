@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre } from '../Constants/URLs'
+import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre, urlHistorial  } from '../Constants/URLs'
 
 
 //constants
@@ -9,6 +9,7 @@ let initialData = {
     upToDateAllPatients: false,
     upToDatePatientById: false,
     patient: '',
+     history: [],    
     patientLanding: [],
 }
 
@@ -17,6 +18,10 @@ let GET_PATIENTS = "GET_PATIENTS"
 let GET_PATIENTS_SUCCESS = "GET_PATIENTS_SUCCESS"
 let GET_PATIENTS_ERROR = "GET_PATIENTS_ERROR"
 let GET_PATIENTS_FROM_STORE = "GET_PATIENTS_FROM_STORE"
+
+let GET_PATIENT_HISTORY = "GET_PATIENT_HISTORY"
+let GET_PATIENT_HISTORY_SUCCESS = "GET_PATIENT_HISTORY_SUCCESS"
+let GET_PATIENT_HISTORY_ERROR = "GET_PATIENT_HISTORY_ERROR"
 
 let BIT_INVERSE = 'BIT_INVERSE'
 let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
@@ -90,6 +95,13 @@ export default function reducer(state = initialData, action){
         case GET_PATIENT_BY_NOMBRE_SUCCESS:
             return {...state, fetching:false, patientLanding: action.payload}
 
+        case GET_PATIENT_HISTORY:
+            return {...state, fetching: true}
+        case GET_PATIENT_HISTORY_SUCCESS:
+            return {...state, fetching:false, history:action.payload}
+        case GET_PATIENT_HISTORY_ERROR:
+            return {...state, fetching:false, error: action.payload}    
+
         default:
             return state
     }
@@ -126,6 +138,27 @@ export let getPatientsAction = () => (dispatch, getState) =>{
         })
     }
 }
+
+export let getPatientHistoryAction = (id) => (dispatch, getState) =>{
+        dispatch({
+            type: GET_PATIENT_HISTORY,
+        })
+        return axios.get(`${urlHistorial}${id}`)
+        .then( res => {
+            dispatch({
+                type: GET_PATIENT_HISTORY_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        }
+    
+        )
+        .catch(err=>{
+            dispatch({
+                type: GET_PATIENT_HISTORY_ERROR,
+                payload: err.message
+            })
+        })
+    }
 
 export let switchAltaAction = (id) => (dispatch, getState) =>{
     const url = window.document.location.pathname
