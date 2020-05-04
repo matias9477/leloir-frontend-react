@@ -4,9 +4,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { connect } from 'react-redux'
 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
+import { getDeterminacionByIdAction } from '../../Redux/determinacionesDuck'
 import MenuOpciones from '../MenuOpciones';
 import './../styles.css';
 
@@ -259,4 +261,9 @@ class FormConsulta extends Component {
 
 }
 
-export default FormConsulta;
+const mapStateToProps = state =>({
+    determinacion: state.determinaciones.determinacion,
+    fetching: state.determinaciones.fetching,
+})
+
+export default connect(mapStateToProps, { getDeterminacionByIdAction })(FormConsulta);
