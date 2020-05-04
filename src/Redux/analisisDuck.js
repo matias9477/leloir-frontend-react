@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlTiposMuestras, urlGetAnalisis } from './../Constants/URLs'
+import { urlAnalisis, urlTiposMuestras, urlGetAnalisis, urlMuestras } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -8,7 +8,7 @@ let initialData = {
     tiposMuestras: [],
     upToDateTiposMuestras: false,
     analisisById: '',
-
+    muestras: [],
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -24,6 +24,10 @@ let GET_TIPOS_MUESTRAS_FROM_STORE = 'GET_TIPOS_MUESTRAS_FROM_STORE'
 let GET_ANALISIS_BY_ID = 'GET_ANALISIS_BY_ID'
 let GET_ANALISIS_BY_SUCCESS = 'GET_ANALISIS_BY_SUCCESS'
 let GET_ANALISIS_BY_ERROR = 'GET_ANALISIS_BY_ERROR'
+
+let GET_MUESTRAS = 'GET_MUESTRAS'
+let GET_MUESTRAS_SUCCESS = 'GET_MUESTRAS_SUCCESS'
+let GET_MUESTRAS_ERROR = 'GET_MUESTRAS_ERROR'
 
 export default function reducer(state = initialData, action){
     switch(action.type){
@@ -50,6 +54,13 @@ export default function reducer(state = initialData, action){
         case GET_ANALISIS_BY_SUCCESS:
             return { ...state, fetching: false, analisisById: action.payload }
         case GET_ANALISIS_BY_ERROR:
+            return { ...state, fetching: false, error: action.payload }
+
+        case GET_MUESTRAS:
+            return { ...state, fetching: true }
+        case GET_MUESTRAS_SUCCESS:
+            return { ...state, fetching: false, muestras: action.payload }
+        case GET_MUESTRAS_ERROR:
             return { ...state, fetching: false, error: action.payload }
 
         default:
@@ -129,6 +140,27 @@ export let getAnalisisByIdAction = (id) => (dispatch, getState) => {
     .catch(error=>{
         dispatch({
             type: GET_ANALISIS_BY_ERROR,
+            payload: error.message
+        })
+    })
+
+}
+
+export let getMuestrasAction = () => (dispatch, getState) => {
+   
+    dispatch({
+        type: GET_MUESTRAS,
+    })
+    return axios.get(urlMuestras)
+    .then(res=>{
+        dispatch({
+            type: GET_MUESTRAS_SUCCESS,
+            payload: res.data,
+        })
+    })
+    .catch(error=>{
+        dispatch({
+            type: GET_MUESTRAS_ERROR,
             payload: error.message
         })
     })

@@ -8,10 +8,10 @@ import { connect } from 'react-redux'
 import MenuOpciones from '../MenuOpciones'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import { urlGetAnalisis, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
+import { urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import { getTiposMuestrasAction, getAnalisisByIdAction } from '../../Redux/analisisDuck'
+import { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction } from '../../Redux/analisisDuck'
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
@@ -39,6 +39,7 @@ class ConsultaAnalisis extends Component {
 
         this.props.getTiposMuestrasAction()
         this.props.getAnalisisByIdAction(this.state.idAnalisis)
+        this.props.getMuestrasAction()
     }
 
     componentWillReceiveProps(nextProp){
@@ -154,7 +155,6 @@ class ConsultaAnalisis extends Component {
 
 
     render() {
-        console.log(this.state.analisis)
         var m = this.showMuestras();
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
@@ -320,7 +320,7 @@ class ConsultaAnalisis extends Component {
                             </Button>
                         </div>
                     </Card.Content>
-                );
+                )
             case "PREPARADO":
                 return (
                     <Card.Content extra>
@@ -336,7 +336,7 @@ class ConsultaAnalisis extends Component {
                         </div>
                     </Card.Content>
 
-                );
+                )
             case "NUEVO":
                 return (
                     <Card.Content extra>
@@ -355,30 +355,30 @@ class ConsultaAnalisis extends Component {
                     </Label>
                 )
         }
-    };
+    }
 
     renderCard = () => (
-                <Card fluid raised centered>
-                    <Card.Content>
-                        <Card.Description textAlign='left'>
-                            Determinaciones:
+        <Card fluid raised centered>
+            <Card.Content>
+                <Card.Description textAlign='left'>
+                    Determinaciones:
 
-                            <List>
-                            {this.state.analisis.determinaciones.map(nombre =>
-                                <List.Item>
-                                    <List.Icon name='lab'/>
-                                    <List.Content><strong>{nombre.determinacion.descripcionPractica}</strong></List.Content>
-                                </List.Item>
-                            )}
-                            </List>
+                    <List>
+                    {this.state.analisis.determinaciones.map(nombre =>
+                        <List.Item>
+                            <List.Icon name='lab'/>
+                            <List.Content><strong>{nombre.determinacion.descripcionPractica}</strong></List.Content>
+                        </List.Item>
+                    )}
+                    </List>
 
-                        </Card.Description>
-                    </Card.Content>
+                </Card.Description>
+            </Card.Content>
 
-                    {this.renderButtons(this.state.analisis.estadoAnalisis.nombre, this.state.idAnalisis)}
+            {this.renderButtons(this.state.analisis.estadoAnalisis.nombre, this.state.idAnalisis)}
 
-                </Card>
-    );
+        </Card>
+    )
 
     handleModalContent() {
         switch (this.state.currentModal) {
@@ -408,4 +408,4 @@ const mapStateToProps = state => ({
     analisis: state.analisis.analisisById,
 })
 
-export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction })(ConsultaAnalisis)
+export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction })(ConsultaAnalisis)
