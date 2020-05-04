@@ -68,8 +68,7 @@ class FormConsulta extends Component {
               </Button>
               <br></br>
             </Container>
-{/* 
-            {fetching ?   */}
+
             <div>
               <SyncLoader
               size={10}
@@ -78,7 +77,7 @@ class FormConsulta extends Component {
               loading={fetching}
               />
             </div> 
-            {/* :  */}
+
                         
               <Container>
                 <Form size='huge'>                
@@ -96,7 +95,7 @@ class FormConsulta extends Component {
                 </div>
 
               </Container>
-             {/* } */}
+
         
         </div>
 
