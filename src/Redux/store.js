@@ -2,6 +2,7 @@ import {createStore, combineReducers, compose, applyMiddleware} from 'redux'
 import patientsReducer from './patientsDuck'
 import userReducer from './userDuck'
 import obrasSocialesReducer from './obrasSocialesDuck'
+import determinacionesReducer from './determinacionesDuck'
 import analisisReducer from './analisisDuck'
 
 import thunk from 'redux-thunk';
@@ -11,6 +12,7 @@ let rootReducer = combineReducers({
     patients: patientsReducer,
     user: userReducer,
     obrasSociales: obrasSocialesReducer,
+    determinaciones: determinacionesReducer,
     analisis: analisisReducer,
 })
 
