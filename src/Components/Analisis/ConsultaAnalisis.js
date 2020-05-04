@@ -1,20 +1,22 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Button, Header, Form, Icon, Grid, Table, Segment, Card, List, Label } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import Select from 'react-select';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { Button, Header, Form, Icon, Grid, Table, Segment, Card, List, Label } from 'semantic-ui-react'
+import {Link} from 'react-router-dom'
+import Select from 'react-select'
+import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
-import { getHumanDate } from '../../Services/MetodosPaciente';
-import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
-import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs";
-import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
-import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados';
+import MenuOpciones from '../MenuOpciones'
+import { getHumanDate } from '../../Services/MetodosPaciente'
+import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
+import { urlGetAnalisis, urlTiposMuestras, urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
+import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
+import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
+import { getTiposMuestrasAction } from '../../Redux/analisisDuck'
 import './../styles.css';
 
 class ConsultaAnalisis extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = ({  
             idAnalisis: this.props.match.params.id,      
             analisis: '',
@@ -34,17 +36,14 @@ class ConsultaAnalisis extends Component {
 
     componentDidMount() {
         this.getAnalisis();
-        this.comboTipos();
         this.getMuestras();
+
+        this.props.getTiposMuestrasAction()
     }
 
-    comboTipos = () =>{
-        axios.get(urlTiposMuestras).then(resolve => {
-            this.setState({
-                tipos: Object.values(resolve.data).flat(),
-            });
-        }, (error) => {
-            console.log('Error combo tipos muestras', error.message);
+    componentWillReceiveProps(nextProp){
+        this.setState({
+            tipos: nextProp.tiposMuestras
         })
     }
 
@@ -407,11 +406,14 @@ class ConsultaAnalisis extends Component {
             default:
                 return null
         }
-    };
+    }
 
-
- 
 }
 
 
-export default ConsultaAnalisis;
+const mapStateToProps = state => ({
+    fetching: state.analisis.fetching,
+    tiposMuestras: state.analisis.tiposMuestras
+})
+
+export default connect(mapStateToProps, { getTiposMuestrasAction })(ConsultaAnalisis)
