@@ -12,7 +12,7 @@ import { urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction } from '../../Redux/analisisDuck'
-import './../styles.css';
+import './../styles.css'
 
 class ConsultaAnalisis extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ class ConsultaAnalisis extends Component {
     }
 
     componentDidMount() {
-        this.getMuestras();
+        this.getMuestras()
 
         this.props.getTiposMuestrasAction()
         this.props.getAnalisisByIdAction(this.state.idAnalisis)
@@ -53,9 +53,9 @@ class ConsultaAnalisis extends Component {
         axios.get(urlMuestras).then(resolve => {
           this.setState({
             muestras: Object.values(resolve.data).flat(),
-          });
+          })
         }, (error) => {
-            console.log('Error fetch muestras: ', error.message);
+            console.log('Error fetch muestras: ', error.message)
         })
     
     }
@@ -76,35 +76,35 @@ class ConsultaAnalisis extends Component {
             "bitActivo": true,
             "estadoId":  1,
             "tipoMuestraId": this.state.tipo.tipoMuestraId,
-        };
+        }
 
         axios.post(api, data).then((response) => {
-            alert('Se generó la muestra con éxito.');
-            this.setState({tipo: ''});
+            alert('Se generó la muestra con éxito.')
+            this.setState({tipo: ''})
             this.getMuestras()
         }, (error) => {
-            alert('No se ha podido generar la muestra.');
+            alert('No se ha podido generar la muestra.')
         })
         
 
-    };
+    }
 
     postMuestra = () =>{
-        const errorTipo = validateRequiredCombos(this.state.tipo);
+        const errorTipo = validateRequiredCombos(this.state.tipo)
 
         if (errorTipo) {
-            this.dataMuestra(urlMuestrasAdd);            
+            this.dataMuestra(urlMuestrasAdd)            
         } else {
-            alert("Revise los datos ingresados.");
+            alert("Revise los datos ingresados.")
             this.setState({
                 errorTipo
             })
         }
     }
 
-    showMuestras = () => {
+    showMuestras = () => { //TODO: cuando cambien back esto se deberia borrar y se accede a las muestras a través del analisis
        
-        const muestras = [];
+        const muestras = []
 
         for(var i = 0; i<this.state.muestras.length; i++){
             if(this.state.muestras[i].analisisId.toString() === this.state.idAnalisis){
@@ -112,13 +112,13 @@ class ConsultaAnalisis extends Component {
             }
         }
 
-        return muestras;
+        return muestras
 
     }
 
-    getOptionLabelTipoMuestra = option => option.nombre;
+    getOptionLabelTipoMuestra = option => option.nombre
 
-    getOptionValueTipoMuestra = option => option.tipoMuestraId;
+    getOptionValueTipoMuestra = option => option.tipoMuestraId
 
     handleChangeTipo = tipo => {
         this.setState({ tipo })
@@ -155,7 +155,7 @@ class ConsultaAnalisis extends Component {
 
 
     render() {
-        var m = this.showMuestras();
+        var m = this.showMuestras()
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
           <div className='union'>
@@ -268,24 +268,24 @@ class ConsultaAnalisis extends Component {
             }
      
           </div>
-        );
+        )
     }
 
     emitirAnalisis = () => {
         axios.get(urlEmitirAnalisis + this.state.idAnalisis, {responseType: 'blob',}).then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            const index1 = response.headers['content-disposition'].indexOf("name=\"") + 6;
-            const index2 = response.headers['content-disposition'].indexOf("\"", 18);
-            link.href = url;
-            link.setAttribute('download', response.headers['content-disposition'].substring(index1, index2)); //or any other extension
-            document.body.appendChild(link);
-            link.click();
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            const index1 = response.headers['content-disposition'].indexOf("name=\"") + 6
+            const index2 = response.headers['content-disposition'].indexOf("\"", 18)
+            link.href = url
+            link.setAttribute('download', response.headers['content-disposition'].substring(index1, index2)) //or any other extension
+            document.body.appendChild(link)
+            link.click()
             this.getAllPendientes()
         }, (error) => {
-            console.log('Error', error.message);
+            console.log('Error', error.message)
         })
-    };
+    }
 
     showModal = (modal) => {
         this.setState({
@@ -293,8 +293,8 @@ class ConsultaAnalisis extends Component {
             // currentAnalisisID: idAnalisis,
             currentModal: modal
 
-        });
-    };
+        })
+    }
 
     hideModalCallback = () => {
         this.setState({
@@ -302,7 +302,7 @@ class ConsultaAnalisis extends Component {
             show: false,
             currentModal: null,
         });
-    };
+    }
 
     renderButtons = (estado) => {
         switch (estado) {
@@ -347,7 +347,7 @@ class ConsultaAnalisis extends Component {
                             </Button>
                         </div>
                     </Card.Content>
-                );
+                )
             default:
                 return (
                     <Label as='a' attached='bottom'>
@@ -387,13 +387,13 @@ class ConsultaAnalisis extends Component {
                     <ModificarResultados show={this.state.show}
                                          callback={this.hideModalCallback}
                                          idAnalisis={this.state.idAnalisis}/>
-                );
+                )
             case "REVISAR":
                 return (
                     <RevisarResultados show={this.state.show}
                                        callback={this.hideModalCallback}
                                        idAnalisis={this.state.idAnalisis}/>
-                );
+                )
             default:
                 return null
         }
@@ -406,6 +406,7 @@ const mapStateToProps = state => ({
     fetching: state.analisis.fetching,
     tiposMuestras: state.analisis.tiposMuestras,
     analisis: state.analisis.analisisById,
+    muestras: state.analisis.muestras,
 })
 
 export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction })(ConsultaAnalisis)
