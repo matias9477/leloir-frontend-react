@@ -1,77 +1,43 @@
-import React from 'react';
-import axios from 'axios';
-import { Header, Pagination, Input, Dropdown } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import { orderBy } from 'lodash';
+import React from 'react'
+import axios from 'axios'
+import { Header, Pagination, Input, Dropdown } from 'semantic-ui-react'
+import {Link} from 'react-router-dom'
+import { orderBy } from 'lodash'
+import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones';
-import { urlMuestras } from './../../Constants/URLs';
-import { nroPorPagina } from "../../Constants/utils";
-import './../styles.css';
+import MenuOpciones from '../MenuOpciones'
+import { nroPorPagina } from "../../Constants/utils"
+import { getMuestrasAction, switchAltaAction } from '../../Redux/muestrasDuck'
+import './../styles.css'
 
-export default class TablaMuestra extends React.Component {
+class TablaMuestra extends React.Component {
     constructor(props){
-        super(props);
+        super(props)
         this.state = {
-            muestras: [],
             limit: nroPorPagina[1].value,
             activePage: 1,
             totalCount: 0,
             sortParams:{
-                direction: undefined
-            },
-            filtro: '',
-            muestrasFiltrados: [],
-        };
-        this.cambioLimite = this.cambioLimite.bind(this);
-        this.onChangePage = this.onChangePage.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
+                direction: 'desc'
+            },  
+            filter: '',
+            param: 'idMuestra',
+        }
     }
 
     componentDidMount(){
-        this.fetchMuestrasAll();
+        this.props.getMuestrasAction()
     }
 
-    fetchMuestrasAll = () => {
-        axios.get(urlMuestras).then(resolve => {
-            this.setState({
-                muestras: Object.values(resolve.data).flat(),
-                muestrasFiltrados: Object.values(resolve.data).flat(),
-                totalCount: (Object.values(resolve.data).flat()).length,
-            });
-
-            var filtro = orderBy(this.state.muestrasFiltrados, [(muestra) => muestra.bitActivo, (muestra) => muestra.idMuestra
-            ], ["desc", "desc"]);
-            var arr = orderBy(this.state.muestras, [(muestra) => muestra.bitActivo, (muestra) => muestra.idMuestra
-            ], ["desc", "desc"]);
-
-            this.setState({
-                muestrasFiltrados: filtro,
-                muestras: arr,
-            })
-
-        }, (error) => {
-            console.log('Error', error.message);
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            totalCount: nextProps.muestras.length
         })
-    };
+    }
 
     bitInverse = muestra => {
-        axios.put(`muestra/switch-alta/${muestra.idMuestra}`).then(response => {
-            if (muestra.bitActivo) {
-                alert(`Se ha dado de baja la muestra ${muestra.idMuestra} con éxito.`);
-                this.fetchMuestrasAll()
-            } else {
-                alert(`Se ha dado de alta la muestra ${muestra.idMuestra} con éxito.`);
-                this.fetchMuestrasAll()
-            }
-        }, (error) => {
-            if (muestra.bitActivo) {
-                alert(`No se ha podido dar de baja la muestra ${muestra.idMuestra}. Intentelo nuevamente.`)
-            } else {
-                alert(`No se ha podido dar de alta la muestra. ${muestra.idMuestra} Intentelo nuevamente.`)
-            }
-        })
-    };
+        this.props.switchAltaAction(muestra.idMuestra)
+    }
 
     mensajeConfirmacion(muestra){
         if (muestra.bitActivo){
@@ -82,7 +48,7 @@ export default class TablaMuestra extends React.Component {
         }
     }
 
-    cantidadPorPagina() {
+    muestrasPerPage() {
         return (
             <div className='rightAlign'>
                 <span>
@@ -91,23 +57,19 @@ export default class TablaMuestra extends React.Component {
                         inline
                         options={nroPorPagina}
                         value = {this.state.limit}
-                        onChange={this.cambioLimite}
+                        onChange={this.limitChange}
                     />
                 </span>
             </div>
         )
-    };
+    }
 
-    cambioLimite(e, data) {
+    limitChange = (e, data) => {
         this.setState({
             limit: data.value,
             activePage: 1,
         });
-        return this.loadData(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
-    }
-
-    loadData(from, to){
-        return (this.state.muestrasFiltrados.slice(from, to))
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
     }
 
     onChangePage = (e, {activePage}) => {
@@ -117,9 +79,9 @@ export default class TablaMuestra extends React.Component {
             this.setState({
                 activePage,
             });
-            return (this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
+            return (this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
         }
-    };
+    }
 
     handleColumnHeaderClick(sortKey) {
         const {
@@ -147,20 +109,44 @@ export default class TablaMuestra extends React.Component {
         }
     }
 
-    handleSearch(valor){
-        this.setState({
-            filtro: valor.target.value,
-        })
+    filtado(array){
+        let { param } = this.state
 
-        var mu = this.state.muestras.filter(function (muestra) {
-           return ((muestra.idMuestra === undefined ? null : muestra.idMuestra.toString().includes(valor.target.value)) ||
-               (muestra.analisisId === undefined ? null : muestra.analisisId.toString().includes(valor.target.value)) );
-        });
+        if (this.state.sortParams.direction === 'desc'){
+            return array.sort((a, b) => (a[param] > b[param]) ? -1 : 1)
+        } else {
+            return array.sort((a, b) => (a[param] > b[param]) ? 1 : -1)
+        }           
+    }
 
-        this.setState({
-            muestrasFiltrados: mu,
-            totalCount: mu.length,
-        })
+    handleSearch = (from, to) => {
+        
+        if(this.state.filter === ""){     
+            return this.filtado(this.props.muestras).slice(from, to)
+
+        } else {
+            if (this.state.activePage !== 1) {
+                this.setState({
+                    activePage: 1
+                })
+            }
+
+            let {filter} = this.state
+
+            const filteredMuestras = this.props.muestras.filter(m => 
+                m.idMuestra.toString().includes(filter) ||
+                ((m.tipoMuestra===undefined || m.tipoMuestra===null) ? null : m.tipoMuestra.toUpperCase().includes(filter.toUpperCase())) ||
+                m.estado.toUpperCase().includes(filter.toUpperCase())
+            )
+
+            if (this.state.totalCount !== filteredMuestras.length) {
+                this.setState({
+                    totalCount: filteredMuestras.length,
+                })
+            }
+
+            return this.filtado(filteredMuestras).slice(from, to)
+        }
 
     }
 
@@ -181,10 +167,17 @@ export default class TablaMuestra extends React.Component {
                     <div className='union'>
                         <div className="ui icon input">
 
-                            <Input value={this.state.filtro} onChange={this.handleSearch} placeholder='Ingrese búsqueda...' icon={{ name: 'search' }}/>
+                            <Input value={this.state.filter} 
+                                onChange={(filter)=>
+                                    this.setState({
+                                        filter: filter.target.value
+                                    })}
+                                        
+                                placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                            />
 
                         </div>
-                        {this.cantidadPorPagina()}
+                        {this.muestrasPerPage()}
                     </div>
 
                     <table className="ui single line table" >
@@ -195,13 +188,13 @@ export default class TablaMuestra extends React.Component {
                             <th onClick={() => this.handleColumnHeaderClick("tipoMuestra")} >Tipo Muestra</th>
                             <th onClick={() => this.handleColumnHeaderClick("fecha")} >Fecha</th>
                             <th onClick={() => this.handleColumnHeaderClick("idEstado")} >Estado</th>
-                            <th onClick={() => this.handleColumnHeaderClick("bitAlta")}>Opciones</th>
+                            <th>Opciones</th>
                         </tr>
                         </thead>
 
                         <tbody className='centerAlignment'>
 
-                        {(this.loadData(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (muestra, index) => (
+                        {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (muestra, index) => (
                             <tr key={index} value={muestra} className={ muestra.bitActivo ? null : "listadosBaja"} >
                                 <td data-label="Id Muestra">
                                     {muestra.idMuestra}
@@ -239,7 +232,7 @@ export default class TablaMuestra extends React.Component {
                     </table>
                     <Pagination
                         activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
+                        totalPages={this.state.filter === '' ? Math.ceil((this.props.muestras.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
                 </div>
@@ -248,3 +241,10 @@ export default class TablaMuestra extends React.Component {
     }
 
 }
+
+const mapStateToProps = state => ({
+    fetching: state.muestras.fetching,
+    muestras: state.muestras.muestras,
+})
+
+export default connect(mapStateToProps, {getMuestrasAction, switchAltaAction}) (TablaMuestra)
