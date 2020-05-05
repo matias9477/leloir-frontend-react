@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios'
 import { Header, Pagination, Input, Dropdown } from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
 import { orderBy } from 'lodash'
@@ -69,7 +68,7 @@ class TablaMuestra extends React.Component {
             limit: data.value,
             activePage: 1,
         });
-        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit));
+        return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))
     }
 
     onChangePage = (e, {activePage}) => {
@@ -84,20 +83,23 @@ class TablaMuestra extends React.Component {
     }
 
     handleColumnHeaderClick(sortKey) {
-        const {
-            muestrasFiltrados,
-            sortParams: { direction }
-        } = this.state;
-
-        const sortDirection = direction === "desc" ? "asc" : "desc";
-        const sortedCollection = orderBy(muestrasFiltrados, [sortKey], [sortDirection]);
-
         this.setState({
-            muestrasFiltrados: sortedCollection,
-            sortParams: {
-                direction: sortDirection
-            }
-        });
+            param: sortKey
+        })
+
+        if (this.state.sortParams.direction === 'desc'){
+            this.setState({
+                sortParams: {
+                    direction: 'asc'
+                }
+            })
+        } else {
+            this.setState({
+                sortParams: {
+                    direction: 'desc'
+                }
+            })
+        } 
     }
 
     estado(bitActivo){
