@@ -67,17 +67,17 @@ class TablaMuestra extends React.Component {
         this.setState({
             limit: data.value,
             activePage: 1,
-        });
+        })
         return this.handleSearch(((this.state.activePage - 1) * this.state.limit), (this.state.activePage * this.state.limit))
     }
 
     onChangePage = (e, {activePage}) => {
         if (activePage === this.state.activePage){
-            return null;
+            return null
         } else {
             this.setState({
                 activePage,
-            });
+            })
             return (this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit) ))
         }
     }
