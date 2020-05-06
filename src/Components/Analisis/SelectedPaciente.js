@@ -1,14 +1,15 @@
-import React from 'react';
-import { Header, Container } from 'semantic-ui-react';
+import React from 'react'
+import { Header, Segment } from 'semantic-ui-react'
 
-import { checkAtributo, titleCase } from '../../Services/MetodosDeValidacion'; 
+import { checkAtributo, titleCase } from '../../Services/MetodosDeValidacion'
+
 
 const SelectedPaciente = props => {
     return (
         <div>
             {(props.selected === '' || props.selected === null) ? null : 
-            <Container style={Style} text>
-                <Header as='h4' style={HeaderStyle}>Información del paciente seleccionado </Header>
+            <Segment secondary className='infoSelectedPaciente'>
+                <Header as='h4' dividing>PACIENTE SELECCIONADO</Header>
                 <p> Número de paciente: {props.selected.id} <br/>
                     Tipo Paciente: {titleCase(props.selected.tipoPaciente)} <br/>
                     Nombre: {props.selected.nombre} {checkAtributo(props.selected.apellido)} <br/>
@@ -18,19 +19,13 @@ const SelectedPaciente = props => {
                     {checkAtributo(props.selected.obraSocial) ? `Obra social: ${props.selected.obraSocial}`: null}
                 </p>
             
-            </Container>
+            </Segment>
         
         }
     </div>    
     );
 };
 
-const Style = {
-    marginTop: '15px',
-    backgroundColor: '#e8f6ff',
-    padding: '8px',
-    fontSize: 'small',
-};
 
 const HeaderStyle = {
     textDecorationLine: 'underline'

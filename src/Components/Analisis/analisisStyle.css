@@ -1,0 +1,23 @@
+.formAnalsis {
+    width: 80%;
+    margin-left: 100px;
+    margin-top: 100px;
+}
+
+.buttonNuevoPaciente {
+    padding: 0.8em !important;
+}
+
+.btnRegistrarAnalisis {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.infoSelectedPaciente {
+    margin-top: 15px;
+    padding: 8px;
+}
+
+.rightColumn {
+    margin-left: 50px;
+}
