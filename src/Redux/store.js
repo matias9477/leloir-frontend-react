@@ -4,6 +4,7 @@ import userReducer from './userDuck'
 import obrasSocialesReducer from './obrasSocialesDuck'
 import determinacionesReducer from './determinacionesDuck'
 import analisisReducer from './analisisDuck'
+import muestrasReducer from './muestrasDuck'
 
 import thunk from 'redux-thunk';
 
@@ -14,6 +15,7 @@ let rootReducer = combineReducers({
     obrasSociales: obrasSocialesReducer,
     determinaciones: determinacionesReducer,
     analisis: analisisReducer,
+    muestras: muestrasReducer,
 })
 
 

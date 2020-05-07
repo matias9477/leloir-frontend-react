@@ -8,10 +8,11 @@ import { connect } from 'react-redux'
 import MenuOpciones from '../MenuOpciones'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import { urlMuestras, urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
+import { urlMuestrasAdd, urlEmitirAnalisis } from "../../Constants/URLs"
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction } from '../../Redux/analisisDuck'
+import { getAnalisisByIdAction } from '../../Redux/analisisDuck'
+import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck'
 import './../styles.css'
 
 class ConsultaAnalisis extends Component {
@@ -21,7 +22,6 @@ class ConsultaAnalisis extends Component {
             idAnalisis: this.props.match.params.id,      
             analisis: '',
             tipos: [],
-            muestras: [],
 
             showMuestra: false,
 
@@ -35,11 +35,8 @@ class ConsultaAnalisis extends Component {
     }
 
     componentDidMount() {
-        this.getMuestras()
-
         this.props.getTiposMuestrasAction()
         this.props.getAnalisisByIdAction(this.state.idAnalisis)
-        this.props.getMuestrasAction()
     }
 
     componentWillReceiveProps(nextProp){
@@ -47,17 +44,6 @@ class ConsultaAnalisis extends Component {
             tipos: nextProp.tiposMuestras,
             analisis: nextProp.analisis,
         })
-    }
-
-    getMuestras = () => {
-        axios.get(urlMuestras).then(resolve => {
-          this.setState({
-            muestras: Object.values(resolve.data).flat(),
-          })
-        }, (error) => {
-            console.log('Error fetch muestras: ', error.message)
-        })
-    
     }
 
     getIconTipo(tipo){
@@ -70,30 +56,20 @@ class ConsultaAnalisis extends Component {
         }
     }
 
-    dataMuestra = (api) => {
-        var data = {
-            "analisisId": this.state.idAnalisis,
-            "bitActivo": true,
-            "estadoId":  1,
-            "tipoMuestraId": this.state.tipo.tipoMuestraId,
-        }
-
-        axios.post(api, data).then((response) => {
-            alert('Se generó la muestra con éxito.')
-            this.setState({tipo: ''})
-            this.getMuestras()
-        }, (error) => {
-            alert('No se ha podido generar la muestra.')
-        })
-        
-
-    }
-
     postMuestra = () =>{
         const errorTipo = validateRequiredCombos(this.state.tipo)
 
         if (errorTipo) {
-            this.dataMuestra(urlMuestrasAdd)            
+            var data = {
+                "analisisId": this.state.idAnalisis,
+                "bitActivo": true,
+                "estadoId":  1,
+                "tipoMuestraId": this.state.tipo.tipoMuestraId,
+            }
+    
+            this.props.addMuestraAction(data)
+            
+            
         } else {
             alert("Revise los datos ingresados.")
             this.setState({
@@ -101,21 +77,6 @@ class ConsultaAnalisis extends Component {
             })
         }
     }
-
-    showMuestras = () => { //TODO: cuando cambien back esto se deberia borrar y se accede a las muestras a través del analisis
-       
-        const muestras = []
-
-        for(var i = 0; i<this.state.muestras.length; i++){
-            if(this.state.muestras[i].analisisId.toString() === this.state.idAnalisis){
-                muestras.push(this.state.muestras[i])
-            }
-        }
-
-        return muestras
-
-    }
-
     getOptionLabelTipoMuestra = option => option.nombre
 
     getOptionValueTipoMuestra = option => option.tipoMuestraId
@@ -155,7 +116,6 @@ class ConsultaAnalisis extends Component {
 
 
     render() {
-        var m = this.showMuestras()
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
           <div className='union'>
@@ -211,7 +171,7 @@ class ConsultaAnalisis extends Component {
                     <Grid.Column width={6} divided>
                     <Header>Muestras</Header>
 
-                        {m.length === 0 ? <div>No existen muestras para este análisis
+                        {this.state.analisis.muestras.length === 0 ? <div>No existen muestras para este análisis
                             <br/><br/>
                             <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showModal: true}) }
                             >
@@ -229,11 +189,11 @@ class ConsultaAnalisis extends Component {
                             </Table.Header>
                             
                             <Table.Body>
-                            {m.map(muestra => (
+                            {this.state.analisis.muestras.map(muestra => (
                             <Table.Row>
                                 <Table.Cell>{muestra.idMuestra}</Table.Cell>
-                                <Table.Cell>{muestra.tipoMuestra}</Table.Cell>
-                                <Table.Cell>{muestra.estado}</Table.Cell>
+                                <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
+                                <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
                             </Table.Row>
                             ))}
                             </Table.Body>
@@ -404,9 +364,8 @@ class ConsultaAnalisis extends Component {
 
 const mapStateToProps = state => ({
     fetching: state.analisis.fetching,
-    tiposMuestras: state.analisis.tiposMuestras,
+    tiposMuestras: state.muestras.tiposMuestras,
     analisis: state.analisis.analisisById,
-    muestras: state.analisis.muestras,
 })
 
-export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction, getMuestrasAction })(ConsultaAnalisis)
+export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction, addMuestraAction })(ConsultaAnalisis)
