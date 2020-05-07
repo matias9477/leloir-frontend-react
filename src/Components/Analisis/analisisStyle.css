@@ -15,14 +15,8 @@
 }
 
 .infoSelectedPaciente {
-    /* text-align: left !important; */
     margin-top: 5px;
     margin-bottom: 20px;
-}
-
-.segment {
-    /* height: 300px; */
-    margin-bottom: 25px !important;
 }
 
 .seleccionPaciente {
@@ -45,5 +39,19 @@
     margin-right: auto;
 }
 
+.seleccionDeterminaciones {
+    margin-top: 30px;
+}
+
+.seleccionDeterminaciones .ui.steps {
+    width: 60em;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.seleccionDeterminaciones .ui.button {
+    margin-top: 3em;
+}
 
 

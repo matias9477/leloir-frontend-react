@@ -130,7 +130,7 @@ class FormNuevoAnalisis extends Component {
   seleccionPaciente(){
     return(
         <div className='seleccionPaciente'> 
-          <Step.Group>
+          <Step.Group size='tiny'>
             <Step active>
               <Icon name='user' />
               <Step.Content>
@@ -176,7 +176,7 @@ class FormNuevoAnalisis extends Component {
           
           <SelectedPaciente selected={this.state.selectedPaciente}/>
 
-          {this.state.selectedPaciente!=='' ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(console.log('me as tocao'))} /> : null}
+          {this.state.selectedPaciente!=='' ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionDeterminaciones'}))} /> : null}
           
         </div>
     )
@@ -184,10 +184,10 @@ class FormNuevoAnalisis extends Component {
 
   seleccionDeterminaciones(){
     return(
-        <div> 
+        <div className='seleccionDeterminaciones'> 
           <Step.Group size='tiny'>
-            <Step>
-              <Icon name='user' />
+            <Step completed>
+              <Icon name='user'/>
               <Step.Content>
                 <Step.Title>Paciente</Step.Title>
                 <Step.Description>Elige el paciente que se hará el análisis</Step.Description>
@@ -221,6 +221,10 @@ class FormNuevoAnalisis extends Component {
                 getOptionValue={this.getOptionValueDeterminaciones}
                 getOptionLabel={this.getOptionLabelDeterminaciones}
               />
+              <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
+              
+              {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'pago'}))} /> : null}
+            
         </div>
     )
   }
@@ -236,7 +240,8 @@ class FormNuevoAnalisis extends Component {
           <Button as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow left' /> Volver
           </Button>
-          {this.state.flagProceso==='seleccionPacientes' ? this.seleccionPaciente() : null}
+          
+          {this.state.flagProceso==='seleccionPacientes' ? this.seleccionPaciente() : (this.state.flagProceso==='seleccionDeterminaciones' ? this.seleccionDeterminaciones() : null)}
         </Container>
           
 

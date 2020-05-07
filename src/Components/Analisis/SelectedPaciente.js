@@ -7,9 +7,10 @@ import './analisisStyle.css'
 
 const SelectedPaciente = props => {
     return (
-        <div className='infoSelectedPaciente'>
+        <div>
             {(props.selected === '' || props.selected === null) ? null : 
-            <div>
+            
+            <div className='infoSelectedPaciente'>
                 <Header size='large' icon textAlign='center'>
                     <Icon name={getIconTipo(props.selected.tipoPaciente)} circular />
                     <Header.Content>{props.selected.nombre} {checkAtributo(props.selected.apellido)}</Header.Content>
