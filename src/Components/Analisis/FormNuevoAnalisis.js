@@ -211,22 +211,91 @@ class FormNuevoAnalisis extends Component {
           </Step.Group>
 
           <Select
-                isMulti
-                options={this.props.determinaciones}
-                onChange={this.handleChangeListDeterminaciones}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder='Seleccione determinaciones...'
-                closeMenuOnSelect={false}
-                getOptionValue={this.getOptionValueDeterminaciones}
-                getOptionLabel={this.getOptionLabelDeterminaciones}
-              />
-              <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
-              
-              {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'pago'}))} /> : null}
+            isMulti
+            options={this.props.determinaciones}
+            onChange={this.handleChangeListDeterminaciones}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            placeholder='Seleccione determinaciones...'
+            closeMenuOnSelect={false}
+            getOptionValue={this.getOptionValueDeterminaciones}
+            getOptionLabel={this.getOptionLabelDeterminaciones}
+          />
+
+          <SelectedDeterminaciones determinaciones={this.state.selectedDeterminaciones}/>
+         
+          <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
+          
+          {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'pago'}))} /> : null}
             
         </div>
     )
+  }
+
+  seccionPagoYRegistro(){
+    return(
+      <div className='seccionPago'> 
+          <Step.Group size='tiny'>
+            <Step completed>
+              <Icon name='user' />
+              <Step.Content>
+                <Step.Title>Paciente</Step.Title>
+                <Step.Description>Elige un paciente</Step.Description>
+              </Step.Content>
+            </Step>
+
+            <Step completed>
+              <Icon name='lab' />
+              <Step.Content>
+                <Step.Title>Determinaciones</Step.Title>
+                <Step.Description>Elige las determinaciones a realizar</Step.Description>
+              </Step.Content>
+            </Step>
+
+            <Step active>
+              <Icon name='dollar sign' />
+              <Step.Content>
+                <Step.Title>Pago</Step.Title>
+              </Step.Content>
+            </Step>
+          </Step.Group>
+
+        <Container>
+          <Header>Pago</Header>
+           {/* <Header as={'h5'}>Precio</Header>
+        
+          <Form.Field control='input' 
+            placeholder='Precio' 
+            value={this.state.precio}   
+            /> */}
+        </Container>
+
+        <Grid>
+          <Grid.Column floated='left' width={5}>
+            <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionDeterminaciones'}))} /> 
+          </Grid.Column>
+          <Grid.Column floated='right' width={5}>
+            <Button primary size='small' onClick={this.nuevoAnalisis} floated='right'> 
+              Registrar Análisis
+            </Button>
+          </Grid.Column>
+        </Grid>
+        
+      </div>
+    )
+  }
+
+  seccionRender(){
+    switch (this.state.flagProceso) {
+      case 'seleccionPacientes':
+        return this.seleccionPaciente();
+      case 'seleccionDeterminaciones':
+        return this.seleccionDeterminaciones();
+      case 'pago':
+        return this.seccionPagoYRegistro();
+      default:
+        return this.seleccionPaciente();
+    }
   }
 
 
@@ -234,40 +303,14 @@ class FormNuevoAnalisis extends Component {
     return (
       <div className='union'>
         <MenuOpciones/>
-        {/* {this.state.loading ? <CircularProgress className={'centeredPosition'} size={50}/> :  */}
-        
         <Container className='formAnalsis'>
           <Button as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow left' /> Volver
           </Button>
           
-          {this.state.flagProceso==='seleccionPacientes' ? this.seleccionPaciente() : (this.state.flagProceso==='seleccionDeterminaciones' ? this.seleccionDeterminaciones() : null)}
+          {this.seccionRender()}
         </Container>
           
-
-             
-          {/* <Header as={'h5'}>Precio</Header>
-        
-          <Form.Field control='input' 
-            placeholder='Precio' 
-            value={this.state.precio}   
-            />
-
-          <Segment secondary className='segment'>
-            <Header as='h3' dividing>INFORMACIÓN DEL ANÁLISIS</Header>
-            <SelectedPaciente selected={this.state.selectedPaciente}/>
-            <SelectedDeterminaciones determinaciones={this.state.selectedDeterminaciones}/>
-          </Segment> */}
-          
-         
-          {/* <Button primary size='small' onClick={this.nuevoAnalisis} floated='right'> 
-            Registrar Análisis
-          </Button>   */}
-          
-        
-        {/* } */}
-
-        
       </div>
     )
   }

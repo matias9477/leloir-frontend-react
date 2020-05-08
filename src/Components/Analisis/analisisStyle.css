@@ -19,7 +19,7 @@
     margin-bottom: 20px;
 }
 
-.seleccionPaciente {
+.seleccionPaciente, .seleccionDeterminaciones, .seccionPago {
     margin-top: 30px;
 }
 
@@ -32,25 +32,18 @@
     margin-bottom: 15px;
 }
 
-.seleccionPaciente .ui.steps {
+.seleccionPaciente .ui.steps, .seleccionDeterminaciones .ui.steps, .seccionPago .ui.steps {
     width: 60em;
     margin-top: 2em;
     margin-left: auto;
     margin-right: auto;
 }
 
-.seleccionDeterminaciones {
-    margin-top: 30px;
+.seleccionPaciente .ui.button {
+    margin-bottom: 40px;
 }
 
-.seleccionDeterminaciones .ui.steps {
-    width: 60em;
-    margin-top: 2em;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.seleccionDeterminaciones .ui.button {
+.seleccionDeterminaciones .ui.button, .seccionPago .ui.button {
     margin-top: 3em;
 }
 
