@@ -213,6 +213,7 @@ class FormNuevoAnalisis extends Component {
           <Select
             isMulti
             options={this.props.determinaciones}
+            value={this.state.selectedDeterminaciones}
             onChange={this.handleChangeListDeterminaciones}
             className="basic-multi-select"
             classNamePrefix="select"
@@ -280,7 +281,7 @@ class FormNuevoAnalisis extends Component {
             </Button>
           </Grid.Column>
         </Grid>
-        
+
       </div>
     )
   }
