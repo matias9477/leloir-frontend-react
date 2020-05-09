@@ -4,7 +4,7 @@ import userReducer from './userDuck'
 import obrasSocialesReducer from './obrasSocialesDuck'
 import determinacionesReducer from './determinacionesDuck'
 import analisisReducer from './analisisDuck'
-
+import domiciliosReducer from './domiciliosDuck'
 import thunk from 'redux-thunk';
 
 //creation of the rootreducer (reducer that is composed of all the other reducers using combinereducers)
@@ -14,6 +14,7 @@ let rootReducer = combineReducers({
     obrasSociales: obrasSocialesReducer,
     determinaciones: determinacionesReducer,
     analisis: analisisReducer,
+    domicilios: domiciliosReducer,
 })
 
 

@@ -21,6 +21,9 @@ import DiarioPracticasContainer from "./Components/DiarioPracticas/DiarioPractic
 import TablaAnalisis from './Components/Analisis/TablaAnalisis';
 import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
 import iFramePBI from './Components/Reportes/iFramePBI';
+import TablaDomicilio from './Components/Domicilio/TablaDomicilio';
+import FormNuevoDomicilio from './Components/Domicilio/AltaDomicilio';
+import ConsultaDomicilio from './Components/Domicilio/ConsultaDomicilio';
 
 
 export default function Routes() {
@@ -55,7 +58,10 @@ export default function Routes() {
             <AuthenticatedRoute exact path="/determinaciones" component={DeterminacionesContainer}/>
             <AuthenticatedRoute exact path="/determinaciones/add" component={FormAltaDeterminacion}/>
             <AuthenticatedRoute exact path="/determinaciones/consulta/:codigoPractica" component={FormConsultaDeterminacion}/>
+            <AuthenticatedRoute exact path="/domicilios" component={TablaDomicilio}/>
             <AuthenticatedRoute exact path="/analisis" component={TablaAnalisis}/>
+            <AuthenticatedRoute exact path="/domicilios/add" component={FormNuevoDomicilio}/>
+            <AuthenticatedRoute exact path="/domicilios/consulta/:id" component={ConsultaDomicilio}/>
             <AuthenticatedRoute exact path="/analisis/add" component={FormNuevoAnalisis}/>
             <AuthenticatedRoute exact path="/analisis/consulta/:id" component={ConsultaAnalisis}/>
             <AuthenticatedRoute exact path="/muestras" component={TablaMuestra}/>

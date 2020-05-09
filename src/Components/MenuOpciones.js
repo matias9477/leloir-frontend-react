@@ -54,6 +54,12 @@ export default class MenuOpciones extends Component {
                         onClick={this.handleItemClick}
                     />
 
+                    <Menu.Item
+                        name='Domicilios'
+                        as={Link} to='/domicilios'
+                        active={activeItem === 'Domicilios'}
+                        onClick={this.handleItemClick}
+                    />
 
                     <Menu.Item
                         name='Obras Sociales'

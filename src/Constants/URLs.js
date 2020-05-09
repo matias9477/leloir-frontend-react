@@ -10,6 +10,12 @@ export const urlAlterObraSocial = "/obras_sociales/modificar/"
 export const urlPlanesXObra = '/obras_sociales/planes/';
 export const urlAltaObraSocial = "/obras_sociales/add"
 
+export const urlDomicilios = "/domicilios/all";
+export const urlDomicilioById = "/domicilios/id/";
+export const urlSwitchAltaDomicilio = "/domicilios/switch-alta/"
+export const urlAlterDomicilio = "/domicilios/modificar/"
+export const urlAltaDomicilio = "/domicilios/add"
+
 export const urlDeterminaciones = "/determinaciones/all";
 export const urlAltaDeterminacion = "/determinaciones/add"
 export const urlSwitchAltaDeterminacion = "/determinaciones/switch-alta/"
