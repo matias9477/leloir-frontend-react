@@ -163,7 +163,7 @@ class TablaDomicilio extends React.Component {
                     <Header as='h2'>Domicilios</Header>
                     
                     <Button as= {Link} to='/domicilios/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                        <Icon name='medkit' /> Nuevo domicilio
+                        <Icon name='home' /> Nuevo domicilio
                     </Button>
                   
                     <br></br>
