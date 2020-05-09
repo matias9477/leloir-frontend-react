@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker'
 import axios from 'axios'
 import 'react-datepicker/dist/react-datepicker.css'
 import { addDays } from 'date-fns'
-import { Button, Form, Divider, Container } from 'semantic-ui-react'
+import { Button, Form, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 

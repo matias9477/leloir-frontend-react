@@ -20,8 +20,7 @@ export const urlConsultaDeterminacion = '/determinaciones/consulta/'
 export const urlMuestras = '/muestras/all'
 export const urlTiposMuestras = '/tipos_muestras/all'
 export const urlMuestrasAdd = '/muestras/add'
-
-export const urlSwichAlta = 'muestras/switch-alta/'
+export const urlSwichAlta = '/muestras/switch-alta/'
 
 export const urlPacientes = '/pacientes/all'
 export const urlPacientesEnAlta = '/pacientes/all-en-alta'

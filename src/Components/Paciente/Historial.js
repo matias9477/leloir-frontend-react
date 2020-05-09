@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import SyncLoader from "react-spinners/SyncLoader"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Icon, Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
@@ -9,7 +8,6 @@ import MenuOpciones from '../MenuOpciones'
 
 
 class Historial extends Component {
-
 
     componentDidMount() {
         this.props.getPatientHistoryAction(this.props.match.params.id)
@@ -83,7 +81,7 @@ class Historial extends Component {
                 </div>
                 
             </div>
-        );
+        )
     }
 }
 
@@ -94,8 +92,6 @@ function mapStateToProps(state) {
         fetching: state.patients.fetching,
         history: state.patients.history.sort((a,b) => (a.idAnalisis > b.idAnalisis) ? -1 : 1),
 
-    };
+    }
 }
-export default connect(
-    mapStateToProps,{ getPatientHistoryAction }
-)(Historial);
+export default connect(mapStateToProps, { getPatientHistoryAction } )(Historial)
