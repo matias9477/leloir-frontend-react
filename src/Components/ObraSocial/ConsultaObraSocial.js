@@ -205,7 +205,7 @@ class ConsultaObraSocial extends Component {
               {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
                 if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {
                   this.modificarObraSocial(e)
-                  } else {window.location.reload(true)} } } primary>
+                  } else {window.location.reload(true)} } }>
                 Modificar Obra Social
               </Button> : null}
 
