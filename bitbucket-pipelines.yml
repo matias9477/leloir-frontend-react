@@ -11,3 +11,7 @@ pipelines:
           - docker push $AWS_CONTAINER_REGISTRY:fe-$BITBUCKET_BUILD_NUMBER
         services:
           - docker
+definitions:
+  services:
+    docker:
+      memory: 2048
