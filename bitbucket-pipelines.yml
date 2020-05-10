@@ -1,0 +1,13 @@
+image: atlassian/pipelines-awscli
+
+pipelines:
+  default:
+    - step:
+        name: "Build & Push Image"
+        deployment: Test
+        script:
+          - eval $(aws ecr get-login --region ${AWS_REGION} --no-include-email)
+          - docker build -t $AWS_CONTAINER_REGISTRY:fe-$BITBUCKET_BUILD_NUMBER .
+          - docker push $AWS_CONTAINER_REGISTRY:fe-$BITBUCKET_BUILD_NUMBER
+        services:
+          - docker
