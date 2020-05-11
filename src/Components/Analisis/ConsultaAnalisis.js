@@ -302,11 +302,11 @@ class ConsultaAnalisis extends Component {
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='green'
-                                    onClick={() => this.showModal(this.state.idAnalisis, "REVISAR")}>
+                                    onClick={() => this.showModal("REVISAR")}>
                                 Revisar Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal("MODIFICAR")}>
                                 Modificar Resultados
                             </Button>
                         </div>
@@ -321,7 +321,7 @@ class ConsultaAnalisis extends Component {
                                 Emitir Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal("MODIFICAR")}>
                                 Modificar Resultados
                             </Button>
                         </div>
@@ -333,7 +333,7 @@ class ConsultaAnalisis extends Component {
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(this.state.idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal("MODIFICAR")}>
                                 Cargar Resultados
                             </Button>
                         </div>
