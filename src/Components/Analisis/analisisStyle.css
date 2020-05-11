@@ -1,0 +1,23 @@
+.formConsultaAnalisis {
+    width: 90%;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formConsultaAnalisis .ui.segment {
+    margin-top: 55px;
+}
+
+.muestras .ui.button {
+    margin-top: 15px;
+}
+
+.createMuestra {
+
+}
+
+.createMuestra .ui.grid {
+    margin-top: 15px;
+}
