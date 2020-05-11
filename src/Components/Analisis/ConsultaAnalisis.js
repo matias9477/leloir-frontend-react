@@ -281,7 +281,6 @@ class ConsultaAnalisis extends Component {
     showModal = (modal) => {
         this.setState({
             show: true,
-            // currentAnalisisID: idAnalisis,
             currentModal: modal
 
         })
@@ -289,7 +288,6 @@ class ConsultaAnalisis extends Component {
 
     hideModalCallback = () => {
         this.setState({
-            // currentAnalisisID: null,
             show: false,
             currentModal: null,
         });

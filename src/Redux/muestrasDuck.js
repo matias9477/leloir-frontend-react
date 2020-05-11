@@ -7,6 +7,7 @@ const initialData = {
     muestras: [],
     upToDateMuestras: false,
     tiposMuestras: [],
+    upToDateTipoMuestras: false,
 }
 
 let GET_MUESTRAS = 'GET_MUESTRAS'
@@ -49,9 +50,9 @@ export default function reducer(state = initialData, action){
         case GET_TIPOS_MUESTRAS:
             return { ...state, fetching: true }
         case GET_TIPOS_MUESTRAS_SUCCESS:
-            return { ...state, fetching: false, tiposMuestras: action.payload }
+            return { ...state, fetching: false, tiposMuestras: action.payload, upToDateTipoMuestras: true }
         case GET_TIPOS_MUESTRAS_ERROR:
-            return { ...state, fetching: false, error: action.payload  }
+            return { ...state, fetching: false, error: action.payload, upToDateTipoMuestras: false  }
         case GET_TIPOS_MUESTRAS_FROM_STORE:
             return { ...state, fetching:false, tiposMuestras: action.payload }
 
@@ -71,10 +72,10 @@ export default function reducer(state = initialData, action){
 export let getMuestrasAction = () => (dispatch, getState) => {
     const state = getState()
 
-    if (state.analisis.upToDateAnalisisAll){
+    if (state.muestras.upToDateMuestras){
         dispatch({
             type: GET_MUESTRAS_FROM_STORE,
-            payload: state.analisis.analisisAll
+            payload: state.muestras.muestras
         })
     } else {
         dispatch({
@@ -124,10 +125,10 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
 export let getTiposMuestrasAction = () => (dispatch, getState) => {
     const state = getState()
 
-    if (state.analisis.upToDateTiposMuestras){
+    if (state.muestras.upToDateTipoMuestras){
         dispatch({
             type: GET_TIPOS_MUESTRAS_FROM_STORE,
-            payload: state.analisis.tiposMuestras
+            payload: state.muestras.tiposMuestras
         })
     } else {
         dispatch({
