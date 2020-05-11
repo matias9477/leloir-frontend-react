@@ -7,17 +7,21 @@
 }
 
 .formConsultaAnalisis .ui.segment {
-    margin-top: 55px;
+    margin-top: 50px;
 }
 
 .muestras .ui.button {
     margin-top: 15px;
 }
 
-.createMuestra {
-
+.createMuestra .css-yk16xz-control {
+    background: #fff6f6;
+    border-color: #e0b4b4;
+    color: #9f3a38;
+    box-shadow: none;
 }
 
-.createMuestra .ui.grid {
-    margin-top: 15px;
+.spinner {
+    width: 100%;
+    margin: 90px 25px 25px;
 }
