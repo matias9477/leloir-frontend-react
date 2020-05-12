@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Form, Icon, Grid, Table, Card, List, Label, Image } from 'semantic-ui-react'
+import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Select from 'react-select'
 import { connect } from 'react-redux'
@@ -13,7 +13,6 @@ import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados'
 import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck'
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck'
 import VerAnalisis from './Modals/VerAnalisisEntregado'
-import './../styles.css'
 import './analisisStyle.css'
 
 class ConsultaAnalisis extends Component {
@@ -124,13 +123,13 @@ class ConsultaAnalisis extends Component {
                 <div>
                     <Header>Muestras</Header>
 
-                    {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>No existen muestras para este análisis
+                    {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>
 
                         {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
                             <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
                                 <Icon name='plus' /> Añadir muestra
                             </Button>
-                        : null }
+                        : 'No existen muestras para este análisis.' }
                     </div>:
 
                     <Table compact>
@@ -156,12 +155,11 @@ class ConsultaAnalisis extends Component {
                             <Table.Row>
                                 <Table.HeaderCell />
                                 <Table.HeaderCell colSpan='4'>
-                                {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
-                                    <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }
-                                    >
-                                        <Icon name='plus' /> Añadir muestra
-                                    </Button>
-                                : null }
+                                    {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
+                                        <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }>
+                                            <Icon name='plus' /> Añadir muestra
+                                        </Button>
+                                    : null }
                                 </Table.HeaderCell>
                             </Table.Row>
                         </Table.Footer>
@@ -184,7 +182,7 @@ class ConsultaAnalisis extends Component {
                             name='tipo muestra'
                             value={this.state.tipo}
                             onChange={this.handleChangeTipo}
-                            placeholder= "Seleccione tipo muestra..."
+                            placeholder= "Seleccione..."
                             isClearable={true}
                             options={this.state.tipos}
                             getOptionValue={this.getOptionValueTipoMuestra}
@@ -332,7 +330,7 @@ class ConsultaAnalisis extends Component {
     render() {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
-            <div className='union'>
+            <div className='unionConNavbar'>
                 <MenuOpciones/>
                 <div className='formConsultaAnalisis'>
                     <Grid columns={3}>
@@ -352,14 +350,14 @@ class ConsultaAnalisis extends Component {
                             </div> :
             
                             <Grid.Row>
-                                <Grid.Column width={4}>
+                                <Grid.Column>
                                     {this.patientRender()}
                                 </Grid.Column>
-                                <Grid.Column width={7}>
+                                <Grid.Column>
                                     {this.determinacionesRender()}
                                     {this.handleModalContent()}
                                 </Grid.Column>
-                                <Grid.Column width={5}>
+                                <Grid.Column>
                                     {this.muestrasRender()}
                                 </Grid.Column>
                             </Grid.Row>
