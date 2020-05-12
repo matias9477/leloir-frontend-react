@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { Button, Header, Form, Icon, Grid, Table, Segment, Card, List, Label } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Select from 'react-select'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
@@ -9,10 +8,9 @@ import SyncLoader from "react-spinners/SyncLoader"
 import MenuOpciones from '../MenuOpciones'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import { urlEmitirAnalisis } from "../../Constants/URLs"
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
 import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import { getAnalisisByIdAction } from '../../Redux/analisisDuck'
+import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck'
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck'
 import './../styles.css'
 import './analisisStyle.css'
@@ -49,16 +47,6 @@ class ConsultaAnalisis extends Component {
         })
     }
 
-    getIconTipo(tipo){
-        if (tipo === 'com.leloir.backend.domain.Animal'){
-            return 'paw'
-        } else if(tipo === 'com.leloir.backend.domain.Persona'){
-            return 'user'
-        } else if(tipo === 'com.leloir.backend.domain.Institucion'){
-            return 'building'
-        }
-    }
-
     postMuestra = () =>{
         const errorTipo = validateRequiredCombos(this.state.tipo)
 
@@ -79,41 +67,9 @@ class ConsultaAnalisis extends Component {
             })
         }
     }
-    getOptionLabelTipoMuestra = option => option.nombre
 
-    getOptionValueTipoMuestra = option => option.tipoMuestraId
-
-    handleChangeTipo = tipo => {
-        this.setState({ tipo })
-    }
-
-    createMuestra = () => {
-        return(
-            <div className={!this.state.errorTipo ? 'createMuestra' : null}>
-                <Grid width='equal'>
-                    <Grid.Column width={10}>
-                        <Select
-                            name='tipo muestra'
-                            value={this.state.tipo}
-                            onChange={this.handleChangeTipo}
-                            placeholder= "Seleccione tipo muestra..."
-                            isClearable={true}
-                            options={this.state.tipos}
-                            getOptionValue={this.getOptionValueTipoMuestra}
-                            getOptionLabel={this.getOptionLabelTipoMuestra}
-                        />
-
-                    </Grid.Column>
-
-                    <Grid.Column width={6}>
-                        <Button primary size='small' floated='center' onClick={this.postMuestra} >
-                            Registrar muestra
-                        </Button>
-                    </Grid.Column>
-                </Grid>
-
-            </div>
-        )
+    emitirAnalisis = (id) => {
+        this.props.emitirAnalisisAction(id)
     }
 
     patientRender(){
@@ -141,7 +97,7 @@ class ConsultaAnalisis extends Component {
                                     <Form.Group widths='equal'>
                                         <Form.Field readOnly={true} label='Razón Social' value={this.state.analisis.paciente.obraSocial.razonSocial} control='input' />
 
-                                    {this.state.analisis.paciente.plan!==undefined ?
+                                    {(this.state.analisis.paciente.plan!==null && this.state.analisis.paciente.plan!==undefined) ?
                                         <Form.Field readOnly={true} label='Plan' value={this.state.analisis.paciente.plan.nombre} control='input' />
                                         : <Form.Field readOnly={true} label='Plan' value='Sin plan' control='input' />   }
                                     </Form.Group>
@@ -213,85 +169,62 @@ class ConsultaAnalisis extends Component {
             </div>
         )
     }
-
-
-    render() {
-        var prevURL = this.props.location.state.prevPath || '/analisis'
-        return (
-            <div className='union'>
-                <MenuOpciones/>
-                <div className='formConsultaAnalisis'>
-
-                    <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
-                        <Icon name='arrow alternate circle left' /> Volver
-                    </Button>
-
-                    {this.props.fetching ? <div className='spinner'>
-                        <SyncLoader
-                            size={10}
-                            margin={5}
-                            color={"black"}
-                            loading={this.state.analisis===''}
+    
+    createMuestra = () => {
+        return(
+            <div className={!this.state.errorTipo ? 'createMuestra' : null}>
+                <Grid width='equal'>
+                    <Grid.Column width={10}>
+                        <Select
+                            name='tipo muestra'
+                            value={this.state.tipo}
+                            onChange={this.handleChangeTipo}
+                            placeholder= "Seleccione tipo muestra..."
+                            isClearable={true}
+                            options={this.state.tipos}
+                            getOptionValue={this.getOptionValueTipoMuestra}
+                            getOptionLabel={this.getOptionLabelTipoMuestra}
                         />
-                        </div> :
 
-                        <Form >
-                            {this.state.analisis ?
-                                    <Segment>
-                                        <Grid width='equal' divided>
-                                            <Grid.Column width={5}>
-                                                {this.patientRender()}
-                                            </Grid.Column>
+                    </Grid.Column>
 
-                                            <Grid.Column width={5}>
-                                                {this.renderCard()}
-                                                {this.handleModalContent()}
-                                            </Grid.Column>
+                    <Grid.Column width={6}>
+                        <Button primary size='small' floated='center' onClick={this.postMuestra} >
+                            Registrar muestra
+                        </Button>
+                    </Grid.Column>
+                </Grid>
 
-                                            <Grid.Column width={6}>
-                                                {this.muestrasRender()}
-                                            </Grid.Column>
-                                        </Grid>
-                                    </Segment>
-                            : null }
-                        </Form>
-
-                    }
             </div>
+        )
+    }
+
+    determinacionesRender = () => (
+        <div>
+            <Header>Determinaciones</Header>
+            <Card fluid raised centered>
+                <Label as='a' attached='top'>
+                    {this.state.analisis.estadoAnalisis.nombre}
+                </Label>
+
+                <Card.Content>
+                    <Card.Description textAlign='left'>
+                        <List>
+                            {this.state.analisis.determinaciones.map((analisis, index) =>
+                                <List.Item key={index}>
+                                    <List.Icon name='lab'/>
+                                    <List.Content><strong>{analisis.determinacion.descripcionPractica}</strong></List.Content>
+                                </List.Item>
+                            )}
+                        </List>
+                    </Card.Description>
+                </Card.Content>
+
+                {this.renderButtons(this.state.analisis.estadoAnalisis.nombre)}
+
+            </Card>
         </div>
     )
-}
-
-    emitirAnalisis = () => {
-        axios.get(urlEmitirAnalisis + this.state.idAnalisis, {responseType: 'blob',}).then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            const index1 = response.headers['content-disposition'].indexOf("name=\"") + 6
-            const index2 = response.headers['content-disposition'].indexOf("\"", 18)
-            link.href = url
-            link.setAttribute('download', response.headers['content-disposition'].substring(index1, index2)) //or any other extension
-            document.body.appendChild(link)
-            link.click()
-            this.getAllPendientes()
-        }, (error) => {
-            console.log('Error', error.message)
-        })
-    }
-
-    showModal = (modal) => {
-        this.setState({
-            show: true,
-            currentModal: modal
-
-        })
-    }
-
-    hideModalCallback = () => {
-        this.setState({
-            show: false,
-            currentModal: null,
-        });
-    }
 
     renderButtons = (estado) => {
         switch (estado) {
@@ -337,38 +270,24 @@ class ConsultaAnalisis extends Component {
                         </div>
                     </Card.Content>
                 )
-            default:
+
+            case "ENTREGADO":
                 return (
-                    <Label as='a' attached='bottom'>
-                        {estado}
-                    </Label>
+                    <Card.Content extra>
+                        <div className='ui two buttons'>
+                            <Button color='green'
+                                    onClick={() => this.emitirAnalisis(this.state.idAnalisis)}>
+                                Emitir Analisis
+                            </Button>
+                            //TODO:poner un boton para ver el analisis
+                        </div>
+                    </Card.Content>
                 )
+
+            default:
+                return 
         }
     }
-
-    renderCard = () => (
-        <div>
-            <Header>Determinaciones</Header>
-            <Card fluid raised centered>
-            <Card.Content>
-                <Card.Description textAlign='left'>
-                    <List>
-                        {this.state.analisis.determinaciones.map((analisis, index) =>
-                            <List.Item key={index}>
-                                <List.Icon name='lab'/>
-                                <List.Content><strong>{analisis.determinacion.descripcionPractica}</strong></List.Content>
-                            </List.Item>
-                        )}
-                    </List>
-
-                </Card.Description>
-            </Card.Content>
-
-            {this.renderButtons(this.state.analisis.estadoAnalisis.nombre)}
-
-        </Card>
-        </div>
-    )
 
     handleModalContent() {
         switch (this.state.currentModal) {
@@ -389,6 +308,87 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+
+    render() {
+        var prevURL = this.props.location.state.prevPath || '/analisis'
+        return (
+            <div className='union'>
+                <MenuOpciones/>
+                <div className='formConsultaAnalisis'>
+
+                    <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+                        <Icon name='arrow alternate circle left' /> Volver
+                    </Button>
+
+                    {this.props.fetching ? <div className='spinner'>
+                        <SyncLoader
+                            size={10}
+                            margin={5}
+                            color={"black"}
+                            loading={this.state.analisis===''}
+                        />
+                        </div> :
+
+                        <Form >
+                            {this.state.analisis ?
+                                    <Segment>
+                                        <Grid width='equal' divided>
+                                            <Grid.Column width={5}>
+                                                {this.patientRender()}
+                                            </Grid.Column>
+
+                                            <Grid.Column width={5}>
+                                                {this.determinacionesRender()}
+                                                {this.handleModalContent()}
+                                            </Grid.Column>
+
+                                            <Grid.Column width={6}>
+                                                {this.muestrasRender()}
+                                            </Grid.Column>
+                                        </Grid>
+                                    </Segment>
+                            : null }
+                        </Form>
+
+                    }
+            </div>
+        </div>
+    )
+    }
+
+    
+    handleChangeTipo = tipo => {
+        this.setState({ tipo })
+    }
+
+    showModal = (modal) => {
+        this.setState({
+            show: true,
+            currentModal: modal
+
+        })
+    }
+
+    hideModalCallback = () => {
+        this.setState({
+            show: false,
+            currentModal: null,
+        });
+    }
+
+    getIconTipo(tipo){
+        if (tipo === 'com.leloir.backend.domain.Animal'){
+            return 'paw'
+        } else if(tipo === 'com.leloir.backend.domain.Persona'){
+            return 'user'
+        } else if(tipo === 'com.leloir.backend.domain.Institucion'){
+            return 'building'
+        }
+    }
+    
+    getOptionLabelTipoMuestra = option => option.nombre
+
+    getOptionValueTipoMuestra = option => option.tipoMuestraId
 }
 
 
@@ -398,4 +398,5 @@ const mapStateToProps = state => ({
     analisis: state.analisis.analisisById,
 })
 
-export default connect(mapStateToProps, { getTiposMuestrasAction, getAnalisisByIdAction, addMuestraAction })(ConsultaAnalisis)
+export default connect(mapStateToProps, 
+    { getTiposMuestrasAction, getAnalisisByIdAction, addMuestraAction, emitirAnalisisAction })(ConsultaAnalisis)
