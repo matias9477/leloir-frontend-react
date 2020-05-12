@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 import MenuOpciones from '../MenuOpciones'
 import { getDomicilioByIdAction, switchAltaAction, alterDomicilioAction } from '../../Redux/domiciliosDuck'
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
 import './domicilioStyles.css'
 
 class ConsultaDomicilio extends Component {
@@ -45,8 +44,6 @@ class ConsultaDomicilio extends Component {
 
   modificarDomicilio = (e) => {
     e.preventDefault()
-
-    const { razonSocial, cuit, telefono, mail, valorUb} = this.state
 
       var data = {
           "direccion": this.state.direccion,

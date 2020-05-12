@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
 import MenuOpciones from '../MenuOpciones';
 import './../styles.css';
@@ -76,8 +75,6 @@ class AltaDomicilio extends Component {
 
   nuevoDomicilio(e){
     e.preventDefault();
-    
-    const {direccion,descripcion } = this.state;
 
       const api = '/domicilios/add';
       this.handleUpdateClick(api);
