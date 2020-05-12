@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Form, Icon, Grid, Table, Segment, Card, List, Label } from 'semantic-ui-react'
+import { Button, Header, Form, Icon, Grid, Table, Card, List, Label, Image } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Select from 'react-select'
 import { connect } from 'react-redux'
@@ -9,9 +9,10 @@ import MenuOpciones from '../MenuOpciones'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import RevisarResultados from '../DiarioPracticas/Modals/ModificarResultados'
+import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados'
 import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck'
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck'
+import VerAnalisis from './Modals/VerAnalisisEntregado'
 import './../styles.css'
 import './analisisStyle.css'
 
@@ -73,11 +74,11 @@ class ConsultaAnalisis extends Component {
     }
 
     patientRender(){
-        return(
-            <div>
-                <Header>Paciente</Header>
+        if (this.state.analisis) {
+            return(
+                <Form>
+                    <Header>Paciente</Header>
                     <Form.Field readOnly={true} label='Fecha Creación' value={this.state.analisis ? getHumanDate(this.state.analisis.createdAt) : ''} control='input' />
-                    <Form.Field readOnly={true} label='Estado' value={this.state.analisis ? this.state.analisis.estadoAnalisis.nombre : ''} control='input' />
                     <Form.Input readOnly={true} label='Nombre' iconPosition='left' value={this.state.analisis !== undefined ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
                         <Icon name={this.getIconTipo(this.state.analisis ? this.state.analisis.paciente.type : '')}/>
                         <input/>
@@ -112,62 +113,66 @@ class ConsultaAnalisis extends Component {
                         <Form.Field readOnly={true} label='Propietario' value={this.state.analisis ? this.state.analisis.paciente.propietario : ''} control='input' />
                     </div>
                     : null}
-            </div>
-        )
+                </Form>
+            )
+        }
     }
 
     muestrasRender(){
-        return(
-            <div>
-                <Header>Muestras</Header>
+        if (this.state.analisis) {
+            return(
+                <div>
+                    <Header>Muestras</Header>
 
-                {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>No existen muestras para este análisis
+                    {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>No existen muestras para este análisis
 
-                    {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
-                        <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
-                            <Icon name='plus' /> Añadir muestra
-                        </Button>
-                    : null }
-                </div>:
+                        {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
+                            <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
+                                <Icon name='plus' /> Añadir muestra
+                            </Button>
+                        : null }
+                    </div>:
 
-                <Table compact>
-                    <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Id</Table.HeaderCell>
-                        <Table.HeaderCell>Tipo</Table.HeaderCell>
-                        <Table.HeaderCell>Estado</Table.HeaderCell>
-                    </Table.Row>
-                    </Table.Header>
-
-                    <Table.Body>
-                    {this.state.analisis.muestras.map((muestra, index) => (
-                    <Table.Row key={index} value={muestra}>
-                        <Table.Cell>{muestra.idMuestra}</Table.Cell>
-                        <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
-                        <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
-                    </Table.Row>
-                    ))}
-                    </Table.Body>
-
-                    <Table.Footer fullWidth>
+                    <Table compact>
+                        <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell />
-                            <Table.HeaderCell colSpan='4'>
-                            {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
-                                <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }
-                                >
-                                    <Icon name='plus' /> Añadir muestra
-                                </Button>
-                            : null }
-                            </Table.HeaderCell>
+                            <Table.HeaderCell>Id</Table.HeaderCell>
+                            <Table.HeaderCell>Tipo</Table.HeaderCell>
+                            <Table.HeaderCell>Estado</Table.HeaderCell>
                         </Table.Row>
-                    </Table.Footer>
-                </Table>
-                }
+                        </Table.Header>
 
-                {this.state.showMuestra ? this.createMuestra() : null}
-            </div>
-        )
+                        <Table.Body>
+                        {this.state.analisis.muestras.map((muestra, index) => (
+                        <Table.Row key={index} value={muestra}>
+                            <Table.Cell>{muestra.idMuestra}</Table.Cell>
+                            <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
+                            <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
+                        </Table.Row>
+                        ))}
+                        </Table.Body>
+
+                        <Table.Footer fullWidth>
+                            <Table.Row>
+                                <Table.HeaderCell />
+                                <Table.HeaderCell colSpan='4'>
+                                {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
+                                    <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }
+                                    >
+                                        <Icon name='plus' /> Añadir muestra
+                                    </Button>
+                                : null }
+                                </Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Footer>
+                    </Table>
+                    }
+
+                    {this.state.showMuestra ? this.createMuestra() : null}
+                </div>
+            )
+    
+        }
     }
     
     createMuestra = () => {
@@ -199,32 +204,36 @@ class ConsultaAnalisis extends Component {
         )
     }
 
-    determinacionesRender = () => (
-        <div>
-            <Header>Determinaciones</Header>
-            <Card fluid raised centered>
-                <Label as='a' attached='top'>
-                    {this.state.analisis.estadoAnalisis.nombre}
-                </Label>
+    determinacionesRender() { 
+        if (this.state.analisis) {
+            return (
+                <div>
+                    <Header>Determinaciones</Header>
+                    <Card fluid raised centered>
+                        <Label as='a' attached='top'>
+                            {this.state.analisis.estadoAnalisis.nombre}
+                        </Label>
 
-                <Card.Content>
-                    <Card.Description textAlign='left'>
-                        <List>
-                            {this.state.analisis.determinaciones.map((analisis, index) =>
-                                <List.Item key={index}>
-                                    <List.Icon name='lab'/>
-                                    <List.Content><strong>{analisis.determinacion.descripcionPractica}</strong></List.Content>
-                                </List.Item>
-                            )}
-                        </List>
-                    </Card.Description>
-                </Card.Content>
+                        <Card.Content>
+                            <Card.Description textAlign='left'>
+                                <List>
+                                    {this.state.analisis.determinaciones.map((analisis, index) =>
+                                        <List.Item key={index}>
+                                            <List.Icon name='lab'/>
+                                            <List.Content><strong>{analisis.determinacion.descripcionPractica}</strong></List.Content>
+                                        </List.Item>
+                                    )}
+                                </List>
+                            </Card.Description>
+                        </Card.Content>
 
-                {this.renderButtons(this.state.analisis.estadoAnalisis.nombre)}
+                        {this.renderButtons(this.state.analisis.estadoAnalisis.nombre)}
 
-            </Card>
-        </div>
-    )
+                    </Card>
+                </div> 
+            )
+        }
+    }
 
     renderButtons = (estado) => {
         switch (estado) {
@@ -279,7 +288,10 @@ class ConsultaAnalisis extends Component {
                                     onClick={() => this.emitirAnalisis(this.state.idAnalisis)}>
                                 Emitir Analisis
                             </Button>
-                            //TODO:poner un boton para ver el analisis
+                            <Button basic color='blue'
+                                    onClick={() => this.showModal("ENTREGADO")}>
+                                Ver Analisis
+                            </Button>
                         </div>
                     </Card.Content>
                 )
@@ -303,8 +315,16 @@ class ConsultaAnalisis extends Component {
                                        callback={this.hideModalCallback}
                                        idAnalisis={this.state.idAnalisis}/>
                 )
+            case "ENTREGADO":
+                return (
+                    <VerAnalisis show={this.state.show}
+                                callback={this.hideModalCallback}
+                                idAnalisis={this.state.idAnalisis}
+                                analisis={this.state.analisis}/>
+                )
+
             default:
-                return null
+                return 
         }
     }
 
@@ -315,42 +335,36 @@ class ConsultaAnalisis extends Component {
             <div className='union'>
                 <MenuOpciones/>
                 <div className='formConsultaAnalisis'>
-
-                    <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
-                        <Icon name='arrow alternate circle left' /> Volver
-                    </Button>
-
-                    {this.props.fetching ? <div className='spinner'>
-                        <SyncLoader
-                            size={10}
-                            margin={5}
-                            color={"black"}
-                            loading={this.state.analisis===''}
-                        />
-                        </div> :
-
-                        <Form >
-                            {this.state.analisis ?
-                                    <Segment>
-                                        <Grid width='equal' divided>
-                                            <Grid.Column width={5}>
-                                                {this.patientRender()}
-                                            </Grid.Column>
-
-                                            <Grid.Column width={5}>
-                                                {this.determinacionesRender()}
-                                                {this.handleModalContent()}
-                                            </Grid.Column>
-
-                                            <Grid.Column width={6}>
-                                                {this.muestrasRender()}
-                                            </Grid.Column>
-                                        </Grid>
-                                    </Segment>
-                            : null }
-                        </Form>
-
-                    }
+                    <Grid columns={3}>
+                        <Grid.Row>
+                            <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+                                <Icon name='arrow alternate circle left' /> Volver
+                            </Button>
+                        </Grid.Row>
+                        
+                        {this.props.fetching ? <div className='spinner'>
+                            <SyncLoader
+                                size={10}
+                                margin={5}
+                                color={"black"}
+                                loading={this.state.analisis===''}
+                            />
+                            </div> :
+            
+                            <Grid.Row>
+                                <Grid.Column width={4}>
+                                    {this.patientRender()}
+                                </Grid.Column>
+                                <Grid.Column width={7}>
+                                    {this.determinacionesRender()}
+                                    {this.handleModalContent()}
+                                </Grid.Column>
+                                <Grid.Column width={5}>
+                                    {this.muestrasRender()}
+                                </Grid.Column>
+                            </Grid.Row>
+                        }
+                    </Grid>
             </div>
         </div>
     )

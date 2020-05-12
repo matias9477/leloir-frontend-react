@@ -9,13 +9,11 @@ export const Modal = ({handleClose, show, children}) => {
     return (
         <div className={showHideClassName}>
             <Segment raised compact className="modal-main">
-                <br/>
 
                 <Segment>
                     {children}
                 </Segment>
 
-                <br/>
                 <Button floated='right' color='red' onClick={handleClose}>Cerrar sin guardar cambios</Button>
             </Segment>
         </div>
