@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button,  Form, Container, Divider } from 'semantic-ui-react'
+import { Button,  Form, Container } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 
