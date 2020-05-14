@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button, Header, Form, Icon, Grid, Segment, Step, Container } from 'semantic-ui-react'
+import { Button, Header, Icon, Grid, Step, Container } from 'semantic-ui-react'
 import {Link} from 'react-router-dom'
 import Select from 'react-select'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import MenuOpciones from '../MenuOpciones'
-import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs'
+import { urlPlanesXObra,urlObrasSoc } from '../../Constants/URLs'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
 import SelectedPaciente from './SelectedPaciente'
 import SelectedDeterminaciones from './SelectedDeterminaciones'
@@ -345,5 +344,4 @@ const mapStateToProps = state => ({
 })
 
 export default  connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction})
-  (FormNuevoAnalisis)
+  {getPatientsAction, getDeterminacionesAction, addAnalisisAction})(FormNuevoAnalisis)
