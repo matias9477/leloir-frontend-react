@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import MenuLateral from '../MenuOpciones'
-import {Button, Card, List} from 'semantic-ui-react'
-import axios from 'axios'
+import {Button, Card, List, Label} from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { urlAnalisisPendientes, urlEmitirAnalisis } from '../../Constants/URLs'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ModificarResultados from './Modals/ModificarResultados'
 import RevisarResultados from './Modals/RevisarResultados'
-import Label from 'semantic-ui-react/dist/commonjs/elements/Label'
 import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck'
 
 
@@ -17,7 +14,6 @@ class DiarioPracticas extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            pendientes: [],
             show: false,
             currentAnalisisID: null,
             currentModal: null,
@@ -26,12 +22,6 @@ class DiarioPracticas extends Component {
 
     componentDidMount() {
         this.props.getAnalisisPendientesAction()
-    }
-
-    componentWillReceiveProps = nextProp => {
-        this.setState({
-            pendientes: nextProp.analisisPendientes,
-        })
     }
 
     emitirAnalisis = (idAnalisis) => {
@@ -53,7 +43,6 @@ class DiarioPracticas extends Component {
             show: false,
             currentModal: null,
         })
-        this.getAllPendientes()
     }
 
     renderButtons = (estado, idAnalisis) => {
@@ -111,16 +100,16 @@ class DiarioPracticas extends Component {
 
     renderCards = () => (
         <Card.Group stackable itemsPerRow={2}>
-            {this.state.pendientes.map((analisis) => (
-                <Card fluid raised centered>
+            {this.props.analisisPendientes.map((analisis, index) => (
+                <Card fluid raised centered key={index}>
                     <Card.Content>
                         <Card.Header>{analisis.paciente}</Card.Header>
                         <Card.Meta>{analisis.diasPendiente}</Card.Meta>
                         <Card.Description textAlign='left'>
                             Determinacion
                             <List>
-                                {analisis.determinaciones.map(nombre =>
-                                    <List.Item>
+                                {analisis.determinaciones.map((nombre, index) =>
+                                    <List.Item key={index}>
                                         <List.Icon name='lab'/>
                                         <List.Content><strong>{nombre}</strong></List.Content>
                                     </List.Item>)}
@@ -155,11 +144,12 @@ class DiarioPracticas extends Component {
     }
 
     render() {
+        const { fetching } = this.props
         return (
             <div className='union'>
                 <MenuLateral/>
                 <div className='tablaListadoHistorico'>
-                    {this.state.pendientes.length === 0 ?
+                    {fetching ?
                         <CircularProgress className={'centeredPosition'} size={50}/> : this.renderCards()}
                 </div>
                 <div>
