@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import ModificarResultados from './Modals/ModificarResultados'
 import RevisarResultados from './Modals/RevisarResultados'
 import Label from 'semantic-ui-react/dist/commonjs/elements/Label'
-import { emitirAnalisisAction } from '../../Redux/analisisDuck'
+import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck'
 
 
 class DiarioPracticas extends Component {
@@ -25,16 +25,12 @@ class DiarioPracticas extends Component {
     }
 
     componentDidMount() {
-        this.getAllPendientes()
+        this.props.getAnalisisPendientesAction()
     }
 
-    getAllPendientes = () => {
-        axios.get(urlAnalisisPendientes).then((response) => {
-            this.setState({
-                pendientes: Object.values(response.data).flat(),
-            })
-        }, (error) => {
-            console.log('Error', error.message)
+    componentWillReceiveProps = nextProp => {
+        this.setState({
+            pendientes: nextProp.analisisPendientes,
         })
     }
 
@@ -174,8 +170,9 @@ class DiarioPracticas extends Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = state => ({  
+    analisisPendientes: state.analisis.analisisPendientes,
+    fetching: state.analisis.fetching,
+})
 
-}
-
-export default connect(mapStateToProps, { emitirAnalisisAction })(DiarioPracticas)
+export default connect(mapStateToProps, { emitirAnalisisAction, getAnalisisPendientesAction })(DiarioPracticas)
