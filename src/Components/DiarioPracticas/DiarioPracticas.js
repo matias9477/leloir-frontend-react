@@ -1,24 +1,27 @@
-import React, {Component} from 'react';
-import MenuLateral from "../MenuOpciones";
-import {Button, Card, List} from 'semantic-ui-react';
-import axios from "axios";
-import {urlAnalisisPendientes, urlEmitirAnalisis} from "../../Constants/URLs";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ModificarResultados from "./Modals/ModificarResultados";
-import RevisarResultados from "./Modals/RevisarResultados";
-import Label from "semantic-ui-react/dist/commonjs/elements/Label";
+import React, { Component } from 'react'
+import MenuLateral from '../MenuOpciones'
+import {Button, Card, List} from 'semantic-ui-react'
+import axios from 'axios'
+import { connect } from 'react-redux'
+
+import { urlAnalisisPendientes, urlEmitirAnalisis } from '../../Constants/URLs'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import ModificarResultados from './Modals/ModificarResultados'
+import RevisarResultados from './Modals/RevisarResultados'
+import Label from 'semantic-ui-react/dist/commonjs/elements/Label'
+import { emitirAnalisisAction } from '../../Redux/analisisDuck'
 
 
 class DiarioPracticas extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             pendientes: [],
             show: false,
             currentAnalisisID: null,
             currentModal: null,
-        };
+        }
     }
 
     componentDidMount() {
@@ -29,27 +32,15 @@ class DiarioPracticas extends Component {
         axios.get(urlAnalisisPendientes).then((response) => {
             this.setState({
                 pendientes: Object.values(response.data).flat(),
-            });
+            })
         }, (error) => {
-            console.log('Error', error.message);
+            console.log('Error', error.message)
         })
-    };
+    }
 
     emitirAnalisis = (idAnalisis) => {
-        axios.get(urlEmitirAnalisis + idAnalisis, {responseType: 'blob',}).then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            const index1 = response.headers['content-disposition'].indexOf("name=\"") + 6;
-            const index2 = response.headers['content-disposition'].indexOf("\"", 18);
-            link.href = url;
-            link.setAttribute('download', response.headers['content-disposition'].substring(index1, index2)); //or any other extension
-            document.body.appendChild(link);
-            link.click();
-            this.getAllPendientes()
-        }, (error) => {
-            console.log('Error', error.message);
-        })
-    };
+        this.props.emitirAnalisisAction(idAnalisis)
+    }
 
     showModal = (idAnalisis, modal) => {
         this.setState({
@@ -57,36 +48,36 @@ class DiarioPracticas extends Component {
             currentAnalisisID: idAnalisis,
             currentModal: modal
 
-        });
-    };
+        })
+    }
 
     hideModalCallback = () => {
         this.setState({
             currentAnalisisID: null,
             show: false,
             currentModal: null,
-        });
+        })
         this.getAllPendientes()
-    };
+    }
 
     renderButtons = (estado, idAnalisis) => {
         switch (estado) {
-            case "EN_PROCESO":
+            case 'EN_PROCESO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='green'
-                                    onClick={() => this.showModal(idAnalisis, "REVISAR")}>
+                                    onClick={() => this.showModal(idAnalisis, 'REVISAR')}>
                                 Revisar Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal(idAnalisis, 'MODIFICAR')}>
                                 Modificar Resultados
                             </Button>
                         </div>
                     </Card.Content>
-                );
-            case "PREPARADO":
+                )
+            case 'PREPARADO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
@@ -95,24 +86,24 @@ class DiarioPracticas extends Component {
                                 Emitir Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal(idAnalisis, 'MODIFICAR')}>
                                 Modificar Resultados
                             </Button>
                         </div>
                     </Card.Content>
 
-                );
-            case "NUEVO":
+                )
+            case 'NUEVO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal(idAnalisis, "MODIFICAR")}>
+                                    onClick={() => this.showModal(idAnalisis, 'MODIFICAR')}>
                                 Cargar Resultados
                             </Button>
                         </div>
                     </Card.Content>
-                );
+                )
             default:
                 return (
                     <Label as='a' attached='bottom'>
@@ -120,7 +111,7 @@ class DiarioPracticas extends Component {
                     </Label>
                 )
         }
-    };
+    }
 
     renderCards = () => (
         <Card.Group stackable itemsPerRow={2}>
@@ -146,26 +137,26 @@ class DiarioPracticas extends Component {
                 </Card>
             ))}
         </Card.Group>
-    );
+    )
 
     handleModalContent() {
         switch (this.state.currentModal) {
-            case "MODIFICAR":
+            case 'MODIFICAR':
                 return (
                     <ModificarResultados show={this.state.show}
                                          callback={this.hideModalCallback}
                                          idAnalisis={this.state.currentAnalisisID}/>
-                );
-            case "REVISAR":
+                )
+            case 'REVISAR':
                 return (
                     <RevisarResultados show={this.state.show}
                                        callback={this.hideModalCallback}
                                        idAnalisis={this.state.currentAnalisisID}/>
-                );
+                )
             default:
                 return null
         }
-    };
+    }
 
     render() {
         return (
@@ -179,8 +170,12 @@ class DiarioPracticas extends Component {
                     {this.handleModalContent()}
                 </div>
             </div>
-        );
+        )
     }
 }
 
-export default DiarioPracticas;
+const mapStateToProps = state => {
+
+}
+
+export default connect(mapStateToProps, { emitirAnalisisAction })(DiarioPracticas)
