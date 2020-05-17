@@ -25,7 +25,6 @@ class Caja extends Component {
 
   render() {
     const { fetching } = this.props;
-    console.log(fetching);
 
     return (
       <div>
@@ -40,11 +39,11 @@ class Caja extends Component {
             />
           </div>
         ) : (
-          <div className="listadoCaja">
-            <Header as="h2">Transacciones</Header>
-            <Transacciones transacciones={this.state.transacciones} />
-          </div>
-        )}
+            <div className="listadoCaja">
+              <Header as="h2">Transacciones</Header>
+              <Transacciones transacciones={this.state.transacciones} />
+            </div>
+          )}
       </div>
     );
   }
