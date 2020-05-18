@@ -20,10 +20,12 @@ const columns = [
   {
     dataField: 'importe',
     text: 'Importe',
+    formatter: importeNegativo,
   },
   {
     dataField: 'efectivo',
     text: 'Efectivo',
+    formatter: importeNegativo,
   },
 ];
 
@@ -34,6 +36,21 @@ const expandRow = {
   onlyOneExpanding: true,
   parentClassName: 'reset-expansion-style',
 };
+
+function importeNegativo(cell, row) {
+  if (cell < 0) {
+    return (
+      <span style={{ color: 'red' }}>
+        {cell}
+      </span>
+    );
+  }
+
+  return (
+    <span> {cell} </span>
+  );
+}
+
 
 class Transacciones extends Component {
   constructor(props) {
@@ -49,6 +66,7 @@ class Transacciones extends Component {
         rowClasses='rowStyle'
         headerWrapperClasses='headerStyle'
         hover={true}
+
       />
     );
   }
