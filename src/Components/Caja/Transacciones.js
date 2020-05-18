@@ -31,12 +31,15 @@ const columns = [
   },
 ];
 
+
 const expandRow = {
   renderer: (row) => (
     <DettalleTransacciones detalleTransacciones={row.detalleTransacciones} />
   ),
   onlyOneExpanding: true,
+  parentClassName: 'reset-expansion-style'
 };
+
 
 class Transacciones extends Component {
   constructor(props) {
@@ -49,6 +52,9 @@ class Transacciones extends Component {
         columns={columns}
         expandRow={expandRow}
         data={this.props.transacciones}
+        rowClasses='rowStyle'
+        headerWrapperClasses="headerStyle"
+        hover={true}
       />
     );
   }

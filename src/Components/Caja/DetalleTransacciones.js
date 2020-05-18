@@ -37,6 +37,8 @@ class DetalleTransacciones extends Component {
         keyField="idDetalleTransaccion"
         columns={columns}
         data={this.props.detalleTransacciones}
+        headerWrapperClasses="subHeaderStyle"
+        rowClasses="expandRowStyle"
       />
     );
   }

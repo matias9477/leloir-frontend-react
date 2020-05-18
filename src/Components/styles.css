@@ -72,7 +72,8 @@ body{
 }
   
 .listadosBaja{
-    color: rgb(163, 160, 160);
+    /* color: rgb(163, 160, 160); */
+    color: red;
 }
 
 .tablaListadoHistorico{

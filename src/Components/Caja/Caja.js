@@ -19,9 +19,6 @@ class Caja extends Component {
   componentDidMount() {
     this.props.getTransaccionesAction();
   }
-  componentWillReceiveProps(nextProp) {
-    this.setState({ transacciones: nextProp.transacciones });
-  }
 
   render() {
     const { fetching } = this.props;
@@ -41,7 +38,7 @@ class Caja extends Component {
         ) : (
             <div className="listadoCaja">
               <Header as="h2">Transacciones</Header>
-              <Transacciones transacciones={this.state.transacciones} />
+              <Transacciones transacciones={this.props.transacciones} />
             </div>
           )}
       </div>
