@@ -9,7 +9,7 @@ const columns = [
     text: 'Detalle',
   },
   {
-    dataField: 'idAnalisis',
+    dataField: 'observacion',
     text: 'Observaciones',
   },
   {
