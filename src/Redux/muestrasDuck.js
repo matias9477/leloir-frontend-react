@@ -1,10 +1,13 @@
 import axios from 'axios'
-import { urlMuestras, urlSwichAlta } from './../Constants/URLs'
+import { urlMuestras, urlSwichAlta, urlTiposMuestras, urlMuestrasAdd } from './../Constants/URLs'
+import { getAnalisisByIdAction } from './analisisDuck'
 
 const initialData = {
     fetching: false,
     muestras: [],
     upToDateMuestras: false,
+    tiposMuestras: [],
+    upToDateTipoMuestras: false,
 }
 
 let GET_MUESTRAS = 'GET_MUESTRAS'
@@ -15,6 +18,15 @@ let GET_MUESTRAS_FROM_STORE = 'GET_MUESTRAS_FROM_STORE'
 let BIT_INVERSE = 'BIT_INVERSE'
 let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
 let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
+
+let GET_TIPOS_MUESTRAS = 'GET_TIPOS_MUESTRAS'
+let GET_TIPOS_MUESTRAS_SUCCESS = 'GET_TIPOS_MUESTRAS_SUCCESS'
+let GET_TIPOS_MUESTRAS_ERROR = 'GET_TIPOS_MUESTRAS_ERROR'
+let GET_TIPOS_MUESTRAS_FROM_STORE = 'GET_TIPOS_MUESTRAS_FROM_STORE'
+
+let ADD_MUESTRA = 'ADD_MUESTRA'
+let ADD_MUESTRA_SUCCESS = 'ADD_MUESTRA_SUCCESS'
+let ADD_MUESTRA_ERROR = 'ADD_MUESTRA_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -35,6 +47,21 @@ export default function reducer(state = initialData, action){
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateMuestras:false }
 
+        case GET_TIPOS_MUESTRAS:
+            return { ...state, fetching: true }
+        case GET_TIPOS_MUESTRAS_SUCCESS:
+            return { ...state, fetching: false, tiposMuestras: action.payload, upToDateTipoMuestras: true }
+        case GET_TIPOS_MUESTRAS_ERROR:
+            return { ...state, fetching: false, error: action.payload, upToDateTipoMuestras: false  }
+        case GET_TIPOS_MUESTRAS_FROM_STORE:
+            return { ...state, fetching:false, tiposMuestras: action.payload }
+
+        case ADD_MUESTRA:
+            return {...state, fetching:true}
+        case ADD_MUESTRA_SUCCESS:
+            return {...state, fetching:false, upToDateMuestras: false }
+        case ADD_MUESTRA_ERROR:
+            return {...state, fetching:false, error:action.payload, upToDateMuestras: true }
 
         default:
             return state
@@ -45,10 +72,10 @@ export default function reducer(state = initialData, action){
 export let getMuestrasAction = () => (dispatch, getState) => {
     const state = getState()
 
-    if (state.analisis.upToDateAnalisisAll){
+    if (state.muestras.upToDateMuestras){
         dispatch({
             type: GET_MUESTRAS_FROM_STORE,
-            payload: state.analisis.analisisAll
+            payload: state.muestras.muestras
         })
     } else {
         dispatch({
@@ -93,4 +120,53 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         })
         alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
     })
+}
+
+export let getTiposMuestrasAction = () => (dispatch, getState) => {
+    const state = getState()
+
+    if (state.muestras.upToDateTipoMuestras){
+        dispatch({
+            type: GET_TIPOS_MUESTRAS_FROM_STORE,
+            payload: state.muestras.tiposMuestras
+        })
+    } else {
+        dispatch({
+            type: GET_TIPOS_MUESTRAS,
+        })
+        return axios.get(urlTiposMuestras)
+        .then(res=>{
+            dispatch({
+                type: GET_TIPOS_MUESTRAS_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(error=>{
+            dispatch({
+                type: GET_TIPOS_MUESTRAS_ERROR,
+                payload: error.message
+            })
+        })
+    }
+}
+
+export let addMuestraAction = (data) => (dispatch, getState) => {
+    dispatch({
+        type: ADD_MUESTRA,
+    })
+    return axios.post(urlMuestrasAdd, data)
+    .then(res=>{
+        dispatch({
+            type: ADD_MUESTRA_SUCCESS,
+        })
+        return dispatch(getAnalisisByIdAction(data.analisisId), alert(`Se ha registrado la muestra con éxito.`))
+    })
+    .catch(error=>{
+        dispatch({
+            type: ADD_MUESTRA_ERROR,
+            payload: error.message
+        })
+        alert(`No se ha registrado la muestra con éxito. Por favor intente nuevamente.`)
+    })
+    
 }
