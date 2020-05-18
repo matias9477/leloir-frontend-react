@@ -5,10 +5,9 @@ import { Button, Header, Form, Icon, Container } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux'
-
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
-import { getDeterminacionByIdAction } from '../../Redux/determinacionesDuck'
+import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
 import MenuOpciones from '../MenuOpciones';
 import './../styles.css';
 
@@ -43,11 +42,24 @@ class FormConsulta extends Component {
     }
 
     componentDidMount() {
-        const api = "/determinaciones/id/" + this.props.match.params.codigoPractica;
-        this.handleUpdateClick(api);
+        this.props.getDeterminacionByIdAction(this.props.match.params.codigoPractica)
+        // const api = "/determinaciones/id/" + this.props.match.params.codigoPractica;
+        // this.handleUpdateClick(api);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            codigoPractica:nextProps.determinacion.codigoPractica,
+            descripcionPractica:nextProps.determinacion.descripcionPractica,
+            unidadBioquimica:nextProps.determinacion.unidadBioquimica,
+            unidadMedida:nextProps.determinacion.unidadMedida,
+            bitAlta:nextProps.determinacion.bitAlta,
+        })
+    }
+
+
     renderForm() {
+        const { fetching } = this.props
         return (
             <div className='Formularios'>
                 <Container className='btnHeader'>
@@ -58,7 +70,7 @@ class FormConsulta extends Component {
                     <Header as='h3' dividing>Búsqueda y modificación</Header>
                 </Container>
                 
-                {this.state.estado === '' ? <CircularProgress size={50}/> : 
+                {fetching ? <CircularProgress size={50}/> : 
                 <Form className='altasYConsultas'>
                     <Form.Group widths='equal'>
                         <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
@@ -112,18 +124,19 @@ class FormConsulta extends Component {
     }
 
     cancelar(e){
-        e.preventDefault();
-        this.setState({
-            modificacion: true,
-            cambios: false,
-            errorCodigoPractica: true,
-            errorDescripcionPractica: true,
-            errorUnidadBioquimica: true,
-        });
-        if (this.state.cambios){
-            const api = "/determinaciones/id/" + this.state.codigoPractica;
-            this.handleUpdateClick(api);
-        }
+        //TODO:agregar esto
+        // e.preventDefault();
+        // this.setState({
+        //     modificacion: true,
+        //     cambios: false,
+        //     errorCodigoPractica: true,
+        //     errorDescripcionPractica: true,
+        //     errorUnidadBioquimica: true,
+        // });
+        // if (this.state.cambios){
+        //     const api = "/determinaciones/id/" + this.state.codigoPractica;
+        //     this.handleUpdateClick(api);
+        // }
     }
 
     habilitarModificacion(e){
@@ -152,16 +165,18 @@ class FormConsulta extends Component {
                 "unidadMedida": this.state.unidadMedida,
             };
 
-            const api = '/determinaciones/modificar/' + this.props.match.params.codigoPractica;
+            this.props.alterDeterminacionAction(this.state.codigoPractica, data)
+            // const api = '/determinaciones/modificar/' + this.props.match.params.codigoPractica;
 
-            axios.put(api,data)
-                .then((response) => {
-                    alert('Se ha modificado la determinación con éxito.');
-                }, (error)=> {
-                    alert('No se ha podido modificar la determinación.');
-                    const api = "/determinaciones/id/" + this.props.match.params.codigoPractica ;
-                    this.handleUpdateClick(api);
-                });
+            // axios.put(api,data)
+            //     .then((response) => {
+            //         alert('Se ha modificado la determinación con éxito.');
+            //     }, (error)=> {
+            //         alert('No se ha podido modificar la determinación.');
+            //         const api = "/determinaciones/id/" + this.props.match.params.codigoPractica ;
+            //         this.handleUpdateClick(api);
+            //     });
+
 
             this.setState({
                 modificacion: true,
@@ -234,17 +249,18 @@ class FormConsulta extends Component {
     }
 
     alta(e){
-        axios.put(`/determinaciones/switch-alta/${this.state.codigoPractica}`).then(response => {
-            alert("Se ha dado de alta la determinación con éxito.");
-              this.setState({estado: true})
+        // axios.put(`/determinaciones/switch-alta/${this.state.codigoPractica}`).then(response => {
+        //     alert("Se ha dado de alta la determinación con éxito.");
+        //       this.setState({estado: true})
              
-              const api = "/determinaciones/id/" + this.state.codigoPractica ;
-              this.handleUpdateClick(api); 
-        }, (error) => {
-            if(this.state.bitAlta) {
-                alert(`No se ha podido dar de alta la determinación. Intentelo nuevamente.`)
-              }
-        })
+        //       const api = "/determinaciones/id/" + this.state.codigoPractica ;
+        //       this.handleUpdateClick(api); 
+        // }, (error) => {
+        //     if(this.state.bitAlta) {
+        //         alert(`No se ha podido dar de alta la determinación. Intentelo nuevamente.`)
+        //       }
+        // })
+        this.props.switchAltaAction(this.state.codigoPractica)
       }
 
 
@@ -266,4 +282,4 @@ const mapStateToProps = state =>({
     fetching: state.determinaciones.fetching,
 })
 
-export default connect(mapStateToProps, { getDeterminacionByIdAction, switchAltaAction  })(FormConsulta);
+export default connect(mapStateToProps, { getDeterminacionByIdAction, switchAltaAction, alterDeterminacionAction })(FormConsulta);
