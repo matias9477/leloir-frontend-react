@@ -124,18 +124,16 @@ class FormConsulta extends Component {
     }
 
     cancelar(e){
-        //TODO:agregar esto
-        // e.preventDefault();
-        // this.setState({
-        //     modificacion: true,
-        //     cambios: false,
-        //     errorCodigoPractica: true,
-        //     errorDescripcionPractica: true,
-        //     errorUnidadBioquimica: true,
-        // });
+        e.preventDefault();
+        this.setState({
+            modificacion: true,
+            cambios: false,
+            errorCodigoPractica: true,
+            errorDescripcionPractica: true,
+            errorUnidadBioquimica: true,
+        });
         // if (this.state.cambios){
-        //     const api = "/determinaciones/id/" + this.state.codigoPractica;
-        //     this.handleUpdateClick(api);
+        //     this.componentWillReceiveProps
         // }
     }
 
