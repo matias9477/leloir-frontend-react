@@ -6,10 +6,6 @@ import DettalleTransacciones from './DetalleTransacciones';
 
 const columns = [
   {
-    dataField: 'idTransaccion',
-    text: 'Id',
-  },
-  {
     dataField: 'fecha',
     text: 'Fecha',
   },

@@ -5,10 +5,6 @@ import './cajaStyles.css';
 
 const columns = [
   {
-    dataField: 'idDetalleTransaccion',
-    text: 'Id',
-  },
-  {
     dataField: 'detalle',
     text: 'Detalle',
   },
