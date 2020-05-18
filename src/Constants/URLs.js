@@ -15,7 +15,7 @@ export const urlAltaDeterminacion = '/determinaciones/add'
 export const urlSwitchAltaDeterminacion = '/determinaciones/switch-alta/'
 export const urlGetDeterminacionById = '/determinaciones/id/'
 export const urlConsultaDeterminacion = '/determinaciones/consulta/'
-
+export const urlAlterDeterminacion = '/determinaciones/modificar/'
 
 export const urlMuestras = '/muestras/all'
 export const urlTiposMuestras = '/tipos_muestras/all'

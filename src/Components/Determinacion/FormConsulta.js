@@ -266,4 +266,4 @@ const mapStateToProps = state =>({
     fetching: state.determinaciones.fetching,
 })
 
-export default connect(mapStateToProps, { getDeterminacionByIdAction })(FormConsulta);
+export default connect(mapStateToProps, { getDeterminacionByIdAction, switchAltaAction  })(FormConsulta);
