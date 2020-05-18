@@ -1,45 +1,43 @@
-import React, { Component } from "react";
-import BootstrapTable from "react-bootstrap-table-next";
-import "./../styles.css";
-import "./cajaStyles.css";
-import DettalleTransacciones from "./DetalleTransacciones";
+import React, { Component } from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import './../styles.css';
+import './cajaStyles.css';
+import DettalleTransacciones from './DetalleTransacciones';
 
 const columns = [
   {
-    dataField: "idTransaccion",
-    text: "Id",
+    dataField: 'idTransaccion',
+    text: 'Id',
   },
   {
-    dataField: "fecha",
-    text: "Fecha",
+    dataField: 'fecha',
+    text: 'Fecha',
   },
   {
-    dataField: "concepto",
-    text: "Concepto",
+    dataField: 'concepto',
+    text: 'Concepto',
   },
   {
-    dataField: "descripcion",
-    text: "Descripción",
+    dataField: 'descripcion',
+    text: 'Descripción',
   },
   {
-    dataField: "importe",
-    text: "Importe",
+    dataField: 'importe',
+    text: 'Importe',
   },
   {
-    dataField: "efectivo",
-    text: "Efectivo",
+    dataField: 'efectivo',
+    text: 'Efectivo',
   },
 ];
-
 
 const expandRow = {
   renderer: (row) => (
     <DettalleTransacciones detalleTransacciones={row.detalleTransacciones} />
   ),
   onlyOneExpanding: true,
-  parentClassName: 'reset-expansion-style'
+  parentClassName: 'reset-expansion-style',
 };
-
 
 class Transacciones extends Component {
   constructor(props) {
@@ -48,12 +46,12 @@ class Transacciones extends Component {
   render() {
     return (
       <BootstrapTable
-        keyField="idTransaccion"
+        keyField='idTransaccion'
         columns={columns}
         expandRow={expandRow}
         data={this.props.transacciones}
         rowClasses='rowStyle'
-        headerWrapperClasses="headerStyle"
+        headerWrapperClasses='headerStyle'
         hover={true}
       />
     );

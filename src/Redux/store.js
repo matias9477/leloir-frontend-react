@@ -1,13 +1,13 @@
-import { createStore, combineReducers, compose, applyMiddleware } from "redux";
-import patientsReducer from "./patientsDuck";
-import userReducer from "./userDuck";
-import obrasSocialesReducer from "./obrasSocialesDuck";
-import determinacionesReducer from "./determinacionesDuck";
-import analisisReducer from "./analisisDuck";
-import muestrasReducer from "./muestrasDuck";
-import cajaReducer from "./cajaDuck";
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+import patientsReducer from './patientsDuck';
+import userReducer from './userDuck';
+import obrasSocialesReducer from './obrasSocialesDuck';
+import determinacionesReducer from './determinacionesDuck';
+import analisisReducer from './analisisDuck';
+import muestrasReducer from './muestrasDuck';
+import cajaReducer from './cajaDuck';
 
-import thunk from "redux-thunk";
+import thunk from 'redux-thunk';
 
 //creation of the rootreducer (reducer that is composed of all the other reducers using combinereducers)
 let rootReducer = combineReducers({

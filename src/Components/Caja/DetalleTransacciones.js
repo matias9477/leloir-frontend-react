@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import BootstrapTable from "react-bootstrap-table-next";
-import "./../styles.css";
-import "./cajaStyles.css";
+import React, { Component } from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import './../styles.css';
+import './cajaStyles.css';
 
 const columns = [
   {
-    dataField: "idDetalleTransaccion",
-    text: "Id",
+    dataField: 'idDetalleTransaccion',
+    text: 'Id',
   },
   {
-    dataField: "detalle",
-    text: "Detalle",
+    dataField: 'detalle',
+    text: 'Detalle',
   },
   {
-    dataField: "idAnalisis",
-    text: "Observaciones",
+    dataField: 'idAnalisis',
+    text: 'Observaciones',
   },
   {
-    dataField: "formaPago",
-    text: "Forma de Pago",
+    dataField: 'formaPago',
+    text: 'Forma de Pago',
   },
   {
-    dataField: "importe",
-    text: "Importe",
+    dataField: 'importe',
+    text: 'Importe',
   },
 ];
 
@@ -34,11 +34,11 @@ class DetalleTransacciones extends Component {
   render() {
     return (
       <BootstrapTable
-        keyField="idDetalleTransaccion"
+        keyField='idDetalleTransaccion'
         columns={columns}
         data={this.props.detalleTransacciones}
-        headerWrapperClasses="subHeaderStyle"
-        rowClasses="expandRowStyle"
+        headerWrapperClasses='subHeaderStyle'
+        rowClasses='expandRowStyle'
       />
     );
   }

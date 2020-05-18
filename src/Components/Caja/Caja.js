@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Header } from "semantic-ui-react";
-import SyncLoader from "react-spinners/SyncLoader";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Header } from 'semantic-ui-react';
+import SyncLoader from 'react-spinners/SyncLoader';
 
-import { getTransaccionesAction } from "../../Redux/cajaDuck";
-import MenuOpciones from "../MenuOpciones";
-import Transacciones from "./Transacciones";
-import "./../styles.css";
-import "./cajaStyles.css";
+import { getTransaccionesAction } from '../../Redux/cajaDuck';
+import MenuOpciones from '../MenuOpciones';
+import Transacciones from './Transacciones';
+import './../styles.css';
+import './cajaStyles.css';
 
 class Caja extends Component {
   constructor(props) {
@@ -27,20 +27,20 @@ class Caja extends Component {
       <div>
         <MenuOpciones />
         {fetching ? (
-          <div className="spinner">
+          <div className='spinner'>
             <SyncLoader
               size={10}
               margin={5}
-              color={"black"}
+              color={'black'}
               loading={fetching}
             />
           </div>
         ) : (
-            <div className="listadoCaja">
-              <Header as="h2">Transacciones</Header>
-              <Transacciones transacciones={this.props.transacciones} />
-            </div>
-          )}
+          <div className='listadoCaja'>
+            <Header as='h2'>Transacciones</Header>
+            <Transacciones transacciones={this.props.transacciones} />
+          </div>
+        )}
       </div>
     );
   }
