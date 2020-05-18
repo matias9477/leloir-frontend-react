@@ -7,8 +7,8 @@ pipelines:
         deployment: Test
         script:
           - eval $(aws ecr get-login --region ${AWS_REGION} --no-include-email)
-          - docker build -t $AWS_CONTAINER_REGISTRY:front-$BITBUCKET_BUILD_NUMBER .
-          - docker push $AWS_CONTAINER_REGISTRY:front-$BITBUCKET_BUILD_NUMBER
+          - docker build -t $AWS_CONTAINER_REGISTRY:latest .
+          - docker push $AWS_CONTAINER_REGISTRY:latest
         services:
           - docker
 definitions:
