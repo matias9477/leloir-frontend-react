@@ -50,9 +50,9 @@ export default function reducer(state = initialData, action){
         case EMITIR_ANALISIS:
             return { ...state, fetching: true }
         case EMITIR_ANALISIS_SUCCESS:
-            return { ...state, fetching: false }
+            return { ...state, fetching: false, upToDatePendientes: false }
         case EMITIR_ANALISIS_ERROR:
-            return { ...state, fetching: false, error: action.payload }
+            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
 
         case GET_ANALISIS_PENDIENTES:
             return { ...state, fetching: true }
@@ -119,6 +119,7 @@ export let getAnalisisByIdAction = (id) => (dispatch, getState) => {
 }
 
 export let emitirAnalisisAction = (id) => (dispatch, getState) => {
+    const urlBase = window.document.location.pathname
 
     dispatch({
         type: EMITIR_ANALISIS,
@@ -136,7 +137,11 @@ export let emitirAnalisisAction = (id) => (dispatch, getState) => {
         dispatch({
             type: EMITIR_ANALISIS_SUCCESS,
         })
-        return dispatch(getAnalisisByIdAction(id))
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
+       
     })
     .catch(error=>{
         dispatch({
@@ -147,7 +152,7 @@ export let emitirAnalisisAction = (id) => (dispatch, getState) => {
 
 }
 
-export let getAnalisisPendientesAction = id => (dispatch, getState) => {
+export let getAnalisisPendientesAction = () => (dispatch, getState) => {
     const state = getState()
 
     if (state.analisis.upToDatePendientes){
