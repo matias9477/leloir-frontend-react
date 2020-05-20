@@ -6,7 +6,7 @@ import SyncLoader from "react-spinners/SyncLoader"
 import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determinacionesDuck'
 import MenuOpciones from "../MenuOpciones";
 import {titleCase} from './../../Services/MetodosDeValidacion';
-import { urlConsultaDeterminacion } from "../../Constants/URLs"
+import { urlConsultaForm } from "../../Constants/URLs"
 import {nroPorPagina} from "../../Constants/utils";
 import './../styles.css';
 
@@ -230,7 +230,7 @@ class Determinaciones extends Component {
                                                 onClick={() => window.confirm(this.mensajeConfirmacion(determinacion)) ? this.bitInverse(determinacion) : null}>
                                                 {this.estado(determinacion.bitAlta)}
                                             </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to={`${urlConsultaDeterminacion}${determinacion.codigoPractica}`}
+                                            <Dropdown.Item as={Link} to={`${urlConsultaForm}${determinacion.codigoPractica}`}
                                                            exact='true'>
                                                 Ver/Modificar
                                             </Dropdown.Item>
