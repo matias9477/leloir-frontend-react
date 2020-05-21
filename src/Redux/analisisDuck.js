@@ -221,7 +221,7 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
             type: CARGAR_RESULTADO_ERROR,
             payload: error.message
         })
-        return dispatch(alert('No se pudo cargar el resultado, intente nuevamente.'))
+        alert('No se pudo cargar el resultado, intente nuevamente.')
     })
 
 
@@ -244,7 +244,7 @@ export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
             type: REVISAR_RESULTADO_ERROR,
             payload: error.message
         })
-        return dispatch(alert('No se pudo cargar la revisión del resultado, intente nuevamente.'))
+        alert('No se pudo cargar la revisión del resultado, intente nuevamente.')
     })
 }
 
