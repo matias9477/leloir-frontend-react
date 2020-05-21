@@ -76,7 +76,7 @@ class FormConsulta extends Component {
                         className={this.state.errorCodigoPractica ? null : 'error'}
                         />
 
-                        <Form.Field label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
+                        <Form.Field required label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
                         value={this.state.descripcionPractica} 
                         disabled={this.state.modificacion}
                         onChange={this.cambioDescripcionPractica}

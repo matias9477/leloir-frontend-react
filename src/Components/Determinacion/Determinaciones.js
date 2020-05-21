@@ -246,7 +246,7 @@ class Determinaciones extends Component {
                     </table>
                     <Pagination
                         activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
+                        totalPages={this.state.filter === '' ? Math.ceil((this.props.determinaciones.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
                 </div>
