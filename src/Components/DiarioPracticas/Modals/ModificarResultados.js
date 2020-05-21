@@ -88,7 +88,7 @@ class ModificarResultados extends Component {
                         size='small'
                         disabled={!this.state.cambios}
                         onClick={this.handleSubmit}
-                    > Modificar </Button>
+                    > Guardar </Button>
                 </div>
             ) 
         }
