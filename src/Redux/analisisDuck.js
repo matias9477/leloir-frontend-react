@@ -9,6 +9,7 @@ let initialData = {
     analisisPendientes: [],
     upToDatePendientes: false,
     fetchingAnalisisPendientes: false,
+    fetchingAnalisisById: false,
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -50,11 +51,11 @@ export default function reducer(state = initialData, action){
             return { ...state, fetching:false, analisisAll: action.payload }
 
         case GET_ANALISIS_BY_ID:
-            return { ...state, fetching: true }
+            return { ...state, fetchingAnalisisById: true }
         case GET_ANALISIS_BY_SUCCESS:
-            return { ...state, fetching: false, analisisById: action.payload }
+            return { ...state, fetchingAnalisisById: false, analisisById: action.payload }
         case GET_ANALISIS_BY_ERROR:
-            return { ...state, fetching: false, error: action.payload }
+            return { ...state, fetchingAnalisisById: false, error: action.payload }
 
         case EMITIR_ANALISIS:
             return { ...state, fetching: true }
@@ -205,7 +206,8 @@ export let getAnalisisPendientesAction = () => (dispatch, getState) => {
 }
 
 export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
-   
+    const urlBase = window.document.location.pathname
+    
     dispatch({
         type: CARGAR_RESULTADO,
     })
@@ -214,7 +216,10 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
         dispatch({
             type: CARGAR_RESULTADO_SUCCESS,
         })
-        return dispatch(getAnalisisPendientesAction())
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
     })
     .catch(error=>{
         dispatch({
@@ -228,7 +233,8 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
 }
 
 export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
-   
+    const urlBase = window.document.location.pathname
+    
     dispatch({
         type: REVISAR_RESULTADO,
     })
@@ -237,7 +243,10 @@ export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
         dispatch({
             type: REVISAR_RESULTADO_SUCCESS,
         })
-        return dispatch(getAnalisisPendientesAction())
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
     })
     .catch(error=>{
         dispatch({

@@ -345,7 +345,6 @@ class ConsultaAnalisis extends Component {
                                 size={10}
                                 margin={5}
                                 color={"black"}
-                                loading={this.state.analisis===''}
                             />
                             </div> :
             
@@ -355,7 +354,6 @@ class ConsultaAnalisis extends Component {
                                 </Grid.Column>
                                 <Grid.Column>
                                     {this.determinacionesRender()}
-                                    {this.handleModalContent()}
                                 </Grid.Column>
                                 <Grid.Column>
                                     {this.muestrasRender()}
@@ -363,6 +361,8 @@ class ConsultaAnalisis extends Component {
                             </Grid.Row>
                         }
                     </Grid>
+                    
+                    {this.handleModalContent()}
             </div>
         </div>
     )
@@ -405,7 +405,7 @@ class ConsultaAnalisis extends Component {
 
 
 const mapStateToProps = state => ({
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisisById,
     tiposMuestras: state.muestras.tiposMuestras,
     analisis: state.analisis.analisisById,
 })

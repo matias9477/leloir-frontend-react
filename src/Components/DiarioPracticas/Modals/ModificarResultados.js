@@ -146,7 +146,7 @@ ModificarResultados.propTypes = {
 
 const mapStateToProps = state => ({
     analisis: state.analisis.analisisById,
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisisById,
 })
 
 export default connect(mapStateToProps, { cargarResultadosAction, getAnalisisByIdAction })(ModificarResultados)
