@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -8,6 +8,7 @@ let initialData = {
     analisisById: '',
     analisisPendientes: [],
     upToDatePendientes: false,
+    fetchingAnalisisPendientes: false,
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -27,6 +28,10 @@ let GET_ANALISIS_PENDIENTES = 'GET_ANALISIS_PENDIENTES'
 let GET_ANALISIS_PENDIENTES_SUCCESS = 'GET_ANALISIS_PENDIENTES_SUCCESS'
 let GET_ANALISIS_PENDIENTES_ERROR = 'GET_ANALISIS_PENDIENTES_ERROR'
 let GET_ANALISIS_PENDIENTES_FROM_STORE = 'GET_ANALISIS_PENDIENTES_FROM_STORE'
+
+let CARGAR_RESULTADO = 'CARGAR_RESULTADO'
+let CARGAR_RESULTADO_SUCCESS = 'CARGAR_RESULTADO_SUCCESS'
+let CARGAR_RESULTADO_ERROR = 'CARGAR_RESULTADO_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -55,13 +60,20 @@ export default function reducer(state = initialData, action){
             return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
 
         case GET_ANALISIS_PENDIENTES:
-            return { ...state, fetching: true }
+            return { ...state, fetchingAnalisisPendientes: true }
         case GET_ANALISIS_PENDIENTES_SUCCESS:
-            return { ...state, fetching: false, analisisPendientes: action.payload, upToDatePendientes:true }
+            return { ...state, fetchingAnalisisPendientes: false, analisisPendientes: action.payload, upToDatePendientes:true }
         case GET_ANALISIS_PENDIENTES_ERROR:
-            return { ...state, fetching: false, error: action.payload, upToDatePendientes: false }
+            return { ...state, fetchingAnalisisPendientes: false, error: action.payload, upToDatePendientes: false }
         case GET_ANALISIS_PENDIENTES_FROM_STORE:
-            return { ...state, fetching:false, analisisPendientes: action.payload }
+            return { ...state, fetchingAnalisisPendientes:false, analisisPendientes: action.payload }
+
+        case CARGAR_RESULTADO:
+            return { ...state, fetching: true }
+        case CARGAR_RESULTADO_SUCCESS:
+            return { ...state, fetching: false, upToDatePendientes: false }
+        case CARGAR_RESULTADO_ERROR:
+            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
 
         default:
             return state
@@ -178,4 +190,26 @@ export let getAnalisisPendientesAction = () => (dispatch, getState) => {
             })
         })
     }
+}
+
+export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
+   
+    dispatch({
+        type: CARGAR_RESULTADO,
+    })
+    return axios.post(urlCargarResultados + id, data)
+    .then(res=>{
+        dispatch({
+            type: CARGAR_RESULTADO_SUCCESS,
+        })
+        return dispatch(getAnalisisPendientesAction())
+    })
+    .catch(error=>{
+        dispatch({
+            type: CARGAR_RESULTADO_ERROR,
+            payload: error.message
+        })
+    })
+
+
 }

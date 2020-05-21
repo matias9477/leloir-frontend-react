@@ -162,7 +162,7 @@ class DiarioPracticas extends Component {
 
 const mapStateToProps = state => ({  
     analisisPendientes: state.analisis.analisisPendientes,
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisisPendientes,
 })
 
 export default connect(mapStateToProps, { emitirAnalisisAction, getAnalisisPendientesAction })(DiarioPracticas)
