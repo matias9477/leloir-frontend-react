@@ -12,9 +12,8 @@ class ModificarResultados extends Component {
         super(props);
         this.state = {
             show: false,
-            currentAnalisisID: null,
             currentAnalisis: null,
-            resultados: [],
+            cambios: false,
         };
     }
 
@@ -47,9 +46,10 @@ class ModificarResultados extends Component {
         let analisisCopy = JSON.parse(JSON.stringify(this.state.currentAnalisis))
 
         analisisCopy.determinaciones[e.target.name].resultado = e.target.value
-        console.log(analisisCopy)
+     
         this.setState({
-            currentAnalisis: analisisCopy 
+            currentAnalisis: analisisCopy,
+            cambios: true 
         }) 
     }
 
@@ -57,45 +57,39 @@ class ModificarResultados extends Component {
     renderModificacionResultadosModal = () => {
         if (this.state.currentAnalisis!==null && this.state.currentAnalisis.determinaciones!==undefined && this.state.currentAnalisis.determinaciones.length>0) {
             return (
-                <Table basic='very' compact='very'>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Código</Table.HeaderCell>
-                            <Table.HeaderCell>Determinación</Table.HeaderCell>
-                            <Table.HeaderCell>Resultado</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header> 
+                <div>
+                    <Table basic='very' compact='very'>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Código</Table.HeaderCell>
+                                <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                <Table.HeaderCell>Resultado</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header> 
 
-                    <Table.Body>
-                        {this.props.analisis.determinaciones.map((det, index) => {
-                            return( 
-                                <Table.Row  key={index} value={det}>
-                                    <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
-                                    <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                                    <Table.Cell>
-                                        <Input name={index} 
-                                        value={this.state.currentAnalisis.determinaciones[index].resultado} 
-                                        placeholder='Ingrese resultado...' onChange={this.changeResultado}/>
-                                        </Table.Cell>
-                                </Table.Row>
-                            )
-                        })}
-                    </Table.Body>
-
-                    <Table.Footer fullWidth>
-                        <Table.Row>
-                            <Table.HeaderCell />
-                            <Table.HeaderCell colSpan='4'>
-                                <Button
-                                    color='green'
-                                    floated='right'
-                                    size='small'
-                                    onClick={this.handleSubmit}
-                                > Modificar </Button>
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Footer>
-                </Table>
+                        <Table.Body>
+                            {this.props.analisis.determinaciones.map((det, index) => {
+                                return( 
+                                    <Table.Row  key={index} value={det}>
+                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                        <Table.Cell>
+                                            <Input name={index} 
+                                            value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                            placeholder='Ingrese resultado...' onChange={this.changeResultado}/>
+                                            </Table.Cell>
+                                    </Table.Row>
+                                )
+                            })}
+                        </Table.Body>
+                    </Table>
+                    <Button
+                        color='green'
+                        size='small'
+                        disabled={!this.state.cambios}
+                        onClick={this.handleSubmit}
+                    > Modificar </Button>
+                </div>
             ) 
         }
     }

@@ -209,6 +209,7 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
             type: CARGAR_RESULTADO_ERROR,
             payload: error.message
         })
+        return dispatch(alert('No se pudo cargar el resultado, intente nuevamente.'))
     })
 
 
