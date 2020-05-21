@@ -15,6 +15,7 @@ docker-compose down --rmi all
 
 echo " [+]  $(date) : part 3 - Clean docker env"
 docker system prune -f
+docker volume prune -f
 
 echo " [+]  $(date) : part 4 - Pulling new images"
 eval "$(aws ecr get-login --region us-east-2 --no-include-email)"
