@@ -1,11 +1,12 @@
 import axios from 'axios'
-import {urlDeterminaciones, urlAltaDeterminacion, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
+import {urlDeterminaciones, urlAlterDeterminacion, urlAltaDeterminacion, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
 
 let initialData = {
     fetching: false,
     determinaciones: [],
     upToDateAllDeterminaciones: false,
     determinacion: '',
+    upToDateDeterminacionById: false,
 }
 
 let GET_DETERMINACIONES = "GET_DETERMINACIONES"
@@ -24,6 +25,10 @@ let GET_DETERMINACION_BY_ID_SUCCESS = 'GET_DETERMINACION_BY_ID_SUCCESS'
 let BIT_INVERSE = 'BIT_INVERSE'
 let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
 let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
+
+let ALTER_DETERMINACION = 'ALTER_DETERMINACION'
+let ALTER_DETERMINACION_SUCCESS = 'ALTER_DETERMINACION_SUCCESS'
+let ALTER_DETERMINACION_ERROR = 'ALTER_DETERMINACION_ERROR'
 
 
 export default function reducer (state=initialData, action){
@@ -57,6 +62,12 @@ export default function reducer (state=initialData, action){
     case BIT_INVERSE_SUCCESS:
         return {...state, fetching:false, upToDateAllDeterminaciones:false}
 
+    case ALTER_DETERMINACION:
+        return {...state, fetching:true}
+    case ALTER_DETERMINACION_SUCCESS:
+        return {...state, fetching:false, upToDateAllDeterminaciones:false, upToDateDeterminacionById:false}
+    case ALTER_DETERMINACION_ERROR:
+        return {...state, fetching:false, error:action.payload}
     default:
         return state
     }
@@ -107,6 +118,26 @@ export let addDeterminacionAction = (data) => (dispatch, getState) =>{
             payload: err.message
         })
         alert(`No se ha podido registrar la determinación ${data.descripcionPractica}. Por favor intente nuevamente`)
+    })
+}
+
+export let alterDeterminacionAction = (id, data) => (dispatch, getState) =>{
+    dispatch({
+        type: ALTER_DETERMINACION
+    })
+    return axios.put(`${urlAlterDeterminacion}${id}`, data)
+    .then(res=>{
+        dispatch({
+            type: ALTER_DETERMINACION_SUCCESS
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('Se ha modificado la determinación con éxito.'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ALTER_DETERMINACION_ERROR,
+            payload: err.message
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('No se ha podido modificar la determinaciónl. Por favor intente nuevamente.'))
     })
 }
 
