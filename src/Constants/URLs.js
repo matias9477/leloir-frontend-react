@@ -15,7 +15,8 @@ export const urlAltaDeterminacion = '/api/determinaciones/add'
 export const urlSwitchAltaDeterminacion = '/api/determinaciones/switch-alta/'
 export const urlGetDeterminacionById = '/api/determinaciones/id/'
 export const urlConsultaDeterminacion = '/api/determinaciones/consulta/'
-
+export const urlAlterDeterminacion = '/api/determinaciones/modificar/'
+export const urlConsultaForm = '/determinaciones/consulta/'
 
 export const urlMuestras = '/api/muestras/all'
 export const urlTiposMuestras = '/api/tipos_muestras/all'
@@ -43,4 +44,4 @@ export const urlAnalisis = '/api/analisis/all'
 export const urlCargarResultados = '/api/analisis/cargar-resultados/'
 export const urlAprobarResultados = '/api/analisis/aprobar-resultados/'
 
-export const urlTransacciones = '/transaccion/all'
+export const urlTransacciones = '/api/transaccion/all'
