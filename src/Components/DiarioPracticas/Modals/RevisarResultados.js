@@ -1,199 +1,176 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
-import {urlAprobarResultados, urlGetAnalisis} from "../../../Constants/URLs";
-import {Button, Divider, Form} from "semantic-ui-react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import {Modal} from "./ModalAnalysisInput";
-import Grid from "semantic-ui-react/dist/commonjs/collections/Grid";
-import Container from "semantic-ui-react/dist/commonjs/elements/Container";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { Button, Divider, Table } from 'semantic-ui-react'
+import SyncLoader from 'react-spinners/SyncLoader'
+
+import { Modal } from './ModalAnalysisInput'
+import { getAnalisisByIdAction, revisarResultadosAction } from '../../../Redux/analisisDuck'
+
+const estadosDeterminaciones = {
+    APROBADO: 'APROBADO',
+    REPETIR: 'REPETIR',
+}
 
 class RevisarResultados extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             show: false,
-            currentAnalisisID: null,
             currentAnalisis: null,
-            resultados: [],
-        };
+            cambios: false,
+        }
     }
 
     componentDidMount() {
+        this.props.getAnalisisByIdAction(this.props.idAnalisis)
         this.showModal()
+    }
+
+    componentWillReceiveProps = next => {
+        this.setState({
+            currentAnalisis: next.analisis
+        })
     }
 
     showModal = () => {
         this.setState({
             show: true,
-        });
-        this.getAnalisis(this.props.idAnalisis)
-    };
+        })
+    }
 
     hideModal = () => {
-        const {callback} = this.props;
+        const {callback} = this.props
         if (callback !== undefined) {
             callback()
         }
-    };
+    }
 
-    getAnalisis = (idAnalisis) => {
-        if (idAnalisis != null) {
-            axios.get((urlGetAnalisis + idAnalisis)).then(resolve => {
-                resolve.data.determinaciones.map(detalleanalisis => {
-                    let repetir = null;
-                    if (detalleanalisis.estadoDetalleAnalisis.nombre === 'APROBADO') repetir = false;
-                    else {
-                        if (detalleanalisis.estadoDetalleAnalisis.nombre === 'REPETIR') repetir = true;
-                    }
-                    this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado, repetir);
-                    return true;
-                });
-                this.setState({currentAnalisis: resolve.data});
-            }, (error) => {
-                console.log('Error get tipo', error.message);
-                return (<div><h1> Error!</h1></div>)
-            });
-        }
-    };
+    changeResult = (index, state, idState) => {
+        let analisisCopy = JSON.parse(JSON.stringify(this.state.currentAnalisis))
 
-    addResultado = (codigopractica, descripcionpractica, resultado, repetir) => {
-        this.setState(prevState => ({
-                resultados: [
-                    ...prevState.resultados,
-                    {
-                        codigoPracticaDeterminaciones: codigopractica,
-                        descripcionPractica: descripcionpractica,
-                        resultado: resultado,
-                        repetir: repetir
-                    }
-                ]
-
-            }
-        ))
-    };
-
-    handleButtons = (idx, state) => {
-        if (this.state.resultados[idx].repetir === state) {
-            let resultados = [...this.state.resultados];
-            resultados[idx].repetir = null;
-            this.setState({resultados: resultados})
-        } else {
-            let resultados = [...this.state.resultados];
-            resultados[idx].repetir = state;
-            this.setState({resultados: resultados})
-        }
-    };
-
+        analisisCopy.determinaciones[index].estadoDetalleAnalisis.nombre = state
+        analisisCopy.determinaciones[index].estadoDetalleAnalisis.estadoId = idState
+     
+        this.setState({
+            currentAnalisis: analisisCopy,
+            cambios: true 
+        }) 
+        
+    }
 
     renderModificacionResultadosModal = () => {
-        if (this.state.currentAnalisis != null) {
+        if (this.state.currentAnalisis!==null && this.state.currentAnalisis.determinaciones!==undefined && this.state.currentAnalisis.determinaciones.length>0) {
             return (
-                <Form>
-                    <Grid columns={4} textAlign='left'>
-                        <Grid.Row>
-                            <Grid.Column width={10}>
-                                <Container text>
-                                    Determinacion
-                                </Container>
-                            </Grid.Column>
-                            <Grid.Column width={4}>
-                                <Container text>
-                                    Resultado
-                                </Container>
-                            </Grid.Column>
-                        </Grid.Row>
-                        {this.state.resultados.map((detalleAnalisis, idx) => {
+                <div>
+                    <Table basic='very' compact='very'>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Código</Table.HeaderCell>
+                                <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                <Table.HeaderCell>Confirmación</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header> 
 
-                                return (
-                                    <Grid.Row verticalAlign='middle'>
-
-                                        <Grid.Column width={10}>
-
-                                            <Container text>
-                                                {detalleAnalisis.descripcionPractica}
-                                            </Container>
-                                        </Grid.Column>
-                                        <Grid.Column width={3}>
-
-                                            <Container text>
-                                                <b>{this.state.resultados[idx].resultado}</b>
-                                            </Container>
-                                        </Grid.Column>
-                                        <Grid.Column width={3}>
+                        <Table.Body>
+                            {this.props.analisis.determinaciones.map((det, index) => {
+                                return( 
+                                    <Table.Row  key={index} value={det}>
+                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                        <Table.Cell>{det.resultado}</Table.Cell>
+                                        <Table.Cell>
                                             <Button.Group>
                                                 <Button
-                                                    active={this.state.resultados[idx].repetir}
-                                                    color={this.state.resultados[idx].repetir ? 'red' : null}
-                                                    onClick={() => this.handleButtons(idx, true)}>
+                                                    active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR }
+                                                    color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR ? 'red' : null}
+                                                    onClick={() => this.changeResult(index, estadosDeterminaciones.REPETIR, 4)}>
                                                     Repetir
                                                 </Button>
                                                 <Button.Or text='o'/>
                                                 <Button
-                                                    active={this.state.resultados[idx].repetir === false}
-                                                    color={this.state.resultados[idx].repetir === false ? 'green' : null}
-                                                    onClick={() => this.handleButtons(idx, false)}>
+                                                    active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO }
+                                                    color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO ? 'green' : null}
+                                                    onClick={() => this.changeResult(index, estadosDeterminaciones.APROBADO, 3)}>
                                                     Aprobar
                                                 </Button>
                                             </Button.Group>
-                                        </Grid.Column>
-
-                                    </Grid.Row>
-
+                                        </Table.Cell>
+                                    </Table.Row>
                                 )
-                            }
-                        )}
-                    </Grid>
-                    <br/>
-                    <br/>
-                    <Button color='green'
-                            type='submit'
-                            onClick={this.handleSubmit}>Guardar</Button>
-                </Form>
-            )
+                            })}
+                        </Table.Body>
+                    </Table>
+                    <Button
+                        basic color='blue'
+                        size='small'
+                        disabled={!this.state.cambios}
+                        onClick={this.handleSubmit}
+                    > Guardar </Button>
+                </div>
+            ) 
         }
-    };
+    }
+
 
     handleSubmit = (e) => {
-        let data = this.state.resultados;
-        let filteredData = data.filter(function (repetir) {
-            if (repetir != null) {
-                return repetir;
+        let temp = []
+
+        this.state.currentAnalisis.determinaciones.map((det, index)=>{
+            if(det.estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO ){
+                return (temp[index] = { "codigoPracticaDeterminaciones": det.determinacion.codigoPractica, "repetir": false })
+            } else if(det.estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR ){
+                return (temp[index] = { "codigoPracticaDeterminaciones": det.determinacion.codigoPractica, "repetir": true })
             }
-        });
+        })
 
-        data.map(resultado => delete resultado.descripcionPractica);
-        data.map(resultado => delete resultado.resultado);
+  	    this.props.revisarResultadosAction(this.props.idAnalisis, temp)
 
-        axios.post(urlAprobarResultados + this.props.idAnalisis, filteredData).then(resolve => {
-            return true
-        }, (error) => {
-            console.log('Error submit', error.message);
-        });
-        this.hideModal();
-    };
+        this.hideModal()
+    }
+
+    checkNombre(){
+        let nombre = this.props.analisis.paciente.nombre
+        if(this.props.analisis.paciente.apellido !== undefined){
+            nombre = this.props.analisis.paciente.nombre + ' ' + this.props.analisis.paciente.apellido
+        }
+        return nombre
+    }
 
     render() {
         return (
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                    <div>
-                        <h2>Revise los resultados de las siguientes determinaciones</h2>
+                    {(this.props.analisis !== '' && !this.props.fetching) ? 
+                        <div> 
+                            <h3>{this.checkNombre()}</h3>
+                            Revise los resultados de las determinaciones
+                            <Divider section/>
+                            {this.renderModificacionResultadosModal()} 
+                        </div>
 
-                        <Divider section/>
-
-                        <br/>
-                        {this.state.currentAnalisis != null ? this.renderModificacionResultadosModal() :
-                            <CircularProgress className={'centeredPosition'} size={50}/>}
-                    </div>
+                    :  <div className='spinnerPosition'>
+                            <SyncLoader
+                                size={10}
+                                margin={5}
+                                color={"black"}
+                            />
+                        </div>  
+                    }
                 </Modal>
             </div>
-        );
+        )
     }
 }
 
 RevisarResultados.propTypes = {
     idAnalisis: PropTypes.number,
-};
+}
 
-export default RevisarResultados;
+const mapStateToProps = state => ({
+    analisis: state.analisis.analisisById,
+    fetching: state.analisis.fetching,
+})
+
+export default connect(mapStateToProps, { getAnalisisByIdAction, revisarResultadosAction })(RevisarResultados)

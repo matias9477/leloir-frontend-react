@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -32,6 +32,10 @@ let GET_ANALISIS_PENDIENTES_FROM_STORE = 'GET_ANALISIS_PENDIENTES_FROM_STORE'
 let CARGAR_RESULTADO = 'CARGAR_RESULTADO'
 let CARGAR_RESULTADO_SUCCESS = 'CARGAR_RESULTADO_SUCCESS'
 let CARGAR_RESULTADO_ERROR = 'CARGAR_RESULTADO_ERROR'
+
+let REVISAR_RESULTADO = 'REVISAR_RESULTADO'
+let REVISAR_RESULTADO_SUCCESS = 'REVISAR_RESULTADO_SUCCESS'
+let REVISAR_RESULTADO_ERROR = 'REVISAR_RESULTADO_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -74,6 +78,14 @@ export default function reducer(state = initialData, action){
             return { ...state, fetching: false, upToDatePendientes: false }
         case CARGAR_RESULTADO_ERROR:
             return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+
+        case REVISAR_RESULTADO:
+            return { ...state, fetching: true }
+        case REVISAR_RESULTADO_SUCCESS:
+            return { ...state, fetching: false, upToDatePendientes: false }
+        case REVISAR_RESULTADO_ERROR:
+            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+
 
         default:
             return state
@@ -214,3 +226,25 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
 
 
 }
+
+export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
+   
+    dispatch({
+        type: REVISAR_RESULTADO,
+    })
+    return axios.post(urlAprobarResultados + id, data)
+    .then(res=>{
+        dispatch({
+            type: REVISAR_RESULTADO_SUCCESS,
+        })
+        return dispatch(getAnalisisPendientesAction())
+    })
+    .catch(error=>{
+        dispatch({
+            type: REVISAR_RESULTADO_ERROR,
+            payload: error.message
+        })
+        return dispatch(alert('No se pudo cargar la revisión del resultado, intente nuevamente.'))
+    })
+}
+
