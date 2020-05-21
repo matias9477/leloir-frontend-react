@@ -122,7 +122,8 @@ class RevisarResultados extends Component {
                 return (temp[index] = { "codigoPracticaDeterminaciones": det.determinacion.codigoPractica, "repetir": false })
             } else if(det.estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR ){
                 return (temp[index] = { "codigoPracticaDeterminaciones": det.determinacion.codigoPractica, "repetir": true })
-            }
+            } 
+            return true
         })
 
   	    this.props.revisarResultadosAction(this.props.idAnalisis, temp)
