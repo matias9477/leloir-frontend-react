@@ -27,7 +27,7 @@ import CajaContainer from './Components/Caja/CajaContainer';
 export default function Routes() {
     return (
         <Switch>
-            <AuthenticatedRoute exact path="/" component={App} />
+            <Route exact path="/" component={App} />
             <Route path="/login" component={LoginForm} />
             <AuthenticatedRoute exact path="/pacientes" component={TablaPaciente} />
             <AuthenticatedRoute exact path="/pacientes/add" component={FormAlta} />
