@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
 import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { nroPorPagina } from "../../Constants/utils"
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { getAnalisisAction } from '../../Redux/analisisDuck'
@@ -139,7 +140,7 @@ class TablaObraSocial extends React.Component {
 
         return(
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
 
                 <div className='tablaListadoHistorico'>
 
