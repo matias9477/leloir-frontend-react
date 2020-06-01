@@ -39,3 +39,11 @@
     margin-bottom: 1.2em;
 }
 
+.analisisAll {
+    width: 100%;
+    margin-top: 100px;
+}
+
+.analisisAll .ui.button {
+    margin-right: 5em;
+}

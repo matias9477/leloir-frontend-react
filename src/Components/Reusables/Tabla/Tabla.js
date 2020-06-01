@@ -2,8 +2,8 @@ import React from 'react';
 import { Header, Pagination, Input, Dropdown, Grid, Button } from 'semantic-ui-react';
 import {Link } from 'react-router-dom'
 
-import { nroPorPagina } from '../../Constants/utils'
-import { getHumanDate } from '../../Services/MetodosPaciente';
+import { nroPorPagina } from '../../../Constants/utils'
+import { getHumanDate } from '../../../Services/MetodosPaciente';
 import './tabla.css';
 
 
