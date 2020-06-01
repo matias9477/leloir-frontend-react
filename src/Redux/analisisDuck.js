@@ -1,11 +1,15 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlNuevoAnalisis } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados,  urlNuevoAnalisis } from './../Constants/URLs'
 
 let initialData = {
     fetchingAnalisis: false,
     analisisAll: [],
     upToDateAnalisisAll: false,
     analisisById: '',
+    analisisPendientes: [],
+    upToDatePendientes: false,
+    fetchingAnalisisPendientes: false,
+    fetchingAnalisisById: false,
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -24,6 +28,20 @@ let GET_ANALISIS_BY_ERROR = 'GET_ANALISIS_BY_ERROR'
 let EMITIR_ANALISIS = 'EMITIR_ANALISIS'
 let EMITIR_ANALISIS_SUCCESS = 'EMITIR_ANALISIS_SUCCESS'
 let EMITIR_ANALISIS_ERROR = 'EMITIR_ANALISIS_ERROR'
+
+let GET_ANALISIS_PENDIENTES = 'GET_ANALISIS_PENDIENTES'
+let GET_ANALISIS_PENDIENTES_SUCCESS = 'GET_ANALISIS_PENDIENTES_SUCCESS'
+let GET_ANALISIS_PENDIENTES_ERROR = 'GET_ANALISIS_PENDIENTES_ERROR'
+let GET_ANALISIS_PENDIENTES_FROM_STORE = 'GET_ANALISIS_PENDIENTES_FROM_STORE'
+
+let CARGAR_RESULTADO = 'CARGAR_RESULTADO'
+let CARGAR_RESULTADO_SUCCESS = 'CARGAR_RESULTADO_SUCCESS'
+let CARGAR_RESULTADO_ERROR = 'CARGAR_RESULTADO_ERROR'
+
+let REVISAR_RESULTADO = 'REVISAR_RESULTADO'
+let REVISAR_RESULTADO_SUCCESS = 'REVISAR_RESULTADO_SUCCESS'
+let REVISAR_RESULTADO_ERROR = 'REVISAR_RESULTADO_ERROR'
+
 
 export default function reducer(state = initialData, action){
     switch(action.type){
@@ -44,18 +62,42 @@ export default function reducer(state = initialData, action){
             return { ...state, fetchingAnalisis: false, error: action.payload, upToDateAnalisisAll: true }
 
         case GET_ANALISIS_BY_ID:
-            return { ...state, fetchingAnalisis: true }
+            return { ...state, fetchingAnalisisById: true }
         case GET_ANALISIS_BY_SUCCESS:
-            return { ...state, fetchingAnalisis: false, analisisById: action.payload }
+            return { ...state, fetchingAnalisisById: false, analisisById: action.payload }
         case GET_ANALISIS_BY_ERROR:
-            return { ...state, fetchingAnalisis: false, error: action.payload }
+            return { ...state, fetchingAnalisisById: false, error: action.payload }
 
         case EMITIR_ANALISIS:
             return { ...state, fetchingAnalisis: true }
         case EMITIR_ANALISIS_SUCCESS:
-            return { ...state, fetchingAnalisis: false }
+            return { ...state, fetchingAnalisis: false, upToDatePendientes: false }
         case EMITIR_ANALISIS_ERROR:
-            return { ...state, fetchingAnalisis: false, error: action.payload }
+            return { ...state, fetchingAnalisis: false, error: action.payload, upToDatePendientes: true }
+
+        case GET_ANALISIS_PENDIENTES:
+            return { ...state, fetchingAnalisisPendientes: true }
+        case GET_ANALISIS_PENDIENTES_SUCCESS:
+            return { ...state, fetchingAnalisisPendientes: false, analisisPendientes: action.payload, upToDatePendientes:true }
+        case GET_ANALISIS_PENDIENTES_ERROR:
+            return { ...state, fetchingAnalisisPendientes: false, error: action.payload, upToDatePendientes: false }
+        case GET_ANALISIS_PENDIENTES_FROM_STORE:
+            return { ...state, fetchingAnalisisPendientes:false, analisisPendientes: action.payload }
+
+        case CARGAR_RESULTADO:
+            return { ...state, fetching: true }
+        case CARGAR_RESULTADO_SUCCESS:
+            return { ...state, fetching: false, upToDatePendientes: false }
+        case CARGAR_RESULTADO_ERROR:
+            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+
+        case REVISAR_RESULTADO:
+            return { ...state, fetching: true }
+        case REVISAR_RESULTADO_SUCCESS:
+            return { ...state, fetching: false, upToDatePendientes: false }
+        case REVISAR_RESULTADO_ERROR:
+            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+
 
         default:
             return state
@@ -113,6 +155,7 @@ export let getAnalisisByIdAction = (id) => (dispatch, getState) => {
 }
 
 export let emitirAnalisisAction = (id) => (dispatch, getState) => {
+    const urlBase = window.document.location.pathname
 
     dispatch({
         type: EMITIR_ANALISIS,
@@ -130,7 +173,11 @@ export let emitirAnalisisAction = (id) => (dispatch, getState) => {
         dispatch({
             type: EMITIR_ANALISIS_SUCCESS,
         })
-        return dispatch(getAnalisisByIdAction(id))
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
+
     })
     .catch(error=>{
         dispatch({
@@ -162,3 +209,84 @@ export let addAnalisisAction = (data) => (dispatch, getState) =>{
 
     })
 }
+
+export let getAnalisisPendientesAction = () => (dispatch, getState) => {
+    const state = getState()
+
+    if (state.analisis.upToDatePendientes){
+        dispatch({
+            type: GET_ANALISIS_PENDIENTES_FROM_STORE,
+            payload: state.analisis.analisisPendientes
+        })
+    } else {
+        dispatch({
+            type: GET_ANALISIS_PENDIENTES
+        })
+        return axios.get(urlAnalisisPendientes)
+        .then(res=>{
+            dispatch({
+                type: GET_ANALISIS_PENDIENTES_SUCCESS,
+                payload: Object.values(res.data).flat()
+            })
+        })
+        .catch(error=>{
+            dispatch({
+                type: GET_ANALISIS_PENDIENTES_ERROR,
+                payload: error.message
+            })
+        })
+    }
+}
+
+export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
+    const urlBase = window.document.location.pathname
+
+    dispatch({
+        type: CARGAR_RESULTADO,
+    })
+    return axios.post(urlCargarResultados + id, data)
+    .then(res=>{
+        dispatch({
+            type: CARGAR_RESULTADO_SUCCESS,
+        })
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
+    })
+    .catch(error=>{
+        dispatch({
+            type: CARGAR_RESULTADO_ERROR,
+            payload: error.message
+        })
+        alert('No se pudo cargar el resultado, intente nuevamente.')
+    })
+
+
+}
+
+export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
+    const urlBase = window.document.location.pathname
+
+    dispatch({
+        type: REVISAR_RESULTADO,
+    })
+    return axios.post(urlAprobarResultados + id, data)
+    .then(res=>{
+        dispatch({
+            type: REVISAR_RESULTADO_SUCCESS,
+        })
+        if( urlBase === '/diario-practicas'){
+            return dispatch(getAnalisisPendientesAction())
+        } else
+            return dispatch(getAnalisisByIdAction(id))
+    })
+    .catch(error=>{
+        dispatch({
+            type: REVISAR_RESULTADO_ERROR,
+            payload: error.message
+        })
+        alert('No se pudo cargar la revisión del resultado, intente nuevamente.')
+    })
+}
+

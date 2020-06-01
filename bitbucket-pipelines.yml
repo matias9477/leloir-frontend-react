@@ -1,0 +1,27 @@
+image: atlassian/pipelines-awscli
+
+pipelines:
+  branches:
+    develop:
+      - step:
+          name: "Build & Push Image"
+          deployment: Test
+          script:
+            - eval $(aws ecr get-login --region ${AWS_REGION} --no-include-email)
+            - docker build -t $AWS_CONTAINER_REGISTRY:latest .
+            - docker push $AWS_CONTAINER_REGISTRY:latest
+          services:
+            - docker
+      - step:
+          name: "Deploy to Test Environment"
+          script:
+            - pipe: atlassian/ssh-run:0.2.5
+              variables:
+                SSH_USER: 'ubuntu'
+                SERVER: 'ec2-18-222-224-137.us-east-2.compute.amazonaws.com'
+                MODE: 'script'
+                COMMAND: 'deploy-script.sh'
+definitions:
+  services:
+    docker:
+      memory: 2048

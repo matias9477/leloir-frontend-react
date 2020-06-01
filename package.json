@@ -2,7 +2,7 @@
   "name": "leloir-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://ec2-18-222-224-137.us-east-2.compute.amazonaws.com",
+  "proxy": "http://localhost:8080",
   "devDependencies": {
     "react-scripts": "3.0.1"
   },
