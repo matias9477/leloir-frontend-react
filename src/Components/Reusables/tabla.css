@@ -1,0 +1,34 @@
+.filter {
+    margin-top: 3em;
+}
+
+.filter .ui.dropdown {
+    right: 35px;
+    font-size: 1.1em;
+}
+
+.filter .ui.input {
+    width: 200%;
+}
+
+.tabla {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.tabla .ui.header {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8em;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.tabla .ui.button {
+    background-color: transparent;
+}
+
+.listadosBaja {
+    color: rgb(163, 160, 160);
+}
