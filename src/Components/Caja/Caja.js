@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header } from 'semantic-ui-react';
-import SyncLoader from 'react-spinners/SyncLoader';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
 import MenuOpciones from '../MenuOpciones';
@@ -28,11 +28,9 @@ class Caja extends Component {
         <MenuOpciones />
         {fetching ? (
           <div className='spinner'>
-            <SyncLoader
-              size={10}
-              margin={5}
-              color={'black'}
-              loading={fetching}
+            <ClipLoader
+                size={60}
+                color={'black'}
             />
           </div>
         ) : (

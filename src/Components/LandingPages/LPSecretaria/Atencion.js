@@ -4,7 +4,7 @@ import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-u
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
-import SyncLoader from "react-spinners/SyncLoader"
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import { urlAnalisisPendientes } from '../../../Constants/URLs'
 import { checkAtributo } from '../../../Services/MetodosDeValidacion'
@@ -203,18 +203,18 @@ class Atencion extends Component {
              
                     <Container >
                         {this.props.fetching ?
-                            <SyncLoader
-                            css={{padding: '100px'}}
-                            size={10}
-                            margin={5}
-                            color={"black"}
-                            loading={this.props.fetching}
-                            /> :
-                        <div>
-                            {JSON.parse(localStorage.current) !== undefined ? 
-                            (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                            JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-                        </div>
+                            <div className='spinner'>
+                                 <ClipLoader
+                                     size={60}
+                                     color={'black'}
+                                 />
+                             </div> : 
+        
+                            <div>
+                                {JSON.parse(localStorage.current) !== undefined ? 
+                                (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                                JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                            </div>
                         }
                         
                         

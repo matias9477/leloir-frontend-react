@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
 import {Button, Container, Form, Header, Icon} from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
+
 import { addDeterminacionAction } from './../../Redux/determinacionesDuck' 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';

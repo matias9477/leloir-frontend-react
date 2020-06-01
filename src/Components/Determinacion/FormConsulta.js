@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux'
+
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
@@ -55,7 +55,12 @@ class FormConsulta extends Component {
                     </Button>
                 </Container>
                 
-                {fetching ? <CircularProgress size={50}/> : 
+                {fetching ? <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                    </div> : 
                 <Container>
                     <Form size='huge'>
                         <Form.Field control='input'

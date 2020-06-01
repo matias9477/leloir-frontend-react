@@ -1,11 +1,12 @@
-import React, {Component} from 'react'
-import {Button, Form, Label, Icon} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Button, Form, Label, Icon } from 'semantic-ui-react'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import ClipLoader from 'react-spinners/ClipLoader'
+
+import { loginAction } from '../../Redux/userDuck'
 import './../styles.css'
-import {withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {loginAction} from '../../Redux/userDuck'
-import {Link} from 'react-router-dom'
-import CircularProgress from '@material-ui/core/CircularProgress'
 
 class LoginComponent extends Component {
 
@@ -42,7 +43,15 @@ class LoginComponent extends Component {
         const { hasLoginFailed, fetching } = this.props
         return (
             <div>
-                {fetching === true ? <CircularProgress size={50}/> : 
+                {fetching === true ? 
+                    <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                    </div> 
+                
+                : 
                     <Form className='login' >
                         <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
                         onChange={this.cambioUsuario}
