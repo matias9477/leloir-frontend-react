@@ -80,8 +80,6 @@ body{
     margin: 90px 25px 25px;
 }
 
-
-
 .tablaDeterminaciones{
     width: 78%;
     margin: 25px;
@@ -106,6 +104,7 @@ body{
     margin-right: 25px;
     margin-left: 25px;
 }
+
 .centeredPosition {
     position: fixed;
     top: 50%;
@@ -115,3 +114,10 @@ body{
 .afluence{
     position: left;
 }
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+ }
