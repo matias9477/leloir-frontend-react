@@ -43,5 +43,6 @@ export const urlEmitirAnalisis = '/api/analisis/emitir-analisis/'
 export const urlAnalisis = '/api/analisis/all'
 export const urlCargarResultados = '/api/analisis/cargar-resultados/'
 export const urlAprobarResultados = '/api/analisis/aprobar-resultados/'
+export const urlNuevoAnalisis = '/api/analisis/add'
 
 export const urlTransacciones = '/api/transaccion/all'
