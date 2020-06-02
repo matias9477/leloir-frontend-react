@@ -48,7 +48,7 @@ body{
     flex-direction:row;
 }
 
-.error{
+.error {
     border-color: red;
 }
 
