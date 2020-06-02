@@ -4,7 +4,6 @@ import {Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
 import NavBar from '../NavBar/NavBar'
 import { nroPorPagina } from "../../Constants/utils"
 import { getHumanDate } from '../../Services/MetodosPaciente'

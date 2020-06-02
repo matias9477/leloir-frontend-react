@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Grid, Menu, Segment} from 'semantic-ui-react'
-import MenuLateral from "../MenuOpciones";
+import NavBar from '../NavBar/NavBar'
 import MiPerfil from "./MiPerfil";
 import NuevoUsuario from "./NuevoUsuario";
 
@@ -35,7 +35,7 @@ class Ajustes extends Component {
 
         return (
             <div className='union'>
-                <MenuLateral/>
+                <NavBar/>
                 <div className='tablaListadoHistorico'>
                     <Grid>
                         <Grid.Column width={4}>

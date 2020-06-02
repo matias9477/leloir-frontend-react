@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { addDeterminacionAction } from './../../Redux/determinacionesDuck' 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import './../styles.css';
 
 class FormAlta extends Component {
@@ -151,7 +151,7 @@ class FormAlta extends Component {
     render() {
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className="FormAlta">
                     {this.renderForm()}
                 </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import './NavBar.css'
-import { BrowserRouter as Router, Switch, Route, Link, withRouter } from 'react-router-dom';
-import Routes from '../../Routes'
+import { Link, withRouter } from 'react-router-dom';
+
 
 const NavBar = () =>(
 <body>

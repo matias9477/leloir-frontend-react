@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import MenuLateral from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import {Button, Card, List, Label} from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
@@ -147,7 +147,7 @@ class DiarioPracticas extends Component {
         const { fetching } = this.props
         return (
             <div className='union'>
-                <MenuLateral/>
+                <NavBar/>
                 <div className='tablaListadoHistorico'>
                     {fetching ?
                         <CircularProgress className={'centeredPosition'} size={50}/> : this.renderCards()}

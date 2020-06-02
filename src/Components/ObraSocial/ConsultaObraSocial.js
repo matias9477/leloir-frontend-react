@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
 import './obraSocialStyles.css'
@@ -133,7 +133,7 @@ class ConsultaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className='Formularios'>
 
           <Container className='btnHeader'>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import "./../../styles.css";
-import MenuOpciones from '../../MenuOpciones';
+import NavBar from '../../NavBar/NavBar'
 import Afluencia from './Afluencia';
 
 class LPSecretaria extends Component {
@@ -9,7 +9,7 @@ class LPSecretaria extends Component {
         return (
             
             <div className="union">
-                <MenuOpciones/>
+                <NavBar/>
                 <div className="avoidMenu">   
                     <Afluencia/>
                 </div>
