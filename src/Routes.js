@@ -21,6 +21,7 @@ import DiarioPracticas from './Components/DiarioPracticas/DiarioPracticas'
 import TablaAnalisis from './Components/Analisis/TablaAnalisis'
 import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis'
 import iFramePBI from './Components/Reportes/iFramePBI'
+import CajaContainer from './Components/Caja/CajaContainer'
 
 
 export default function Routes() {
@@ -53,6 +54,8 @@ export default function Routes() {
             <AuthenticatedRoute exact path='/diario-practicas' component={DiarioPracticas}/>
             
             <AuthenticatedRoute exact path='/reportes' component={iFramePBI}/>
+            
+            <AuthenticatedRoute exact path="/caja" component={CajaContainer} />
 
         </Switch>
     )
