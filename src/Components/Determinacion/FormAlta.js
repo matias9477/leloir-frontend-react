@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import {Button, Container, Form, Header, Icon} from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
 import { addDeterminacionAction } from './../../Redux/determinacionesDuck' 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
 import MenuOpciones from '../MenuOpciones';
-import './../styles.css';
+import './determinaciones.css';
 
 class FormAlta extends Component {
     constructor(props) {
@@ -23,61 +23,8 @@ class FormAlta extends Component {
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
         });
-        this.fetchDeterminacion = this.fetchDeterminacion.bind(this);
-        this.cambioCodigoPractica = this.cambioCodigoPractica.bind(this);
-        this.cambioDescripcionPractica = this.cambioDescripcionPractica.bind(this);
-        this.cambioUnidadBioquimica = this.cambioUnidadBioquimica.bind(this);
-        this.cambioUnidadMedida = this.cambioUnidadMedida.bind(this);
     }
-
-    renderForm() {
-        return (
-            <div className='Formularios'>
-                <Container className='btnHeader'>
-                    <Button className='boton' as={Link} to='/determinaciones' exact='true' floated='left' icon
-                            labelPosition='left' primary size='small'>
-                        <Icon name='arrow alternate circle left'/> Volver
-                    </Button>
-
-                    <Header as='h3' dividing>Registrar nueva Determinación</Header>
-                </Container>
-
-                <Form onSubmit={this.fetchDeterminacion} className='altasYConsultas'>
-
-                    <Form.Group widths='equal'>
-                        <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
-                        value={this.state.codigoPractica} 
-                        onChange={this.cambioCodigoPractica}
-                        className={this.state.errorCodigoPractica ? null : 'error'}
-                        />
-
-                        <Form.Field required label='Descripción Práctica' control='input' 
-                        placeholder='Descripción Práctica'
-                        value={this.state.descripcionPractica} 
-                        onChange={this.cambioDescripcionPractica}
-                        className={this.state.errorDescripcionPractica ? null : 'error'}/>
-                    </Form.Group>
-
-                    <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                    value={this.state.unidadBioquimica} 
-                    onChange={this.cambioUnidadBioquimica}
-                    className={this.state.errorUnidadBioquimica ? null : 'error'}
-                    />
-
-                    <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                    value={this.state.unidadMedida} 
-                    onChange={this.cambioUnidadMedida}/>
-
-                    <br/>
-
-                    <Button primary type="submit" onClick={this.fetchDeterminacion} className="boton"> Registrar Determinacion</Button>
-
-                </Form>
-            </div>
-
-        );
-    }
-
+    
     handleUpdateClick = () => {
         var data = {
             "bitAlta": true,
@@ -86,19 +33,19 @@ class FormAlta extends Component {
             "unidadBioquimica": this.state.unidadBioquimica,
             "unidadMedida": this.state.unidadMedida
         };
-
+        
         this.props.addDeterminacionAction(data)
     };
-
-    fetchDeterminacion(e) {
+    
+    fetchDeterminacion = (e) => {
         e.preventDefault();
-
+        
         const {codigoPractica, unidadBioquimica, descripcionPractica} = this.state;
-
+        
         const errorCodigoPractica= validateOnlyNumbersRequired(codigoPractica);
         const errorUnidadBioquimica = validateOnlyNumbersRequired(unidadBioquimica);
         const errorDescripcionPractica = validateRequiredStringNum(descripcionPractica);
-
+        
         if (errorCodigoPractica && errorUnidadBioquimica && errorDescripcionPractica) {
             this.handleUpdateClick()
             this.vaciadoCampos()
@@ -111,7 +58,7 @@ class FormAlta extends Component {
             })
         }
     }
-
+    
     vaciadoCampos() {
         this.setState({
             codigoPractica: '',
@@ -123,39 +70,84 @@ class FormAlta extends Component {
             errorUnidadMedida: true,
         })
     }
-
-    cambioCodigoPractica(e) {
+    
+    cambioCodigoPractica = (e) => {
         this.setState({
             codigoPractica: e.target.value
         })
     }
-
-    cambioDescripcionPractica(e) {
+    
+    cambioDescripcionPractica = (e) => {
         this.setState({
             descripcionPractica: e.target.value
         })
     }
-
-    cambioUnidadBioquimica(e) {
+    
+    cambioUnidadBioquimica = (e) => {
         this.setState({
             unidadBioquimica: e.target.value
         })
     }
 
-    cambioUnidadMedida(e) {
+    cambioUnidadMedida = (e) => {
         this.setState({
             unidadMedida: e.target.value
         })
     }
-
-
+    
+    
     render() {
         return (
             <div className='union'>
                 <MenuOpciones/>
-                <div className="FormAlta">
-                    {this.renderForm()}
+                <div className='registro'>
+                    <Container className='btnHeader'>
+                        <Button as={Link} to='/determinaciones' exact='true' floated='left' icon
+                                labelPosition='left' primary size='small'>
+                            <Icon name='arrow alternate circle left'/> Volver
+                        </Button>
+                    </Container>
+                  
+                    <Form size='huge'>                
+                        <Form.Field control='input' 
+                        value='Nueva Determinación' 
+                        id = 'headerConsulta'
+                        />
+                        <Divider id='divider'/>
+                        
+                    </Form>
+    
+                    <Form onSubmit={this.fetchDeterminacion}>
+    
+                        <Form.Group widths='equal'>
+                            <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
+                            value={this.state.codigoPractica} 
+                            onChange={this.cambioCodigoPractica}
+                            className={this.state.errorCodigoPractica ? null : 'error'}
+                            />
+    
+                            <Form.Field required label='Descripción Práctica' control='input' 
+                            placeholder='Descripción Práctica'
+                            value={this.state.descripcionPractica} 
+                            onChange={this.cambioDescripcionPractica}
+                            className={this.state.errorDescripcionPractica ? null : 'error'}/>
+                        </Form.Group>
+    
+                        <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
+                        value={this.state.unidadBioquimica} 
+                        onChange={this.cambioUnidadBioquimica}
+                        className={this.state.errorUnidadBioquimica ? null : 'error'}
+                        />
+    
+                        <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
+                        value={this.state.unidadMedida} 
+                        onChange={this.cambioUnidadMedida}/>
+    
+                        <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.fetchDeterminacion}> Registrar Determinacion</Button>
+    
+                    </Form>
                 </div>
+    
             </div>
         );
     }
