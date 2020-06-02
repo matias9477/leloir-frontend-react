@@ -54,6 +54,8 @@ export default function Routes() {
             <AuthenticatedRoute exact path='/diario-practicas' component={DiarioPracticas}/>
             
             <AuthenticatedRoute exact path='/reportes' component={iFramePBI}/>
+            
+            <AuthenticatedRoute exact path="/caja" component={CajaContainer} />
 
             <AuthenticatedRoute exact path="/caja" component={CajaContainer} />
 
