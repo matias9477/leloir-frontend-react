@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import MenuOpciones from '../MenuOpciones'
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
@@ -151,7 +151,12 @@ class ConsultaObraSocial extends Component {
             </Button>
           </Container>
 
-          {this.props.fetching ? <CircularProgress size={50}/> :
+          {this.props.fetching ? <div className='spinner'>
+              <ClipLoader
+                  size={60}
+                  color={'black'}
+              />
+            </div> :
 
             <Container>
               <Form size='huge'>                
