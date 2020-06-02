@@ -1,6 +1,6 @@
 import React from 'react'
 import './NavBar.css'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, withRouter } from 'react-router-dom';
 import Routes from '../../Routes'
 
 const NavBar = () =>(
@@ -119,4 +119,4 @@ const NavBar = () =>(
   </Router>
 )
 
-export default NavBar
+export default withRouter(NavBar)
