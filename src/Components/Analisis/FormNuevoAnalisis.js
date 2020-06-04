@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
@@ -172,7 +172,7 @@ class FormNuevoAnalisis extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         {this.state.loading ? <CircularProgress className={'centeredPosition'} size={50}/> : 
         <Form  className="btnHeader">
           <Button className='boton' as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>

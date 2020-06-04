@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form, Icon, Container } from 'semantic-ui-react'
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import {Link} from 'react-router-dom';
 import AltaPersona from './AltaPersona';
 import AltaAnimal from './AltaAnimal';
@@ -73,7 +73,7 @@ class FormAlta extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>      
