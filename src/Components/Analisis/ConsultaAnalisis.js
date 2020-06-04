@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
@@ -331,7 +331,7 @@ class ConsultaAnalisis extends Component {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
             <div className='unionConNavbar'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='formConsultaAnalisis'>
                     <Grid columns={3}>
                         <Grid.Row>

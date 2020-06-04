@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {loginAction} from '../../Redux/userDuck'
 import {Link} from 'react-router-dom'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import {Redirect} from 'react-router-dom';
 
 class LoginComponent extends Component {
 
@@ -39,7 +40,7 @@ class LoginComponent extends Component {
 
 
     render() {
-        const { hasLoginFailed, fetching } = this.props
+        const { hasLoginFailed, fetching, loggedIn } = this.props
         return (
             <div>
                 {fetching === true ? <CircularProgress size={50}/> : 
@@ -55,11 +56,9 @@ class LoginComponent extends Component {
                         className={hasLoginFailed ? 'error' : null}
                         />
                         
-                        <Link to='/'>
                             <Button exact='true' primary onClick={this.loginClicked}>
-                                Iniciar Sesión
+                                        Iniciar Sesión
                             </Button>
-                        </Link>
                         
                         {hasLoginFailed ?
                         <Label style={errorStyle}>
@@ -67,6 +66,7 @@ class LoginComponent extends Component {
                         </Label> : null }
                     </Form>
                 }
+                {loggedIn ? <Redirect to="/"/> : null}
             </div>
         )
     }
