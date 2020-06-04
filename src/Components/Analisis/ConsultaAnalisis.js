@@ -330,11 +330,11 @@ class ConsultaAnalisis extends Component {
     render() {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className='formConsultaAnalisis'>
-                    <Grid columns={3}>
-                        <Grid.Row>
+                <div className='avoidMenu'>
+                    <Grid columns={3} style={{marginLeft: '0px'}}>
+                        <Grid.Row style={{marginLeft: '0px'}}>
                             <Button as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                                 <Icon name='arrow alternate circle left' /> Volver
                             </Button>
@@ -362,9 +362,9 @@ class ConsultaAnalisis extends Component {
                     </Grid>
                     
                     {this.handleModalContent()}
+                </div>
             </div>
-        </div>
-    )
+        )
     }
 
     
