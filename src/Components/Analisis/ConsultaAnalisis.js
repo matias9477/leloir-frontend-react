@@ -1,18 +1,18 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
 import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
 import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados';
 import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck';
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck';
-import VerAnalisis from './Modals/VerAnalisisEntregado'
+import VerAnalisis from './Modals/VerAnalisisEntregado';
 import './analisisStyle.css';
 
 class ConsultaAnalisis extends Component {
@@ -331,7 +331,7 @@ class ConsultaAnalisis extends Component {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='formConsultaAnalisis'>
                     <Grid columns={3}>
                         <Grid.Row>

@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
-import MenuLateral from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import MiPerfil from './MiPerfil';
 import NuevoUsuario from './NuevoUsuario';
-import './ajustes.css';
 
 class Ajustes extends Component {
     constructor(props) {
@@ -35,7 +34,7 @@ class Ajustes extends Component {
 
         return (
             <div className='union'>
-                <MenuLateral/>
+                <NavBar/>
                 <div className='menuAjustes'>
                     <Grid>
                         <Grid.Column width={4}>

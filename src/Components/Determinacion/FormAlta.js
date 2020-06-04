@@ -4,10 +4,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
-import { addDeterminacionAction } from './../../Redux/determinacionesDuck' 
+import { addDeterminacionAction } from './../../Redux/determinacionesDuck'
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar';
 import './determinaciones.css';
 
 class FormAlta extends Component {
@@ -24,7 +24,7 @@ class FormAlta extends Component {
             errorUnidadBioquimica: true,
         });
     }
-    
+
     handleUpdateClick = () => {
         var data = {
             "bitAlta": true,
@@ -33,19 +33,19 @@ class FormAlta extends Component {
             "unidadBioquimica": this.state.unidadBioquimica,
             "unidadMedida": this.state.unidadMedida
         };
-        
+
         this.props.addDeterminacionAction(data)
     };
-    
+
     fetchDeterminacion = (e) => {
         e.preventDefault();
-        
+
         const {codigoPractica, unidadBioquimica, descripcionPractica} = this.state;
-        
+
         const errorCodigoPractica= validateOnlyNumbersRequired(codigoPractica);
         const errorUnidadBioquimica = validateOnlyNumbersRequired(unidadBioquimica);
         const errorDescripcionPractica = validateRequiredStringNum(descripcionPractica);
-        
+
         if (errorCodigoPractica && errorUnidadBioquimica && errorDescripcionPractica) {
             this.handleUpdateClick()
             this.vaciadoCampos()
@@ -58,7 +58,7 @@ class FormAlta extends Component {
             })
         }
     }
-    
+
     vaciadoCampos() {
         this.setState({
             codigoPractica: '',
@@ -70,19 +70,19 @@ class FormAlta extends Component {
             errorUnidadMedida: true,
         })
     }
-    
+
     cambioCodigoPractica = (e) => {
         this.setState({
             codigoPractica: e.target.value
         })
     }
-    
+
     cambioDescripcionPractica = (e) => {
         this.setState({
             descripcionPractica: e.target.value
         })
     }
-    
+
     cambioUnidadBioquimica = (e) => {
         this.setState({
             unidadBioquimica: e.target.value
@@ -94,12 +94,12 @@ class FormAlta extends Component {
             unidadMedida: e.target.value
         })
     }
-    
-    
+
+
     render() {
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='registro'>
                     <Container className='btnHeader'>
                         <Button as={Link} to='/determinaciones' exact='true' floated='left' icon
@@ -107,47 +107,47 @@ class FormAlta extends Component {
                             <Icon name='arrow alternate circle left'/> Volver
                         </Button>
                     </Container>
-                  
-                    <Form size='huge'>                
-                        <Form.Field control='input' 
-                        value='Nueva Determinación' 
+
+                    <Form size='huge'>
+                        <Form.Field control='input'
+                        value='Nueva Determinación'
                         id = 'headerConsulta'
                         />
                         <Divider id='divider'/>
-                        
+
                     </Form>
-    
+
                     <Form onSubmit={this.fetchDeterminacion}>
-    
+
                         <Form.Group widths='equal'>
                             <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
-                            value={this.state.codigoPractica} 
+                            value={this.state.codigoPractica}
                             onChange={this.cambioCodigoPractica}
                             className={this.state.errorCodigoPractica ? null : 'error'}
                             />
-    
-                            <Form.Field required label='Descripción Práctica' control='input' 
+
+                            <Form.Field required label='Descripción Práctica' control='input'
                             placeholder='Descripción Práctica'
-                            value={this.state.descripcionPractica} 
+                            value={this.state.descripcionPractica}
                             onChange={this.cambioDescripcionPractica}
                             className={this.state.errorDescripcionPractica ? null : 'error'}/>
                         </Form.Group>
-    
+
                         <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                        value={this.state.unidadBioquimica} 
+                        value={this.state.unidadBioquimica}
                         onChange={this.cambioUnidadBioquimica}
                         className={this.state.errorUnidadBioquimica ? null : 'error'}
                         />
-    
+
                         <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                        value={this.state.unidadMedida} 
+                        value={this.state.unidadMedida}
                         onChange={this.cambioUnidadMedida}/>
-    
+
                         <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.fetchDeterminacion}> Registrar Determinacion</Button>
-    
+
                     </Form>
                 </div>
-    
+
             </div>
         );
     }

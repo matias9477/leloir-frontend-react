@@ -5,7 +5,7 @@ import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import { addObraSocialAction } from '../../Redux/obrasSocialesDuck';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import './obraSocialStyles.css';
 
 class AltaObraSocial extends Component {
@@ -118,7 +118,7 @@ class AltaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
           <div className='registro'>
             <Container className='btnHeader'>
               <Button as= {Link} to='/obras_sociales' exact='true' floated='left' icon labelPosition='left' primary size='small'>
@@ -126,25 +126,25 @@ class AltaObraSocial extends Component {
               </Button>
             </Container>
 
-            <Form size='huge'>                
-              <Form.Field control='input' 
-              value='Nueva Obra Social' 
+            <Form size='huge'>
+              <Form.Field control='input'
+              value='Nueva Obra Social'
               id = 'headerConsulta'
               />
               <Divider id='divider'/>
-              
+
             </Form>
 
 
             <Form onSubmit={this.nuevaObraSocial} >
 
-              <Form.Field required label='Razón Social' control='input' 
+              <Form.Field required label='Razón Social' control='input'
                 placeholder='Razón Social'
                 value={this.state.razonSocial}
                 onChange={this.cambioRazonSocial}
                 className= {this.state.errorRazonSocial === true ? null : 'error'}
               />
-              
+
               <Form.Field label='Cuit' maxLength={11} control='input'
                 placeholder='Cuit'
                 value={this.state.cuit}
@@ -176,7 +176,7 @@ class AltaObraSocial extends Component {
 
               <Button primary style={{marginTop: '2.2rem'}} type="submit" onClick={this.nuevaObraSocial} className="boton"> Registrar Obra Social</Button >
 
-            </Form>  
+            </Form>
           </div>
       </div>
     )

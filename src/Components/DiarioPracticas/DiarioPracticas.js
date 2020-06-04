@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import MenuLateral from '../MenuOpciones'
-import { Button, Card, List, Label } from 'semantic-ui-react'
-import { connect } from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
+import React, { Component } from 'react';
+import NavBar from '../NavBar/NavBar';
+import { Button, Card, List, Label } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import ModificarResultados from './Modals/ModificarResultados'
-import RevisarResultados from './Modals/RevisarResultados'
-import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck'
-import './styles.css'
+import ModificarResultados from './Modals/ModificarResultados';
+import RevisarResultados from './Modals/RevisarResultados';
+import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck';
+import './styles.css';
 
 class DiarioPracticas extends Component {
 
@@ -147,13 +147,13 @@ class DiarioPracticas extends Component {
         const { fetching } = this.props
         return (
             <div className='union'>
-                <MenuLateral/>
+                <NavBar/>
                 {fetching ? <div className='spinner'>
                         <ClipLoader
                             size={60}
                             color={'black'}
                         />
-                    </div> : 
+                    </div> :
                     <div className='listadoModals'>
                         {this.renderCards()}
                         {this.handleModalContent()}

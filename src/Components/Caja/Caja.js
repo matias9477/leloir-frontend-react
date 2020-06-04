@@ -4,7 +4,7 @@ import { Header } from 'semantic-ui-react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import Transacciones from './Transacciones';
 import './../styles.css';
 import './cajaStyles.css';
@@ -25,7 +25,7 @@ class Caja extends Component {
 
     return (
       <div>
-        <MenuOpciones />
+        <NavBar />
         {fetching ? (
           <div className='spinner'>
             <ClipLoader

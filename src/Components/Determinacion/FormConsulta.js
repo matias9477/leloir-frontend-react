@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar';
 import './determinaciones.css';
 
 class FormConsulta extends Component {
@@ -121,28 +121,28 @@ class FormConsulta extends Component {
         else {
           return 'Dar de Alta'
         }
-    }    
+    }
 
 
     render() {
         const { fetching } = this.props
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='consulta'>
-                    
+
                     <Container className='btnHeader'>
                         <Button as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
                             <Icon name='arrow alternate circle left' /> Volver
                         </Button>
                     </Container>
-                    
+
                     {fetching ? <div className='spinner'>
                         <ClipLoader
                             size={60}
                             color={'black'}
                         />
-                        </div> : 
+                        </div> :
                         <Container>
                             <Form size='huge'>
                                 <Form.Field control='input'
@@ -154,16 +154,16 @@ class FormConsulta extends Component {
                             </Form>
 
                             <Form>
-                                
+
                                 <Form.Group widths='equal'>
                                     <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
-                                    value={this.state.codigoPractica} 
+                                    value={this.state.codigoPractica}
                                     id='disabled'
                                     className={this.state.errorCodigoPractica ? null : 'error'}
                                     />
 
                                     <Form.Field required label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
-                                    value={this.state.descripcionPractica} 
+                                    value={this.state.descripcionPractica}
                                     onChange={this.cambioDescripcionPractica}
                                     className={this.state.errorDescripcionPractica ? null : 'error'}
                                     />
@@ -176,7 +176,7 @@ class FormConsulta extends Component {
                                 />
 
                                 <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                                value={this.state.unidadMedida} 
+                                value={this.state.unidadMedida}
                                 onChange={this.cambioUnidadMedida}
                                 />
 
@@ -198,7 +198,7 @@ class FormConsulta extends Component {
                             </Form>
                         </Container>
                     }
-                
+
                 </div>
             </div>
         );

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determinacionesDuck'
-import MenuOpciones from "../MenuOpciones";
+import NavBar from '../NavBar/NavBar'
 import {titleCase} from './../../Services/MetodosDeValidacion';
 import { urlConsultaForm } from "../../Constants/URLs"
 import {nroPorPagina} from "../../Constants/utils";
@@ -159,7 +159,7 @@ class Determinaciones extends Component {
         const { fetching } = this.props
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='tablaListadoHistorico'>
 
                     <Header as='h2'>Determinaciones</Header>

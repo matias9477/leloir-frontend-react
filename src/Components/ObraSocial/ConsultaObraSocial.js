@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
 import './obraSocialStyles.css'
@@ -142,7 +142,7 @@ class ConsultaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className='consulta'>
 
           <Container className='btnHeader'>
@@ -212,9 +212,9 @@ class ConsultaObraSocial extends Component {
                 <br/>
 
                 <Button color={this.state.bitAlta ? 'red' : 'green'}
-                  onClick={(e) => { 
+                  onClick={(e) => {
                   if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {
-                    this.alta(e) } 
+                    this.alta(e) }
                   else {e.preventDefault()}} }
                 >{this.mensajeBtnSwitchAlta()}</Button>
 
