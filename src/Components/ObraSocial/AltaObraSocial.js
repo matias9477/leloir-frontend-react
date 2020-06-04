@@ -6,7 +6,7 @@ import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import { addObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import NavBar from '../NavBar/NavBar'
-import './obraSocialStyles.css';
+import '../styles.css';
 
 class AltaObraSocial extends Component {
   constructor(props) {
@@ -117,9 +117,9 @@ class AltaObraSocial extends Component {
 
   render() {
     return (
-      <div className='union'>
+      <div>
         <NavBar/>
-          <div className='registro'>
+          <div className='avoidMenu'>
             <Container className='btnHeader'>
               <Button as= {Link} to='/obras_sociales' exact='true' floated='left' icon labelPosition='left' primary size='small'>
                 <Icon name='arrow alternate circle left' /> Volver

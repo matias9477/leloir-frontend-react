@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
+import React, { Component } from 'react';
+import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import NavBar from '../NavBar/NavBar'
-import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
-import './obraSocialStyles.css'
+import NavBar from '../NavBar/NavBar';
+import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
+import '../styles.css';
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
@@ -141,9 +141,9 @@ class ConsultaObraSocial extends Component {
 
   render() {
     return (
-      <div className='union'>
+      <div>
         <NavBar/>
-        <div className='consulta'>
+        <div className='avoidMenu'>
 
           <Container className='btnHeader'>
             <Button as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
@@ -184,7 +184,7 @@ class ConsultaObraSocial extends Component {
                 </Form.Group>
 
                 <Form.Field  label='Cuit' maxLength={11} control='input'
-                value={this.state.cuit}
+                value={this.state.cuit === null ? '' : this.state.cuit}
                 onChange={this.cambioCuit}
                 className= {this.state.errorCuit === true ? null : 'error'}
                 />
