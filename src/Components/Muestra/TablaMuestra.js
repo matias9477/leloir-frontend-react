@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 import ClipLoader from "react-spinners/ClipLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { nroPorPagina } from "../../Constants/utils"
 import { getMuestrasAction, switchAltaAction } from '../../Redux/muestrasDuck'
 import './../styles.css'
@@ -158,7 +158,7 @@ class TablaMuestra extends React.Component {
         const { fetching } = this.props
         return(
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
 
                 <div className='tablaListadoHistorico'>
 

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import ConsultaPersona from './ConsultaPersona'
 import ConsultaAnimal from './ConsultaAnimal'
 import ConsultaInstitucion from './ConsultaInstitucion'
@@ -59,7 +59,7 @@ class FormConsulta extends Component {
     const { fetching } = this.props
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         
         <div className="FormAlta">
             <Container className='btnHeader'>

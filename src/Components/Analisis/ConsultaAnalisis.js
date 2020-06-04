@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { getHumanDate } from '../../Services/MetodosPaciente'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
@@ -331,7 +331,7 @@ class ConsultaAnalisis extends Component {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
             <div className='unionConNavbar'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='formConsultaAnalisis'>
                     <Grid columns={3}>
                         <Grid.Row>
@@ -345,7 +345,6 @@ class ConsultaAnalisis extends Component {
                                 size={10}
                                 margin={5}
                                 color={"black"}
-                                loading={this.state.analisis===''}
                             />
                             </div> :
             
@@ -355,7 +354,6 @@ class ConsultaAnalisis extends Component {
                                 </Grid.Column>
                                 <Grid.Column>
                                     {this.determinacionesRender()}
-                                    {this.handleModalContent()}
                                 </Grid.Column>
                                 <Grid.Column>
                                     {this.muestrasRender()}
@@ -363,6 +361,8 @@ class ConsultaAnalisis extends Component {
                             </Grid.Row>
                         }
                     </Grid>
+                    
+                    {this.handleModalContent()}
             </div>
         </div>
     )
@@ -405,7 +405,7 @@ class ConsultaAnalisis extends Component {
 
 
 const mapStateToProps = state => ({
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisisById,
     tiposMuestras: state.muestras.tiposMuestras,
     analisis: state.analisis.analisisById,
 })

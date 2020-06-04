@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import './../styles.css';
 
 class FormConsulta extends Component {
@@ -200,7 +200,7 @@ class FormConsulta extends Component {
     render() {
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className="FormAlta">
                     {this.renderForm()}
                 </div>

@@ -1,16 +1,12 @@
 import React from "react";
 import "./App.css";
 import 'semantic-ui-css/semantic.min.css';
-import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria'
+import NavBar from './Components/NavBar/NavBar'
 
 
 function App(){
   return(
-    // <div className="App">
-    <div className="App">
-      {/* <MenuOpciones></MenuOpciones> */}
-      <LPSecretaria/>
-    </div>
+    <div></div>
   );
 }
 

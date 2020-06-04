@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { nroPorPagina } from "../../Constants/utils"
 import { nullTo } from '../../Services/MetodosDeValidacion'
 import { getObrasSocialesAction, switchAltaAction } from '../../Redux/obrasSocialesDuck'
@@ -158,7 +158,7 @@ class TablaObraSocial extends React.Component {
         const { fetching } = this.props
         return(
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
 
                 <div className='tablaListadoHistorico'>
 

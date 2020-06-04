@@ -5,7 +5,7 @@ import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
 import {nroPorPagina} from "../../Constants/utils"
 import { getPatientsAction, switchAltaAction } from './../../Redux/patientsDuck'
@@ -166,7 +166,7 @@ class TablaPaciente extends React.Component {
 
         return (
             <div className='union'>
-                <MenuOpciones/>
+                <NavBar/>
                 <div className='tablaListadoHistorico'>
                     <Header as='h2'>Pacientes</Header>
 

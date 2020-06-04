@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import { addObraSocialAction } from '../../Redux/obrasSocialesDuck';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar'
 import './../styles.css';
 
 class AltaObraSocial extends Component {
@@ -182,7 +182,7 @@ class AltaObraSocial extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>
