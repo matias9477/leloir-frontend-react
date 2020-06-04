@@ -9,7 +9,7 @@ class LPSecretaria extends Component {
     render() {
         return (
             
-            <div className='union'>
+            <div>
                 <NavBar/>
                 <div className='avoidMenu'>
                     <Afluencia/>
