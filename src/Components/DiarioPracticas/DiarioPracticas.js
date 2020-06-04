@@ -146,7 +146,7 @@ class DiarioPracticas extends Component {
     render() {
         const { fetching } = this.props
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
                 {fetching ? <div className='spinner'>
                         <ClipLoader
@@ -154,7 +154,7 @@ class DiarioPracticas extends Component {
                             color={'black'}
                         />
                     </div> :
-                    <div className='listadoModals'>
+                    <div className='avoidMenu'>
                         {this.renderCards()}
                         {this.handleModalContent()}
                     </div>
