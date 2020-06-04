@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 
 const NavBar = () =>(
-<body>
+
   <nav class="navbar">
     <ul class="navbar-nav">
       <li class="logo">
@@ -108,7 +108,6 @@ const NavBar = () =>(
         </li>
     </ul>
   </nav> 
-  </body>
 )
 
 export default withRouter(NavBar)
