@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import ClipLoader from 'react-spinners/ClipLoader'
 
 import { loginAction } from '../../Redux/userDuck'
-import './../styles.css'
+import './login.css'
 
 class LoginComponent extends Component {
 
@@ -65,7 +65,7 @@ class LoginComponent extends Component {
                         />
                         
                         <Link to='/'>
-                            <Button exact='true' primary onClick={this.loginClicked}>
+                            <Button disabled={(this.state.password === '' || this.state.usernameOrEmail === '') ? true : false} exact='true' primary onClick={this.loginClicked}>
                                 Iniciar Sesión
                             </Button>
                         </Link>

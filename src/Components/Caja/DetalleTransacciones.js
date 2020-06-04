@@ -23,10 +23,7 @@ const columns = [
 ];
 
 class DetalleTransacciones extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+ 
   render() {
     return (
       <BootstrapTable
