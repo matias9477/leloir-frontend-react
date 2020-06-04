@@ -11,6 +11,7 @@ import ConsultaAnimal from './ConsultaAnimal'
 import ConsultaInstitucion from './ConsultaInstitucion'
 import Historial from './Historial'
 import { getPatientByIdAction } from '../../Redux/patientsDuck'
+import { urlGetPacienteById } from '../../Constants/URLs'
 import './../styles.css'
 import './patientsStyle.css'
 
@@ -29,8 +30,7 @@ class FormConsulta extends Component {
   }
 
   getTipo(){
-    //TODO: cambiar el hardcodeo de URLS
-    axios.get("/pacientes/id/" + this.props.match.params.id).then(resolve => {
+    axios.get(`${urlGetPacienteById} + ${this.props.match.params.id}`).then(resolve => {
       this.setState({
           tipo: resolve.data.type,
       })
