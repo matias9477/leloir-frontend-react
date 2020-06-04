@@ -6,7 +6,6 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar'
 import Transacciones from './Transacciones';
-import './../styles.css';
 import './cajaStyles.css';
 
 class Caja extends Component {
@@ -34,7 +33,7 @@ class Caja extends Component {
             />
           </div>
         ) : (
-          <div className='listadoCaja'>
+          <div className='avoidMenu'>
             <Header as='h2'>Transacciones</Header>
             <Transacciones transacciones={this.props.transacciones} />
           </div>
