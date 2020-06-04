@@ -33,9 +33,9 @@ class Ajustes extends Component {
         const {activeItem} = this.state
 
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className='menuAjustes'>
+                <div className='avoidMenu'>
                     <Grid>
                         <Grid.Column width={4}>
                             <Menu fluid vertical tabular>
