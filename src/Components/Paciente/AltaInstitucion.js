@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
-import './../styles.css'
+import './patientsStyle.css'
 
 class AltaInstitucion extends Component {
   constructor(props) {
@@ -111,7 +111,7 @@ class AltaInstitucion extends Component {
    
   render(){
     return (
-      <div className='altasYConsultas'>
+      <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nueva Institución</Header>
        
         <Form onSubmit={this.getPaciente}>

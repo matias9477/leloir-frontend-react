@@ -171,34 +171,31 @@ class ConsultaAnimal extends Component {
 
                 <Form.Field required id='disabled' label='Fecha alta' control='input' 
                 value={this.state.fechaAlta}/>
-
               </Form.Group>
 
               <Form.Group widths='equal'>
-              <Form.Field required label='Nombre Animal' control='input' 
-              value={this.state.nombre} 
-              onChange={this.cambioNombre} 
-              className= {this.state.errorNombre === true ? null : 'error'} 
-              />
-                
-                <Form.Field required label='Tipo Animal' control='select' 
-                value={this.state.tipo} 
-                onChange={this.cambioTipo} 
-                className= {this.state.errorTipo === true ? null : 'error'} 
-                >
-                  <option value={null}>  </option>
-                  {this.state.tipos.map(item => (
-                  <option key={item.tipoAnimalId}>{item.nombre}</option>))}
-                </Form.Field>
+                <Form.Field required label='Nombre Animal' control='input' 
+                value={this.state.nombre} 
+                onChange={this.cambioNombre} 
+                className= {this.state.errorNombre === true ? null : 'error'} 
+                />
+                  
+                  <Form.Field required label='Tipo Animal' control='select' 
+                  value={this.state.tipo} 
+                  onChange={this.cambioTipo} 
+                  className= {this.state.errorTipo === true ? null : 'error'} 
+                  >
+                    <option value={null}>  </option>
+                    {this.state.tipos.map(item => (
+                    <option key={item.tipoAnimalId}>{item.nombre}</option>))}
+                  </Form.Field>
                 </Form.Group>
+
                 <Form.Field required label='Propietario' control='input' 
                 value={this.state.propietario} 
                 onChange={this.cambioPropietario} 
                 className= {this.state.errorPropietario === true ? null : 'error'} 
                 />
-
-            
-
 
               <Form.Group widths='equal'>
                 <Form.Field  label='Telefono' control='input' 
