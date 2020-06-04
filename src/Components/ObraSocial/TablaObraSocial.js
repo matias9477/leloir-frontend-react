@@ -1,14 +1,14 @@
-import React from 'react'
-import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
-import { connect } from 'react-redux'
-import SyncLoader from "react-spinners/SyncLoader"
+import React from 'react';
+import { Button, Header, Pagination, Icon, Input, Dropdown, Grid } from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
+import SyncLoader from "react-spinners/SyncLoader";
 
-import NavBar from '../NavBar/NavBar'
-import { nroPorPagina } from "../../Constants/utils"
-import { nullTo } from '../../Services/MetodosDeValidacion'
-import { getObrasSocialesAction, switchAltaAction } from '../../Redux/obrasSocialesDuck'
-import './../styles.css'
+import NavBar from '../NavBar/NavBar';
+import { nroPorPagina } from "../../Constants/utils";
+import { nullTo } from '../../Services/MetodosDeValidacion';
+import { getObrasSocialesAction, switchAltaAction } from '../../Redux/obrasSocialesDuck';
+import '../styles.css';
 
 class TablaObraSocial extends React.Component {
     constructor(props){
@@ -157,10 +157,10 @@ class TablaObraSocial extends React.Component {
     render(){
         const { fetching } = this.props
         return(
-            <div className='union'>
+            <div>
                 <NavBar/>
 
-                <div className='tablaListadoHistorico'>
+                <div className='avoidMenu'>
 
                     <Header as='h2'>Obras Sociales</Header>
                     
@@ -183,21 +183,24 @@ class TablaObraSocial extends React.Component {
 
                         <div>
                    
-                            <div className='union'>
-                                <div className="ui icon input">
-
-                                    <Input value={this.state.filter} 
-                                        onChange={(filter)=>
-                                            this.setState({
-                                                filter: filter.target.value
-                                            })}
+                            <Grid>
+                                <Grid.Column floated='left' width={5}>
+                                    <div className="ui icon input">
+                                        <Input value={this.state.filter} 
+                                            onChange={(filter)=>
+                                                this.setState({
+                                                    filter: filter.target.value
+                                                })}
                                                 
-                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
-                                    />
+                                                placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                                />
 
-                                </div>
-                                {this.obrasSocialesPerPage()}
-                            </div> 
+                                    </div>
+                                </Grid.Column>
+                                <Grid.Column floated='right' width={5}>
+                                    {this.obrasSocialesPerPage()}
+                                </Grid.Column>
+                            </Grid>
 
                             <table className="ui single line table" >
                             <thead className='centerAlignment'>

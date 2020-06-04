@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import Select from 'react-select'
-import { connect } from 'react-redux'
-import SyncLoader from "react-spinners/SyncLoader"
+import React, { Component } from 'react';
+import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import Select from 'react-select';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import NavBar from '../NavBar/NavBar'
-import { getHumanDate } from '../../Services/MetodosPaciente'
-import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados'
-import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados'
-import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck'
-import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck'
-import VerAnalisis from './Modals/VerAnalisisEntregado'
-import './analisisStyle.css'
+import NavBar from '../NavBar/NavBar';
+import { getHumanDate } from '../../Services/MetodosPaciente';
+import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
+import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
+import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados';
+import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck';
+import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck';
+import VerAnalisis from './Modals/VerAnalisisEntregado';
+import './analisisStyle.css';
 
 class ConsultaAnalisis extends Component {
     constructor(props) {
@@ -52,16 +52,16 @@ class ConsultaAnalisis extends Component {
 
         if (errorTipo) {
             var data = {
-                "analisisId": this.state.idAnalisis,
-                "bitActivo": true,
-                "estadoId":  1,
-                "tipoMuestraId": this.state.tipo.tipoMuestraId,
+                'analisisId': this.state.idAnalisis,
+                'bitActivo': true,
+                'estadoId':  1,
+                'tipoMuestraId': this.state.tipo.tipoMuestraId,
             }
 
             this.props.addMuestraAction(data)
 
         } else {
-            alert("Seleccione un tipo de muestra para continuar.")
+            alert('Seleccione un tipo de muestra para continuar.')
             this.setState({
                 errorTipo
             })
@@ -91,7 +91,7 @@ class ConsultaAnalisis extends Component {
                                 <Form.Field readOnly={true} label='Número' value={this.state.analisis ? this.state.analisis.paciente.nroDocumento : ''} control='input' />
                             </Form.Group>
 
-                            {(this.state.analisis && this.state.analisis.paciente.obraSocial!==undefined) ?
+                            {(this.state.analisis && this.state.analisis.paciente.obraSocial!==null) ?
                                 <div>
                                     <b>Obra Social</b>
                                     <Form.Group widths='equal'>
@@ -125,7 +125,7 @@ class ConsultaAnalisis extends Component {
 
                     {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>
 
-                        {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
+                        {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
                             <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
                                 <Icon name='plus' /> Añadir muestra
                             </Button>
@@ -155,7 +155,7 @@ class ConsultaAnalisis extends Component {
                             <Table.Row>
                                 <Table.HeaderCell />
                                 <Table.HeaderCell colSpan='4'>
-                                    {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== "ENTREGADO" && this.state.analisis.estadoAnalisis.nombre !== "CANCELADO" && this.state.analisis.estadoAnalisis.nombre !== "PREPARADO" )) ?
+                                    {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
                                         <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }>
                                             <Icon name='plus' /> Añadir muestra
                                         </Button>
@@ -182,7 +182,7 @@ class ConsultaAnalisis extends Component {
                             name='tipo muestra'
                             value={this.state.tipo}
                             onChange={this.handleChangeTipo}
-                            placeholder= "Seleccione..."
+                            placeholder= 'Seleccione...'
                             isClearable={true}
                             options={this.state.tipos}
                             getOptionValue={this.getOptionValueTipoMuestra}
@@ -235,22 +235,22 @@ class ConsultaAnalisis extends Component {
 
     renderButtons = (estado) => {
         switch (estado) {
-            case "EN_PROCESO":
+            case 'EN_PROCESO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='green'
-                                    onClick={() => this.showModal("REVISAR")}>
+                                    onClick={() => this.showModal('REVISAR')}>
                                 Revisar Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal("MODIFICAR")}>
+                                    onClick={() => this.showModal('MODIFICAR')}>
                                 Modificar Resultados
                             </Button>
                         </div>
                     </Card.Content>
                 )
-            case "PREPARADO":
+            case 'PREPARADO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
@@ -259,26 +259,26 @@ class ConsultaAnalisis extends Component {
                                 Emitir Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal("MODIFICAR")}>
+                                    onClick={() => this.showModal('MODIFICAR')}>
                                 Modificar Resultados
                             </Button>
                         </div>
                     </Card.Content>
 
                 )
-            case "NUEVO":
+            case 'NUEVO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal("MODIFICAR")}>
+                                    onClick={() => this.showModal('MODIFICAR')}>
                                 Cargar Resultados
                             </Button>
                         </div>
                     </Card.Content>
                 )
 
-            case "ENTREGADO":
+            case 'ENTREGADO':
                 return (
                     <Card.Content extra>
                         <div className='ui two buttons'>
@@ -287,7 +287,7 @@ class ConsultaAnalisis extends Component {
                                 Emitir Analisis
                             </Button>
                             <Button basic color='blue'
-                                    onClick={() => this.showModal("ENTREGADO")}>
+                                    onClick={() => this.showModal('ENTREGADO')}>
                                 Ver Analisis
                             </Button>
                         </div>
@@ -301,19 +301,19 @@ class ConsultaAnalisis extends Component {
 
     handleModalContent() {
         switch (this.state.currentModal) {
-            case "MODIFICAR":
+            case 'MODIFICAR':
                 return (
                     <ModificarResultados show={this.state.show}
                                          callback={this.hideModalCallback}
                                          idAnalisis={this.state.idAnalisis}/>
                 )
-            case "REVISAR":
+            case 'REVISAR':
                 return (
                     <RevisarResultados show={this.state.show}
                                        callback={this.hideModalCallback}
                                        idAnalisis={this.state.idAnalisis}/>
                 )
-            case "ENTREGADO":
+            case 'ENTREGADO':
                 return (
                     <VerAnalisis show={this.state.show}
                                 callback={this.hideModalCallback}
@@ -330,21 +330,20 @@ class ConsultaAnalisis extends Component {
     render() {
         var prevURL = this.props.location.state.prevPath || '/analisis'
         return (
-            <div className='unionConNavbar'>
+            <div>
                 <NavBar/>
-                <div className='formConsultaAnalisis'>
-                    <Grid columns={3}>
-                        <Grid.Row>
-                            <Button className='boton' as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+                <div className='avoidMenu'>
+                    <Grid columns={3} style={{marginLeft: '0px'}}>
+                        <Grid.Row style={{marginLeft: '0px'}}>
+                            <Button as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                                 <Icon name='arrow alternate circle left' /> Volver
                             </Button>
                         </Grid.Row>
                         
                         {this.props.fetching ? <div className='spinner'>
-                            <SyncLoader
-                                size={10}
-                                margin={5}
-                                color={"black"}
+                            <ClipLoader
+                                size={60}
+                                color={'black'}
                             />
                             </div> :
             
@@ -363,9 +362,9 @@ class ConsultaAnalisis extends Component {
                     </Grid>
                     
                     {this.handleModalContent()}
+                </div>
             </div>
-        </div>
-    )
+        )
     }
 
     

@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import {Link} from 'react-router-dom'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import NavBar from '../NavBar/NavBar'
-import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck'
-import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion'
-import './obraSocialStyles.css'
+import NavBar from '../NavBar/NavBar';
+import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
+import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
+import '../styles.css';
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
@@ -129,20 +129,34 @@ class ConsultaObraSocial extends Component {
       })
   }
 
+  mensajeBtnSwitchAlta(){
+    if (this.state.bitAlta) {
+      return 'Dar de Baja'
+    }
+    else {
+      return 'Dar de Alta'
+    }
+  }
+
 
   render() {
     return (
-      <div className='union'>
+      <div>
         <NavBar/>
-        <div className='Formularios'>
+        <div className='avoidMenu'>
 
           <Container className='btnHeader'>
-            <Button className='boton' as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
+            <Button as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
               <Icon name='arrow alternate circle left' /> Volver
             </Button>
           </Container>
 
-          {this.props.fetching ? <CircularProgress size={50}/> :
+          {this.props.fetching ? <div className='spinner'>
+              <ClipLoader
+                  size={60}
+                  color={'black'}
+              />
+            </div> :
 
             <Container>
               <Form size='huge'>                
@@ -155,61 +169,63 @@ class ConsultaObraSocial extends Component {
                 
               </Form>
 
-              <Form className='consulta'>
+              <Form>
 
-              <Form.Group widths='equal'>
-                <Form.Field required label='Id' control='input'
-                id='disabled'  width={5}
-                value={this.state.id} />
+                <Form.Group widths='equal'>
+                  <Form.Field required label='Id' control='input'
+                  id='disabled'  width={5}
+                  value={this.state.id} />
 
-                <Form.Field required label='Razon Social' control='input'
-                value={this.state.razonSocial}
-                onChange={this.cambioRazonSocial}
-                className= {this.state.errorRazonSocial === true ? null : 'error'}
-                />
-              </Form.Group>
+                  <Form.Field required label='Razon Social' control='input'
+                  value={this.state.razonSocial}
+                  onChange={this.cambioRazonSocial}
+                  className= {this.state.errorRazonSocial === true ? null : 'error'}
+                  />
+                </Form.Group>
 
-              <Form.Field  label='Cuit' maxLength={11} control='input'
-              value={this.state.cuit}
-              onChange={this.cambioCuit}
-              className= {this.state.errorCuit === true ? null : 'error'}
-              />
-
-              <Form.Group widths='equal'>
-                <Form.Field  label='Telefono' control='input'
-                value={this.state.telefono || ''}
-                onChange={this.cambioTelefono}
-                className= {this.state.errorTelefono === true ? null : 'error'}
+                <Form.Field  label='Cuit' maxLength={11} control='input'
+                value={this.state.cuit === null ? '' : this.state.cuit}
+                onChange={this.cambioCuit}
+                className= {this.state.errorCuit === true ? null : 'error'}
                 />
 
-                <Form.Field  label='Mail' control='input'
-                value={this.state.mail || ''}
-                onChange={this.cambioMail}
-                className= {this.state.errorMail === true ? null : 'error'}
-                />
+                <Form.Group widths='equal'>
+                  <Form.Field  label='Telefono' control='input'
+                  value={this.state.telefono || ''}
+                  onChange={this.cambioTelefono}
+                  className= {this.state.errorTelefono === true ? null : 'error'}
+                  />
 
-                <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
-                value={this.state.valorUb}
-                onChange={this.cambioValorUb}
-                className= {this.state.errorValorUb === true ? null : 'error'}
-                />
-              </Form.Group>
+                  <Form.Field  label='Mail' control='input'
+                  value={this.state.mail || ''}
+                  onChange={this.cambioMail}
+                  className= {this.state.errorMail === true ? null : 'error'}
+                  />
 
-              <br/>
+                  <Form.Field  label='Unidad Bioquimica' maxLength={11} control='input'
+                  value={this.state.valorUb}
+                  onChange={this.cambioValorUb}
+                  className= {this.state.errorValorUb === true ? null : 'error'}
+                  />
+                </Form.Group>
 
-              {(!this.state.bitAlta) ? <Button onClick={(e) => {
-                if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {
-                  this.alta(e)
-                  } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
+                <br/>
 
-              {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
-                if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {
-                  this.modificarObraSocial(e)
-                  } else {window.location.reload(true)} } }>
-                Modificar Obra Social
-              </Button> : null}
+                <Button color={this.state.bitAlta ? 'red' : 'green'}
+                  onClick={(e) => {
+                  if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {
+                    this.alta(e) }
+                  else {e.preventDefault()}} }
+                >{this.mensajeBtnSwitchAlta()}</Button>
 
-            </Form>
+                {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
+                  if (window.confirm('¿Esta seguro que quiere modificar la obra social ' + this.state.razonSocial + '?')) {
+                    this.modificarObraSocial(e)
+                    } else {window.location.reload(true)} } }>
+                  Modificar Obra Social
+                </Button> : null}
+
+              </Form>
             </Container>
           }
         </div>

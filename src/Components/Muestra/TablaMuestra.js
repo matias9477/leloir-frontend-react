@@ -1,13 +1,12 @@
-import React from 'react'
-import { Header, Pagination, Input, Dropdown } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
-import { connect } from 'react-redux'
-import ClipLoader from "react-spinners/ClipLoader"
+import React from 'react';
+import { Header, Pagination, Input, Dropdown, Grid } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from "react-spinners/ClipLoader";
 
-import NavBar from '../NavBar/NavBar'
-import { nroPorPagina } from "../../Constants/utils"
-import { getMuestrasAction, switchAltaAction } from '../../Redux/muestrasDuck'
-import './../styles.css'
+import NavBar from '../NavBar/NavBar';
+import { nroPorPagina } from "../../Constants/utils";
+import { getMuestrasAction, switchAltaAction } from '../../Redux/muestrasDuck';
 
 class TablaMuestra extends React.Component {
     constructor(props){
@@ -49,7 +48,7 @@ class TablaMuestra extends React.Component {
 
     muestrasPerPage() {
         return (
-            <div className='rightAlign'>
+            <div>
                 <span>
                     Cantidad de muestras por página:{' '}
                     <Dropdown
@@ -157,10 +156,10 @@ class TablaMuestra extends React.Component {
     render(){
         const { fetching } = this.props
         return(
-            <div className='union'>
+            <div>
                 <NavBar/>
 
-                <div className='tablaListadoHistorico'>
+                <div className='avoidMenu'>
 
                     <Header as='h2'>Muestras</Header>
 
@@ -168,7 +167,7 @@ class TablaMuestra extends React.Component {
                     <br></br>
                     <br></br>
                     
-                    {fetching ? <div className='spinnerPosition'> 
+                    {fetching ? <div className='spinner'> 
                         <ClipLoader
                         size={50}
                         color={"black"}
@@ -177,21 +176,24 @@ class TablaMuestra extends React.Component {
 
                         <div>
 
-                            <div className='union'>
-                                <div className="ui icon input">
-
-                                    <Input value={this.state.filter} 
-                                        onChange={(filter)=>
-                                            this.setState({
-                                                filter: filter.target.value
-                                            })}
+                            <Grid>
+                                <Grid.Column floated='left' width={5}>
+                                    <div className="ui icon input">
+                                        <Input value={this.state.filter} 
+                                            onChange={(filter)=>
+                                                this.setState({
+                                                    filter: filter.target.value
+                                                })}
                                                 
-                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
-                                    />
+                                                placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                                />
 
-                                </div>
-                                {this.muestrasPerPage()}
-                            </div>
+                                    </div>
+                                </Grid.Column>
+                                <Grid.Column floated='right' width={5}>
+                                    {this.muestrasPerPage()}
+                                </Grid.Column>
+                            </Grid>
 
                             <table className="ui single line table" >
                                 <thead className='centerAlignment'>

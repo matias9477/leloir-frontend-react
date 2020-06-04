@@ -1,15 +1,16 @@
 import React from 'react'
-import { Button, Dropdown, Header, Icon, Input, Pagination } from 'semantic-ui-react'
+import { Button, Dropdown, Header, Icon, Input, Pagination, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { orderBy } from 'lodash'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
 import NavBar from '../NavBar/NavBar'
-import {nullTo, titleCase} from '../../Services/MetodosDeValidacion'
-import {nroPorPagina} from "../../Constants/utils"
+import { nullTo, titleCase } from '../../Services/MetodosDeValidacion'
+import { nroPorPagina } from "../../Constants/utils"
 import { getPatientsAction, switchAltaAction } from './../../Redux/patientsDuck'
-import './../styles.css'
+import { urlConsultaPacientes } from '../../Constants/NavUrl';
+import './patientsStyle.css'
 
 class TablaPaciente extends React.Component {
     constructor(props) {
@@ -165,9 +166,9 @@ class TablaPaciente extends React.Component {
         const { fetching } = this.props
 
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className='tablaListadoHistorico'>
+                <div className='avoidMenu'>
                     <Header as='h2'>Pacientes</Header>
 
                     <Button as={Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' primary size='small'>
@@ -178,7 +179,7 @@ class TablaPaciente extends React.Component {
                     <br></br>
                     <br></br>
 
-                    {fetching ? <div className='tablaListadoHistorico'>
+                    {fetching ? <div className='spinner'>
                         <SyncLoader
                         size={10}
                         margin={5}
@@ -188,19 +189,24 @@ class TablaPaciente extends React.Component {
                         </div> :
 
                         <div>
-                            <div className='union'>
-                                <div className="ui icon input">
-                                    <Input value={this.state.filter} 
-                                    onChange={(filter)=>
-                                        this.setState({
-                                            filter: filter.target.value
-                                        })}
-                                        
-                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
-                                        />
-                                </div>
-                                {this.patientsPerPage()}
-                            </div>
+                            <Grid>
+                                <Grid.Column floated='left' width={5}>
+                                    <div className="ui icon input">
+                                        <Input value={this.state.filter} 
+                                            onChange={(filter)=>
+                                                this.setState({
+                                                    filter: filter.target.value
+                                                })}
+                                                
+                                                placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                                />
+
+                                    </div>
+                                </Grid.Column>
+                                <Grid.Column floated='right' width={5}>
+                                    {this.patientsPerPage()}
+                                </Grid.Column>
+                            </Grid>
 
                             <table className="ui single line striped table">
                                 <thead className='centerAlignment'>
@@ -236,7 +242,7 @@ class TablaPaciente extends React.Component {
                                                         onClick={() => window.confirm(this.confirmationMessage(paciente)) ? this.bitInverse(paciente) : null}>
                                                         {this.patientsState(paciente.bitAlta)}
                                                     </Dropdown.Item>
-                                                    <Dropdown.Item as={Link} to={{pathname: `/pacientes/consulta/${paciente.id}`, state: { prevPath: window.location.pathname }}}
+                                                    <Dropdown.Item as={Link} to={{pathname: `${urlConsultaPacientes}${paciente.id}`, state: { prevPath: window.location.pathname, type: paciente.tipoPaciente} }} 
                                                                 exact='true'>
                                                         Ver/Modificar
                                                     </Dropdown.Item>
@@ -262,11 +268,10 @@ class TablaPaciente extends React.Component {
                     }
 
                 </div>    
-            }
             </div>
-    )
+    )}
 }
-}
+
 
 
 const mapStateToProps = state =>({

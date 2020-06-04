@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import "./../../styles.css";
-import NavBar from '../../NavBar/NavBar'
+
+import NavBar from '../../NavBar/NavBar';
 import Afluencia from './Afluencia';
+import './../../styles.css';
 
 class LPSecretaria extends Component {
     
     render() {
         return (
             
-            <div className="union">
+            <div>
                 <NavBar/>
-                <div className="avoidMenu">   
+                <div className='avoidMenu'>
                     <Afluencia/>
                 </div>
             </div>

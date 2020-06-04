@@ -53,9 +53,7 @@ function importeNegativo(cell, row) {
 
 
 class Transacciones extends Component {
-  constructor(props) {
-    super(props);
-  }
+  
   render() {
     return (
       <BootstrapTable

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux'
+
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
-import NavBar from '../NavBar/NavBar'
-import './../styles.css';
+import NavBar from '../NavBar/NavBar';
+import '../styles.css';
 
 class FormConsulta extends Component {
     constructor(props) {
@@ -43,81 +43,6 @@ class FormConsulta extends Component {
             bitAlta:nextProps.determinacion.bitAlta,
         })
     }
-
-
-    renderForm() {
-        const { fetching } = this.props
-        return (
-            <div className='Formularios'>
-                <Container className='btnHeader'>
-                    <Button className='boton' as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
-                        <Icon name='arrow alternate circle left' /> Volver
-                    </Button>
-                </Container>
-                
-                {fetching ? <CircularProgress size={50}/> : 
-                <Container>
-                    <Form size='huge'>
-                        <Form.Field control='input'
-                        value={this.state.descripcionPractica}
-                        id='headerConsulta'
-                        className={this.state.errorDescripcionPractica===true ? null: 'error'}
-                        />
-                        <Divider id='divider'/>
-                    </Form>
-
-                <Form className='altasYConsultas'>
-                    
-                    <Form.Group widths='equal'>
-                        <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
-                        value={this.state.codigoPractica} 
-                        disabled={this.state.modificacion}
-                        onChange={this.cambioCodigoPractica}
-                        className={this.state.errorCodigoPractica ? null : 'error'}
-                        />
-
-                        <Form.Field required label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
-                        value={this.state.descripcionPractica} 
-                        disabled={this.state.modificacion}
-                        onChange={this.cambioDescripcionPractica}
-                        className={this.state.errorDescripcionPractica ? null : 'error'}
-                        />
-                    </Form.Group>
-
-                    <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                    value={this.state.unidadBioquimica}
-                    disabled={this.state.modificacion} 
-                    onChange={this.cambioUnidadBioquimica}
-                    className={this.state.errorUnidadBioquimica ? null : 'error'}
-                    />
-
-                    <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                    value={this.state.unidadMedida} 
-                    disabled={this.state.modificacion}
-                    onChange={this.cambioUnidadMedida}
-                    />
-
-                            {(!this.state.bitAlta) ? <Button onClick={(e) => {
-                                if (window.confirm('¿Esta seguro que quiere dar de alta la determinacion ' + this.state.descripcionPractica + '?')) {
-                                    this.alta(e)
-                                } else { e.preventDefault() }
-                            }}>Dar de Alta</Button> : null}
-
-                            {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
-                                if (window.confirm('¿Esta seguro que quiere modificar la determinación ' + this.state.descripcionPractica + '?')) {
-                                    this.modificarDeterminacion(e)
-                                } else { window.location.reload(true) }
-                            }}>
-                                Modificar Determinación
-              </Button> : null}
-
-                </Form>
-                </Container>
-                }
-            </div>
-        );
-    }
-
 
     modificarDeterminacion = (e) => {
         e.preventDefault();
@@ -156,13 +81,6 @@ class FormConsulta extends Component {
                 errorDescripcionPractica,
             });
         }
-    };
-
-
-    cambioCodigoPractica = (e) =>{
-        this.setState({
-            codigoPractica: e.target.value
-        })
     }
 
     cambioDescripcionPractica = (e) =>{
@@ -194,15 +112,93 @@ class FormConsulta extends Component {
 
     alta(e){
         this.props.switchAltaAction(this.state.codigoPractica)
-      }
+    }
+
+    mensajeBtnSwitchAlta(){
+        if (this.state.bitAlta) {
+          return 'Dar de Baja'
+        }
+        else {
+          return 'Dar de Alta'
+        }
+    }
 
 
     render() {
+        const { fetching } = this.props
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className="FormAlta">
-                    {this.renderForm()}
+                <div className='avoidMenu'>
+
+                    <Container className='btnHeader'>
+                        <Button as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
+                            <Icon name='arrow alternate circle left' /> Volver
+                        </Button>
+                    </Container>
+
+                    {fetching ? <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                        </div> :
+                        <Container>
+                            <Form size='huge'>
+                                <Form.Field control='input'
+                                value={this.state.descripcionPractica}
+                                id='headerConsulta'
+                                className={this.state.errorDescripcionPractica===true ? null: 'error'}
+                                />
+                                <Divider id='divider'/>
+                            </Form>
+
+                            <Form>
+
+                                <Form.Group widths='equal'>
+                                    <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
+                                    value={this.state.codigoPractica}
+                                    id='disabled'
+                                    className={this.state.errorCodigoPractica ? null : 'error'}
+                                    />
+
+                                    <Form.Field required label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
+                                    value={this.state.descripcionPractica}
+                                    onChange={this.cambioDescripcionPractica}
+                                    className={this.state.errorDescripcionPractica ? null : 'error'}
+                                    />
+                                </Form.Group>
+
+                                <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
+                                value={this.state.unidadBioquimica}
+                                onChange={this.cambioUnidadBioquimica}
+                                className={this.state.errorUnidadBioquimica ? null : 'error'}
+                                />
+
+                                <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
+                                value={this.state.unidadMedida}
+                                onChange={this.cambioUnidadMedida}
+                                />
+
+                                <Button color={this.state.bitAlta ? 'red' : 'green'}
+                                    onClick={(e) => {
+                                    if (window.confirm('¿Esta seguro que quiere dar de alta la determinacion ' + this.state.descripcionPractica + '?')) {
+                                        this.alta(e)
+                                    } else { e.preventDefault()} }}
+                                    >{this.mensajeBtnSwitchAlta()}</Button>
+
+                                {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
+                                    if (window.confirm('¿Esta seguro que quiere modificar la determinación ' + this.state.descripcionPractica + '?')) {
+                                        this.modificarDeterminacion(e)
+                                    } else { window.location.reload(true) }
+                                }}>
+                                    Modificar Determinación
+                                </Button> : null}
+
+                            </Form>
+                        </Container>
+                    }
+
                 </div>
             </div>
         );
