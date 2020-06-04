@@ -8,7 +8,7 @@ import { addDeterminacionAction } from './../../Redux/determinacionesDuck'
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
 import NavBar from '../NavBar/NavBar';
-import './determinaciones.css';
+import '../styles.css';
 
 class FormAlta extends Component {
     constructor(props) {
@@ -98,9 +98,9 @@ class FormAlta extends Component {
 
     render() {
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className='registro'>
+                <div className='avoidMenu'>
                     <Container className='btnHeader'>
                         <Button as={Link} to='/determinaciones' exact='true' floated='left' icon
                                 labelPosition='left' primary size='small'>

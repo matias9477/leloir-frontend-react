@@ -9,7 +9,7 @@ import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
 import NavBar from '../NavBar/NavBar';
-import './determinaciones.css';
+import '../styles.css';
 
 class FormConsulta extends Component {
     constructor(props) {
@@ -127,9 +127,9 @@ class FormConsulta extends Component {
     render() {
         const { fetching } = this.props
         return (
-            <div className='union'>
+            <div>
                 <NavBar/>
-                <div className='consulta'>
+                <div className='avoidMenu'>
 
                     <Container className='btnHeader'>
                         <Button as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
