@@ -1,12 +1,12 @@
-import React from 'react'
-import { Button, Icon } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
+import React, { Component } from 'react';
+import { Button, Dropdown, Header, Icon, Input, Pagination, Grid } from "semantic-ui-react";
+import {Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import MenuOpciones from '../MenuOpciones'
-import { getDeterminacionesAction, switchAltaAction } from '../../Redux/determinacionesDuck'
-import { urlConsultaForm } from '../../Constants/NavURL'
+import { getDeterminacionesAction, switchAltaAction } from '../../Redux/determinacionesDuck';
+import NavBar from '../NavBar/NavBar';
+import { urlConsultaForm } from "../../Constants/URLs"
 import Tabla from '../Reusables/Tabla/Tabla'
 import './determinaciones.css'
 
@@ -28,10 +28,10 @@ const columns = [
         text: 'Unidad de Medida'
     }
   ];
-  
+
 
 class TablaDeterminaciones extends React.Component {
-   
+
     componentDidMount(){
         this.props.getDeterminacionesAction()
     }
@@ -40,18 +40,18 @@ class TablaDeterminaciones extends React.Component {
         const { fetching } = this.props
 
         return(
-            <div className='union'>
-                <MenuOpciones/>
-              
+            <div>
+                <NavBar/>
+
                 {fetching ? <div className='spinner'>
                         <ClipLoader
                             size={60}
                             color={'black'}
                         />
-                    </div> : 
+                    </div> :
 
                     <div className='determinacionesAll'>
-                        
+
                         <Button as={Link} to='/determinaciones/add' exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                             <Icon name='lab'/> Nueva Determinación
@@ -68,7 +68,7 @@ class TablaDeterminaciones extends React.Component {
                         />
                     </div>
                 }
-                    
+
             </div>
         )
     }

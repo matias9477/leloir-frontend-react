@@ -1,5 +1,5 @@
 .unionConNavbar {
-    display:flex; 
+    display:flex;
     flex-direction:row;
 }
 
@@ -24,11 +24,6 @@
     border-color: #e0b4b4;
     color: #9f3a38;
     box-shadow: none;
-}
-
-.spinner {
-    width: 100%;
-    margin: 90px 25px 25px;
 }
 
 .modalVerDetalle .ui.basic.table {

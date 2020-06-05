@@ -22,12 +22,13 @@ import TablaAnalisis from './Components/Analisis/TablaAnalisis'
 import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis'
 import iFramePBI from './Components/Reportes/iFramePBI'
 import CajaContainer from './Components/Caja/CajaContainer'
+import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria'
 
 
 export default function Routes() {
     return (
         <Switch>
-            <AuthenticatedRoute exact path='/' component={App}/>
+            <AuthenticatedRoute exact path='/' component={LPSecretaria}/>
 
             <Route path='/login' component={LoginForm}/>
             <AuthenticatedRoute exact path='/Logout' component={LogoutContainer}/>

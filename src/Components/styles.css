@@ -1,6 +1,34 @@
-body{
+body {
     background-color: rgb(255, 255, 255);
     text-align: center;
+}
+
+.avoidMenu {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3.5rem;
+    margin-bottom: 2rem;
+}
+
+.error {
+    border-color: red;
+}
+
+.listadosBaja {
+    color: rgb(163, 160, 160);
+}
+
+.btnHeader {
+    width: 70%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 100px;
+}
+
+.spinner {
+    top: 50%;
+    left: 50%;
 }
 
 .Formularios{
@@ -11,80 +39,12 @@ body{
     align-items: center;
 }
 
-.patientExtended{
-    display: flex;
-    flex-direction: row;
-}
-
-.historialPaciente{
-    width: 50%;
-    margin: 10px 25px;
-    align-items: center;
-}
-
-.altasYConsultas{ 
-    width: 80%;
-    margin-top: 40px;
-    margin-bottom: 45px;
-    vertical-align: center;
-    display: inline-block;
-}
-
-.FormAlta{
-    width: 100%;
-}
-
-.login{
-    width: 100%;
-    align-self: center; 
-}
-
-.boton{
-    padding: 50px;
-}
-
-.Navigator{
-    display:flex; 
-    flex-direction:row;
-}
-
-.error{
-    border-color: red;
-}
-
-.union{
-    display:flex; 
-    flex-direction:row;
-}
-
-.btnHeader{
-    width: 70%;
-    margin-left: 150px;
-    margin-right: 25px;
-    margin-top: 100px;
-}
-
-.analisisConsulta{
-    width: 90%;
-    margin-left: 60px;
-    margin-right: 25px;
-    margin-top: 100px;
-}
   
-.listadosBaja{
-    color: rgb(163, 160, 160);
-}
-
 .tablaListadoHistorico{
-    width: 100%;
-    margin: 90px 25px 25px;
-}
-
-
-
-.tablaDeterminaciones{
-    width: 78%;
-    margin: 25px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3.5rem;
 }
 
 .rightAlign{
@@ -100,18 +60,9 @@ body{
     text-align: center;
 }
 
-.avoidMenu{
-    margin-top: 100px;
-    width: 100%;
-    margin-right: 25px;
-    margin-left: 25px;
-}
 .centeredPosition {
     position: fixed;
     top: 50%;
     left: 50%;
   }
 
-.afluence{
-    position: left;
-}

@@ -1,17 +1,15 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import { Button,  Form, Container } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import axios from 'axios';
+import { Button,  Form, Container } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos  } from './../../Services/MetodosDeValidacion'
-import { urlTiposAnimales } from './../../Constants/URLs'
-import { getHumanDate } from '../../Services/MetodosPaciente'
-import { getIdTipoAnimal } from '../../Services/MetodosPaciente'
-import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente'
-import { switchAltaAction, alterPatientAction } from '../../Redux/patientsDuck'
-import './../styles.css'
-import './patientsStyle.css'
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos  } from './../../Services/MetodosDeValidacion';
+import { urlTiposAnimales } from './../../Constants/URLs';
+import { getHumanDate } from '../../Services/MetodosPaciente';
+import { getIdTipoAnimal } from '../../Services/MetodosPaciente';
+import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
+import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
+import './patientsStyle.css';
 
 class ConsultaAnimal extends Component {
   constructor(props) {
@@ -51,6 +49,7 @@ class ConsultaAnimal extends Component {
 
   componentDidMount() {
     this.comboTipos()
+    this.props.getPatientByIdAction(this.props.patientId)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -163,84 +162,80 @@ class ConsultaAnimal extends Component {
 
   render(){
     return(
-      <div className='Formularios'>
-      {(this.state.id === '') ? <CircularProgress size={50}/> : 
-       <Container>        
-        <Form>
-          <Form.Group widths='equal'>
-              <Form.Field required id='disabled' label='Número de Paciente' control='input' width={5}
-              value={this.state.id}  />
-
-              <Form.Field required id='disabled' label='Fecha alta' control='input' 
-              value={this.state.fechaAlta}/>
-
-            </Form.Group>
-
+      <div>
+        <Container>        
+          <Form>
             <Form.Group widths='equal'>
-            <Form.Field required label='Nombre Animal' control='input' 
-            value={this.state.nombre} 
-            onChange={this.cambioNombre} 
-            className= {this.state.errorNombre === true ? null : 'error'} 
-            />
-               
-              <Form.Field required label='Tipo Animal' control='select' 
-              value={this.state.tipo} 
-              onChange={this.cambioTipo} 
-              className= {this.state.errorTipo === true ? null : 'error'} 
-              >
-                <option value={null}>  </option>
-                {this.state.tipos.map(item => (
-                <option key={item.tipoAnimalId}>{item.nombre}</option>))}
-              </Form.Field>
+                <Form.Field required id='disabled' label='Número' control='input' width={5}
+                value={this.state.id}  />
+
+                <Form.Field required id='disabled' label='Fecha alta' control='input' 
+                value={this.state.fechaAlta}/>
               </Form.Group>
-              <Form.Field required label='Propietario' control='input' 
-              value={this.state.propietario} 
-              onChange={this.cambioPropietario} 
-              className= {this.state.errorPropietario === true ? null : 'error'} 
-              />
 
-           
+              <Form.Group widths='equal'>
+                <Form.Field required label='Nombre Animal' control='input' 
+                value={this.state.nombre} 
+                onChange={this.cambioNombre} 
+                className= {this.state.errorNombre === true ? null : 'error'} 
+                />
+                  
+                  <Form.Field required label='Tipo Animal' control='select' 
+                  value={this.state.tipo} 
+                  onChange={this.cambioTipo} 
+                  className= {this.state.errorTipo === true ? null : 'error'} 
+                  >
+                    <option value={null}>  </option>
+                    {this.state.tipos.map(item => (
+                    <option key={item.tipoAnimalId}>{item.nombre}</option>))}
+                  </Form.Field>
+                </Form.Group>
 
+                <Form.Field required label='Propietario' control='input' 
+                value={this.state.propietario} 
+                onChange={this.cambioPropietario} 
+                className= {this.state.errorPropietario === true ? null : 'error'} 
+                />
 
-            <Form.Group widths='equal'>
-              <Form.Field  label='Telefono' control='input' 
-              value={this.state.telefono || ''} 
-              className= {this.state.errorTelefono === true ? null : 'error'} 
-              onChange={this.cambioTelefono} 
-              />
+              <Form.Group widths='equal'>
+                <Form.Field  label='Telefono' control='input' 
+                value={this.state.telefono || ''} 
+                className= {this.state.errorTelefono === true ? null : 'error'} 
+                onChange={this.cambioTelefono} 
+                />
 
-              <Form.Field  label='Mail' control='input' 
-              value={this.state.mail || ''} 
-              className= {this.state.errorMail === true ? null : 'error'} 
-              onChange={this.cambioMail} 
-              />
-            </Form.Group>
+                <Form.Field  label='Mail' control='input' 
+                value={this.state.mail || ''} 
+                className= {this.state.errorMail === true ? null : 'error'} 
+                onChange={this.cambioMail} 
+                />
+              </Form.Group>
 
-            <br/>
+              <br/>
 
-            {(!this.state.bitAlta) ? <Button onClick={(e) => { 
-              if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
-                this.alta(e)
-              } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
-              
-            {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => { 
-              if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
-                this.modificarPaciente(e)
-              } else {window.location.reload(true)} } } > 
-              Modificar Paciente
-            </Button> : null}        
+              {(!this.state.bitAlta) ? <Button onClick={(e) => { 
+                if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
+                  this.alta(e)
+                } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
+                
+              {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => { 
+                if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
+                  this.modificarPaciente(e)
+                } else {window.location.reload(true)} } } > 
+                Modificar Paciente
+              </Button> : null}        
 
-        </Form>  
-      </Container>
-      }
+          </Form>  
+        </Container>
     </div>
     )
   }
 
 }
 
-const mapStateToProps = (state, props) =>({
+const mapStateToProps = (state) =>({
+  patient: state.patients.patient,
 })
 
 
-export default connect(mapStateToProps,{switchAltaAction, alterPatientAction})(ConsultaAnimal)
+export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction})(ConsultaAnimal)

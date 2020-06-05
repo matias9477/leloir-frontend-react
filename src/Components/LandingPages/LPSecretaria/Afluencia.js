@@ -78,6 +78,7 @@ class Afluencia extends Component {
                             <Form onSubmit={this.addPatient} >
 
                                 <label>Nombre Paciente</label>
+                                
                                 <div className='union'>
 
                                     <input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..."/>

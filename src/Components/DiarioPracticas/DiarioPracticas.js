@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import MenuLateral from '../MenuOpciones'
-import {Button, Card, List, Label} from 'semantic-ui-react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import NavBar from '../NavBar/NavBar';
+import { Button, Card, List, Label } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import ModificarResultados from './Modals/ModificarResultados'
-import RevisarResultados from './Modals/RevisarResultados'
-import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck'
-
+import ModificarResultados from './Modals/ModificarResultados';
+import RevisarResultados from './Modals/RevisarResultados';
+import { emitirAnalisisAction, getAnalisisPendientesAction } from '../../Redux/analisisDuck';
+import './styles.css';
 
 class DiarioPracticas extends Component {
 
@@ -146,15 +146,19 @@ class DiarioPracticas extends Component {
     render() {
         const { fetching } = this.props
         return (
-            <div className='union'>
-                <MenuLateral/>
-                <div className='tablaListadoHistorico'>
-                    {fetching ?
-                        <CircularProgress className={'centeredPosition'} size={50}/> : this.renderCards()}
-                </div>
-                <div>
-                    {this.handleModalContent()}
-                </div>
+            <div>
+                <NavBar/>
+                {fetching ? <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                    </div> :
+                    <div className='avoidMenu'>
+                        {this.renderCards()}
+                        {this.handleModalContent()}
+                    </div>
+                }
             </div>
         )
     }

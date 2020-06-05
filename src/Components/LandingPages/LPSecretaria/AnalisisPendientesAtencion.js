@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header, Container, List, Divider, Button, Grid } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './LPSecretaria.css'
 
 const AnalisisPendientes = ({pendientes}) => {
