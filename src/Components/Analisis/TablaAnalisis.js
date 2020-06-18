@@ -6,7 +6,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
 import Tabla from '../Reusables/Tabla/Tabla'
-import { urlConsultaAnalisis } from '../../Constants/NavURL'
+import { urlConsultaAnalisis } from '../../Constants/NavUrl';
 import { getAnalisisAction } from '../../Redux/analisisDuck';
 import './analisisStyle.css';
 
@@ -47,9 +47,9 @@ class TablaAnalisis extends React.Component {
                         />
                     </div> :
 
-                    <div className='analisisAll'>
+                    <div>
 
-                        <Button as= {Link} to='/analisis/add' exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                        <Button as= {Link} to='/analisis/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
                             <Icon name='syringe' /> Nuevo Análisis
                         </Button>
 
