@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Button, Dropdown, Header, Icon, Input, Pagination, Grid } from "semantic-ui-react";
+import React from 'react';
+import { Button, Icon } from "semantic-ui-react";
 import {Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import { getDeterminacionesAction, switchAltaAction } from '../../Redux/determinacionesDuck';
 import NavBar from '../NavBar/NavBar';
-import { urlConsultaForm } from "../../Constants/URLs"
+import { urlConsultaForm } from "../../Constants/NavUrl"
 import Tabla from '../Reusables/Tabla/Tabla'
-import './determinaciones.css'
+import '../styles.css'
 
 const columns = [
     {
@@ -50,9 +50,9 @@ class TablaDeterminaciones extends React.Component {
                         />
                     </div> :
 
-                    <div className='determinacionesAll'>
+                    <div>
 
-                        <Button as={Link} to='/determinaciones/add' exact='true' floated='right' icon labelPosition='left' primary
+                        <Button as={Link} to='/determinaciones/add' style={{marginRight: '6em'}} exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                             <Icon name='lab'/> Nueva Determinación
                         </Button>
