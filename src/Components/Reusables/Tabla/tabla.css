@@ -14,8 +14,9 @@
 .tabla {
     margin-left: auto;
     margin-right: auto;
-    width: 90%;
+    width: 80%;
     margin-bottom: 20px;
+    margin-top: 5em;
 }
 
 .tabla .ui.header {
