@@ -54,7 +54,7 @@ class TablaPacientes extends React.Component {
                     <div>
 
                         <Button as= {Link} to='/pacientes/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='syringe' /> Nuevo Paciente
+                            <Icon name='user' /> Nuevo Paciente
                         </Button>
 
                         <Tabla
