@@ -55,7 +55,7 @@ class TablaAnalisis extends React.Component {
 
                         <Tabla
                             data={this.props.analisis}
-                            param={'analisisId'}
+                            param={'idAnalisis'}
                             columns={columns}
                             title='Analisis'
                             options={true}
