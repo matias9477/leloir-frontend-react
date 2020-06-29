@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Pagination, Input, Dropdown, Grid, Button } from 'semantic-ui-react';
+import { Header, Pagination, Input, Dropdown, Grid, Button, Icon } from 'semantic-ui-react';
 import {Link } from 'react-router-dom'
 
 import { nroPorPagina } from '../../../Constants/utils'
@@ -126,7 +126,7 @@ class Tabla extends React.Component {
     }
 
     checkEmptyEntry(value){
-        if(value === ''){
+        if(value === '' || value === undefined){
             return '-'
         } 
         return value
@@ -148,6 +148,17 @@ class Tabla extends React.Component {
         }
         else {
             return (`¿Esta seguro que quiere lo quiere dar de alta?`)
+        }
+    }
+
+
+    getIconTipo(tipo){
+        if (tipo === 'ANIMAL'){
+            return 'paw'
+        } else if(tipo === 'PERSONA'){
+            return 'user'
+        } else if(tipo === 'INSTITUCION'){
+            return 'building'
         }
     }
 
@@ -194,7 +205,7 @@ class Tabla extends React.Component {
 
                             {this.props.columns.map((col, index)=> (
                                 <td data-label={col.text}>
-                                    {col.type === 'Date' ? getHumanDate(row[col.dataField]) : (this.checkEmptyEntry(row[col.dataField]))}
+                                    {col.type === 'Date' ? getHumanDate(row[col.dataField]) : (col.type ==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : (this.checkEmptyEntry(row[col.dataField])))}
                                 </td> 
                             ))}
 
