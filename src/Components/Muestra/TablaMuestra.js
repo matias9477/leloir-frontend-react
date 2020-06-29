@@ -36,7 +36,6 @@ class TablaMuestras extends React.Component {
     render(){
         const { fetching } = this.props
 
-        console.log(this.props.muestras)
         return(
             <div>
                 <NavBar/>
