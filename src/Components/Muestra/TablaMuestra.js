@@ -5,6 +5,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import NavBar from '../NavBar/NavBar';
 import Tabla from '../Reusables/Tabla/Tabla';
 import { getMuestrasAction } from '../../Redux/muestrasDuck';
+import { urlConsultaMuestras } from '../../Constants/NavUrl';
 
 
 const columns = [
@@ -55,9 +56,11 @@ class TablaMuestras extends React.Component {
 
                         <Tabla
                             data={this.props.muestras}
-                            param={'muestraId'}
+                            param={'idMuestra'}
                             columns={columns}
                             title='Muestras'
+                            options={true}
+                            path={urlConsultaMuestras}
                         />
                     </div>
                 }
