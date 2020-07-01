@@ -6,7 +6,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 
 import { getDeterminacionesAction, switchAltaAction } from '../../Redux/determinacionesDuck';
 import NavBar from '../NavBar/NavBar';
-import { urlConsultaForm } from "../../Constants/NavUrl"
+import { urlConsultaDeterminaciones } from "../../Constants/NavUrl"
 import Tabla from '../Reusables/Tabla/Tabla'
 import '../styles.css'
 
@@ -62,7 +62,7 @@ class TablaDeterminaciones extends React.Component {
                             param={'codigoPractica'}
                             columns={columns}
                             title='Determinaciones'
-                            path={urlConsultaForm}
+                            path={urlConsultaDeterminaciones}
                             options={true}
                             switchAlta={true}
                         />

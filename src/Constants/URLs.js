@@ -21,6 +21,8 @@ export const urlMuestras = '/api/muestras/all'
 export const urlTiposMuestras = '/api/tipos_muestras/all'
 export const urlMuestrasAdd = '/api/muestras/add'
 export const urlSwichAlta = '/api/muestras/switch-alta/'
+export const urlGetMuestraById = '/api/muestras/id/'
+export const urlAlterMuestra = '/api/muestras/modificar/'
 
 export const urlPacientes = '/api/pacientes/all'
 export const urlPacientesEnAlta = '/api/pacientes/all-en-alta'

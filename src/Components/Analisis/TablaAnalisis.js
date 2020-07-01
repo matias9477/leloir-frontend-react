@@ -14,7 +14,6 @@ const columns = [
     {
         dataField: 'createdAt',
         text: 'Fecha',
-        type: 'Date',
     },
     {
         dataField: 'paciente',
