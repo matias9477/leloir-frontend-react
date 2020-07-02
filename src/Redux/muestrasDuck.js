@@ -234,6 +234,6 @@ export let alterMuestraAction = (id, data) => (dispatch, getState) => {
                 type: ALTER_MUESTRA_ERROR,
                 payload: err.message
             })
-            return dispatch(getMuestraByIdAction(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
+            return dispatch(getMuestraByIdAction(id), alert('No se ha podido modificar la muestra. Por favor intente nuevamente.'))
         })
 }

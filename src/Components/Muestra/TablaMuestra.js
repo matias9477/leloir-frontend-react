@@ -50,10 +50,6 @@ class TablaMuestras extends React.Component {
 
                     <div>
 
-                        {/* <Button as= {Link} to='/muestras/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='syringe' /> Nueva Mustra
-                        </Button> */}
-
                         <Tabla
                             data={this.props.muestras}
                             param={'idMuestra'}

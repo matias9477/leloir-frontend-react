@@ -190,8 +190,8 @@ class Tabla extends React.Component {
             <table className='ui single line table' >
                 <thead className='centerAlignment'>
                     <tr>
-                        {this.props.columns.map(col => ( 
-                            <th onClick={() => this.handleColumnHeaderClick(col.dataField)}>{col.text}</th>
+                        {this.props.columns.map((col, index) => ( 
+                            <th key={index} onClick={() => this.handleColumnHeaderClick(col.dataField)}>{col.text}</th>
                         ))}
                         {this.props.path ? <th/> : null}
                     </tr>
@@ -204,7 +204,7 @@ class Tabla extends React.Component {
                         <tr key={index} value={row}  className={(row.bitAlta===false ) ? "listadosBaja" : null}> 
 
                             {this.props.columns.map((col, index)=> (
-                                <td data-label={col.text}>
+                                <td key={index} data-label={col.text}>
                                     {col.type === 'Date' ? getHumanDate(row[col.dataField]) : (col.type ==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : this.checkEmptyEntry(row[col.dataField]))}
                                 </td> 
                             ))}

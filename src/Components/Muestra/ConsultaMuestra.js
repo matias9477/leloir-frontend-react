@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Button, Form, Icon, Container, Divider, Grid } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
+import Select from 'react-select';
 
 import NavBar from '../NavBar/NavBar';
 import { getMuestraByIdAction, switchAltaAction, getTiposMuestrasAction, alterMuestraAction } from '../../Redux/muestrasDuck';
 import { validateRequiredCombos } from '../../Services/MetodosDeValidacion';
-import '../styles.css';
+import { getHumanDate } from '../../Services/MetodosPaciente';
+import './muestras.css'
 
 class ConsultaMuestra extends Component {
   constructor(props) {
@@ -62,13 +64,13 @@ class ConsultaMuestra extends Component {
           "createdAt": this.props.muestra.createdAt,
           "createdBy": this.props.muestra.createdBy,
           "estadoMuestra": {
-            "estadoId": this.props.muestra.estadoMuestra.tipoMuestraId,
-            "nombre": this.props.muestra.nombre
+            "estadoId": this.props.muestra.estadoMuestra.estadoId,
+            "nombre": this.props.muestra.estadoMuestra.nombre
           },
           "idMuestra": this.props.muestra.idMuestra,
           "tipoMuestra": {
-            "nombre": "string",
-            "tipoMuestraId": 0
+            "nombre": this.state.tipo.nombre,
+            "tipoMuestraId": this.state.tipo.tipoMuestraId
           },
           "updatedAt": this.props.muestra.updatedAt,
           "updatedBy": this.props.muestra.updatedBy
@@ -84,15 +86,13 @@ class ConsultaMuestra extends Component {
     } else {
       alert("Revise los datos ingresados.")
     }
-
   }
 
-  cambioTipo = (e) => {
-    console.log(e.target.value)
-      this.setState( {
-          tipoMuestra: e,
-          cambios: true,
-      })
+  cambioTipo = tipo => {
+    this.setState({ 
+      tipo,
+      cambios: true,
+    })
   }
 
   mensajeBtnSwitchAlta(){
@@ -109,91 +109,98 @@ class ConsultaMuestra extends Component {
     const {fetching} = this.props
      
     return (
-        <div>
-            <NavBar/>
-            <div className='avoidMenu'>
+      <div>
+        <NavBar/>
+        <div className='avoidMenu'>
 
-            <Container className='btnHeader'>
-                <Button as= {Link} to='/muestras' floated='left' icon labelPosition='left' primary size='small'>
-                <Icon name='arrow alternate circle left' /> Volver
-                </Button>
-            </Container>
+        <Container className='btnHeader'>
+            <Button as= {Link} to='/muestras' floated='left' icon labelPosition='left' primary size='small'>
+            <Icon name='arrow alternate circle left' /> Volver
+            </Button>
+        </Container>
 
-            {(fetching) ? <div className='spinner'>
-                <ClipLoader
-                    size={60}
-                    color={'black'}/>
-              </div> :
+        {(fetching) ? <div className='spinner'>
+            <ClipLoader
+                size={60}
+                color={'black'}/>
+          </div> :
 
-                <Container>
-                  <Form size='huge'>                
-                    <Form.Field control='input' 
-                      value="Muestra" 
-                      id = 'headerConsulta' 
-                    />
-                <Divider id='divider'/>
-                
-              </Form>
-                  {typeof(this.props.muestra) === "string" ? null :
+          <Container>
+            <Form size='huge'>                
+              <Form.Field control='input' 
+                value="Muestra" 
+                id = 'headerConsulta' 
+                readOnly={true}
+              />
+              <Divider id='divider'/>
+            
+            </Form>
+              
+            {typeof(this.props.muestra) === "string" ? null :
+              
+              <Form>
+                <Grid columns='equal'>
+                  <Grid.Column>
+                    <Form.Field required label='Id' control='input'
+                    id='disabled'  width={5} readOnly={true}
+                    value={this.state.idMuestra} />
+                  </Grid.Column>
                   
-                  <Form>
+                  <Grid.Column>
+                    <Form.Field required label='Tipo Muestra' id='labelTipoMuestra' />
+                    <Select
+                      name='tipo muestra'
+                      value={this.state.tipo}
+                      onChange={this.cambioTipo}
+                      placeholder= "Tipo muestra"
+                      options={this.props.tiposMuestras}
+                      getOptionValue={this.getOptionValuTipoMuestra}
+                      getOptionLabel={this.getOptionLabelTipoMuestra}
+                    />
+                  </Grid.Column>
+                </Grid>
 
-                    <Form.Group widths='equal'>
-                      <Form.Field required label='Id' control='input'
-                      id='disabled'  width={5}
-                      value={this.state.idMuestra} />
+                <Form.Group widths='equal'>
+                  <Form.Field required label='Fecha' control='input'
+                  value={getHumanDate(this.state.fecha)} readOnly={true}
+                  id='disabled'
+                  />
 
-                      <Form.Field required label='Tipo Muestra' control='select' 
-                        placeholder = 'Tipo Muestra' 
-                        value={this.state.tipo.nombre} 
-                        onChange={this.cambioTipo} 
-                        className= {this.state.errorTipo === true ? null : 'error'} 
-                        >
-                        {this.props.tiposMuestras.map(item => (
-                            <option key={item.tipoMuestraId}>{item.nombre}</option>))}
-                      </Form.Field>
-                    </Form.Group>
+                  <Form.Field required label='Estado' control='input'
+                  value={this.state.estado.nombre} readOnly={true}
+                  id='disabled'
+                  />
 
+                </Form.Group>
 
-                    <Form.Group widths='equal'>
-                      <Form.Field required label='Fecha' control='input'
-                      value={this.state.fecha}
-                      id='disabled'
-                      />
+                <br/>
 
-                      <Form.Field required label='Estado' control='input'
-                      value={this.state.estado.nombre}
-                      id='disabled'
-                      />
+                <Button color={this.state.bitActivo ? 'red' : 'green'}
+                onClick={(e) => {
+                if (window.confirm('¿Esta seguro que quiere dar de alta la muestra?')) {
+                    this.alta(e) }
+                else {e.preventDefault()}} }
+                >{this.mensajeBtnSwitchAlta()}</Button>
 
-                    </Form.Group>
+                {(this.state.cambios && this.state.bitActivo) ? <Button primary onClick={(e) => {
+                if (window.confirm('¿Esta seguro que quiere modificar la muestra?')) {
+                    this.modificarMuestra(e)
+                    } else {window.location.reload(true)} } }>
+                Modificar Muestra
+                </Button> : null}
 
-                    <br/>
-
-                    <Button color={this.state.bitActivo ? 'red' : 'green'}
-                    onClick={(e) => {
-                    if (window.confirm('¿Esta seguro que quiere dar de alta la muestra?')) {
-                        this.alta(e) }
-                    else {e.preventDefault()}} }
-                    >{this.mensajeBtnSwitchAlta()}</Button>
-
-                    {(this.state.cambios && this.state.bitActivo) ? <Button primary onClick={(e) => {
-                    if (window.confirm('¿Esta seguro que quiere modificar la muestra?')) {
-                        this.modificarMuestra(e)
-                        } else {window.location.reload(true)} } }>
-                    Modificar Muestra
-                    </Button> : null}
-
-                  </Form> 
-                }
-                </Container>
+              </Form> 
             }
-            </div>
-
+          </Container>
+        }
         </div>
+
+      </div>
     )
 }
+  getOptionLabelTipoMuestra = option => option.nombre;
 
+  getOptionValuTipoMuestra = option => option.tipoMuestraId;
 }
 
 const mapStateToProps = (state) => ({
