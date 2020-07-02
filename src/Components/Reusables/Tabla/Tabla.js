@@ -112,7 +112,8 @@ class Tabla extends React.Component {
                 })
             }
 
-            if(this.state.activePage > Math.ceil(this.state.totalCount / this.state.limit)){
+            if(this.state.activePage > Math.ceil(this.state.totalCount / this.state.limit) && Math.ceil(this.state.totalCount / this.state.limit) > 0){
+                console.log("entro aca")
                 this.setState({
                     activePage: Math.ceil(this.state.totalCount / this.state.limit)
                 })
