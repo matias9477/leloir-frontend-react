@@ -9,7 +9,8 @@ import NavBar from '../NavBar/NavBar';
 import { getMuestraByIdAction, switchAltaAction, getTiposMuestrasAction, alterMuestraAction } from '../../Redux/muestrasDuck';
 import { validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import { getHumanDate } from '../../Services/MetodosPaciente';
-import './muestras.css'
+import './muestras.css';
+import '../styles.css';
 
 class ConsultaMuestra extends Component {
   constructor(props) {
@@ -131,6 +132,7 @@ class ConsultaMuestra extends Component {
                 value="Muestra" 
                 id = 'headerConsulta' 
                 readOnly={true}
+                className='headerFont'
               />
               <Divider id='divider'/>
             

@@ -2,10 +2,12 @@
 #headerConsulta {
     text-align: center;
     border: none;
-    font-weight: bold;
-    size: 90px;
     padding: 0;
     background-color: transparent;
+
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    font-weight: 300;
 }
 
 #divider {
