@@ -30,8 +30,7 @@ class Tabla extends React.Component {
             options={nroPorPagina}
             value = {this.state.limit}
             onChange={this.limitChange} 
-            />
-            
+            />          
         )
     }
 
@@ -87,32 +86,25 @@ class Tabla extends React.Component {
     handleSearch = (from, to) => {
         if (this.state.filter === ''){
             return this.filtado(this.props.data).slice(from, to)
-        } else {
-            if (this.state.activePage !== 1) {
-                this.setState({
-                    activePage: 1
-                })
-            }
+        } 
+        else {
 
             let {filter} = this.state
+            let filteredData = []
 
-            const filteredData = this.props.data.filter((data, index) =>
-                this.props.columns.map(col=>(
-                    (typeof(data[col.dataField]) === 'number' ? (data[col.dataField]).toString().includes(filter) : null)
-                )
-                )  
-            )
-
-
-            // const filteredData = this.props.data.filter(a =>
-            //     a.analisisId.toString().includes(filter) ||
-            //     a.paciente.nombre.toUpperCase().includes(filter.toUpperCase()) ||
-            //     (a.paciente.apellido===undefined ? null : a.paciente.apellido.toUpperCase().includes(filter.toUpperCase())) ||
-            //     (a.paciente.apellido===undefined ? null : (a.paciente.nombre + ' ' + a.paciente.apellido).toUpperCase().includes(filter.toUpperCase())) ||
-            //     a.estadoAnalisis.nombre.replace('_', ' ').toUpperCase().includes(filter.toUpperCase()) ||
-            //     getHumanDate(a.createdAt).toString().includes(filter)
-
-            // )
+            for (let i = 0; i < this.props.data.length; i++) {
+                for (let index = 0; index < this.props.columns.length; index++) {
+                    var a = this.props.columns[index].dataField
+                    var b = this.props.data[i]
+                
+                    if (b[a]===undefined || b[a]===null) {
+                        break
+                    } else if (b[a].toString().toUpperCase().includes(filter.toString().toUpperCase()) === true) {
+                        filteredData.push(this.props.data[i])
+                        break
+                    }
+                }
+            }
 
             if (this.state.totalCount !== filteredData.length) {
                 this.setState({
@@ -120,8 +112,13 @@ class Tabla extends React.Component {
                 })
             }
 
-            return this.filtado(filteredData).slice(from, to)
+            if(this.state.activePage > Math.ceil(this.state.totalCount / this.state.limit)){
+                this.setState({
+                    activePage: Math.ceil(this.state.totalCount / this.state.limit)
+                })
+            }
 
+            return this.filtado(filteredData).slice(from, to)
         }
     }
 
@@ -227,8 +224,8 @@ class Tabla extends React.Component {
             
             </table>
             <Pagination
-                activePage={this.state.activePage}
-                totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
+                totalPages={Math.ceil(this.state.totalCount / this.state.limit)}
+                activePage={(this.state.activePage > Math.ceil(this.state.totalCount / this.state.limit) ? Math.ceil(this.state.totalCount / this.state.limit) : this.state.activePage)}
                 onPageChange={this.onChangePage}
             />
             
