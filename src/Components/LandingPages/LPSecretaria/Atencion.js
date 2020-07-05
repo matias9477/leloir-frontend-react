@@ -1,17 +1,15 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react'
-import Select from 'react-select'
-import { Link } from 'react-router-dom'
-import {connect} from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
+import React, { Component } from 'react';
+import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react';
+import Select from 'react-select';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import { urlAnalisisPendientes } from '../../../Constants/URLs'
-import { checkAtributo } from '../../../Services/MetodosDeValidacion'
-import SelectedPaciente from './PacienteEnAtencion'
-import AnalisisPendientes from './AnalisisPendientesAtencion'
-import { getPatientsAction } from '../../../Redux/patientsDuck'
-import './LPSecretaria.css'
+import { checkAtributo } from '../../../Services/MetodosDeValidacion';
+import SelectedPaciente from './PacienteEnAtencion';
+import AnalisisPendientes from './AnalisisPendientesAtencion';
+import { getPatientsAction } from '../../../Redux/patientsDuck';
+import './LPSecretaria.css';
 
 class Atencion extends Component {
     constructor(props) {
@@ -47,19 +45,6 @@ class Atencion extends Component {
     saveStorage(name, data){
         if (data != null){
              localStorage.setItem(name, JSON.stringify(data))
-        }
-    }
-
-    getAnalisisPendientes = () =>{
-        let paciente = JSON.parse(localStorage.current)[0] || JSON.parse(localStorage.current)
-        if(paciente!==false && this.state.analisisPendientes.length === 0){
-                axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
-                    this.setState({
-                        analisisPendientes : Object.values(resolve.data).flat(),
-                    })
-                }, (error) => {
-                    console.log('Error en la búsqueda de analisis pendientes: ',error.message);
-                })
         }
     }
 
@@ -132,14 +117,12 @@ class Atencion extends Component {
 
     patientFound(){
         let patient = JSON.parse(localStorage.current)[0] || JSON.parse(localStorage.current)
-        this.getAnalisisPendientes()
+
         return(
             <div> 
                 <SelectedPaciente selected={patient} />
             
-                {patient.bitAlta ? (this.state.analisisPendientes.length>0 ?
-                    <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
-                : <h4>El paciente no posee análisis pendientes</h4>) : null}
+                <AnalisisPendientes id={patient.id}/>
                 
             </div>
         )
@@ -237,4 +220,4 @@ function mapStateToProps(state){
 }
 
 
-export default connect(mapStateToProps, {getPatientsAction})(Atencion)
+export default connect(mapStateToProps, {getPatientsAction})(Atencion);
