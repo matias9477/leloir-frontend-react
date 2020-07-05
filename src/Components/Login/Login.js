@@ -1,8 +1,12 @@
-import React, {Component} from 'react';
-import AuthenticationService from '../../Services/AuthenticationService';
-import {Button, Form, Label, Icon} from 'semantic-ui-react';
-import './../styles.css';
-import {withRouter} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Button, Form, Label, Icon } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
+
+import { loginAction } from '../../Redux/userDuck';
+import './login.css';
 
 class LoginComponent extends Component {
 
@@ -11,68 +15,67 @@ class LoginComponent extends Component {
         this.state = {
             usernameOrEmail: '',
             password: '',
-            hasLoginFailed: false,
-            showSuccessMessage: false,
-            open: false,
         };
-
-        this.cambioUsuario = this.cambioUsuario.bind(this);
-        this.cambioPass = this.cambioPass.bind(this);
-        this.loginClicked = this.loginClicked.bind(this);
     }
 
-    cambioUsuario(e) {
+    cambioUsuario = (e) =>{
         this.setState({
             usernameOrEmail: e.target.value
         })
     }
 
-    cambioPass(e) {
+    cambioPass = (e) => {
         this.setState({
             password: e.target.value
         })
     }
 
-    redirectLoginSuccessful() {
-        this.props.history.push('/');
-    }
-
-
-    loginClicked(e) {
+    loginClicked = (e) => {
         e.preventDefault();
-        AuthenticationService
-            .executeJwtAuthenticationService(this.state.usernameOrEmail, this.state.password)
-            .then((response) => {
-                AuthenticationService.registerSuccessfulLoginForJwt(this.state.usernameOrEmail, response.data.tokenType, response.data.accessToken);
-                this.props.history.push(`/`)
-            }).catch(() => {
-            this.setState({showSuccessMessage: false});
-            this.setState({hasLoginFailed: true})
-        })
+        const { usernameOrEmail, password } = this.state
+        if(usernameOrEmail && password){
+            this.props.loginAction(usernameOrEmail, password)
+        }
     }
+
 
     render() {
+        const { hasLoginFailed, fetching, loggedIn } = this.props
         return (
-            <Form className='login'>
-                <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
-                onChange={this.cambioUsuario}
-                className={this.state.hasLoginFailed ? 'error' : null}
-                />
+            <div>
+                {fetching === true ?
+                    <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                    </div>
 
-                <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' 
-                placeholder='Contraseña'
-                onChange={this.cambioPass}
-                className={this.state.hasLoginFailed ? 'error' : null}
-                />
+                :
+                    <Form className='login' >
+                        <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
+                        onChange={this.cambioUsuario}
+                        className={hasLoginFailed ? 'error' : null}
+                        />
 
-                <Button content='Iniciar Sesión' primary onClick={this.loginClicked}/>
-                
-                {this.state.hasLoginFailed ?
-                <Label style={errorStyle}>
-                    <Icon name='warning circle' color='red' /> Usuario y/o contraseña errónea. Revise los datos ingresados.
-                </Label> : null }
-            </Form>
-
+                        <Form.Input type='password' icon='lock' iconPosition='left' label='Contraseña' 
+                        placeholder='Contraseña'
+                        onChange={this.cambioPass}
+                        className={hasLoginFailed ? 'error' : null}
+                        />
+                        
+                            <Button disabled={(this.state.password === '' || this.state.usernameOrEmail === '') ? true : false} exact='true' primary onClick={this.loginClicked}>
+                                        Iniciar Sesión
+                            </Button>
+                        
+                        {hasLoginFailed ?
+                        <Label style={errorStyle}>
+                            <Icon name='warning circle' color='red' /> Usuario y/o contraseña errónea. Revise los datos ingresados.
+                        </Label> : null }
+                    </Form>
+                }
+                {loggedIn ? <Redirect to="/"/> : null}
+            </div>
         )
     }
 }
@@ -80,6 +83,16 @@ class LoginComponent extends Component {
 const errorStyle = {
     marginTop: '15px',
     backgroundColor: 'white',
-  };
+};
 
-export default withRouter(LoginComponent)
+
+function mapStateToProps(state){
+    return {
+        fetching:state.user.fetching,
+        loggedIn:state.user.loggedIn,
+        hasLoginFailed:state.user.hasLoginFailed
+    }
+}
+
+
+export default withRouter(connect(mapStateToProps,{loginAction})(LoginComponent))

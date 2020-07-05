@@ -1,0 +1,35 @@
+.unionConNavbar {
+    display:flex;
+    flex-direction:row;
+}
+
+.formConsultaAnalisis {
+    width: 90%;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formConsultaAnalisis .ui.segment {
+    margin-top: 50px;
+}
+
+.muestras .ui.button {
+    margin-top: 15px;
+}
+
+.createMuestra .css-yk16xz-control {
+    background: #fff6f6;
+    border-color: #e0b4b4;
+    color: #9f3a38;
+    box-shadow: none;
+}
+
+.modalVerDetalle .ui.basic.table {
+    margin-top: 1.8em;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.2em;
+}

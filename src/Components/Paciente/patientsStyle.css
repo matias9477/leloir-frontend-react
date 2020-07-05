@@ -1,0 +1,32 @@
+
+#headerConsulta {
+    text-align: center;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+#divider {
+    margin-bottom: 35px;
+    margin-top: 0;
+    border-color: rgb(112, 106, 106);
+    border-block-end: none;
+    width: 75%;
+    display: inline-block;
+}
+
+#disabled {
+    pointer-events: none;
+    background-color: #f2f3f5 !important;
+}
+
+.altasPacientes{
+    margin-top: 3rem;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}

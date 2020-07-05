@@ -1,15 +1,19 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form } from 'semantic-ui-react';
-import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente';
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion';
-import { urlTiposAnimales } from './../../Constants/URLs';
-import './../styles.css';
+import React, { Component } from 'react'
+import axios from 'axios'
+import {withRouter} from 'react-router-dom'
+import { Button, Header, Form } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import 'react-datepicker/dist/react-datepicker.css'
+
+import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
+import { urlTiposAnimales } from './../../Constants/URLs'
+import { addPatientAction } from '../../Redux/patientsDuck'
+import './patientsStyle.css'
 
 class AltaAnimal extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = ({
         nombre: '',
         telefono:'',
@@ -25,31 +29,25 @@ class AltaAnimal extends Component {
         errorPropietario: true,
         errorMail: true,
       })
-    this.getPaciente = this.getPaciente.bind(this);
-    this.cambioNombre = this.cambioNombre.bind(this);
-    this.cambioTipo = this.cambioTipo.bind(this); 
-    this.cambioPropietario = this.cambioPropietario.bind(this);
-    this.cambioTelefono = this.cambioTelefono.bind(this);
-    this.cambioMail = this.cambioMail.bind(this);
   } 
 
   comboTipos = () =>{
     axios.get(urlTiposAnimales).then(resolve => {
       this.setState({
         tipos: Object.values(resolve.data).flat(),
-      });
+      })
     }, (error) => {
-        console.log('Error combo animales', error.message);
+        console.log('Error combo animales', error.message)
     })
 
   }
 
   componentDidMount() {
-    this.comboTipos();
-
+    this.comboTipos()
   }
 
-  handleUpdateClick = (api) => {
+  handleUpdateClick = () => {
+    // const url = this.props.location.state.prevPath
     var data = {
         "type": "com.leloir.backend.domain.Animal",
         "bitAlta": true,
@@ -63,31 +61,37 @@ class AltaAnimal extends Component {
             "nombre": this.state.tipo,
             "tipoAnimalId": getIdTipoAnimal(this.state.tipo, this.state.tipos),
         }
-    };
+    }
 
-      axios.post(api, data
-        ).then((response) => {
-          alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.'); 
-          this.vaciadoCampos();
-        }, (error) => {
-          alert('No se ha podido registrar el paciente.');
-      });
+    this.props.addPatientAction(data)
+    this.vaciadoCampos()
+   
+    //TODO: agregar redireccionamiento al prevpath after success
+
+
+      // axios.post(api, data
+      //   ).then((response) => {
+      //     alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.')
+      //     this.vaciadoCampos()
+      //     this.props.history.push(url)
+      //   }, (error) => {
+      //     alert('No se ha podido registrar el paciente.')
+      // })
   }
 
-  getPaciente(e){
-    e.preventDefault();
+  getPaciente = (e) => {
+    e.preventDefault()
     
-    const { nombre, tipo, propietario, mail, telefono } = this.state;
+    const { nombre, tipo, propietario, mail, telefono } = this.state
 
-    const errorNombre = validateNombre(nombre);
-    const errorTipo = validateRequiredCombos(tipo);
-    const errorPropietario = validateNombre(propietario);
-    const errorMail = validateMail(mail);
-    const errorTelefono = validateOnlyNumbers(telefono);
+    const errorNombre = validateNombre(nombre)
+    const errorTipo = validateRequiredCombos(tipo)
+    const errorPropietario = validateNombre(propietario)
+    const errorMail = validateMail(mail)
+    const errorTelefono = validateOnlyNumbers(telefono)
 
     if ( errorNombre && errorTipo && errorPropietario && errorMail && errorTelefono ) {
-      const api = '/pacientes/add';
-      this.handleUpdateClick(api);
+      this.handleUpdateClick()
     } else {
       alert("Verifique los datos ingresados.")
       this.setState({
@@ -116,31 +120,31 @@ class AltaAnimal extends Component {
     })
   }
  
-  cambioNombre(e) {
+  cambioNombre = (e) => {
     this.setState( {
       nombre: e.target.value
     })
   }
 
-  cambioTipo(e) {
+  cambioTipo = (e) => {
     this.setState( {
       tipo: e.target.value
     })
   }  
 
-  cambioPropietario(e){
+  cambioPropietario = (e) => {
     this.setState( {
         propietario: e.target.value
     })
   } 
 
-  cambioTelefono(e){
+  cambioTelefono = (e) => {
     this.setState( {
         telefono: e.target.value
     })
   }
 
-  cambioMail(e){
+  cambioMail = (e) => {
     this.setState( {
         mail: e.target.value
     })
@@ -148,7 +152,7 @@ class AltaAnimal extends Component {
 
   render(){
     return (
-      <div className='altasYConsultas'>
+      <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
 
         <Form onSubmit={this.getPaciente}>
@@ -200,11 +204,15 @@ class AltaAnimal extends Component {
         </Form>  
       </div>
 
-    );
+    )
   }
 
 
 }
 
+const mapStateToProps = state =>({
+  fetching: state.patients.fetching,
+})
 
-export default AltaAnimal;
+
+export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaAnimal))

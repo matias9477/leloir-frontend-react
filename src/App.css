@@ -1,10 +1,11 @@
 .App {
   text-align: center;
 }
-.Menu{
+.Menu {
   position: absolute;
   top: 1;
   width: 100%;
   overflow: hidden;
   background-color: black;
 }
+

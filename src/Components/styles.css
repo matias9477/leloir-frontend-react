@@ -1,69 +1,50 @@
-body{
+body {
     background-color: rgb(255, 255, 255);
     text-align: center;
 }
 
-.Formularios{
-    width: 70%;
-    margin-left: 150px;
-    margin-right: 25px;
-    margin-top: 40px;
-}
-
-.altasYConsultas{ 
+.avoidMenu {
     width: 80%;
-    margin-top: 40px;
-    margin-bottom: 45px;
-    vertical-align: center;
-    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3.5rem;
+    margin-bottom: 2rem;
 }
 
-.FormAlta{
-    width: 100%;
-}
-
-.login{
-    width: 100%;
-    align-self: center;
-}
-
-.boton{
-    padding: 50px;
-}
-
-.Navigator{
-    display:flex; 
-    flex-direction:row;
-}
-
-.error{
+.error {
     border-color: red;
 }
 
-.union{
-    display:flex; 
-    flex-direction:row;
+.listadosBaja {
+    color: rgb(163, 160, 160);
 }
 
-.btnHeader{
+.btnHeader {
     width: 70%;
     margin-left: 150px;
     margin-right: 25px;
     margin-top: 100px;
 }
+
+.spinner {
+    top: 50%;
+    left: 50%;
+}
+
+.Formularios{
+    width: 40%;
+    margin-left: 150px;
+    margin-right: 25px;
+    margin-top: 40px;
+    align-items: center;
+}
+
   
-.listadosBaja{
-    color: rgb(163, 160, 160);
-}
-
 .tablaListadoHistorico{
-    width: 100%;
-    margin: 90px 25px 25px;
-}
-
-.tablaDeterminaciones{
-    width: 78%;
-    margin: 25px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3.5rem;
 }
 
 .rightAlign{
@@ -78,4 +59,10 @@ body{
 .centerAlignment{
     text-align: center;
 }
+
+.centeredPosition {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
 

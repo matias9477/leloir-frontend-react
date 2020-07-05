@@ -1,52 +1,24 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import MenuOpciones from '../../MenuOpciones';
+
+import NavBar from '../../NavBar/NavBar';
+import Afluencia from './Afluencia';
+import './../../styles.css';
 
 class LPSecretaria extends Component {
-    constructor(props) {
-        super(props);
-
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
+    
     render() {
         return (
+            
             <div>
-                <MenuOpciones/>
+                <NavBar/>
+                <div className='avoidMenu'>
+                    <Afluencia/>
+                </div>
             </div>
+            
         );
     }
 }
 
-LPSecretaria.propTypes = {
-
-};
 
 export default LPSecretaria;

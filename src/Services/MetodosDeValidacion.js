@@ -1,5 +1,5 @@
 export const emptyToNull = (v) => {
-    if (v === '' || v === null){
+    if (v === '' || v === null || v === undefined){
       return v=null;
     } else if (isFinite(String(v))){
       return v;
@@ -30,7 +30,7 @@ export function nullTo(nro){
 }
 
 export function validateRequiredCombos(valor){
-  if (valor.length === 0 || valor === ''){
+  if (valor === undefined || valor === null || valor.length === 0 || valor === ''){
       return false
   }
   return true
@@ -77,8 +77,20 @@ export function validateOnlyNumbersRequired(valor){
 export function validateMail(mail){
   const validMail = /\S+@\S+\.\S+/;
   
-  if (mail === '' || mail === null){
+  if (mail === '' || mail === null || mail === undefined){
     return true
+  } else if ( validMail.test(mail) ) {
+    return true
+  } else {
+    return false
+  } 
+}
+
+export function validateRequiredMail(mail){
+  const validMail = /\S+@\S+\.\S+/;
+  
+  if (mail === '' || mail === null){
+    return false
   } else if ( validMail.test(mail) ) {
     return true
   } else {
@@ -106,3 +118,21 @@ export function validateFechaNacimiento(fechaNacimiento) {
   }
 }
 
+export function checkAtributo(atributo){
+  if(atributo !== undefined){
+      return atributo;
+  } 
+  else{
+      return '';
+  }
+}
+
+export function validateContraseña(contra1, contra2){
+  if (contra1 === '' || contra2 === ''){
+    return false
+  } else if ((contra1 === contra2) && (hasNumbers(contra1) || (typeof(contra1) === 'string') || hasNumbers(contra2) || (typeof(contra2) === 'string')) ){
+    return true
+  } else {
+    return false
+  }
+}
