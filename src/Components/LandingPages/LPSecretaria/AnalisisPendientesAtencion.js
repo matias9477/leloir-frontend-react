@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Container, List, Divider, Button, Grid } from 'semantic-ui-react';
+import { Header, Container, List, Divider, Button, Grid, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -22,12 +22,12 @@ class AnalisisPendientes extends React.Component {
                     <Container className='dataPacienteEnAtencion' text>                    
                         <Header as='h4' className= 'hStyle'>ANÁLISIS PENDIENTE DEL PACIENTE</Header>
                                                 
-                            {pendientes.map(pendiente =>{
-                                return <div>
-                                    <Grid width='equal'>
+                            {pendientes.map((pendiente, index) =>{
+                                return <div key={index}> 
+                                    <Grid width='equal' >
                                         <Grid.Column width={11}>
                                             <List> 
-                                                <List.Item width>
+                                                <List.Item>
                                                     <List.Content>ID Analisis: {pendiente.idAnalisis}</List.Content>
                                                 </List.Item>
 
@@ -42,18 +42,21 @@ class AnalisisPendientes extends React.Component {
                                         </Grid.Column>
                                         <Grid.Column >
                                                 
-                                            <Button as= {Link} to={{pathname: `/analisis/consulta/${pendiente.idAnalisis}`, state: { prevPath: window.location.pathname }}} primary >Ver análisis</Button>
+                                            <Button as= {Link} to={{pathname: `/analisis/consulta/${pendiente.idAnalisis}`, state: { prevPath: window.location.pathname }}} icon circular inverted color='blue'>
+                                               <Icon name='arrow right'/>
+                                            </Button>
                                         </Grid.Column>
-                                                
                                     </Grid>
                                     <Divider/>
                                 </div>
                                         
                             })}                   
                     </Container>
-                :   <Container>
+                :   <div>
+                    {this.props.alta ?
                         <Header as='h4' textAlign='center'>El paciente no posee análisis pendientes.</Header>
-                    </Container>}
+                        : null}
+                    </div>}
             </div>
         );
     }

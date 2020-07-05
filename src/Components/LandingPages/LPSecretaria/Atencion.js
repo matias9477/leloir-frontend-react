@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react';
+import { Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react';
 import Select from 'react-select';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ class Atencion extends Component {
         this.state = ({
             selectedPaciente: '',
             analisisPendientes:[],
+            flag: false,
         });
     }
 
@@ -84,13 +85,12 @@ class Atencion extends Component {
             return (
                 <div className='patientNotFound'> 
                     <h4>{JSON.parse(localStorage.nombreCurrent)}</h4>
-                    <subtitle  className='patientNotFoundMessage'> Paciente no encontrado </subtitle>
+                    <div  className='patientNotFoundMessage'> Paciente no encontrado</div>
                     <Divider />
                     <h4>Búsque el paciente o regístrelo a continuación</h4>
                
                     <Grid columns='equal'>
                         <Grid.Column>
-                            <br></br>
                             <Select
                                 name='pacientes'
                                 onChange={this.handleChangeListPacientes}
@@ -100,12 +100,10 @@ class Atencion extends Component {
                                 getOptionValue={this.getOptionValuePatient}
                                 getOptionLabel={this.getOptionLabelPatient}
                             />
-
                         </Grid.Column>
                         <Grid.Column width={5}>
-                            <br/>
-                            <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
-                                <Icon name='user' /> Nuevo Paciente
+                            <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                                <Icon name='user'/> 
                             </Button>
                         </Grid.Column>
                     </Grid>
@@ -117,12 +115,11 @@ class Atencion extends Component {
 
     patientFound(){
         let patient = JSON.parse(localStorage.current)[0] || JSON.parse(localStorage.current)
-
+        
         return(
             <div> 
                 <SelectedPaciente selected={patient} />
-            
-                <AnalisisPendientes id={patient.id}/>
+                <AnalisisPendientes id={patient.id} alta={patient.bitAlta}/>
                 
             </div>
         )
@@ -134,16 +131,16 @@ class Atencion extends Component {
 
             <div className='moreThanOnePatientScroll'>
             {JSON.parse(localStorage.current).map((patient, index) => (
-            <List divided verticalAlign="middle">
-                <List.Item >
-                    <List.Content floated='right'>
-                        <Button style={{marginRight: '20px'}} onClick={() => this.handleOnClickMoreThan1Patient(patient)}>Elegir</Button>
-                    </List.Content>
-                    <Icon name={this.getIconTipo(patient.tipoPaciente)}/>
-                    <List.Content>{this.checkName(patient)}</List.Content>
-                </List.Item>
-                <hr style={{margin: '0'}}/>
-            </List>
+                <List key={index} divided verticalAlign="middle">
+                    <List.Item >
+                        <List.Content floated='right'>
+                            <Button style={{marginRight: '20px'}} onClick={() => this.handleOnClickMoreThan1Patient(patient)}>Elegir</Button>
+                        </List.Content>
+                        <Icon name={this.getIconTipo(patient.tipoPaciente)}/>
+                        <List.Content>{this.checkName(patient)}</List.Content>
+                    </List.Item>
+                    <hr style={{margin: '0'}}/>
+                </List>
             ))}
             </div>
         </Container>
@@ -175,15 +172,20 @@ class Atencion extends Component {
         } 
         return name
     } 
+
+    removeCurrent = () => {
+        localStorage.removeItem("current");
+        this.setState({
+            flag: true
+        })
+    }
          
 
-    render() {
+    render() { 
+
         return (
             <div className='atencion'>
-                <Header as='h2'>Atención</Header>
-                
                 {(localStorage.current !== undefined) ? 
-             
                     <Container >
                         {this.props.fetching ?
                             <div className='spinner'>
@@ -191,21 +193,21 @@ class Atencion extends Component {
                                      size={60}
                                      color={'black'}
                                  />
-                             </div> : 
-        
+                            </div> : 
                             <div>
                                 {JSON.parse(localStorage.current) !== undefined ? 
                                 (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
                                 JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                                {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                    <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                : null}
                             </div>
                         }
-                        
-                        
-                    </Container>
+
+                   </Container>
                     
                 : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
                 }
-               
             </div>
         );
     }
