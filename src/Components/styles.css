@@ -64,5 +64,14 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-  }
+}
 
+@media only screen and (max-width: 600px) {
+    .avoidMenu {
+        margin-top: 35px;
+        width: 100%;
+        padding: 0 0.4rem;
+        padding-bottom: 6em;
+    }
+  
+}

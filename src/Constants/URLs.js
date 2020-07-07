@@ -39,6 +39,7 @@ export const urlSignIn = '/api/auth/signin'
 export const urlLoggedUser = '/api/user/me'
 
 export const urlAnalisisPendientes = '/api/analisis/pendientes'
+export const urlAnalisisByIdPendientes = '/api/analisis/pendientes/'
 export const urlGetAnalisis = '/api/analisis/id/'
 export const urlEmitirAnalisis = '/api/analisis/emitir-analisis/'
 export const urlAnalisis = '/api/analisis/all'
