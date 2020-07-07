@@ -57,12 +57,7 @@
   }
 
   export const getHumanDate = (date) => {
-    date = new Date(date);
-    var d = date.getDate().toString();
-    var dd = (d.length === 2) ? d : "0"+d;
-    var m = (date.getMonth()+1).toString();
-    var mm = (m.length === 2) ? m : "0"+m;     
-    return((date.getFullYear()) + '-' + mm + '-' + dd.toString());
+    return date.slice(0, 10)
   }
 
   export const getIdTipoAnimal = (tipoAnimal, tipos) => {

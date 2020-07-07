@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
-import { Button,  Form, Container } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { Button,  Form, Container } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
-import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
-import { getHumanDate } from '../../Services/MetodosPaciente'
-import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente'
-import { switchAltaAction, alterPatientAction } from '../../Redux/patientsDuck'
-import './patientsStyle.css'
+import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion';
+import { getHumanDate } from '../../Services/MetodosPaciente';
+import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
+import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
+import './patientsStyle.css';
 
 
 class ConsultaInstitucion extends Component {
@@ -29,6 +28,10 @@ class ConsultaInstitucion extends Component {
         errorFax: true,
               
     })
+    }
+
+    componentDidMount(){
+        this.props.getPatientByIdAction(this.props.patientId)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -121,70 +124,70 @@ class ConsultaInstitucion extends Component {
 
     render(){
         return(
-            <div className='Formularios'>
-            {(this.state.id === '') ? <CircularProgress size={50}/> : 
-            <Container>                   
-                <Form>
-                    <Form.Group widths='equal'>
-                        <Form.Field required id='disabled' label='Número de Paciente' control='input' width={5}
-                        value={this.state.id} 
+            <div>
+                <Container>                   
+                    <Form>
+                        <Form.Group widths='equal'>
+                            <Form.Field required id='disabled' label='Número' control='input' width={5}
+                            value={this.state.id} 
+                            />
+
+                            <Form.Field required id='disabled' label='Fecha alta' control='input' 
+                            value={this.state.fechaAlta} 
+                            />
+                        </Form.Group>
+
+                        <Form.Field required label='Nombre Institucón' control='input' disabled={this.state.modificacion}  
+                        value={this.state.nombre} 
+                        onChange={this.cambioNombre} 
+                        className= {this.state.errorNombre === true ? null : 'error'} 
                         />
 
-                        <Form.Field required id='disabled' label='Fecha alta' control='input' 
-                        value={this.state.fechaAlta} 
+                        <Form.Group widths='equal'>
+                            <Form.Field  label='Telefono' control='input' 
+                            value={this.state.telefono || ''} 
+                            onChange={this.cambioTelefono} 
+                            className= {this.state.errorTelefono === true ? null : 'error'} 
+                            />
+
+                            <Form.Field  label='Mail' control='input' 
+                            value={this.state.mail || ''} 
+                            onChange={this.cambioMail} 
+                            className= {this.state.errorMail === true ? null : 'error'} 
+                            />
+                        </Form.Group>
+
+                        <Form.Field  label='Fax' control='input' 
+                        value={this.state.fax || ''} 
+                        onChange={this.cambioFax} 
+                        className= {this.state.errorFax === true ? null : 'error'} 
                         />
-                    </Form.Group>
 
-                    <Form.Field required label='Nombre Institucón' control='input' disabled={this.state.modificacion}  
-                    value={this.state.nombre} 
-                    onChange={this.cambioNombre} 
-                    className= {this.state.errorNombre === true ? null : 'error'} 
-                    />
+                        <br/>
 
-                    <Form.Group widths='equal'>
-                        <Form.Field  label='Telefono' control='input' 
-                        value={this.state.telefono || ''} 
-                        onChange={this.cambioTelefono} 
-                        className= {this.state.errorTelefono === true ? null : 'error'} 
-                        />
-
-                        <Form.Field  label='Mail' control='input' 
-                        value={this.state.mail || ''} 
-                        onChange={this.cambioMail} 
-                        className= {this.state.errorMail === true ? null : 'error'} 
-                        />
-                    </Form.Group>
-
-                    <Form.Field  label='Fax' control='input' 
-                    value={this.state.fax || ''} 
-                    onChange={this.cambioFax} 
-                    className= {this.state.errorFax === true ? null : 'error'} 
-                    />
-
-                    <br/>
-
-                    {(!this.state.bitAlta) ? <Button onClick={(e) => { 
-                        if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
-                        this.alta(e)
-                        } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
-                        
-                    {(this.state.cambios && this.state.bitAlta) ? <Button onClick={(e) => { 
-                        if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
-                        this.modificarPaciente(e)
-                        } else {window.location.reload(true)} } } primary>
-                        Modificar Paciente
-                    </Button> : null}           
+                        {(!this.state.bitAlta) ? <Button onClick={(e) => { 
+                            if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
+                            this.alta(e)
+                            } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
                             
-                </Form>  
-            </Container>
-            }
+                        {(this.state.cambios && this.state.bitAlta) ? <Button onClick={(e) => { 
+                            if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
+                            this.modificarPaciente(e)
+                            } else {window.location.reload(true)} } } primary>
+                            Modificar Paciente
+                        </Button> : null}           
+                                
+                    </Form>  
+                </Container>
+                
             </div>
         )
     }
 }
 
 const mapStateToProps = (state, props) =>({
+  patient: state.patients.patient,
 })
   
-export default connect(mapStateToProps,{switchAltaAction, alterPatientAction})(ConsultaInstitucion)
+export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction})(ConsultaInstitucion)
   

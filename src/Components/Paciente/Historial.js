@@ -4,8 +4,6 @@ import { Icon, Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
 import './../styles.css'
-import MenuOpciones from '../MenuOpciones'
-
 
 class Historial extends Component {
 
@@ -73,10 +71,9 @@ class Historial extends Component {
     render() {
         const { fetching } = this.props
         return (
-            <div className='union'>
-                <MenuOpciones />
+            <div>
                 <div className='historialPaciente'>
-                    <h1>{this.props.history.paciente}</h1>
+                    <h3>Historial</h3>
                     {fetching ?  null : this.renderTable(this.props.history)}
                 </div>
                 

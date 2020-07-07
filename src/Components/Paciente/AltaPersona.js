@@ -11,7 +11,7 @@ import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs'
 import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
-import './../styles.css'
+import './patientsStyle.css'
 
 class AltaPersona extends Component {
   constructor(props) {
@@ -335,7 +335,7 @@ class AltaPersona extends Component {
 
   render(){
     return (
-      <div className='altasYConsultas'>
+      <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Paciente</Header>
 
         <Form>

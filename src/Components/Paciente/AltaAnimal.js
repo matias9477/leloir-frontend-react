@@ -9,7 +9,7 @@ import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
 import { urlTiposAnimales } from './../../Constants/URLs'
 import { addPatientAction } from '../../Redux/patientsDuck'
-import './../styles.css'
+import './patientsStyle.css'
 
 class AltaAnimal extends Component {
   constructor(props) {
@@ -152,7 +152,7 @@ class AltaAnimal extends Component {
 
   render(){
     return (
-      <div className='altasYConsultas'>
+      <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
 
         <Form onSubmit={this.getPaciente}>
