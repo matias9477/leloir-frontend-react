@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import { addDays } from 'date-fns'
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Button, Form, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -93,7 +93,7 @@ class AltaPersona extends Component {
 
   comboPlanes = () =>{
     if(this.state.planes.length === 0 && this.state.obraSocial !== ''){
-    axios.get('/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
+    axios.get('/api/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
          this.setState({
            planes: Object.values(resolve.data).flat(),
          })
@@ -202,9 +202,15 @@ class AltaPersona extends Component {
     }
 
     this.props.addPatientAction(data)
-    this.vaciadoCampos()
-    //TODO: implementar direccionamiento a prevpath after success
   }
+
+
+
+
+  redirect = () => (
+    this.props.history.push("/pacientes")
+  )
+
 
   getPaciente = (e) => {
     e.preventDefault()
@@ -223,6 +229,7 @@ class AltaPersona extends Component {
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       this.handleUpdateClick()
+      this.redirect()
     } else {
       alert('Verifique los datos ingresados.')
       this.setState({
@@ -239,31 +246,7 @@ class AltaPersona extends Component {
     }    
   }
 
-  vaciadoCampos(){
-    this.setState( {
-      id: '',
-      nombre: '',
-      apellido:'',
-      tipoDoc:'',
-      nroDoc:'',
-      fechaNacimiento:'',
-      fechaAlta:'',
-      sexo:'',
-      nacionalidad:'',
-      telefono:'',
-      mail:'',
-      obraSocial:'',
-      plan:'',
-      errorNombre: true,
-      errorApellido: true,
-      errorTipoDoc: true,
-      errorNroDoc: true,
-      errorSexo: true,
-      errorNac: true,
-      errorFechaNac: true,
-      errorMail: true,
-    })
-  }
+
  
   cambioNombre = (e) => {
     this.setState( {
@@ -461,4 +444,4 @@ const mapStateToProps = state =>({
   fetching: state.patients.fetching,
 })
 
-export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaPersona))
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaPersona))
