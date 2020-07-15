@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
 import { urlTiposAnimales } from './../../Constants/URLs'
+import { pacientes } from '../../Constants/URLsNavigation'
 import { addPatientAction } from '../../Redux/patientsDuck'
 import './patientsStyle.css'
 
@@ -152,7 +153,7 @@ class AltaAnimal extends Component {
 
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to="/pacientes" />
+      return <Redirect to={pacientes} />
     }
     return (
       <div className='altasPacientes'>

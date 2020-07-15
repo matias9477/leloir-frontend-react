@@ -4,6 +4,7 @@ import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 
+import { pacientes } from '../../Constants/URLsNavigation'
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
@@ -111,7 +112,7 @@ class AltaInstitucion extends Component {
    
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to="/pacientes" />
+      return <Redirect to={pacientes} />
     }
     return (
       <div className='altasPacientes'>

@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs'
+import { pacientes } from '../../Constants/URLsNavigation'
 import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
@@ -315,7 +316,7 @@ class AltaPersona extends Component {
 
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to="/pacientes" />
+      return <Redirect to={pacientes} />
     }
     return (
       <div className='altasPacientes'>
