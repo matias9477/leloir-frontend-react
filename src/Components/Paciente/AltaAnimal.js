@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Redirect} from 'react-router-dom'
 import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -151,6 +151,9 @@ class AltaAnimal extends Component {
   }  
 
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to="/pacientes" />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
@@ -212,7 +215,8 @@ class AltaAnimal extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 
-export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaAnimal))
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaAnimal))

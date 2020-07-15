@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import { addDays } from 'date-fns'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import { Button, Form, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -200,16 +200,13 @@ class AltaPersona extends Component {
         "bitAlta": true
     }
     }
-
-    this.props.addPatientAction(data)
+       this.props.addPatientAction(data)
   }
 
+  
 
 
 
-  redirect = () => (
-    this.props.history.push("/pacientes")
-  )
 
 
   getPaciente = (e) => {
@@ -229,7 +226,7 @@ class AltaPersona extends Component {
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       this.handleUpdateClick()
-      this.redirect()
+      //this.redirect()
     } else {
       alert('Verifique los datos ingresados.')
       this.setState({
@@ -317,6 +314,9 @@ class AltaPersona extends Component {
   }
 
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to="/pacientes" />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Paciente</Header>
@@ -442,6 +442,7 @@ class AltaPersona extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaPersona))

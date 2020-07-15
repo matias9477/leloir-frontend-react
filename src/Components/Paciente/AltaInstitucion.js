@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter, Redirect } from 'react-router-dom'
 
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
@@ -110,6 +110,9 @@ class AltaInstitucion extends Component {
 
    
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to="/pacientes" />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nueva Institución</Header>
@@ -159,7 +162,8 @@ class AltaInstitucion extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 
-export default connect(mapStateToProps,{addPatientAction})(AltaInstitucion)
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaInstitucion))
