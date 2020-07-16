@@ -69,7 +69,7 @@ class TablaAnalisis extends React.Component {
 
 }
 const mapStateToProps = state => ({
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisis,
     analisis: state.analisis.analisisAll
 })
 

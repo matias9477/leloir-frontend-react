@@ -6,7 +6,7 @@ import Select from 'react-select'
 import { connect } from 'react-redux'
 
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar'
 import { urlPlanesXObra,urlObrasSoc } from '../../Constants/URLs'
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
 import SelectedPaciente from './SelectedPaciente'
@@ -14,6 +14,7 @@ import SelectedDeterminaciones from './SelectedDeterminaciones'
 import { getPatientsAction } from '../../Redux/patientsDuck' 
 import { getDeterminacionesAction } from '../../Redux/determinacionesDuck'
 import { addAnalisisAction } from '../../Redux/analisisDuck'
+import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck'
 import './../styles.css'
 import './analisisStyle.css'
 
@@ -23,7 +24,7 @@ class FormNuevoAnalisis extends Component {
     this.state = ({
         determinaciones: [],
         pacientes: [],
-        obrasSociales: [],
+        // obrasSociales: [],
         planes: [],
         precio:'',
 
@@ -40,7 +41,7 @@ class FormNuevoAnalisis extends Component {
     }
 
   componentDidMount(){
-    this.getAllObraSocial()
+    this.props.getObrasSocialesAction()
 
     this.props.getPatientsAction()
     this.props.getDeterminacionesAction()
@@ -60,19 +61,19 @@ class FormNuevoAnalisis extends Component {
     }
   }
 
-  getAllObraSocial = () =>{
-    axios.get(urlObrasSoc).then((response) => {
-      this.setState({
-        obrasSociales: Object.values(response.data).flat(),
-      })
-  }, (error) => {
-      console.log('Error en carga de obras sociales: ', error.message)
-  })
-  }
+  // getAllObraSocial = () =>{
+  //   axios.get(urlObrasSoc).then((response) => {
+  //     this.setState({
+  //       obrasSociales: Object.values(response.data).flat(),
+  //     })
+  // }, (error) => {
+  //     console.log('Error en carga de obras sociales: ', error.message)
+  // })
+  // }
 
   getAllPlanes = () =>{
     if(this.state.planes.length === 0){
-    axios.get(urlPlanesXObra+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)).then((response) => {
+    axios.get(urlPlanesXObra+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.props.obrasSociales)).then((response) => {
       this.setState({
         planes: Object.values(response.data).flat(),
       })
@@ -106,7 +107,7 @@ class FormNuevoAnalisis extends Component {
   }
  
   getPrecio = (e) => { //TODO: arreglar esta mierda
-    const api = "/precio/obraSocialId/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.state.obrasSociales)+"/planId/"+getIdPlan(this.state.selectedPaciente.plan,this.state.planes)+"/determinaciones/"+ this.listIdDets(this.state.selectedDeterminaciones)
+    const api = "/precio/obraSocialId/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.props.obrasSociales)+"/planId/"+getIdPlan(this.state.selectedPaciente.plan,this.state.planes)+"/determinaciones/"+ this.listIdDets(this.state.selectedDeterminaciones)
     axios.get(api)
     .then(resolve =>{
       this.setState({
@@ -302,7 +303,7 @@ class FormNuevoAnalisis extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <Container className='formAnalsis'>
           <Button as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow left' /> Volver
@@ -341,7 +342,8 @@ class FormNuevoAnalisis extends Component {
 const mapStateToProps = state => ({
   patients: state.patients.patients,
   determinaciones: state.determinaciones.determinaciones,
+  obrasSociales: state.obrasSociales.obrasSociales,
 })
 
 export default  connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction})(FormNuevoAnalisis)
+  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction})(FormNuevoAnalisis)
