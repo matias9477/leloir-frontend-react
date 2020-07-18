@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 
 import { urlTablaPacientes}  from '../../Constants/NavUrl';
-import { urlTablaPacientes } from '../../Constants/NavUrl'
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
