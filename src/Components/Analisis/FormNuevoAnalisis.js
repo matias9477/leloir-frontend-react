@@ -6,7 +6,7 @@ import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import NavBar from '../NavBar/NavBar'
-import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta } from '../../Constants/URLs';
+import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta, urlAddAnalisis } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import './../styles.css';
@@ -140,8 +140,7 @@ class FormNuevoAnalisis extends Component {
     const errorPaciente = validateRequiredCombos(selectedPaciente);
     const errorDeterminaciones = validateRequiredCombos(selectedDeterminaciones);
     if ( errorPaciente && errorDeterminaciones ) {
-      const api = '/analisis/add';
-      this.handleUpdateClick(api);
+      this.handleUpdateClick(urlAddAnalisis);
     } else {
       alert("Revise los datos ingresados.");
       this.setState({

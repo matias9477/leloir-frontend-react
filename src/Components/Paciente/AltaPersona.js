@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos} from '../../Constants/URLs'
-import { pacientes } from '../../Constants/URLsNavigation'
+import { urlTablaPacientes } from '../../Constants/NavUrl'
 import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
@@ -125,7 +125,6 @@ class AltaPersona extends Component {
   }
 
   handleUpdateClick = (api) => {
-    // const url = this.props.location.state.prevPath
     var data
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
@@ -227,7 +226,6 @@ class AltaPersona extends Component {
 
     if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
       this.handleUpdateClick()
-      //this.redirect()
     } else {
       alert('Verifique los datos ingresados.')
       this.setState({
@@ -316,7 +314,7 @@ class AltaPersona extends Component {
 
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to={pacientes} />
+      return <Redirect to={urlTablaPacientes} />
     }
     return (
       <div className='altasPacientes'>
