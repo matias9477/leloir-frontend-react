@@ -4,6 +4,7 @@ import {Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
+import { urlAddDeterminacion } from '../../Constants/NavUrl';
 import { getDeterminacionesAction, switchAltaAction } from '../../Redux/determinacionesDuck';
 import NavBar from '../NavBar/NavBar';
 import { urlConsultaDeterminaciones } from "../../Constants/NavUrl"
@@ -52,7 +53,7 @@ class TablaDeterminaciones extends React.Component {
 
                     <div>
 
-                        <Button as={Link} to='/determinaciones/add' style={{marginRight: '6em'}} exact='true' floated='right' icon labelPosition='left' primary
+                        <Button as={Link} to={urlAddDeterminacion} style={{marginRight: '6em'}} exact='true' floated='right' icon labelPosition='left' primary
                             size='small'>
                             <Icon name='lab'/> Nueva Determinación
                         </Button>

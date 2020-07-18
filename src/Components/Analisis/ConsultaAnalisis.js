@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaAnalisis } from '../../Constants/NavUrl';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
@@ -328,7 +329,7 @@ class ConsultaAnalisis extends Component {
 
 
     render() {
-        var prevURL = this.props.location.state.prevPath || '/analisis'
+        var prevURL = this.props.location.state.prevPath || urlTablaAnalisis
         return (
             <div>
                 <NavBar/>

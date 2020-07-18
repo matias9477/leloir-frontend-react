@@ -6,6 +6,7 @@ import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
 import NavBar from '../NavBar/NavBar'
+import { urlAddPaciente, urlTablaAnalisis } from '../../Constants/NavUrl' 
 import { urlPlanesXObra,urlObrasSoc,urlDeterminaciones, urlPacientesEnAlta, urlAddAnalisis } from '../../Constants/URLs';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
@@ -174,7 +175,7 @@ class FormNuevoAnalisis extends Component {
         <NavBar/>
         {this.state.loading ? <CircularProgress className={'centeredPosition'} size={50}/> : 
         <Form  className="avoidMenu">
-          <Button as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+          <Button as= {Link} to={urlTablaAnalisis} exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
           </Button>
           <Header as='h2'>Registrar nuevo Análisis</Header>
@@ -194,7 +195,7 @@ class FormNuevoAnalisis extends Component {
               />
             </Grid.Column>
             <Grid.Column>
-              <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
+              <Button as= {Link} to={{pathname: urlAddPaciente, state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
                 <Icon name='user' /> Nuevo Paciente
               </Button>
             </Grid.Column>
