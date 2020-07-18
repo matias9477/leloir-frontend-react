@@ -3,11 +3,11 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
-import { Button, Form, Container } from 'semantic-ui-react';
+import { Button, Form, Container, Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente';
-import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
+import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, fechaAltaDateStamp, getAge  } from './../../Services/MetodosPaciente';
 import { urlDocs, urlObrasSoc, urlPaises, urlSexos } from '../../Constants/URLs';
 import { emptyToNull, titleCase,  validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
@@ -356,15 +356,16 @@ class ConsultaPersona extends Component {
 
   
   render() { 
+
     return (
       <div>
         <Container>  
           <Form>
               <Form.Group widths='equal'>
-                <Form.Field required id='disabled' label='Número' control='input' width={5}
+                <Form.Field readOnly={true} required id='disabled' label='Número' control='input' width={5}
                 value={this.state.id}/>
                 
-                <Form.Field required id='disabled' label='Fecha alta' control='input' 
+                <Form.Field readOnly={true} required id='disabled' label='Fecha alta' control='input' 
                 value={this.state.fechaAlta} />
               </Form.Group>
 
@@ -421,16 +422,23 @@ class ConsultaPersona extends Component {
                 <option key={item.idPais}>{item.nombreBonito}</option>))}
               </Form.Field> 
               
-              <Form.Field required 
-              className= {this.state.errorFechaNac === true ? null : 'error'} 
-              >
-                <label>Fecha de Nacimiento</label>
-                  <DatePicker selected={Date.parse(this.state.fechaNacimiento)} onChange= {this.cambioFechaNacimiento} 
-                  peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
-                  maxDate={addDays(new Date(), 0)} 
-                  dateFormat="yyyy-MM-dd">
-                  </DatePicker> 
-              </Form.Field>
+              <Grid columns={2}>
+                <Grid.Column>
+                  <Form.Field required 
+                  className= {this.state.errorFechaNac === true ? null : 'error'} 
+                  >
+                    <label>Fecha de Nacimiento</label>
+                      <DatePicker selected={Date.parse(this.state.fechaNacimiento)} onChange= {this.cambioFechaNacimiento} 
+                      peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+                      maxDate={addDays(new Date(), 0)} 
+                      dateFormat="yyyy-MM-dd">
+                      </DatePicker> 
+                  </Form.Field>
+                </Grid.Column>
+                <Grid.Column>
+                  <Form.Field readOnly={true} label='Edad' value={getAge(this.state.fechaNacimiento).toString()} control='input' id='disabled'/>
+                </Grid.Column>
+              </Grid>
 
               <Form.Group widths='equal'>
                 <Form.Field  label='Telefono' control='input'
@@ -447,24 +455,24 @@ class ConsultaPersona extends Component {
               </Form.Group>
 
               <Form.Group widths='equal'> 
-              <Form.Field  label='Obra Social' control='select' 
-              value={this.state.obraSocial} 
-              onChange={this.cambioObraSocial} 
-              className= {this.state.errorObraSocial === true ? null : 'error'} 
-              >
-                <option value={null}>  </option>
-                {this.state.obrasSociales.map(item => (
-                <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-              </Form.Field>
+                <Form.Field  label='Obra Social' control='select' 
+                value={this.state.obraSocial} 
+                onChange={this.cambioObraSocial} 
+                className= {this.state.errorObraSocial === true ? null : 'error'} 
+                >
+                  <option value={null}>  </option>
+                  {this.state.obrasSociales.map(item => (
+                  <option key={item.idObraSocial}>{item.razonSocial}</option>))}
+                </Form.Field>
 
-              <Form.Field  label='Plan' control='select' 
-              value={this.state.plan} 
-              onChange={this.cambioPlan}  
-              >
-                <option value={null}>  </option>
-                {this.state.planes.map(item => (
-                <option key={item.planId}>{item.nombre}</option>))}
-              </Form.Field> 
+                <Form.Field  label='Plan' control='select' 
+                value={this.state.plan} 
+                onChange={this.cambioPlan}  
+                >
+                  <option value={null}>  </option>
+                  {this.state.planes.map(item => (
+                  <option key={item.planId}>{item.nombre}</option>))}
+                </Form.Field> 
               </Form.Group>
               <br/>
 
