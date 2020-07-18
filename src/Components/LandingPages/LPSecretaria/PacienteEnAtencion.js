@@ -1,8 +1,9 @@
 import React from 'react'
 import { Header, Container, List, Button, Grid, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom'
 
+import { urlAddAnalisis, urlConsultaPacientes } from '../../../Constants/NavUrl' 
 import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
 import { switchAltaAction, getPatientByNombreAction } from './../../../Redux/patientsDuck'
 import './LPSecretaria.css'
@@ -57,10 +58,10 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                             </List>
                         </Grid.Column>
                         <Grid.Column >
-                            <Button as= {Link} to={{pathname: `/pacientes/consulta/${selected.id}`, state: { prevPath: window.location.pathname }}} primary size='small' icon>
+                            <Button as= {Link} to={{pathname: `${urlConsultaPacientes}${selected.id}`, state: { prevPath: window.location.pathname }}} primary size='small' icon>
                                 <Icon name='user'/>
                             </Button>
-                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: '/analisis/add', state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
+                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: {urlAddAnalisis}, state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
                                 <Icon name='syringe' /> 
                             </Button>
                         </Grid.Column>

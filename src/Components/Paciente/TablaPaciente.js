@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlAddPaciente } from '../../Constants/NavUrl';
 import Tabla from '../Reusables/Tabla/Tabla'
 import { urlConsultaPacientes } from '../../Constants/NavUrl';
 import { getPatientsAction } from '../../Redux/patientsDuck';
@@ -53,7 +54,7 @@ class TablaPacientes extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to='/pacientes/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                        <Button as= {Link} to={urlAddPaciente} style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
                             <Icon name='user' /> Nuevo Paciente
                         </Button>
 

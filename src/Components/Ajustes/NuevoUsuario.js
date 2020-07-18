@@ -6,7 +6,7 @@ import {Button, Form} from 'semantic-ui-react'
 import axios from "axios";
 import Select from 'react-select';
 
-import {urlDocs, urlPaises, urlSexos} from "../../Constants/URLs";
+import {urlDocs, urlPaises, urlSexos, urlSignUp} from "../../Constants/URLs";
 import {getCurrentDate} from "../../Services/MetodosPaciente";
 import { validateNombre, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento, validateContraseña } from './../../Services/MetodosDeValidacion';
 import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
@@ -320,7 +320,7 @@ class NuevoUsuario extends Component {
         if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNacionalidad && errorMail && errorUsuario && errorContraseña && errorRol) {
 
             let data = this.state.signUpRequest;
-            axios.post('/auth/signup', data
+            axios.post(urlSignUp, data
             ).then((response) => {
                 alert(`Se creo el usuario correctamente.`);
             }, (error) => {
