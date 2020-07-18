@@ -160,7 +160,7 @@ class Tabla extends React.Component {
     }
 
     render(){
-        const { param } = this.props
+        const { param, dataConsulta } = this.props
 
         return <div className='tabla'>
             
@@ -210,7 +210,7 @@ class Tabla extends React.Component {
                                 {this.props.path ?
                                     <Button circular icon='settings'
                                     as= {Link} 
-                                    to={{pathname: `${this.props.path}${this.props.data[index][param]}`, state: { prevPath: window.location.pathname }}} 
+                                    to={{pathname: `${this.props.path}${this.props.data[index][param]}`, state: { prevPath: window.location.pathname, type: this.props.data[index][dataConsulta] }}} 
                                     exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
                                     >
                                     </Button> 
