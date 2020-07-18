@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaObrasSociales } from '../../Constants/NavUrl';
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
 import '../styles.css';
@@ -146,7 +147,7 @@ class ConsultaObraSocial extends Component {
         <div className='avoidMenu'>
 
           <Container className='btnHeader'>
-            <Button as= {Link} to='/obras_sociales' floated='left' icon labelPosition='left' primary size='small'>
+            <Button as= {Link} to={urlTablaObrasSociales} floated='left' icon labelPosition='left' primary size='small'>
               <Icon name='arrow alternate circle left' /> Volver
             </Button>
           </Container>

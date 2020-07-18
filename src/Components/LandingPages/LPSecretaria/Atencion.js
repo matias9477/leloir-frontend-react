@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
+import { urlAddPaciente } from '../../../Constants/NavUrl';
 import { checkAtributo } from '../../../Services/MetodosDeValidacion';
 import SelectedPaciente from './PacienteEnAtencion';
 import AnalisisPendientes from './AnalisisPendientesAtencion';
@@ -102,7 +103,7 @@ class Atencion extends Component {
                             />
                         </Grid.Column>
                         <Grid.Column width={5}>
-                            <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                            <Button as= {Link} to={{pathname: {urlAddPaciente}, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
                                 <Icon name='user'/> 
                             </Button>
                         </Grid.Column>

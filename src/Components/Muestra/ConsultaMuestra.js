@@ -6,6 +6,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import Select from 'react-select';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaMuestras } from '../../Constants/NavUrl'
 import { getMuestraByIdAction, switchAltaAction, getTiposMuestrasAction, alterMuestraAction } from '../../Redux/muestrasDuck';
 import { validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import { getHumanDate } from '../../Services/MetodosPaciente';
@@ -107,7 +108,7 @@ class ConsultaMuestra extends Component {
 
 
   render() {
-    var prevURL = this.props.location.state.prevPath || '/muestras'
+    var prevURL = this.props.location.state.prevPath || urlTablaMuestras
     const {fetching} = this.props
      
     return (

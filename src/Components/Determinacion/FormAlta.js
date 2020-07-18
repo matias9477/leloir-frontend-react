@@ -4,7 +4,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
-import { addDeterminacionAction } from './../../Redux/determinacionesDuck'
+import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
+import { addDeterminacionAction } from './../../Redux/determinacionesDuck';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
 import NavBar from '../NavBar/NavBar';
@@ -102,7 +103,7 @@ class FormAlta extends Component {
                 <NavBar/>
                 <div className='avoidMenu'>
                     <Container className='btnHeader'>
-                        <Button as={Link} to='/determinaciones' exact='true' floated='left' icon
+                        <Button as={Link} to={urlTablaDeterminaciones} exact='true' floated='left' icon
                                 labelPosition='left' primary size='small'>
                             <Icon name='arrow alternate circle left'/> Volver
                         </Button>

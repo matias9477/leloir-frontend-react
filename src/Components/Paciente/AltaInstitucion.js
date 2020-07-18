@@ -4,7 +4,7 @@ import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 
-
+import { urlTablaPacientes}  from '../../Constants/NavUrl';
 import { urlTablaPacientes } from '../../Constants/NavUrl'
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
@@ -137,7 +137,7 @@ class AltaInstitucion extends Component {
 
           <br/>
           
-          <Button as= {Link} to={'/pacientes'} primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
+          <Button as= {Link} to={urlTablaPacientes} primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 
         </Form>  
       </div>
