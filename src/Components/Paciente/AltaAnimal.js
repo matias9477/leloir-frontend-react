@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Redirect} from 'react-router-dom'
 import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
 import { urlTiposAnimales } from './../../Constants/URLs'
+import { pacientes } from '../../Constants/URLsNavigation'
 import { addPatientAction } from '../../Redux/patientsDuck'
 import './patientsStyle.css'
 
@@ -151,6 +152,9 @@ class AltaAnimal extends Component {
   }  
 
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to={pacientes} />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
@@ -212,7 +216,8 @@ class AltaAnimal extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 
-export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaAnimal))
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaAnimal))
