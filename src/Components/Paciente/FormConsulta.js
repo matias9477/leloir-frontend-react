@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Icon, Container, Divider, Form, Grid, Tab } from 'semantic-ui-react';
+import { Button, Icon, Container, Divider, Form, Tab } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ClipLoader from "react-spinners/ClipLoader";
 
 import NavBar from '../NavBar/NavBar';
 import ConsultaPersona from './ConsultaPersona';
@@ -33,6 +32,7 @@ class FormConsulta extends Component {
               <Form.Field control='input' 
                 value={this.props.patient.apellido === undefined ? this.props.patient.nombre : this.props.patient.nombre + ' ' + this.props.patient.apellido} 
                 id = {'headerConsulta'}
+                readOnly={true}
               />
               <Divider id={'divider'}/>
               
