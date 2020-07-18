@@ -12,6 +12,10 @@ import './analisisStyle.css';
 
 const columns = [
     {
+        dataField: 'idAnalisis',
+        text: 'Núm'
+    },
+    {
         dataField: 'createdAt',
         text: 'Fecha',
     },
