@@ -196,7 +196,7 @@ class Tabla extends React.Component {
             
                 <tbody className='centerAlignment'>
                 
-                    {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map(  (row, index) => (
+                    {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map( (row, index) => (
 
                         <tr key={index} value={row}  className={(row.bitAlta===false ) ? "listadosBaja" : null}> 
 
@@ -205,12 +205,12 @@ class Tabla extends React.Component {
                                     {col.type === 'Date' ? getHumanDate(row[col.dataField]) : (col.type ==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : this.checkEmptyEntry(row[col.dataField]))}
                                 </td> 
                             ))}
-
+                                    
                             {this.props.options ? <td>
                                 {this.props.path ?
                                     <Button circular icon='settings'
                                     as= {Link} 
-                                    to={{pathname: `${this.props.path}${this.props.data[index][param]}`, state: { prevPath: window.location.pathname, type: this.props.data[index][dataConsulta] }}} 
+                                    to={{pathname: `${this.props.path}${row[param]}`, state: { prevPath: window.location.pathname, type: row[dataConsulta] }}} 
                                     exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
                                     >
                                     </Button> 
