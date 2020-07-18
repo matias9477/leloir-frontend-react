@@ -64,6 +64,7 @@ class TablaPacientes extends React.Component {
                             title='Pacientes'
                             options={true}
                             path={urlConsultaPacientes}
+                            dataConsulta={"tipoPaciente"}
                         />
                     </div>
                 }

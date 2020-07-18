@@ -30,3 +30,7 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.ui.attached.tabular.menu {
+    margin-top: 2.2rem;
+}
