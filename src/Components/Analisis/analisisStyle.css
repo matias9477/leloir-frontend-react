@@ -33,3 +33,7 @@
     margin-right: auto;
     margin-bottom: 1.2em;
 }
+
+.ui.circular.button {
+    background-color: transparent;
+}
