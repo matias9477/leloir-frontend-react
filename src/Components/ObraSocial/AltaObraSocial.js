@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 
+import { urlTablaObrasSociales } from '../../Constants/NavUrl'
+import { urlAltaObraSocial } from '../../Constants/URLs'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail} from './../../Services/MetodosDeValidacion';
 import { addObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import NavBar from '../NavBar/NavBar'
@@ -55,8 +57,7 @@ class AltaObraSocial extends Component {
     const errorValorUb = validateOnlyNumbers(valorUb);
 
     if ( errorRazonSocial && errorCuit && errorMail && errorTelefono  && errorValorUb) {
-      const api = '/obras_sociales/add';
-      this.handleUpdateClick(api);
+      this.handleUpdateClick(urlAltaObraSocial);
     } else {
       alert("Revise los datos ingresados.");
       this.setState({
@@ -121,7 +122,7 @@ class AltaObraSocial extends Component {
         <NavBar/>
           <div className='avoidMenu'>
             <Container className='btnHeader'>
-              <Button as= {Link} to='/obras_sociales' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+              <Button as= {Link} to={urlTablaObrasSociales} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                 <Icon name='arrow alternate circle left' /> Volver
               </Button>
             </Container>

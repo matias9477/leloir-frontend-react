@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaPacientes } from '../../Constants/NavUrl'
 import ConsultaPersona from './ConsultaPersona';
 import ConsultaAnimal from './ConsultaAnimal';
 import ConsultaInstitucion from './ConsultaInstitucion';
@@ -52,7 +53,7 @@ class FormConsulta extends Component {
   }
   
   render() {
-    var prevURL = this.props.location.state.prevPath || '/pacientes'
+    var prevURL = this.props.location.state.prevPath || urlTablaPacientes
     
     return (
       <div>

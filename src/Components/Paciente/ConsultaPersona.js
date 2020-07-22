@@ -6,6 +6,7 @@ import { addDays } from 'date-fns';
 import { Button, Form, Container, Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
+import { urlPlanes } from '../../Constants/URLs'
 import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente';
 import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, fechaAltaDateStamp, getAge  } from './../../Services/MetodosPaciente';
 import { urlDocs, urlObrasSoc, urlPaises, urlSexos } from '../../Constants/URLs';
@@ -98,7 +99,7 @@ class ConsultaPersona extends Component {
 
   comboPlanes = () =>{
     if(this.state.planes.length === 0){
-    axios.get('/obras_sociales/planes/' + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
+    axios.get(urlPlanes + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
          this.setState({
            planes: Object.values(resolve.data).flat(),
          })

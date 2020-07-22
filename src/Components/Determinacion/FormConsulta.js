@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux'
 
+import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
@@ -132,7 +133,7 @@ class FormConsulta extends Component {
                 <div className='avoidMenu'>
 
                     <Container className='btnHeader'>
-                        <Button as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
+                        <Button as= {Link} to={urlTablaDeterminaciones} floated='left' icon labelPosition='left' primary size='small'>
                             <Icon name='arrow alternate circle left' /> Volver
                         </Button>
                     </Container>
