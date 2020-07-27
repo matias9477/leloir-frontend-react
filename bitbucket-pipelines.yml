@@ -1,8 +1,18 @@
-image: atlassian/pipelines-awscli
+image: node:10.15.0
 
 pipelines:
+  default:
+      - step:
+          name: "Run tests"
+          script:
+            - npm run test
+
   branches:
     develop:
+      - step:
+          name: "Run tests"
+          script:
+            - npm run test
       - step:
           name: "Build & Push Image"
           deployment: Test
