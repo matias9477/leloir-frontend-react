@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Header, Form, Icon, Container } from 'semantic-ui-react'
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
-import MenuOpciones from '../MenuOpciones';
+import NavBar from '../NavBar/NavBar';
 import './../styles.css';
 
 class AltaDomicilio extends Component {
@@ -107,7 +107,7 @@ class AltaDomicilio extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className="FormAlta">
           {this.renderForm()}
         </div>

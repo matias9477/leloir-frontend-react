@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import MenuOpciones from '../MenuOpciones'
+import NavBar from '../NavBar/NavBar';
 import { getDomicilioByIdAction, switchAltaAction, alterDomicilioAction } from '../../Redux/domiciliosDuck'
 import './domicilioStyles.css'
 
@@ -78,7 +78,7 @@ class ConsultaDomicilio extends Component {
   render() {
     return (
       <div className='union'>
-        <MenuOpciones/>
+        <NavBar/>
         <div className='Formularios'>
 
           <Container className='btnHeader'>
