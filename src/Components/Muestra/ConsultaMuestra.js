@@ -61,25 +61,8 @@ class ConsultaMuestra extends Component {
     })
 
     if ( errorTipo ) {
-      var data = {
-          "bitActivo": true,
-          "createdAt": this.props.muestra.createdAt,
-          "createdBy": this.props.muestra.createdBy,
-          "estadoMuestra": {
-            "estadoId": this.props.muestra.estadoMuestra.estadoId,
-            "nombre": this.props.muestra.estadoMuestra.nombre
-          },
-          "idMuestra": this.props.muestra.idMuestra,
-          "tipoMuestra": {
-            "nombre": this.state.tipo.nombre,
-            "tipoMuestraId": this.state.tipo.tipoMuestraId
-          },
-          "updatedAt": this.props.muestra.updatedAt,
-          "updatedBy": this.props.muestra.updatedBy
-        
-      }
-
-      this.props.alterMuestraAction(this.state.idMuestra, data)
+    
+      this.props.alterMuestraAction(this.state.idMuestra, this.state.tipo.nombre)
 
       this.setState({
           cambios: false,
