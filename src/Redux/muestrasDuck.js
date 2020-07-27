@@ -222,7 +222,7 @@ export let alterMuestraAction = (id, data) => (dispatch, getState) => {
     dispatch({
         type: ALTER_MUESTRA,
     })
-    return axios.put(`${urlAlterMuestra}${id}`, data)
+    return axios.put(`${urlAlterMuestra}${id}?tipoMuestra=${data}`)
         .then(res=>{
             dispatch({
                 type: ALTER_MUESTRA_SUCCESS
