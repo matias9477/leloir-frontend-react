@@ -1,28 +1,39 @@
-import React from 'react'
-import { Switch, Route } from 'react-router-dom'
-import AuthenticatedRoute from './Services/AuthenticatedRoute'
-import App from './App'
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import AuthenticatedRoute from './Services/AuthenticatedRoute';
+import App from './App';
 
-import LoginForm from './Components/Login/LoginLayout'
-import TablaPaciente from './Components/Paciente/TablaPaciente'
-import FormAlta from './Components/Paciente/FormAlta'
-import FormConsulta from './Components/Paciente/FormConsulta'
-import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer'
-import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta'
-import TablaObraSocial from './Components/ObraSocial/TablaObraSocial'
-import ConsultaObraSocial from './Components/ObraSocial/ConsultaObraSocial'
-import AltaObraSocial from './Components/ObraSocial/AltaObraSocial'
-import LogoutContainer from './Components/Logout/LogoutContainer'
-import FormAltaDeterminacion from './Components/Determinacion/FormAlta'
-import FormNuevoAnalisis from './Components/Analisis/FormNuevoAnalisis'
-import AjustesContainer from './Components/Ajustes/AjustesContainer'
-import TablaMuestra from './Components/Muestra/TablaMuestra'
-import DiarioPracticas from './Components/DiarioPracticas/DiarioPracticas'
-import TablaAnalisis from './Components/Analisis/TablaAnalisis'
-import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis'
-import iFramePBI from './Components/Reportes/iFramePBI'
-import CajaContainer from './Components/Caja/CajaContainer'
-import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria'
+import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria';
+
+import LoginForm from './Components/Login/LoginLayout';
+import LogoutContainer from './Components/Logout/LogoutContainer';
+import AjustesContainer from './Components/Ajustes/AjustesContainer';
+
+import TablaPaciente from './Components/Paciente/TablaPaciente';
+import FormAlta from './Components/Paciente/FormAlta';
+import FormConsulta from './Components/Paciente/FormConsulta';
+
+import TablaObraSocial from './Components/ObraSocial/TablaObraSocial';
+import ConsultaObraSocial from './Components/ObraSocial/ConsultaObraSocial';
+import AltaObraSocial from './Components/ObraSocial/AltaObraSocial';
+
+import DeterminacionesContainer from './Components/Determinacion/DeterminacionesContainer';
+import FormConsultaDeterminacion from './Components/Determinacion/FormConsulta';
+import FormAltaDeterminacion from './Components/Determinacion/FormAlta';
+
+import TablaAnalisis from './Components/Analisis/TablaAnalisis';
+import FormNuevoAnalisis from './Components/Analisis/FormNuevoAnalisis';
+import ConsultaAnalisis from './Components/Analisis/ConsultaAnalisis';
+
+import TablaMuestra from './Components/Muestra/TablaMuestra';
+import ConsultaMuestra from './Components/Muestra/ConsultaMuestra';
+
+import DiarioPracticas from './Components/DiarioPracticas/DiarioPracticas';
+
+import iFramePBI from './Components/Reportes/iFramePBI';
+
+import CajaContainer from './Components/Caja/CajaContainer';
+
 import TablaDomicilio from './Components/Domicilio/TablaDomicilio';
 import FormNuevoDomicilio from './Components/Domicilio/AltaDomicilio';
 import ConsultaDomicilio from './Components/Domicilio/ConsultaDomicilio';
@@ -54,11 +65,12 @@ export default function Routes() {
             <AuthenticatedRoute exact path='/analisis/consulta/:id' component={ConsultaAnalisis}/>
 
             <AuthenticatedRoute exact path='/muestras' component={TablaMuestra}/>
+            <AuthenticatedRoute exact path='/muestras/consulta/:id' component={ConsultaMuestra}/>
 
             <AuthenticatedRoute exact path='/diario-practicas' component={DiarioPracticas}/>
-
+            
             <AuthenticatedRoute exact path='/reportes' component={iFramePBI}/>
-
+            
             <AuthenticatedRoute exact path="/caja" component={CajaContainer} />
 
             <AuthenticatedRoute exact path="/domicilios" component={TablaDomicilio}/>

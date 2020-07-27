@@ -1,8 +1,9 @@
 import React from 'react'
-import { Header, Container, List, Button, Grid } from 'semantic-ui-react'
+import { Header, Container, List, Button, Grid, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom'
 
+import { urlAddAnalisis, urlConsultaPacientes } from '../../../Constants/NavUrl' 
 import { checkAtributo, titleCase } from '../../../Services/MetodosDeValidacion'
 import { switchAltaAction, getPatientByNombreAction } from './../../../Redux/patientsDuck'
 import './LPSecretaria.css'
@@ -57,20 +58,20 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                             </List>
                         </Grid.Column>
                         <Grid.Column >
-                            <Button as= {Link} to={{pathname: `/pacientes/consulta/${selected.id}`, state: { prevPath: window.location.pathname }}} primary >Ver Paciente</Button>
-                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: '/analisis/add', state: { prevPath: window.location.pathname, paciente: selected }}} primary >Nuevo Análisis</Button>
+                            <Button as= {Link} to={{pathname: `${urlConsultaPacientes}${selected.id}`, state: { prevPath: window.location.pathname }}} primary size='small' icon>
+                                <Icon name='user'/>
+                            </Button>
+                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: {urlAddAnalisis}, state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
+                                <Icon name='syringe' /> 
+                            </Button>
                         </Grid.Column>
 
                     </Grid>
-                    
-                    {!selected.bitAlta ?
-                        <h4 className='patientNotFoundMessage'>ESTE PACIENTE SE ENCUENTRA DADO DE BAJA</h4> 
-                    : null}
 
-                    {(!selected.bitAlta) ? <Button onClick={(e) => { 
+                    {(!selected.bitAlta) ? <Button size='small' basic color='green' onClick={(e) => { 
                     if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + nombre(selected) + '?')) {  
                         darAlta(selected)
-                    } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
+                    } else {e.preventDefault()}}} style={{inlineSize: '-webkit-fill-available', width: '100%'}}>Dar de Alta</Button> : null}
 
                 
             </Container>

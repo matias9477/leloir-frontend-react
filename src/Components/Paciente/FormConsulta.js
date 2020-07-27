@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Icon, Container, Divider, Form, Grid } from 'semantic-ui-react';
+import { Button, Icon, Container, Divider, Form, Tab } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ClipLoader from "react-spinners/ClipLoader";
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaPacientes } from '../../Constants/NavUrl'
 import ConsultaPersona from './ConsultaPersona';
 import ConsultaAnimal from './ConsultaAnimal';
 import ConsultaInstitucion from './ConsultaInstitucion';
@@ -15,29 +15,50 @@ import './patientsStyle.css';
 class FormConsulta extends Component {
   
   renderConsulta(){
-      if (this.props.location.state.type === 'ANIMAL'){
-        return <ConsultaAnimal patientId={this.props.match.params.id}/>
-      } else if (this.props.location.state.type === 'PERSONA'){
-        return <ConsultaPersona patientId={this.props.match.params.id}/>
-      } else if (this.props.location.state.type === 'INSTITUCION'){
-        return <ConsultaInstitucion patientId={this.props.match.params.id}/>
-      }
+    if (this.props.location.state.type === 'ANIMAL'){
+      return <ConsultaAnimal patientId={this.props.match.params.id}/>
+    } else if (this.props.location.state.type === 'PERSONA'){
+      return <ConsultaPersona patientId={this.props.match.params.id}/>
+    } else if (this.props.location.state.type === 'INSTITUCION'){
+      return <ConsultaInstitucion patientId={this.props.match.params.id}/>
+    }
   }
 
-  renderHistorial(){
-    return <Historial match={this.props.match}/>    
-  }
+  tabs(){
+    const panes = [
+      {
+        menuItem: 'Datos Paciente', render: () => 
+          <Tab.Pane loading={this.props.fetching}>
+            <Form size='huge'>                
+              <Form.Field control='input' 
+                value={this.props.patient.apellido === undefined ? this.props.patient.nombre : this.props.patient.nombre + ' ' + this.props.patient.apellido} 
+                id = {'headerConsulta'}
+                readOnly={true}
+              />
+              <Divider id={'divider'}/>
+              
+            </Form> 
+            {this.renderConsulta()}
+          </Tab.Pane>,
+      },
+      { 
+        menuItem: 'Historial', render: () => 
+          <Tab.Pane>
+            <Historial match={this.props.match}/>
+          </Tab.Pane> 
+      },
+    ]
 
+    return panes
+  }
   
   render() {
-    var prevURL = this.props.location.state.prevPath || '/pacientes'
-    const { fetching } = this.props
+    var prevURL = this.props.location.state.prevPath || urlTablaPacientes
     
     return (
       <div>
         <NavBar/>
         
-
         <div className="avoidMenu">
           <Container className='btnHeader'>
             <Button as= {Link} to={prevURL} floated='left' icon labelPosition='left' primary size='small'>
@@ -46,38 +67,8 @@ class FormConsulta extends Component {
             <br></br>
           </Container>
           
+          <Tab panes={this.tabs()} />
 
-          {fetching ? 
-            <div className='spinner'>
-              <ClipLoader
-                size={50}
-                color={"black"}
-                />
-            </div> 
-            :
-                        
-            <Form size='huge'>                
-              <Form.Field control='input' 
-                value={this.props.patient.apellido === undefined ? this.props.patient.nombre : this.props.patient.nombre + ' ' + this.props.patient.apellido} 
-                id = {'headerConsulta'}
-              />
-              <Divider id={'divider'}/>
-              
-            </Form> 
-          }
-
-          <Grid columns={2}>
-            <Grid.Column>
-              {this.renderConsulta()}
-            </Grid.Column>
-
-            <Grid.Column>
-              {this.renderHistorial()} 
-            </Grid.Column>
-
-          </Grid>
-          
-        
         </div>
 
       </div>

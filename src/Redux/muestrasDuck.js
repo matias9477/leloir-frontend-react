@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlMuestras, urlSwichAlta, urlTiposMuestras, urlMuestrasAdd } from './../Constants/URLs'
+import { urlMuestras, urlSwichAlta, urlTiposMuestras, urlMuestrasAdd, urlGetMuestraById, urlAlterMuestra } from './../Constants/URLs'
 import { getAnalisisByIdAction } from './analisisDuck'
 
 const initialData = {
@@ -8,6 +8,7 @@ const initialData = {
     upToDateMuestras: false,
     tiposMuestras: [],
     upToDateTipoMuestras: false,
+    muestra: '',
 }
 
 let GET_MUESTRAS = 'GET_MUESTRAS'
@@ -27,6 +28,14 @@ let GET_TIPOS_MUESTRAS_FROM_STORE = 'GET_TIPOS_MUESTRAS_FROM_STORE'
 let ADD_MUESTRA = 'ADD_MUESTRA'
 let ADD_MUESTRA_SUCCESS = 'ADD_MUESTRA_SUCCESS'
 let ADD_MUESTRA_ERROR = 'ADD_MUESTRA_ERROR'
+
+let GET_MUESTRA_BY_ID = 'GET_MUESTRA_BY_ID'
+let GET_MUESTRA_BY_ID_SUCCESS = 'GET_MUESTRA_BY_ID_SUCCESS'
+let GET_MUESTRA_BY_ID_ERROR = 'GET_MUESTRA_BY_ID_ERROR'
+
+let ALTER_MUESTRA = 'ALTER_MUESTRA'
+let ALTER_MUESTRA_SUCCESS = 'ALTER_MUESTRA_SUCCESS'
+let ALTER_MUESTRA_ERROR = 'ALTER_MUESTRA_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -62,7 +71,22 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateMuestras: false }
         case ADD_MUESTRA_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateMuestras: true }
+        
+        case GET_MUESTRA_BY_ID:
+            return { ...state, fetching: true }
+        case GET_MUESTRA_BY_ID_SUCCESS:
+            return { ...state, fetching: false, muestra: action.payload }
+        case GET_MUESTRA_BY_ID_ERROR:
+            return { ...state, fetching: false, error: action.payload }
 
+        case ALTER_MUESTRA:
+            return {...state, fetching:true}
+        case ALTER_MUESTRA_SUCCESS:
+            return {...state, fetching:false, upToDateMuestras:false}
+        case ALTER_MUESTRA_ERROR:
+            return {...state, fetching:false, error:action.payload}
+
+    
         default:
             return state
     }
@@ -111,6 +135,9 @@ export let switchAltaAction = (id) => (dispatch, getState) =>{
         })
         if (url === '/muestras'){
             return dispatch(getMuestrasAction(), alert('La operación se ha realizado con éxito.'))
+        }
+        else {
+            return dispatch(getMuestraByIdAction(id))
         }
     })
     .catch(err=>{
@@ -169,4 +196,44 @@ export let addMuestraAction = (data) => (dispatch, getState) => {
         alert(`No se ha registrado la muestra con éxito. Por favor intente nuevamente.`)
     })
     
+}
+
+export let getMuestraByIdAction = (id) => (dispatch, getState) => {
+
+    dispatch({
+        type: GET_MUESTRA_BY_ID,
+    })
+    return axios.get(`${urlGetMuestraById}${id}`)
+        .then(res=>{
+            dispatch({
+                type: GET_MUESTRA_BY_ID_SUCCESS,
+                payload: res.data,
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_MUESTRA_BY_ID_ERROR,
+                payload: err.message
+            })
+        })
+}
+
+export let alterMuestraAction = (id, data) => (dispatch, getState) => {
+    dispatch({
+        type: ALTER_MUESTRA,
+    })
+    return axios.put(`${urlAlterMuestra}${id}?tipoMuestra=${data}`)
+        .then(res=>{
+            dispatch({
+                type: ALTER_MUESTRA_SUCCESS
+            })
+            return dispatch(getMuestraByIdAction(id))
+        })
+        .catch(err=>{
+            dispatch({
+                type: ALTER_MUESTRA_ERROR,
+                payload: err.message
+            })
+            return dispatch(getMuestraByIdAction(id), alert('No se ha podido modificar la muestra. Por favor intente nuevamente.'))
+        })
 }

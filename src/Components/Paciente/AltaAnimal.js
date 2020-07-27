@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Redirect} from 'react-router-dom'
 import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
 import { urlTiposAnimales } from './../../Constants/URLs'
+import { urlTablaPacientes } from '../../Constants/NavUrl'
 import { addPatientAction } from '../../Redux/patientsDuck'
 import './patientsStyle.css'
 
@@ -64,19 +65,6 @@ class AltaAnimal extends Component {
     }
 
     this.props.addPatientAction(data)
-    this.vaciadoCampos()
-   
-    //TODO: agregar redireccionamiento al prevpath after success
-
-
-      // axios.post(api, data
-      //   ).then((response) => {
-      //     alert('Se registro el paciente ' + titleCase(this.state.nombre)  + ' con éxito.')
-      //     this.vaciadoCampos()
-      //     this.props.history.push(url)
-      //   }, (error) => {
-      //     alert('No se ha podido registrar el paciente.')
-      // })
   }
 
   getPaciente = (e) => {
@@ -102,22 +90,6 @@ class AltaAnimal extends Component {
         errorTelefono,
       })
     }    
-  }
-
-  vaciadoCampos(){
-    this.setState( {
-      id: '',
-      nombre: '',
-      tipo: '',
-      propietario: '',
-      telefono:'',
-      mail:'',
-      errorNombre: true,
-      errorTipo: true,
-      errorPropietario: true,
-      errorTelefono: true,
-      errorMail: true,
-    })
   }
  
   cambioNombre = (e) => {
@@ -151,6 +123,9 @@ class AltaAnimal extends Component {
   }  
 
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to={urlTablaPacientes} />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Animal</Header>
@@ -212,7 +187,8 @@ class AltaAnimal extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 
-export default connect(mapStateToProps,{addPatientAction})(withRouter(AltaAnimal))
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaAnimal))

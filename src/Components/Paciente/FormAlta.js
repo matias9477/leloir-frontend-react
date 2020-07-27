@@ -44,7 +44,6 @@ class FormAlta extends Component {
 
 
   render() {
-    const url = this.props.location.state.prevPath;
 
     return (
       <div>
@@ -53,7 +52,7 @@ class FormAlta extends Component {
           <div className='avoidMenu'>
           
           <Container className='btnHeader'>
-            <Button as= {Link} to={url} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+            <Button as= {Link} to={"/pacientes"} exact='true' floated='left' icon labelPosition='left' primary size='small'>
               <Icon name='arrow alternate circle left' /> Volver
             </Button>
           </Container>

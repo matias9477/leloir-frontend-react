@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaAnalisis } from '../../Constants/NavUrl';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
@@ -13,6 +14,7 @@ import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados';
 import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck';
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck';
 import VerAnalisis from './Modals/VerAnalisisEntregado';
+import { urlConsultaMuestras } from '../../Constants/NavUrl';
 import './analisisStyle.css';
 
 class ConsultaAnalisis extends Component {
@@ -138,6 +140,7 @@ class ConsultaAnalisis extends Component {
                             <Table.HeaderCell>Id</Table.HeaderCell>
                             <Table.HeaderCell>Tipo</Table.HeaderCell>
                             <Table.HeaderCell>Estado</Table.HeaderCell>
+                            <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                         </Table.Header>
 
@@ -147,6 +150,14 @@ class ConsultaAnalisis extends Component {
                             <Table.Cell>{muestra.idMuestra}</Table.Cell>
                             <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
                             <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
+                            <Table.Cell>
+                                <Button circular icon='settings' size='mini'
+                                    as= {Link}
+                                    to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
+                                    exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
+                                    >
+                                </Button>
+                            </Table.Cell>
                         </Table.Row>
                         ))}
                         </Table.Body>
@@ -157,7 +168,7 @@ class ConsultaAnalisis extends Component {
                                 <Table.HeaderCell colSpan='4'>
                                     {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
                                         <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }>
-                                            <Icon name='plus' /> Añadir muestra
+                                            <Icon name='plus'/> Añadir muestra
                                         </Button>
                                     : null }
                                 </Table.HeaderCell>
@@ -326,9 +337,17 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+    setPrevPath(){
+        if (this.props.location.state.prevPath !== undefined){
+            return this.props.location.state.prevPath;
+        } else {
+            return urlTablaAnalisis
+        }
+    }
+
 
     render() {
-        var prevURL = this.props.location.state.prevPath || '/analisis'
+        var prevURL = this.setPrevPath()
         return (
             <div>
                 <NavBar/>

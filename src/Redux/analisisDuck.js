@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -10,6 +10,7 @@ let initialData = {
     upToDatePendientes: false,
     fetchingAnalisisPendientes: false,
     fetchingAnalisisById: false,
+    analisisPendientesById: [],
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -37,6 +38,10 @@ let CARGAR_RESULTADO_ERROR = 'CARGAR_RESULTADO_ERROR'
 let REVISAR_RESULTADO = 'REVISAR_RESULTADO'
 let REVISAR_RESULTADO_SUCCESS = 'REVISAR_RESULTADO_SUCCESS'
 let REVISAR_RESULTADO_ERROR = 'REVISAR_RESULTADO_ERROR'
+
+let GET_ANALISIS_PENDIENTES_BY_ID = 'GET_ANALISIS_PENDIENTES_BY_ID'
+let GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS = 'GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS'
+let GET_ANALISIS_PENDIENTES_BY_ID_ERROR = 'GET_ANALISIS_PENDIENTES_BY_ID_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -86,6 +91,13 @@ export default function reducer(state = initialData, action){
             return { ...state, fetching: false, upToDatePendientes: false }
         case REVISAR_RESULTADO_ERROR:
             return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+
+        case GET_ANALISIS_PENDIENTES_BY_ID:
+            return { ...state, fetching: true }
+        case GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS:
+            return { ...state, fetching: false, analisisPendientesById: action.payload }
+        case GET_ANALISIS_PENDIENTES_BY_ID_ERROR:
+            return { ...state, fetching: false, error: action.payload }
 
 
         default:
@@ -257,3 +269,22 @@ export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
     })
 }
 
+export let getAnalisisPendientesByIdAction = (id) => (dispatch, getState) => {
+    
+    dispatch({
+        type: GET_ANALISIS_PENDIENTES_BY_ID
+    })
+    return axios.get(urlAnalisisByIdPendientes + id)
+    .then(res=>{
+        dispatch({
+            type: GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS,
+            payload: Object.values(res.data).flat()
+        })
+    })
+    .catch(error=>{
+        dispatch({
+            type: GET_ANALISIS_PENDIENTES_BY_ID_ERROR,
+            payload: error.message
+        })
+    })
+}
