@@ -1,9 +1,10 @@
-image: node:10.15.0
+image: atlassian/pipelines-awscli
 
 pipelines:
   default:
       - step:
           name: "Run tests"
+          image: node:10.15.0
           script:
             - npm install
             - npm run test
@@ -12,6 +13,7 @@ pipelines:
     develop:
       - step:
           name: "Run tests"
+          image: node:10.15.0
           script:
             - npm install
             - npm run test
