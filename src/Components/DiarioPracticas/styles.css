@@ -22,7 +22,10 @@
     padding-left: 50px;
     padding-right: 50px;
     overflow: auto;
+  }
 
+  .modal-main .ui.segment {
+    margin-top: 3em;
   }
   
   .display-block {

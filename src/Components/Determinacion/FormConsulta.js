@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Header, Form, Icon, Container } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux'
 
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
-import { getDeterminacionByIdAction } from '../../Redux/determinacionesDuck'
-import MenuOpciones from '../MenuOpciones';
-import './../styles.css';
+import { getDeterminacionByIdAction, alterDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
+import NavBar from '../NavBar/NavBar';
+import '../styles.css';
 
 class FormConsulta extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            isbottonPressed:true,
-            modificacion: true,
-            cancelar: true,
-            valor:true,
-
             cambios: false,
 
             codigoPractica: '',
@@ -33,104 +27,20 @@ class FormConsulta extends Component {
             errorCodigoPractica: true,
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
-
         });
-        this.cambioCodigoPractica = this.cambioCodigoPractica.bind(this);
-        this.cambioDescripcionPractica = this.cambioDescripcionPractica.bind(this);
-        this.cambioUnidadBioquimica = this.cambioUnidadBioquimica.bind(this);
-        this.cambioUnidadMedida = this.cambioUnidadMedida.bind(this);
-        this.cambioBitAlta = this.cambioBitAlta.bind(this);
     }
 
     componentDidMount() {
-        const api = "/determinaciones/id/" + this.props.match.params.codigoPractica;
-        this.handleUpdateClick(api);
+        this.props.getDeterminacionByIdAction(this.props.match.params.codigoPractica)
     }
 
-    renderForm() {
-        return (
-            <div className='Formularios'>
-                <Container className='btnHeader'>
-                    <Button className='boton' as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
-                        <Icon name='arrow alternate circle left' /> Volver
-                    </Button>
-                    <br></br>
-                    <Header as='h3' dividing>Búsqueda y modificación</Header>
-                </Container>
-                
-                {this.state.estado === '' ? <CircularProgress size={50}/> : 
-                <Form className='altasYConsultas'>
-                    <Form.Group widths='equal'>
-                        <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
-                        value={this.state.codigoPractica} 
-                        disabled={this.state.modificacion}
-                        onChange={this.cambioCodigoPractica}
-                        className={this.state.errorCodigoPractica ? null : 'error'}
-                        />
-
-                        <Form.Field label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
-                        value={this.state.descripcionPractica} 
-                        disabled={this.state.modificacion}
-                        onChange={this.cambioDescripcionPractica}
-                        className={this.state.errorDescripcionPractica ? null : 'error'}
-                        />
-                    </Form.Group>
-
-                    <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                    value={this.state.unidadBioquimica}
-                    disabled={this.state.modificacion} 
-                    onChange={this.cambioUnidadBioquimica}
-                    className={this.state.errorUnidadBioquimica ? null : 'error'}
-                    />
-
-                    <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                    value={this.state.unidadMedida} 
-                    disabled={this.state.modificacion}
-                    onChange={this.cambioUnidadMedida}
-                    />
-
-                    {( !this.state.isbottonPressed && this.state.modificacion && this.state.estado) ? <Button  onClick={(e) => {
-                        this.habilitarModificacion(e)} }>Modificar</Button>  : null}
-
-                    {(!this.state.estado) ? <Button onClick={(e) => { 
-                        if (window.confirm('¿Esta seguro que quiere dar de alta la determinación ' + this.state.descripcionPractica + '?')) {  
-                        this.alta(e)
-                        } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
-            
-                    {(!this.state.modificacion) ? <Button disabled={this.state.isbottonPressed}  onClick={(e) => {
-                        if (window.confirm('¿Esta seguro que quiere modificar la determinación ' + this.state.descripcionPractica + '?')) {
-                            this.modificarDeterminacion(e)
-                        } else {e.preventDefault()} } } primary>Aceptar</Button> : null}
-
-                    {(!this.state.modificacion) ? <Button disabled={this.state.cancelar} onClick={(e) => {
-                        this.cancelar(e)} } color='red'> Cancelar </Button> : null }
-
-                </Form>
-                }
-            </div>
-        );
-    }
-
-    cancelar(e){
-        e.preventDefault();
+    componentWillReceiveProps(nextProps) {
         this.setState({
-            modificacion: true,
-            cambios: false,
-            errorCodigoPractica: true,
-            errorDescripcionPractica: true,
-            errorUnidadBioquimica: true,
-        });
-        if (this.state.cambios){
-            const api = "/determinaciones/id/" + this.state.codigoPractica;
-            this.handleUpdateClick(api);
-        }
-    }
-
-    habilitarModificacion(e){
-        e.preventDefault();
-        this.setState ({
-            modificacion: false,
-            cancelar: false,
+            codigoPractica:nextProps.determinacion.codigoPractica,
+            descripcionPractica:nextProps.determinacion.descripcionPractica,
+            unidadBioquimica:nextProps.determinacion.unidadBioquimica,
+            unidadMedida:nextProps.determinacion.unidadMedida,
+            bitAlta:nextProps.determinacion.bitAlta,
         })
     }
 
@@ -152,16 +62,7 @@ class FormConsulta extends Component {
                 "unidadMedida": this.state.unidadMedida,
             };
 
-            const api = '/determinaciones/modificar/' + this.props.match.params.codigoPractica;
-
-            axios.put(api,data)
-                .then((response) => {
-                    alert('Se ha modificado la determinación con éxito.');
-                }, (error)=> {
-                    alert('No se ha podido modificar la determinación.');
-                    const api = "/determinaciones/id/" + this.props.match.params.codigoPractica ;
-                    this.handleUpdateClick(api);
-                });
+            this.props.alterDeterminacionAction(this.state.codigoPractica, data)
 
             this.setState({
                 modificacion: true,
@@ -180,80 +81,124 @@ class FormConsulta extends Component {
                 errorDescripcionPractica,
             });
         }
-    };
-
-    handleUpdateClick = (api) => {
-        axios.get(api).then(determinacion => {
-          this.setState({
-            codigoPractica: determinacion.data.codigoPractica,
-            descripcionPractica: determinacion.data.descripcionPractica,
-            unidadBioquimica: determinacion.data.unidadBioquimica,
-            unidadMedida: determinacion.data.unidadMedida,
-            
-            bitAlta: determinacion.data.bitAlta,
-            isbottonPressed:false,
-            estado: determinacion.data.bitAlta,
-          });
-        }, (error) => {
-            console.log('Error fetch: ', error.message);
-        })
-    
     }
 
-    cambioCodigoPractica(e) {
-        this.setState({
-            codigoPractica: e.target.value
-        })
-    }
-
-    cambioDescripcionPractica(e) {
+    cambioDescripcionPractica = (e) =>{
         this.setState({
             descripcionPractica: e.target.value,
             cambios: true,
         })
     }
 
-    cambioUnidadBioquimica(e) {
+    cambioUnidadBioquimica = (e) =>{
         this.setState({
             unidadBioquimica: e.target.value,
             cambios: true
         })
     }
 
-    cambioUnidadMedida(e) {
+    cambioUnidadMedida = (e) =>{
         this.setState({
             unidadMedida: e.target.value,
             cambios: true,
         })
     }
 
-    cambioBitAlta(e){
+    cambioBitAlta = (e) =>{
         this.setState({
             bitAlta: e.target.value,
         })
     }
 
     alta(e){
-        axios.put(`/determinaciones/switch-alta/${this.state.codigoPractica}`).then(response => {
-            alert("Se ha dado de alta la determinación con éxito.");
-              this.setState({estado: true})
-             
-              const api = "/determinaciones/id/" + this.state.codigoPractica ;
-              this.handleUpdateClick(api); 
-        }, (error) => {
-            if(this.state.bitAlta) {
-                alert(`No se ha podido dar de alta la determinación. Intentelo nuevamente.`)
-              }
-        })
-      }
+        this.props.switchAltaAction(this.state.codigoPractica)
+    }
+
+    mensajeBtnSwitchAlta(){
+        if (this.state.bitAlta) {
+          return 'Dar de Baja'
+        }
+        else {
+          return 'Dar de Alta'
+        }
+    }
 
 
     render() {
+        const { fetching } = this.props
         return (
-            <div className='union'>
-                <MenuOpciones/>
-                <div className="FormAlta">
-                    {this.renderForm()}
+            <div>
+                <NavBar/>
+                <div className='avoidMenu'>
+
+                    <Container className='btnHeader'>
+                        <Button as= {Link} to='/determinaciones' floated='left' icon labelPosition='left' primary size='small'>
+                            <Icon name='arrow alternate circle left' /> Volver
+                        </Button>
+                    </Container>
+
+                    {fetching ? <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                        </div> :
+                        <Container>
+                            <Form size='huge'>
+                                <Form.Field control='input'
+                                value={this.state.descripcionPractica}
+                                id='headerConsulta'
+                                className={this.state.errorDescripcionPractica===true ? null: 'error'}
+                                />
+                                <Divider id='divider'/>
+                            </Form>
+
+                            <Form>
+
+                                <Form.Group widths='equal'>
+                                    <Form.Field required label='Código Práctica' control='input' placeholder='Código Práctica' width={5}
+                                    value={this.state.codigoPractica}
+                                    id='disabled'
+                                    className={this.state.errorCodigoPractica ? null : 'error'}
+                                    />
+
+                                    <Form.Field required label='Descripción Práctica' control='input' placeholder='Descripción Práctica'
+                                    value={this.state.descripcionPractica}
+                                    onChange={this.cambioDescripcionPractica}
+                                    className={this.state.errorDescripcionPractica ? null : 'error'}
+                                    />
+                                </Form.Group>
+
+                                <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
+                                value={this.state.unidadBioquimica}
+                                onChange={this.cambioUnidadBioquimica}
+                                className={this.state.errorUnidadBioquimica ? null : 'error'}
+                                />
+
+                                <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
+                                value={this.state.unidadMedida}
+                                onChange={this.cambioUnidadMedida}
+                                />
+
+                                <Button color={this.state.bitAlta ? 'red' : 'green'}
+                                    onClick={(e) => {
+                                    if (window.confirm('¿Esta seguro que quiere dar de alta la determinacion ' + this.state.descripcionPractica + '?')) {
+                                        this.alta(e)
+                                    } else { e.preventDefault()} }}
+                                    >{this.mensajeBtnSwitchAlta()}</Button>
+
+                                {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
+                                    if (window.confirm('¿Esta seguro que quiere modificar la determinación ' + this.state.descripcionPractica + '?')) {
+                                        this.modificarDeterminacion(e)
+                                    } else { window.location.reload(true) }
+                                }}>
+                                    Modificar Determinación
+                                </Button> : null}
+
+                            </Form>
+                        </Container>
+                    }
+
                 </div>
             </div>
         );
@@ -266,4 +211,4 @@ const mapStateToProps = state =>({
     fetching: state.determinaciones.fetching,
 })
 
-export default connect(mapStateToProps, { getDeterminacionByIdAction })(FormConsulta);
+export default connect(mapStateToProps, { getDeterminacionByIdAction, switchAltaAction, alterDeterminacionAction })(FormConsulta);

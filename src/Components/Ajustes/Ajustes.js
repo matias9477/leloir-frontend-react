@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
-import {Grid, Menu, Segment} from 'semantic-ui-react'
-import MenuLateral from "../MenuOpciones";
-import MiPerfil from "./MiPerfil";
-import NuevoUsuario from "./NuevoUsuario";
+import { Grid, Menu, Segment } from 'semantic-ui-react'
+
+import NavBar from '../NavBar/NavBar'
+import MiPerfil from './MiPerfil';
+import NuevoUsuario from './NuevoUsuario';
 
 class Ajustes extends Component {
     constructor(props) {
         super(props);
         this.state = ({
             activeItem: '',
-
         });
-        this.handleItemClick = this.handleItemClick.bind(this);
     }
 
     componentDidMount() {
@@ -34,9 +33,9 @@ class Ajustes extends Component {
         const {activeItem} = this.state
 
         return (
-            <div className='union'>
-                <MenuLateral/>
-                <div className='tablaListadoHistorico'>
+            <div>
+                <NavBar/>
+                <div className='avoidMenu'>
                     <Grid>
                         <Grid.Column width={4}>
                             <Menu fluid vertical tabular>

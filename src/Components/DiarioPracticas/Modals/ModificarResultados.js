@@ -1,139 +1,142 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
-import {urlCargarResultados, urlGetAnalisis} from "../../../Constants/URLs";
-import {Button, Divider, Form} from "semantic-ui-react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import {Modal} from "./ModalAnalysisInput";
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import SyncLoader from 'react-spinners/SyncLoader'
+
+import { Button, Divider, Table, Input } from 'semantic-ui-react'
+import { Modal } from './ModalAnalysisInput'
+import { cargarResultadosAction, getAnalisisByIdAction } from '../../../Redux/analisisDuck'
 
 class ModificarResultados extends Component {
     constructor(props) {
         super(props);
         this.state = {
             show: false,
-            currentAnalisisID: null,
             currentAnalisis: null,
-            resultados: [],
+            cambios: false,
         };
     }
 
     componentDidMount() {
+        this.props.getAnalisisByIdAction(this.props.idAnalisis)
         this.showModal()
+    }
+
+    componentWillReceiveProps = next => {
+        this.setState({
+            currentAnalisis: next.analisis
+        })
     }
 
     showModal = () => {
         this.setState({
             show: true,
-        });
-        this.getAnalisis(this.props.idAnalisis)
-    };
+        })   
+    }
 
     hideModal = () => {
         const {callback} = this.props;
         if (callback !== undefined) {
             callback()
         }
-    };
+    }
 
-    getAnalisis = (idAnalisis) => {
-        if (idAnalisis != null) {
-            axios.get((urlGetAnalisis + idAnalisis)).then(resolve => {
-                resolve.data.determinaciones.map(detalleanalisis => {
-                    this.addResultado(detalleanalisis.determinacion.codigoPractica, detalleanalisis.determinacion.descripcionPractica, detalleanalisis.resultado);
-                    return true;
-                });
-                this.setState({currentAnalisis: resolve.data});
-            }, (error) => {
-                console.log('Error get tipo', error.message);
-                return (<div><h1> Error!</h1></div>)
-            });
-        }
-    };
+    changeResultado = e => {
 
-    addResultado = (codigopractica, descripcionpractica, resultado) => {
-        this.setState(prevState => ({
-                resultados: [
-                    ...prevState.resultados,
-                    {idDeterminacion: codigopractica, descripcionPractica: descripcionpractica, resultado: resultado}
-                ]
+        let analisisCopy = JSON.parse(JSON.stringify(this.state.currentAnalisis))
 
-            }
-        ))
-    };
-
-    handleCambioResultado = (e) => {
-        if (["idDeterminacion", "descripcionPractica", "resultado"].includes(e.target.className)) {
-            let resultados = [...this.state.resultados];
-            resultados[e.target.dataset.id][e.target.className] = e.target.value.toUpperCase();
-            this.setState({resultados: resultados})
-        } else {
-            this.setState({[e.target.name]: e.target.value.toUpperCase()})
-        }
-    };
+        analisisCopy.determinaciones[e.target.name].resultado = e.target.value
+     
+        this.setState({
+            currentAnalisis: analisisCopy,
+            cambios: true 
+        }) 
+    }
 
 
     renderModificacionResultadosModal = () => {
-        if (this.state.currentAnalisis != null) {
+        if (this.state.currentAnalisis!==null && this.state.currentAnalisis.determinaciones!==undefined && this.state.currentAnalisis.determinaciones.length>0) {
             return (
-                <Form onSubmit={this.handleSubmit} onChange={this.handleCambioResultado}>
-                    {this.state.resultados.map((detalleAnalisis, idx) => {
-                            let determinacionId = `det-${idx}`;
-                            return (
-                                <div key={idx} class="block">
-                                    <label htmlFor={determinacionId}>{detalleAnalisis.descripcionPractica}</label>
-                                    <input
-                                        type="text"
-                                        name={determinacionId}
-                                        data-id={idx}
-                                        id={determinacionId}
-                                        value={this.state.resultados[idx].resultado}
-                                        placeholder="Ingrese resultado..."
-                                        className="resultado"
-                                    />
-                                </div>
-                            )
-                        }
-                    )}
-                    <br/>
-                    <br/>
-                    <Button color='green' type='submit'>Guardar</Button>
-                </Form>)
+                <div>
+                    <Table basic='very' compact='very'>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Código</Table.HeaderCell>
+                                <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                <Table.HeaderCell>Resultado</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header> 
+
+                        <Table.Body>
+                            {this.props.analisis.determinaciones.map((det, index) => {
+                                return( 
+                                    <Table.Row  key={index} value={det}>
+                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                        <Table.Cell>
+                                            <Input name={index} 
+                                            value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                            placeholder='Ingrese resultado...' onChange={this.changeResultado}/>
+                                            </Table.Cell>
+                                    </Table.Row>
+                                )
+                            })}
+                        </Table.Body>
+                    </Table>
+                    <Button
+                        color='green'
+                        size='small'
+                        disabled={!this.state.cambios}
+                        onClick={this.handleSubmit}
+                    > Guardar </Button>
+                </div>
+            ) 
         }
-    };
+    }
 
     handleSubmit = (e) => {
-        let data = this.state.resultados;
-        let filteredData = data.filter(function (resultado) {
-            if (resultado != null) {
-                return resultado;
-            }
-        });
+        let temp = []
 
-        data.map(resultado => delete resultado.descripcionPractica);
-        axios.post(urlCargarResultados + this.props.idAnalisis, filteredData).then(resolve => {
-                return true
-        }, (error) => {
-            console.log('Error submit', error.message);
-        });
-        this.hideModal();
-    };
+        this.state.currentAnalisis.determinaciones.map((det, index)=>{
+            return (temp[index] = { "idDeterminacion": det.determinacion.codigoPractica, "resultado": det.resultado })
+        })
+
+        this.props.cargarResultadosAction(this.props.idAnalisis, temp)
+    
+        this.hideModal()
+    }
+
+    checkNombre(){
+        let nombre = this.props.analisis.paciente.nombre
+        if(this.props.analisis.paciente.apellido !== undefined){
+            nombre = this.props.analisis.paciente.nombre + ' ' + this.props.analisis.paciente.apellido
+        }
+        return nombre
+    }
 
     render() {
         return (
             <div>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                    <div>
-                        <h2>Complete los resultados de las siguientes determinaciones</h2>
+                    {(this.props.analisis !== '' && !this.props.fetching) ? 
+                        <div> 
+                            <h3>{this.checkNombre()}</h3>
+                            Ingrese los resultados de las determinaciones
+                            <Divider section/>
+                            {this.renderModificacionResultadosModal()} 
+                        </div>
 
-                        <Divider section/>
-
-                        <br/>
-                        {this.state.currentAnalisis != null ? this.renderModificacionResultadosModal() :
-                            <CircularProgress className={'centeredPosition'} size={50}/>}
-                    </div>
+                    :  <div className='spinnerPosition'>
+                            <SyncLoader
+                                size={10}
+                                margin={5}
+                                color={"black"}
+                            />
+                        </div>  
+                    }
                 </Modal>
             </div>
-        );
+        )
     }
 }
 
@@ -141,4 +144,9 @@ ModificarResultados.propTypes = {
     idAnalisis: PropTypes.number,
 };
 
-export default ModificarResultados;
+const mapStateToProps = state => ({
+    analisis: state.analisis.analisisById,
+    fetching: state.analisis.fetchingAnalisisById,
+})
+
+export default connect(mapStateToProps, { cargarResultadosAction, getAnalisisByIdAction })(ModificarResultados)

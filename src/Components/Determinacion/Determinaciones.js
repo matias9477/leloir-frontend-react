@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
-import {Button, Dropdown, Header, Icon, Input, Pagination} from "semantic-ui-react";
-import {Link} from "react-router-dom";
-import { connect } from 'react-redux'
-import SyncLoader from "react-spinners/SyncLoader"
-import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determinacionesDuck'
-import MenuOpciones from "../MenuOpciones";
+import React, { Component } from 'react';
+import { Button, Dropdown, Header, Icon, Input, Pagination, Grid } from "semantic-ui-react";
+import {Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import SyncLoader from "react-spinners/SyncLoader";
+
+import { getDeterminacionesAction, switchAltaAction } from './../../Redux/determinacionesDuck';
+import NavBar from '../NavBar/NavBar';
 import {titleCase} from './../../Services/MetodosDeValidacion';
-import { urlConsultaDeterminacion } from "../../Constants/URLs"
-import {nroPorPagina} from "../../Constants/utils";
-import './../styles.css';
+import { urlConsultaForm } from "../../Constants/URLs"
+import { nroPorPagina } from "../../Constants/utils";
+import '../styles.css';
 
 class Determinaciones extends Component {
     constructor(props) {
@@ -23,9 +24,6 @@ class Determinaciones extends Component {
             filter: '',
             param: 'idDeterminacion',
         };
-        this.cambioLimite = this.cambioLimite.bind(this);
-        this.onChangePage = this.onChangePage.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
@@ -33,9 +31,9 @@ class Determinaciones extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        	this.setState({
-                totalCount: nextProps.determinaciones.length
-            })
+        this.setState({
+            totalCount: nextProps.determinaciones.length
+        })
     }
     
 
@@ -55,7 +53,7 @@ class Determinaciones extends Component {
         )
     };
 
-    cambioLimite(e, data) {
+    cambioLimite = (e, data) => {
         this.setState({
             limit: data.value,
             activePage: 1,
@@ -93,7 +91,6 @@ class Determinaciones extends Component {
             })
         }          
     } 
-
 
     filtrado(array){
         let { param } = this.state
@@ -158,9 +155,9 @@ class Determinaciones extends Component {
     render() {
         const { fetching } = this.props
         return (
-            <div className='union'>
-                <MenuOpciones/>
-                <div className='tablaListadoHistorico'>
+            <div>
+                <NavBar/>
+                <div className='avoidMenu'>
 
                     <Header as='h2'>Determinaciones</Header>
 
@@ -183,19 +180,24 @@ class Determinaciones extends Component {
                         </div> : 
                     <div>
 
-                    <div className='union'>
-                        <div className="ui icon input">
+                     <Grid>
+                        <Grid.Column floated='left' width={5}>
+                            <div className="ui icon input">
+                                <Input value={this.state.filter} 
+                                    onChange={(filter)=>
+                                        this.setState({
+                                            filter: filter.target.value
+                                        })}
+                                        
+                                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}} 
+                                        />
 
-                        <Input value={this.state.filtro} 
-                        onChange={(filter)=>
-                            this.setState({
-                                filter: filter.target.value
-                            })}
-                        placeholder='Ingrese búsqueda...' icon={{name: 'search'}}/>
-
-                        </div>
-                        {this.cantidadPorPagina()}
-                    </div>
+                            </div>
+                        </Grid.Column>
+                        <Grid.Column floated='right' width={5}>
+                            {this.cantidadPorPagina()}
+                        </Grid.Column>
+                    </Grid>
 
                     <table className="ui single line table">
                         <thead className='centerAlignment'>
@@ -230,7 +232,7 @@ class Determinaciones extends Component {
                                                 onClick={() => window.confirm(this.mensajeConfirmacion(determinacion)) ? this.bitInverse(determinacion) : null}>
                                                 {this.estado(determinacion.bitAlta)}
                                             </Dropdown.Item>
-                                            <Dropdown.Item as={Link} to={`${urlConsultaDeterminacion}${determinacion.codigoPractica}`}
+                                            <Dropdown.Item as={Link} to={`${urlConsultaForm}${determinacion.codigoPractica}`}
                                                            exact='true'>
                                                 Ver/Modificar
                                             </Dropdown.Item>
@@ -246,7 +248,7 @@ class Determinaciones extends Component {
                     </table>
                     <Pagination
                         activePage={this.state.activePage}
-                        totalPages={Math.ceil((this.state.totalCount) / this.state.limit)}
+                        totalPages={this.state.filter === '' ? Math.ceil((this.props.determinaciones.length) / this.state.limit) : Math.ceil((this.state.totalCount) / this.state.limit)}
                         onPageChange={this.onChangePage}
                     />
                 </div>

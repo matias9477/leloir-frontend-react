@@ -1,11 +1,12 @@
-import React, {Component} from 'react'
-import {Button, Form, Label, Icon} from 'semantic-ui-react'
-import './../styles.css'
-import {withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {loginAction} from '../../Redux/userDuck'
-import {Link} from 'react-router-dom'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import React, { Component } from 'react';
+import { Button, Form, Label, Icon } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
+
+import { loginAction } from '../../Redux/userDuck';
+import './login.css';
 
 class LoginComponent extends Component {
 
@@ -39,10 +40,18 @@ class LoginComponent extends Component {
 
 
     render() {
-        const { hasLoginFailed, fetching } = this.props
+        const { hasLoginFailed, fetching, loggedIn } = this.props
         return (
             <div>
-                {fetching === true ? <CircularProgress size={50}/> : 
+                {fetching === true ?
+                    <div className='spinner'>
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+                    </div>
+
+                :
                     <Form className='login' >
                         <Form.Input type='text' icon='user' iconPosition='left' label='Usuario' placeholder='Usuario'
                         onChange={this.cambioUsuario}
@@ -55,11 +64,9 @@ class LoginComponent extends Component {
                         className={hasLoginFailed ? 'error' : null}
                         />
                         
-                        <Link to='/'>
-                            <Button exact='true' primary onClick={this.loginClicked}>
-                                Iniciar Sesión
+                            <Button disabled={(this.state.password === '' || this.state.usernameOrEmail === '') ? true : false} exact='true' primary onClick={this.loginClicked}>
+                                        Iniciar Sesión
                             </Button>
-                        </Link>
                         
                         {hasLoginFailed ?
                         <Label style={errorStyle}>
@@ -67,6 +74,7 @@ class LoginComponent extends Component {
                         </Label> : null }
                     </Form>
                 }
+                {loggedIn ? <Redirect to="/"/> : null}
             </div>
         )
     }
