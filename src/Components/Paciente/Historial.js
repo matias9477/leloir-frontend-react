@@ -73,7 +73,6 @@ class Historial extends Component {
         return (
             <div>
                 <div className='historialPaciente'>
-                    <h3>Historial</h3>
                     {fetching ?  null : this.renderTable(this.props.history)}
                 </div>
                 

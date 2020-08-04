@@ -107,6 +107,7 @@ class ConsultaMuestra extends Component {
 
 
   render() {
+    var prevURL = this.props.location.state.prevPath || '/muestras'
     const {fetching} = this.props
      
     return (
@@ -115,9 +116,9 @@ class ConsultaMuestra extends Component {
         <div className='avoidMenu'>
 
         <Container className='btnHeader'>
-            <Button as= {Link} to='/muestras' floated='left' icon labelPosition='left' primary size='small'>
+          <Button as= {Link} to={{pathname: prevURL, state: {prevPath: undefined}}} exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow alternate circle left' /> Volver
-            </Button>
+          </Button>
         </Container>
 
         {(fetching) ? <div className='spinner'>

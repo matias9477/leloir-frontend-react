@@ -30,3 +30,11 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.ui.attached.tabular.menu {
+    margin-top: 2.2rem;
+}
+
+.react-datepicker-wrapper, .react-datepicker__input-container {
+    width: -webkit-fill-available;
+}
