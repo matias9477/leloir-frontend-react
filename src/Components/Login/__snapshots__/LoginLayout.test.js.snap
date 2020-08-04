@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginForm should render correctly in "debug" mode 1`] = `
+<div
+  className="loginLayout"
+>
+  <Segment>
+    <Image
+      as="img"
+      centered={true}
+      size="small"
+      src="/android-chrome-192x192.png"
+      ui={true}
+    />
+    <withRouter(Connect(LoginComponent)) />
+  </Segment>
+</div>
+`;

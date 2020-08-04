@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaAnalisis } from '../../Constants/NavUrl';
 import { getHumanDate } from '../../Services/MetodosPaciente';
 import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion';
 import ModificarResultados from '../DiarioPracticas/Modals/ModificarResultados';
@@ -151,11 +152,11 @@ class ConsultaAnalisis extends Component {
                             <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
                             <Table.Cell>
                                 <Button circular icon='settings' size='mini'
-                                    as= {Link} 
-                                    to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}} 
+                                    as= {Link}
+                                    to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
                                     exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
                                     >
-                                </Button> 
+                                </Button>
                             </Table.Cell>
                         </Table.Row>
                         ))}
@@ -340,7 +341,7 @@ class ConsultaAnalisis extends Component {
         if (this.props.location.state.prevPath !== undefined){
             return this.props.location.state.prevPath;
         } else {
-            return '/analisis'
+            return urlTablaAnalisis
         }
     }
 

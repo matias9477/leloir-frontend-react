@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlAddObraSocial } from '../../Constants/NavUrl';
 import Tabla from '../Reusables/Tabla/Tabla'
 import { urlConsultaObraSocial } from '../../Constants/NavUrl';
 import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck';
@@ -48,7 +49,7 @@ class TablaObraSocial extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to='/obras_sociales/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                        <Button as= {Link} to={urlAddObraSocial} style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
                             <Icon name='medkit' /> Nueva Obra Social
                         </Button>
 

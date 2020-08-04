@@ -34,7 +34,7 @@ class Historial extends Component {
                             {analisis.idAnalisis}
                         </Table.Cell>
                         <Table.Cell>
-                            {analisis.diasPendiente}
+                            {analisis.createdAt}
                         </Table.Cell>
                         <Table.Cell>
                             {analisis.determinaciones !== undefined ? analisis.determinaciones.map((deter)=>(
