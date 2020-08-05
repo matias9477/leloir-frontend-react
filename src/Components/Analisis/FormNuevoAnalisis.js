@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Header, Icon, Grid, Step, Container, Form } from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 
 import NavBar from '../NavBar/NavBar';
+import { urlTablaAnalisis } from './../../Constants/NavUrl';
 import { checkAtributo, validateRequiredCombos, validateString } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import SelectedDeterminaciones from './SelectedDeterminaciones';
@@ -289,6 +290,9 @@ class FormNuevoAnalisis extends Component {
 
 
   render() {
+    if (!this.props.upToDateAnalisisAll) {
+      return <Redirect to={urlTablaAnalisis} />
+    }
     return (
       <div className='union'>
         <NavBar/>
@@ -336,7 +340,8 @@ const mapStateToProps = state => ({
   patients: state.patients.patients,
   determinaciones: state.determinaciones.determinaciones,
   obrasSociales: state.obrasSociales.obrasSociales,
+  upToDateAnalisisAll: state.analisis.upToDateAnalisisAll,
 })
 
-export default  connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction})(FormNuevoAnalisis)
+export default  withRouter(connect(mapStateToProps, 
+  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction})(FormNuevoAnalisis))
