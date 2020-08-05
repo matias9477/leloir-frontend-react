@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes,  urlNuevoAnalisis } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes, urlAddAnalisis } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -12,6 +12,7 @@ let initialData = {
     fetchingAnalisisPendientes: false,
     fetchingAnalisisById: false,
     analisisPendientesById: [],
+    registroAnalisis: [],
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -63,7 +64,7 @@ export default function reducer(state = initialData, action){
         case ADD_NUEVO_ANALISIS:
             return { ...state, fetchingAnalisis: true }
         case ADD_NUEVO_ANALISIS_SUCCESS:
-            return { ...state, fetchingAnalisis: false,  upToDateAnalisisAll: false }
+            return { ...state, fetchingAnalisis: false, registroAnalisis:action.payload, upToDateAnalisisAll: false }
         case ADD_NUEVO_ANALISIS_ERROR:
             return { ...state, fetchingAnalisis: false, error: action.payload, upToDateAnalisisAll: true }
 
@@ -206,10 +207,11 @@ export let addAnalisisAction = (data) => (dispatch, getState) =>{
         type: ADD_NUEVO_ANALISIS,
     })
 
-    return axios.post(urlNuevoAnalisis, data)
+    return axios.post(urlAddAnalisis, data)
     .then(res=>{
         dispatch({
             type: ADD_NUEVO_ANALISIS_SUCCESS,
+            payload: res.data
         })
         alert(`Se ha registrado el análisis con éxito.`)
     })

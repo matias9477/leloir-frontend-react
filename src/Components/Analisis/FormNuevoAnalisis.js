@@ -1,22 +1,20 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import { Button, Header, Icon, Grid, Step, Container } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
-import Select from 'react-select'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import axios from 'axios';
+import { Button, Header, Icon, Grid, Step, Container, Form } from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
+import Select from 'react-select';
+import { connect } from 'react-redux';
 
-import {getIdObraSocial, getIdPlan} from '../../Services/MetodosPaciente'
-import NavBar from '../NavBar/NavBar'
-import { urlPlanesXObra,urlObrasSoc } from '../../Constants/URLs'
-import { checkAtributo, validateRequiredCombos } from '../../Services/MetodosDeValidacion'
-import SelectedPaciente from './SelectedPaciente'
-import SelectedDeterminaciones from './SelectedDeterminaciones'
-import { getPatientsAction } from '../../Redux/patientsDuck' 
-import { getDeterminacionesAction } from '../../Redux/determinacionesDuck'
-import { addAnalisisAction } from '../../Redux/analisisDuck'
-import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck'
-import './../styles.css'
-import './analisisStyle.css'
+import NavBar from '../NavBar/NavBar';
+import { checkAtributo, validateRequiredCombos, validateString } from '../../Services/MetodosDeValidacion';
+import SelectedPaciente from './SelectedPaciente';
+import SelectedDeterminaciones from './SelectedDeterminaciones';
+import { getPatientsAction } from '../../Redux/patientsDuck';
+import { getDeterminacionesAction } from '../../Redux/determinacionesDuck';
+import { addAnalisisAction } from '../../Redux/analisisDuck';
+import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck';
+import './../styles.css';
+import './analisisStyle.css';
 
 class FormNuevoAnalisis extends Component {
   constructor(props) {
@@ -24,9 +22,8 @@ class FormNuevoAnalisis extends Component {
     this.state = ({
         determinaciones: [],
         pacientes: [],
-        // obrasSociales: [],
-        planes: [],
-        precio:'',
+        precio: '',
+        medico: '',
 
         mod: false,
 
@@ -37,6 +34,7 @@ class FormNuevoAnalisis extends Component {
 
         errorPaciente: true,
         errorDeterminaciones: true,
+        errorMedico: true,
     })
     }
 
@@ -54,45 +52,25 @@ class FormNuevoAnalisis extends Component {
     })
   }
 
-  componentDidUpdate(){ //esto es mal
-    this.getAllPlanes()
-    if(this.state.mod === true){
-    this.getPrecio()
-    }
-  }
-
-  // getAllObraSocial = () =>{
-  //   axios.get(urlObrasSoc).then((response) => {
-  //     this.setState({
-  //       obrasSociales: Object.values(response.data).flat(),
-  //     })
-  // }, (error) => {
-  //     console.log('Error en carga de obras sociales: ', error.message)
-  // })
+  // componentDidUpdate(){  //esto esta re mal
+  //   if(this.state.mod === true){
+  //   this.getPrecio()
+  //   }
   // }
-
-  getAllPlanes = () =>{
-    if(this.state.planes.length === 0){
-    axios.get(urlPlanesXObra+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.props.obrasSociales)).then((response) => {
-      this.setState({
-        planes: Object.values(response.data).flat(),
-      })
-  }, (error) => {
-      console.log('Error en carga de planes: ', error.message)
-  })
-}
-  }
 
   nuevoAnalisis = (e) => {
     e.preventDefault()
-    const { selectedPaciente, selectedDeterminaciones } = this.state
+    const { selectedPaciente, selectedDeterminaciones, medico } = this.state
 
     const errorPaciente = validateRequiredCombos(selectedPaciente)
     const errorDeterminaciones = validateRequiredCombos(selectedDeterminaciones)
-    if ( errorPaciente && errorDeterminaciones ) {
+    const errorMedico = validateString(medico)
+
+    if ( errorPaciente && errorDeterminaciones && errorMedico ) {
       var data = {
         "idPaciente": this.state.selectedPaciente.id,
         "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
+        "medicoSolicitante": this.state.medico,
         "precio": this.state.precio,
       }
   
@@ -107,7 +85,7 @@ class FormNuevoAnalisis extends Component {
   }
  
   getPrecio = (e) => { //TODO: arreglar esta mierda
-    const api = "/precio/obraSocialId/"+getIdObraSocial(this.state.selectedPaciente.obraSocial,this.props.obrasSociales)+"/planId/"+getIdPlan(this.state.selectedPaciente.plan,this.state.planes)+"/determinaciones/"+ this.listIdDets(this.state.selectedDeterminaciones)
+    const api = ""
     axios.get(api)
     .then(resolve =>{
       this.setState({
@@ -209,6 +187,16 @@ class FormNuevoAnalisis extends Component {
               </Step.Content>
             </Step>
           </Step.Group>
+
+          <Form>
+            <Form.Field label='Médico Solicitante' control='input' 
+            placeholder='Ingrese médico solicitante...' value={this.state.medico} 
+            onChange={this.cambioMedico} 
+            className= {this.state.errorMedico === true ? null : 'error'} 
+            />  
+          </Form>
+
+          <br/> <br/>
 
           <Select
             isMulti
@@ -335,7 +323,12 @@ class FormNuevoAnalisis extends Component {
         mod:true
       })
     }
-  
+  }
+
+  cambioMedico = e => {
+    this.setState ({
+      medico: e.target.value
+    })
   }
 }
 

@@ -44,6 +44,14 @@ export function validateNombre(nombre){
   }
 }
 
+export function validateString(nombre){
+  if (hasNumbers(nombre)){
+    return false
+  } else {
+    return true
+  }
+}
+
 export function validateRequiredStringNum(nombre){
   if (nombre === ''){
     return false
