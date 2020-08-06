@@ -8,8 +8,10 @@ import { validateRequiredCombos, validateContraseña } from './../../Services/Me
 import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
 
 const roles = [
-    { key: 'Secretaria', value: 'SECRETARIA', text: 'Secretaria' },
-    { key: 'Técnico', value: 'TECNICO', text: 'Técnico de laboratorio' },
+    { key: 'Secretaria', value: 'ROLE_SECRETARIA', text: 'Secretaria' },
+    { key: 'Técnico', value: 'ROLE_TECNICO_LABORATORIO', text: 'Técnico de laboratorio' },
+    { key: 'Bioquímico', value: 'ROLE_BIOQUIMICO', text:'Bioquímico' },
+    { key: 'Admin', value: 'ROLE_ADMIN', text: 'Admin' },
 ]
 
 class NuevoUsuario extends Component {
