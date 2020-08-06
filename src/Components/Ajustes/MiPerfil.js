@@ -43,6 +43,7 @@ class MiPerfil extends Component {
         return (
             <div>
                 <h1>Mi Perfil</h1>
+                <div className="ui divider"/>
                 <Form>
                     <Form.Group widths='equal'>
                         <Form.Field label='id' control='input' placeholder='id' value={this.state.id}
