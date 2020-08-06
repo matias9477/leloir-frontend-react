@@ -17,10 +17,12 @@ class ConsultaDomicilio extends Component {
         id:'',
         direccion: '',
         descripcion:'',
+        paciente:'',
         bitAlta: '',
 
         errorDireccion: true,
         errorDescripcion: true,
+        errorPaciente: true,
 
     })
   }
@@ -34,6 +36,7 @@ class ConsultaDomicilio extends Component {
       id: nextProps.domicilio.idDomicilio,
       direccion: nextProps.domicilio.direccion,
       descripcion: nextProps.domicilio.descripcion,
+      paciente: nextProps.domicilio.paciente,
       bitAlta: nextProps.domicilio.bitActivo,
     })
   }
@@ -48,6 +51,7 @@ class ConsultaDomicilio extends Component {
       var data = {
           "direccion": this.state.direccion,
           "descripcion": this.state.descripcion,
+          "paciente": this.state.paciente,
           "bitActivo": true,
         }
 
@@ -74,6 +78,12 @@ class ConsultaDomicilio extends Component {
     })
   }
 
+  cambioPaciente = (e) => {
+    this.setState( {
+        paciente: e.target.value,
+        cambios: true,
+    })
+  }
 
   render() {
     return (
@@ -117,6 +127,16 @@ class ConsultaDomicilio extends Component {
                 value={this.state.descripcion || ''}
                 onChange={this.cambioDescripcion}
                 className= {this.state.errorDescripcion === true ? null : 'error'}
+                />
+              </Form.Group>
+
+
+              <Form.Group widths='equal'>
+
+                <Form.Field  label='Paciente' control='input'
+                value={this.state.paciente || ''}
+                onChange={this.cambioPaciente}
+                className= {this.state.errorPaciente === true ? null : 'error'}
                 />
               </Form.Group>
 

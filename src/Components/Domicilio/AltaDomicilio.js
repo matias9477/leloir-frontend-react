@@ -12,14 +12,17 @@ class AltaDomicilio extends Component {
     this.state = ({
         direccion: '',
         descripcion:'',
+        paciente: '',
 
         errorDireccion: true,
         errorDescripcion: true,
+        errorPaciente: true,
 
       });
       this.nuevoDomicilio = this.nuevoDomicilio.bind(this);
       this.cambioDireccion = this.cambioDireccion.bind(this);
       this.cambioDescripcion = this.cambioDescripcion.bind(this);
+      this.cambioPaciente = this.cambioPaciente.bind(this);
 
   }
   
@@ -51,6 +54,13 @@ class AltaDomicilio extends Component {
           className= {this.state.errorDescripcion === true ? null : 'error'}
           />
 
+          <Form.Field label='Paciente' control='input'
+          placeholder='Paciente'
+          value={this.state.paciente}
+          onChange={this.cambioPaciente}
+          className= {this.state.errorPaciente === true ? null : 'error'}
+          />
+
           <br/>
 
           <Button primary type="submit" onClick={this.nuevoDomicilio} className="boton"> Registrar Domicilio</Button >
@@ -65,6 +75,7 @@ class AltaDomicilio extends Component {
     var data = {
       "direccion": this.state.direccion,
       "descripcion": this.state.descripcion,
+      "paciente": this.state.paciente,
       "bitActivo": true
     };
 
@@ -85,8 +96,10 @@ class AltaDomicilio extends Component {
     this.setState( {
       direccion: '',
       descripcion: '',
+      paciente: '',
       errorDireccion: true,
       errorDescripcion: true,
+      errorPaciente: true,
     })
   }
  
@@ -102,7 +115,11 @@ class AltaDomicilio extends Component {
     })
   }  
 
-  
+  cambioPaciente(e) {
+    this.setState( {
+      paciente: e.target.value
+    })
+  } 
 
   render() {
     return (

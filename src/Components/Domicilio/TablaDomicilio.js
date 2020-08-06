@@ -203,6 +203,7 @@ class TablaDomicilio extends React.Component {
                                     <th onClick={() => this.handleColumnHeaderClick("idDomicilio")}  >Id</th>
                                     <th onClick={() => this.handleColumnHeaderClick("direccion")} >Direccion</th>
                                     <th onClick={() => this.handleColumnHeaderClick("descripcion")} >Descripción</th>
+                                    <th onClick={() => this.handleColumnHeaderClick("paciente")} >Paciente</th>
                                     <th onClick={() => this.handleColumnHeaderClick("bitActivo")} >Opciones </th>
                                 </tr>
                             </thead>
@@ -219,6 +220,9 @@ class TablaDomicilio extends React.Component {
                                     </td>
                                     <td data-label="Descripción">
                                         {nullTo(domicilio.descripcion)}
+                                    </td>
+                                    <td data-label="Paciente">
+                                        {nullTo(domicilio.paciente)}
                                     </td>
                                     <td>
                                         <Dropdown item icon='ellipsis horizontal' simple>
