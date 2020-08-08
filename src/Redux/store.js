@@ -33,13 +33,3 @@ export default function generateStore(){
 
     return store;
 }
-
-
-
-
-
-
-
-
-
-

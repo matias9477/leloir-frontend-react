@@ -41,10 +41,10 @@ class TablaDomicilio extends React.Component {
 
     confirmationSwitchAltaMessage(domicilio){
         if (domicilio.bitActivo){
-            return (`¿Esta seguro que quiere eliminar el domicilio ${domicilio.direccion}?`)
+            return (`¿Esta seguro que quiere eliminar el domicilio a ${domicilio.direccion}?`)
         }
         else {
-            return (`¿Esta seguro que quiere eliminar el domicilio ${domicilio.direccion}?`)
+            return (`¿Esta seguro que quiere eliminar el domicilio a ${domicilio.direccion}?`)
         }
     }
 

@@ -116,14 +116,14 @@ export let addDomicilioAction = (data) => (dispatch, getState) =>{
             type: ADD_DOMICILIO_SUCCESS,
 
         })
-        alert(`Se ha registrado el domicilio ${data.direccion} con exito`)
+        alert(`Se ha registrado el domicilio a ${data.direccion} con exito`)
     })
     .catch(err=>{
         dispatch({
             type: ADD_DOMICILIO_ERROR,
             payload: err.message
         })
-        alert(`No se ha podido registrar el domicilio ${data.direccion}. Por favor intente nuevamente.`)
+        alert(`No se ha podido registrar el domicilio a ${data.direccion}. Por favor intente nuevamente.`)
 
     })
 
