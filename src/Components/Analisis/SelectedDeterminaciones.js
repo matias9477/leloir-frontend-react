@@ -17,7 +17,7 @@ const SelectedDeterminaciones = props => {
                                     <div>{determinacion.descripcionPractica}</div>
                                 </Grid.Column>
                                 <Grid.Column>
-                                    <div>$</div>
+                                    <div>{determinacion.unidadMedida}</div>
                                 </Grid.Column>
                             </Grid>
                         ))}

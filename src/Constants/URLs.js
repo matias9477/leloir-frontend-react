@@ -53,6 +53,7 @@ export const urlAnalisis = '/api/analisis/all'
 export const urlCargarResultados = '/api/analisis/cargar-resultados/'
 export const urlAprobarResultados = '/api/analisis/aprobar-resultados/'
 export const urlAddAnalisis = '/api/analisis/add'
+export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 
 //CAJA
 export const urlTransacciones = '/api/transaccion/all'

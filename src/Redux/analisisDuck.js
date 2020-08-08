@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes, urlAddAnalisis } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes, urlAddAnalisis, urlGetPreviewRegistroAnalisis } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -13,6 +13,7 @@ let initialData = {
     fetchingAnalisisById: false,
     analisisPendientesById: [],
     registroAnalisis: [],
+    previewRegistroAnalisis: [],
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
@@ -48,6 +49,10 @@ let REVISAR_RESULTADO_ERROR = 'REVISAR_RESULTADO_ERROR'
 let GET_ANALISIS_PENDIENTES_BY_ID = 'GET_ANALISIS_PENDIENTES_BY_ID'
 let GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS = 'GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS'
 let GET_ANALISIS_PENDIENTES_BY_ID_ERROR = 'GET_ANALISIS_PENDIENTES_BY_ID_ERROR'
+
+let GET_PREVIEW_REGISTRO_ANALISIS = 'GET_PREVIEW_REGISTRO_ANALISIS'
+let GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS = 'GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS'
+let GET_PREVIEW_REGISTRO_ANALISIS_ERROR = 'GET_PREVIEW_REGISTRO_ANALISIS_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -110,6 +115,13 @@ export default function reducer(state = initialData, action){
         case GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS:
             return { ...state, fetching: false, analisisPendientesById: action.payload }
         case GET_ANALISIS_PENDIENTES_BY_ID_ERROR:
+            return { ...state, fetching: false, error: action.payload }
+
+        case GET_PREVIEW_REGISTRO_ANALISIS:
+            return { ...state, fetching: true }
+        case GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS:
+            return { ...state, fetching: false, previewRegistroAnalisis: action.payload }
+        case GET_PREVIEW_REGISTRO_ANALISIS_ERROR:
             return { ...state, fetching: false, error: action.payload }
 
 
@@ -320,6 +332,26 @@ export let getAnalisisPendientesByIdAction = (id) => (dispatch, getState) => {
     .catch(error=>{
         dispatch({
             type: GET_ANALISIS_PENDIENTES_BY_ID_ERROR,
+            payload: error.message
+        })
+    })
+}
+
+export let getPreviewRegistroAnalisis = (data) => (dispatch, getState) => {
+
+    dispatch({
+        type: GET_PREVIEW_REGISTRO_ANALISIS
+    })
+    return axios.post(urlGetPreviewRegistroAnalisis, data)
+    .then(res=>{
+        dispatch({
+            type: GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS,
+            payload: Object.values(res.data).flat()
+        })
+    })
+    .catch(error=>{
+        dispatch({
+            type: GET_PREVIEW_REGISTRO_ANALISIS_ERROR,
             payload: error.message
         })
     })

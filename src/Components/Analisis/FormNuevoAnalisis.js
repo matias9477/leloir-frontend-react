@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Header, Icon, Grid, Step, Container, Form } from 'semantic-ui-react';
+import { Button, Header, Icon, Grid, Step, Container, Form, Segment } from 'semantic-ui-react';
 import {Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -12,7 +12,7 @@ import SelectedPaciente from './SelectedPaciente';
 import SelectedDeterminaciones from './SelectedDeterminaciones';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { getDeterminacionesAction } from '../../Redux/determinacionesDuck';
-import { addAnalisisAction } from '../../Redux/analisisDuck';
+import { addAnalisisAction, getPreviewRegistroAnalisis } from '../../Redux/analisisDuck';
 import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck';
 import './../styles.css';
 import './analisisStyle.css';
@@ -72,7 +72,6 @@ class FormNuevoAnalisis extends Component {
         "idPaciente": this.state.selectedPaciente.id,
         "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
         "medicoSolicitante": this.state.medico,
-        "precio": this.state.precio,
       }
   
       this.props.addAnalisisAction(data)
@@ -216,7 +215,7 @@ class FormNuevoAnalisis extends Component {
          
           <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
           
-          {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'pago'}))} /> : null}
+          {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={this.handleSeleccionDeterminaciones} /> : null}
             
         </div>
     )
@@ -251,13 +250,8 @@ class FormNuevoAnalisis extends Component {
           </Step.Group>
 
         <Container>
-          <Header>Pago</Header>
-           {/* <Header as={'h5'}>Precio</Header>
-        
-          <Form.Field control='input' 
-            placeholder='Precio' 
-            value={this.state.precio}   
-            /> */}
+          <br/>
+          <Segment raised>Acá va a ir el detalle del análisis a crear</Segment>
         </Container>
 
         <Grid>
@@ -329,6 +323,17 @@ class FormNuevoAnalisis extends Component {
     }
   }
 
+  handleSeleccionDeterminaciones = () => {
+    this.setState({ flagProceso: 'pago'})
+    const data = {
+      "codigoPracticaDeterminaciones": this.listIdDets(this.state.selectedDeterminaciones),
+      "idPaciente": this.state.selectedPaciente.id,
+      "medicoSolicitante": this.state.medico
+    }
+
+    this.props.getPreviewRegistroAnalisis(data)
+  }
+
   cambioMedico = e => {
     this.setState ({
       medico: e.target.value
@@ -341,7 +346,8 @@ const mapStateToProps = state => ({
   determinaciones: state.determinaciones.determinaciones,
   obrasSociales: state.obrasSociales.obrasSociales,
   upToDateAnalisisAll: state.analisis.upToDateAnalisisAll,
+  previewRegistroAnalisis: state.analisis.previewRegistroAnalisis,
 })
 
 export default  withRouter(connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction})(FormNuevoAnalisis))
+  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction, getPreviewRegistroAnalisis})(FormNuevoAnalisis))
