@@ -8,8 +8,8 @@ const SelectedDeterminaciones = props => {
                 <Segment>
                     <Header as='h4'>Determinaciones a realizar</Header>
                     <div>
-                        {props.determinaciones.map(determinacion=>(
-                            <Grid columns='equal'>
+                        {props.determinaciones.map((determinacion, index)=>(
+                            <Grid columns='equal' key={index}>
                                 <Grid.Column>
                                     <div>{determinacion.codigoPractica}</div>
                                 </Grid.Column>

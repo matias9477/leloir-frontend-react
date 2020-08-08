@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Button, Header, Icon, Grid, Step, Container, Form, Segment } from 'semantic-ui-react';
+import { Button, Icon, Grid, Step, Container, Form, Segment, Table } from 'semantic-ui-react';
 import {Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -53,12 +52,6 @@ class FormNuevoAnalisis extends Component {
     })
   }
 
-  // componentDidUpdate(){  //esto esta re mal
-  //   if(this.state.mod === true){
-  //   this.getPrecio()
-  //   }
-  // }
-
   nuevoAnalisis = (e) => {
     e.preventDefault()
     const { selectedPaciente, selectedDeterminaciones, medico } = this.state
@@ -84,19 +77,6 @@ class FormNuevoAnalisis extends Component {
     }    
   }
  
-  getPrecio = (e) => { //TODO: arreglar esta mierda
-    const api = ""
-    axios.get(api)
-    .then(resolve =>{
-      this.setState({
-        precio: resolve.data,
-        mod:false
-      })
-    }, (error) => {
-      console.log('error al buscar precio de analisis')
-    })
-  }
-
   listIdDets(dets) {
     let list = []
     for (let i=0; i<dets.length; i+=1) {
@@ -251,7 +231,44 @@ class FormNuevoAnalisis extends Component {
 
         <Container>
           <br/>
-          <Segment raised>Acá va a ir el detalle del análisis a crear</Segment>
+          <Segment raised>
+            <Form>
+              <h2>{this.props.previewRegistroAnalisis.paciente} </h2>
+          
+              <Table basic='very'>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Código</Table.HeaderCell>
+                    <Table.HeaderCell>Nombre</Table.HeaderCell>
+                    <Table.HeaderCell>Precio Final</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                  {this.props.previewRegistroAnalisis.determinaciones!==undefined ? this.props.previewRegistroAnalisis.determinaciones.map((det, index) => (
+                    <Table.Row key={index}>
+                      <Table.Cell>{det.codigoPractica}</Table.Cell>
+                      <Table.Cell>{det.nombreDeterminacion}</Table.Cell>
+                      <Table.Cell>{det.coseguro}</Table.Cell>
+                    </Table.Row>
+                  )) : null}
+                </Table.Body>
+
+                <Table.Footer>
+                <Table.Row>
+                  <Table.HeaderCell/>
+                  <Table.HeaderCell/>
+                  <Table.HeaderCell>
+                    <Icon name='dollar sign' color='green'/>
+                    {this.props.previewRegistroAnalisis.coseguro}
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Footer>
+              </Table>
+
+              <Form.Field/>
+            </Form>
+          </Segment>
         </Container>
 
         <Grid>

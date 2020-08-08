@@ -346,7 +346,7 @@ export let getPreviewRegistroAnalisis = (data) => (dispatch, getState) => {
     .then(res=>{
         dispatch({
             type: GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS,
-            payload: Object.values(res.data).flat()
+            payload: Object.values(res.data).flat()[0]
         })
     })
     .catch(error=>{
