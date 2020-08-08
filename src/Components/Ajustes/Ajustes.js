@@ -26,7 +26,7 @@ class Ajustes extends Component {
             return <MiPerfil/>
         } else if ( this.state.activeItem === 'NuevoUsuario') {
             return <NuevoUsuario/>
-        }
+        } 
     }
 
     render() {
