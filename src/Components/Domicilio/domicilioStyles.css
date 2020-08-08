@@ -1,0 +1,11 @@
+.consulta {
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 45px;
+    vertical-align: center;
+    display: inline-block;
+}
+
+.error{
+    border-color: red;
+}

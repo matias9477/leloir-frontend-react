@@ -6,6 +6,7 @@ import determinacionesReducer from './determinacionesDuck';
 import analisisReducer from './analisisDuck';
 import muestrasReducer from './muestrasDuck';
 import cajaReducer from './cajaDuck';
+import domiciliosReducer from './domiciliosDuck'
 
 import thunk from 'redux-thunk';
 
@@ -18,17 +19,17 @@ let rootReducer = combineReducers({
   analisis: analisisReducer,
   muestras: muestrasReducer,
   caja: cajaReducer,
+  domicilios: domiciliosReducer,
 });
 
 //agregamos las devtools para usar en chrome
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 //función para crear la store
-export default function generateStore() {
-  let store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(thunk))
-  );
+export default function generateStore(){
+    let store = createStore(rootReducer, 
+        composeEnhancers(applyMiddleware(thunk))
+    )
 
-  return store;
+    return store;
 }
