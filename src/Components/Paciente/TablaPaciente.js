@@ -13,6 +13,10 @@ import './patientsStyle.css';
 
 const columns = [
     {
+        dataField: 'id',
+        text: 'Número',
+    },
+    {
         dataField: 'fechaAlta',
         text: 'Fecha Alta',
     },
