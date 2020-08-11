@@ -1,3 +1,56 @@
+.formAnalsis {
+    width: 65em;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttonNuevoPaciente {
+    padding: 0.8em !important;
+}
+
+.btnRegistrarAnalisis {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.infoSelectedPaciente {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.infoSelectedPaciente .ui.center.aligned.header {
+    color: rgba(0,0,0,.87);
+}
+
+.seleccionPaciente, .seleccionDeterminaciones, .seccionPago {
+    margin-top: 30px;
+}
+
+.seleccionPaciente .ui.container {
+    font-size: 1.2em;
+}
+
+.seleccionPaciente .ui.grid {
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.seleccionPaciente .ui.steps, .seleccionDeterminaciones .ui.steps, .seccionPago .ui.steps {
+    width: 60em;
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.seleccionPaciente .ui.button {
+    margin-bottom: 40px;
+}
+
+.seleccionDeterminaciones .ui.button, .seccionPago .ui.button {
+    margin-top: 3em;
+}
+
 .unionConNavbar {
     display:flex;
     flex-direction:row;

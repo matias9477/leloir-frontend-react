@@ -13,7 +13,6 @@ export const urlPlanesXObra = '/api/obras_sociales/planes/'
 export const urlAltaObraSocial = '/api/obras_sociales/add'
 export const urlPlanes = '/api/obras_sociales/planes/'
 
-
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
 export const urlAltaDeterminacion = '/api/determinaciones/add'
@@ -29,7 +28,6 @@ export const urlMuestrasAdd = '/api/muestras/add'
 export const urlSwichAlta = '/api/muestras/switch-alta/'
 export const urlGetMuestraById = '/api/muestras/id/'
 export const urlAlterMuestra = '/api/muestras/modificar/'
-
 
 //PACIENTES
 export const urlPacientes = '/api/pacientes/all'
@@ -55,7 +53,7 @@ export const urlAnalisis = '/api/analisis/all'
 export const urlCargarResultados = '/api/analisis/cargar-resultados/'
 export const urlAprobarResultados = '/api/analisis/aprobar-resultados/'
 export const urlAddAnalisis = '/api/analisis/add'
-
+export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 
 //CAJA
 export const urlTransacciones = '/api/transaccion/all'

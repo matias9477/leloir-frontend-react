@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes } from './../Constants/URLs'
+import { urlAnalisis, urlGetAnalisis, urlEmitirAnalisis, urlAnalisisPendientes, urlCargarResultados, urlAprobarResultados, urlAnalisisByIdPendientes, urlAddAnalisis, urlGetPreviewRegistroAnalisis } from './../Constants/URLs'
 
 let initialData = {
     fetching: false,
+    fetchingAnalisis: false,
     analisisAll: [],
     upToDateAnalisisAll: false,
     analisisById: '',
@@ -11,12 +12,18 @@ let initialData = {
     fetchingAnalisisPendientes: false,
     fetchingAnalisisById: false,
     analisisPendientesById: [],
+    registroAnalisis: [],
+    previewRegistroAnalisis: [],
 }
 
 let GET_ANALISIS = 'GET_ANALISIS'
 let GET_ANALISIS_SUCCESS = 'GET_ANALISIS_SUCCESS'
 let GET_ANALISIS_ERROR = 'GET_ANALISIS_ERROR'
 let GET_ANALISIS_FROM_STORE = 'GET_ANALISIS_FROM_STORE'
+
+let ADD_NUEVO_ANALISIS = 'ADD_NUEVO_ANALISIS'
+let ADD_NUEVO_ANALISIS_SUCCESS = 'ADD_NUEVO_ANALISIS_SUCCESS'
+let ADD_NUEVO_ANALISIS_ERROR = 'ADD_NUEVO_ANALISIS_ERROR'
 
 let GET_ANALISIS_BY_ID = 'GET_ANALISIS_BY_ID'
 let GET_ANALISIS_BY_SUCCESS = 'GET_ANALISIS_BY_SUCCESS'
@@ -43,17 +50,28 @@ let GET_ANALISIS_PENDIENTES_BY_ID = 'GET_ANALISIS_PENDIENTES_BY_ID'
 let GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS = 'GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS'
 let GET_ANALISIS_PENDIENTES_BY_ID_ERROR = 'GET_ANALISIS_PENDIENTES_BY_ID_ERROR'
 
+let GET_PREVIEW_REGISTRO_ANALISIS = 'GET_PREVIEW_REGISTRO_ANALISIS'
+let GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS = 'GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS'
+let GET_PREVIEW_REGISTRO_ANALISIS_ERROR = 'GET_PREVIEW_REGISTRO_ANALISIS_ERROR'
+
 
 export default function reducer(state = initialData, action){
     switch(action.type){
         case GET_ANALISIS:
-            return { ...state, fetching: true }
+            return { ...state, fetchingAnalisis: true }
         case GET_ANALISIS_SUCCESS:
-            return { ...state, fetching: false, analisisAll: action.payload, upToDateAnalisisAll:true }
+            return { ...state, fetchingAnalisis: false, analisisAll: action.payload, upToDateAnalisisAll:true }
         case GET_ANALISIS_ERROR:
-            return { ...state, fetching: false, error: action.payload, upToDateAnalisisAll: false }
+            return { ...state, fetchingAnalisis: false, error: action.payload, upToDateAnalisisAll: false }
         case GET_ANALISIS_FROM_STORE:
-            return { ...state, fetching:false, analisisAll: action.payload }
+            return { ...state, fetchingAnalisis:false, analisisAll: action.payload }
+
+        case ADD_NUEVO_ANALISIS:
+            return { ...state, fetchingAnalisis: true }
+        case ADD_NUEVO_ANALISIS_SUCCESS:
+            return { ...state, fetchingAnalisis: false, registroAnalisis:action.payload, upToDateAnalisisAll: false }
+        case ADD_NUEVO_ANALISIS_ERROR:
+            return { ...state, fetchingAnalisis: false, error: action.payload, upToDateAnalisisAll: true }
 
         case GET_ANALISIS_BY_ID:
             return { ...state, fetchingAnalisisById: true }
@@ -63,11 +81,11 @@ export default function reducer(state = initialData, action){
             return { ...state, fetchingAnalisisById: false, error: action.payload }
 
         case EMITIR_ANALISIS:
-            return { ...state, fetching: true }
+            return { ...state, fetchingAnalisis: true }
         case EMITIR_ANALISIS_SUCCESS:
-            return { ...state, fetching: false, upToDatePendientes: false }
+            return { ...state, fetchingAnalisis: false, upToDatePendientes: false }
         case EMITIR_ANALISIS_ERROR:
-            return { ...state, fetching: false, error: action.payload, upToDatePendientes: true }
+            return { ...state, fetchingAnalisis: false, error: action.payload, upToDatePendientes: true }
 
         case GET_ANALISIS_PENDIENTES:
             return { ...state, fetchingAnalisisPendientes: true }
@@ -97,6 +115,13 @@ export default function reducer(state = initialData, action){
         case GET_ANALISIS_PENDIENTES_BY_ID_SUCCESS:
             return { ...state, fetching: false, analisisPendientesById: action.payload }
         case GET_ANALISIS_PENDIENTES_BY_ID_ERROR:
+            return { ...state, fetching: false, error: action.payload }
+
+        case GET_PREVIEW_REGISTRO_ANALISIS:
+            return { ...state, fetching: true }
+        case GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS:
+            return { ...state, fetching: false, previewRegistroAnalisis: action.payload }
+        case GET_PREVIEW_REGISTRO_ANALISIS_ERROR:
             return { ...state, fetching: false, error: action.payload }
 
 
@@ -135,7 +160,7 @@ export let getAnalisisAction = () => (dispatch, getState) => {
 }
 
 export let getAnalisisByIdAction = (id) => (dispatch, getState) => {
-   
+
     dispatch({
         type: GET_ANALISIS_BY_ID,
     })
@@ -178,7 +203,7 @@ export let emitirAnalisisAction = (id) => (dispatch, getState) => {
             return dispatch(getAnalisisPendientesAction())
         } else
             return dispatch(getAnalisisByIdAction(id))
-       
+
     })
     .catch(error=>{
         dispatch({
@@ -187,6 +212,29 @@ export let emitirAnalisisAction = (id) => (dispatch, getState) => {
         })
     })
 
+}
+
+export let addAnalisisAction = (data) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_NUEVO_ANALISIS,
+    })
+
+    return axios.post(urlAddAnalisis, data)
+    .then(res=>{
+        dispatch({
+            type: ADD_NUEVO_ANALISIS_SUCCESS,
+            payload: res.data
+        })
+        alert(`Se ha registrado el análisis con éxito.`)
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_NUEVO_ANALISIS_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar el análisis. Por favor intente nuevamente.`)
+
+    })
 }
 
 export let getAnalisisPendientesAction = () => (dispatch, getState) => {
@@ -219,7 +267,7 @@ export let getAnalisisPendientesAction = () => (dispatch, getState) => {
 
 export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
     const urlBase = window.document.location.pathname
-    
+
     dispatch({
         type: CARGAR_RESULTADO,
     })
@@ -246,7 +294,7 @@ export let cargarResultadosAction = (id, data) => (dispatch, getState) => {
 
 export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
     const urlBase = window.document.location.pathname
-    
+
     dispatch({
         type: REVISAR_RESULTADO,
     })
@@ -270,7 +318,7 @@ export let revisarResultadosAction = (id, data) => (dispatch, getState) => {
 }
 
 export let getAnalisisPendientesByIdAction = (id) => (dispatch, getState) => {
-    
+
     dispatch({
         type: GET_ANALISIS_PENDIENTES_BY_ID
     })
@@ -284,6 +332,26 @@ export let getAnalisisPendientesByIdAction = (id) => (dispatch, getState) => {
     .catch(error=>{
         dispatch({
             type: GET_ANALISIS_PENDIENTES_BY_ID_ERROR,
+            payload: error.message
+        })
+    })
+}
+
+export let getPreviewRegistroAnalisis = (data) => (dispatch, getState) => {
+
+    dispatch({
+        type: GET_PREVIEW_REGISTRO_ANALISIS
+    })
+    return axios.post(urlGetPreviewRegistroAnalisis, data)
+    .then(res=>{
+        dispatch({
+            type: GET_PREVIEW_REGISTRO_ANALISIS_SUCCESS,
+            payload: Object.values(res.data).flat()[0]
+        })
+    })
+    .catch(error=>{
+        dispatch({
+            type: GET_PREVIEW_REGISTRO_ANALISIS_ERROR,
             payload: error.message
         })
     })
