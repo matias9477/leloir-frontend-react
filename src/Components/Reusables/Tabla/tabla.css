@@ -33,3 +33,7 @@
 .listadosBaja {
     color: rgb(163, 160, 160);
 }
+
+.importeNegativo {
+    color: red;
+}
