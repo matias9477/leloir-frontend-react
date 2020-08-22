@@ -1,20 +1,66 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Header } from 'semantic-ui-react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
+import Tabla from '../Reusables/Tabla/Tabla';
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar'
-import Transacciones from './Transacciones';
 import './cajaStyles.css';
 
+const columns = [
+  {
+    dataField: 'fecha',
+    text: 'Fecha',
+  },
+  {
+    dataField: 'concepto',
+    text: 'Concepto',
+  },
+  {
+    dataField: 'descripcion',
+    text: 'Descripción',
+  },
+  {
+    dataField: 'importe',
+    text: 'Importe',
+    style: 'importeNegativo',
+  },
+  {
+    dataField: 'efectivo',
+    text: 'Efectivo',
+    style: 'importeNegativo',
+  },
+];
+
+const columnsDetalle = [
+  {
+    dataField: 'detalle',
+    text: 'Detalle',
+  },
+  {
+    dataField: 'observacion',
+    text: 'Observaciones',
+  },
+  {
+    dataField: 'formaPago',
+    text: 'Forma de Pago',
+  },
+  {
+    dataField: 'importe',
+    text: 'Importe',
+  },
+];
+
+
 class Caja extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
       transacciones: [],
     };
   }
+  
   componentDidMount() {
     this.props.getTransaccionesAction();
   }
@@ -33,9 +79,18 @@ class Caja extends Component {
             />
           </div>
         ) : (
-          <div className='avoidMenu'>
-            <Header as='h2'>Transacciones</Header>
-            <Transacciones transacciones={this.props.transacciones} />
+          <div>
+
+            <Tabla
+                data={this.props.transacciones}
+                param='idTransaccion'
+                // urlAdd={''} //TODO:agregar url cuando se haga el registro de transacciones
+                // buttonTitleAdd='Nueva Transacción'
+                columns={columns}
+                title='Caja'
+                expansibleRows={true}
+                expansibleRowsContent={columnsDetalle}
+            />
           </div>
         )}
       </div>
