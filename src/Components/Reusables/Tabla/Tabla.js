@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header, Pagination, Input, Dropdown, Grid, Button, Icon, Table } from 'semantic-ui-react';
-import {Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { nroPorPagina } from '../../../Constants/utils'
 import { getHumanDate } from '../../../Services/MetodosPaciente';
@@ -83,7 +83,7 @@ class Tabla extends React.Component {
     }
 
     showDetailsRow(row){
-        return <Table basic='very'>
+        return <Table basic='very' className='expansibleSeccion'>
             <Table.Header>
                 <Table.Row>
                     {this.props.expansibleRowsContent.map((colu, index) => (
