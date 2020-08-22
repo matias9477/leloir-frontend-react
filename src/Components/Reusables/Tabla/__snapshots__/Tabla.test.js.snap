@@ -4,11 +4,19 @@ exports[`should render the component correctly with the given mocked props 1`] =
 <div
   className="tabla"
 >
-  <Header
-    as="h2"
+  <Grid
+    columns={3}
   >
-    Pacientes
-  </Header>
+    <GridColumn />
+    <GridColumn>
+      <Header
+        as="h2"
+      >
+        Pacientes
+      </Header>
+    </GridColumn>
+    <GridColumn />
+  </Grid>
   <div
     className="filter"
   >

@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -52,13 +50,11 @@ class TablaAnalisis extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to={urlAddAnalisis} style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='syringe' /> Nuevo Análisis
-                        </Button>
-
                         <Tabla
                             data={this.props.analisis}
-                            param={'idAnalisis'}
+                            param='idAnalisis'
+                            urlAdd={urlAddAnalisis}
+                            buttonTitleAdd='Nuevo Análisis'
                             columns={columns}
                             title='Analisis'
                             options={true}
