@@ -192,8 +192,21 @@ class Tabla extends React.Component {
         const { param, dataConsulta } = this.props
         
         return <div className='tabla'>
-            
-            <Header as='h2'>{this.props.title}</Header>
+ 
+            <Grid columns={3}>
+                <Grid.Column/>
+                <Grid.Column>
+                    <Header as='h2'>{this.props.title}</Header>
+                </Grid.Column>
+                <Grid.Column>
+                    {this.props.urlAdd ?
+                    <Button as={Link}
+                    to={this.props.urlAdd} 
+                    exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                        <Icon name='user'/>{this.props.buttonTitleAdd}
+                    </Button> : null}
+                </Grid.Column>
+            </Grid>
             
             <div className='filter'>
                 <Grid>
@@ -239,6 +252,7 @@ class Tabla extends React.Component {
                                         as= {Link} 
                                         to={{pathname: `${this.props.path}${row[param]}`, state: { prevPath: window.location.pathname, type: row[dataConsulta] }}} 
                                         exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
+                                        style={{backgroundColor: 'transparent'}}
                                         >
                                         </Button> 
                                     : null }

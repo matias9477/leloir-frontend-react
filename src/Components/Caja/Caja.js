@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { Button, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 
 import Tabla from '../Reusables/Tabla/Tabla';
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
@@ -83,15 +81,11 @@ class Caja extends Component {
         ) : (
           <div>
 
-            <Button as={Link} disabled
-            // to={urlAddPaciente} 
-            style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-              <Icon name='user' /> Nueva Transacción
-            </Button>
-  
             <Tabla
                 data={this.props.transacciones}
-                param={'idTransaccion'}
+                param='idTransaccion'
+                // urlAdd={''} //TODO:agregar url cuando se haga el registro de transacciones
+                // buttonTitleAdd='Nueva Transacción'
                 columns={columns}
                 title='Caja'
                 expansibleRows={true}
