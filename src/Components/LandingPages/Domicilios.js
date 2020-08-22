@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import { Table } from 'semantic-ui-react'
+import { Table, Header } from 'semantic-ui-react'
 import { getDomiciliosAction } from '../../Redux/domiciliosDuck'
 import { connect } from 'react-redux';
-
 import './domicilios.css';
 
-const roles = [
-    { key: 'Secretaria', value: 'ROLE_SECRETARIA', text: 'Secretaria' },
-    { key: 'Técnico', value: 'ROLE_TECNICO_LABORATORIO', text: 'Técnico de laboratorio' },
-    { key: 'Bioquímico', value: 'ROLE_BIOQUIMICO', text:'Bioquímico' },
-    { key: 'Admin', value: 'ROLE_ADMIN', text: 'Admin' },
-]
 
 const domicilios = [
     { idDomicilio: 1, direccion: "1472 Mcguire Point", descripcion: 'la casa del viejo puto', paciente: 'alberto fernandez', fecha: "mañana culia" },
@@ -18,14 +11,17 @@ const domicilios = [
     { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: 'la casa de nisman', paciente: null, fecha: "mañana culia" },
     { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: 'la casa de nisman', paciente: null, fecha: "mañana culia" },
     { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
+    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
 ]
 
 class Domicilios extends Component {
-    constructor(props){
-        super(props);
-    }
-
-
 
     componentDidMount() {
         this.props.getDomiciliosAction()
@@ -50,6 +46,7 @@ class Domicilios extends Component {
         var listDomicilios = domicilios.map(this.createDomicilio)
         return (
             <div className='Domicilios'>
+                <Header as='h3'>Domicilios del día</Header>
                 <Table color="blue" key="blue">
                     <Table.Header>
                         <Table.Row>
