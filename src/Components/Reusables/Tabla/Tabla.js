@@ -20,7 +20,6 @@ class Tabla extends React.Component {
             }, 
             filter: '',
             param: props.param,
-            expansibleRows: false,
             row: [],
         }
       }
@@ -77,7 +76,6 @@ class Tabla extends React.Component {
 
     handleRowClick(row){ 
         this.setState({
-            expansibleRows: !this.state.expansibleRows,
             row,
         })
     }
@@ -260,7 +258,7 @@ class Tabla extends React.Component {
                         
                             </tr>,
 
-                            (this.state.expansibleRows & (row === this.state.row) ) ? 
+                            ((row === this.state.row) ) ? 
                                 <tr key={index+1}>
                                     <td style={{border: 'none'}}/>
                                     <td style={{border: 'none'}}/>
