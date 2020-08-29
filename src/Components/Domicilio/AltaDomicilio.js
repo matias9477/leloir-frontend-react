@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Header, Form, Icon, Container,Grid  } from 'semantic-ui-react'
 import Select from 'react-select';
@@ -7,8 +7,9 @@ import { addDomicilioAction } from '../../Redux/domiciliosDuck';
 import NavBar from '../NavBar/NavBar';
 import axios from 'axios';
 import './../styles.css';
-import {urlAltaDomicilio, urlDomicilios, urlDomiciliosTable,urlPacientesEnAlta} from '../../Constants/URLs';
-import {emptyToNull} from '../../Services/MetodosDeValidacion';
+import {urlAltaDomicilio, urlDomiciliosTable,urlPacientesEnAlta} from '../../Constants/URLs';
+
+
 class AltaDomicilio extends Component {
   constructor(props) {
     super(props);

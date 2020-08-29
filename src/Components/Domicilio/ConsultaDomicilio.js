@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import NavBar from '../NavBar/NavBar';
@@ -150,7 +150,7 @@ class ConsultaDomicilio extends Component {
               {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
                 if (window.confirm('¿Esta seguro que quiere modificar el domicilio ' + this.state.direccion + '?')) {
                   this.modificarDomicilio(e)
-                  } else {window.location.reload(true)} } } primary>
+                  } else {window.location.reload(true)} } }>
                 Modificar Domicilio
               </Button> : null}
 

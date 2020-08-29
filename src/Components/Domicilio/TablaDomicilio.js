@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Header, Pagination, Icon, Input, Dropdown } from 'semantic-ui-react'
-import {Link} from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 import SyncLoader from "react-spinners/SyncLoader"
 
