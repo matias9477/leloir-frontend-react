@@ -59,9 +59,9 @@ export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 export const urlTransacciones = '/api/transaccion/all'
 
 //DOMICILIOS
-export const urlDomicilios = "/api/domicilios/all";
-export const urlDomicilioById = "/api/domicilios/id/";
-export const urlSwitchAltaDomicilio = "/api/domicilios/switch-alta/"
+export const urlDomicilios = "/api/domicilios/all"
+export const urlDomicilioById = "/api/domicilios/id/"
 export const urlAlterDomicilio = "/api/domicilios/modificar/"
 export const urlAltaDomicilio = "/api/domicilios/add"
 export const urlDomiciliosTable = "/domicilios"
+export const urlTomorrowDomicilios = '/api/domicilios/tomorrow'

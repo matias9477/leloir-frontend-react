@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import NavBar from '../NavBar/NavBar';
-import { getDomicilioByIdAction, switchAltaAction, alterDomicilioAction } from '../../Redux/domiciliosDuck'
+import { getDomicilioByIdAction, alterDomicilioAction } from '../../Redux/domiciliosDuck'
 import './domicilioStyles.css'
 
 class ConsultaDomicilio extends Component {
@@ -41,9 +41,9 @@ class ConsultaDomicilio extends Component {
     })
   }
 
-  alta(e){
-    this.props.switchAltaAction(this.state.id)
-  }
+  // alta(e){
+  //   this.props.switchAltaAction(this.state.id)
+  // }
 
   modificarDomicilio = (e) => {
     e.preventDefault()
@@ -86,6 +86,7 @@ class ConsultaDomicilio extends Component {
   }
 
   render() {
+    console.log(this.props.match.params.id)
     return (
       <div className='union'>
         <NavBar/>
@@ -171,4 +172,4 @@ const mapStateToProps = (state, props) => ({
 
 })
 
-export default connect(mapStateToProps, { getDomicilioByIdAction, switchAltaAction, alterDomicilioAction })(ConsultaDomicilio)
+export default connect(mapStateToProps, { getDomicilioByIdAction, alterDomicilioAction })(ConsultaDomicilio)

@@ -1,9 +1,12 @@
 import axios from 'axios';
-import {urlDomicilios, urlSwitchAltaDomicilio,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio} from './../Constants/URLs';
+import {urlDomicilios,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
     domicilios: [],
+    upToDateAllDomicilios: false,
+    tomorrowDomicilios: [],
+    
 }
 
 let ADD_DOMICILIO = "ADD_DOMICILIO"
@@ -13,10 +16,7 @@ let ADD_DOMICILIO_ERROR = "ADD_DOMICILIO_ERROR"
 let GET_DOMICILIOS = 'GET_DOMICILIOS'
 let GET_DOMICILIOS_SUCCESS = 'GET_DOMICILIOS_SUCCESS'
 let GET_DOMICILIOS_ERROR = 'GET_DOMICILIOS_ERROR'
-
-let BIT_INVERSE = 'BIT_INVERSE'
-let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
-let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
+let GET_DOMICILIOS_FROM_STORE = 'GET_DOMICILIOS_FROM_STORE'
 
 let GET_DOMICILIO_BY_ID = 'GET_DOMICILIO_BY_ID'
 let GET_DOMICILIO_BY_ID_ERROR = 'GET_DOMICILIO_BY_ID_ERROR'
@@ -26,7 +26,50 @@ let ALTER_DOMICILIO = 'ALTER_DOMICILIO'
 let ALTER_DOMICILIO_SUCCESS = 'ALTER_DOMICILIO_SUCCESS'
 let ALTER_DOMICILIO_ERROR = 'ALTER_DOMICILIO_ERROR'
 
+let GET_TOMORROW_DOMICILIOS = 'GET_TOMORROW_DOMICILIOS'
+let GET_TOMORROW_DOMICILIOS_SUCCESS = 'GET_TOMORROW_DOMICILIOS_SUCCESS'
+let GET_TOMORROW_DOMICILIOS_ERROR = 'GET_TOMORROW_DOMICILIOS_ERROR'
+
+
+export default function reducer(state = initialData, action) {
+    switch(action.type){
+        case GET_DOMICILIOS:
+            return {...state, fetching: true}
+        case GET_DOMICILIOS_SUCCESS:
+            return {...state, fetching: false, domicilios: action.payload, upToDateAllDomicilios:true} 
+        case GET_DOMICILIOS_ERROR:
+            return {...state, fetching: false, error: action.payload}
+        case GET_DOMICILIOS_FROM_STORE:
+            return {...state, fetching:false, domicilios: action.payload}
+
+        case ADD_DOMICILIO:
+            return {...state, fetching: true}
+        case ADD_DOMICILIO_SUCCESS:
+            return {...state, fetching:false, upToDateAllDomicilios:false }
+        case ADD_DOMICILIO_ERROR:
+            return {...state, fetching:false}
+
+        case GET_TOMORROW_DOMICILIOS:
+            return {...state, fetching: true}
+        case GET_TOMORROW_DOMICILIOS_SUCCESS:
+            return {...state, fetching:false, tomorrowDomicilios: action.payload}
+        case GET_TOMORROW_DOMICILIOS_ERROR:
+            return {...state, fetching:false, error: action.payload}
+        default:
+            return state
+    }
+}
+
+
 export let getDomiciliosAction = () => (dispatch, getState) => {
+    const state = getState()
+
+    if(state.domicilios.upToDateAllDomicilios){
+        dispatch({
+            type: GET_DOMICILIOS_FROM_STORE,
+            payload: state.domicilios.domicilios,
+        })
+    }else{
     dispatch({
         type: GET_DOMICILIOS,
     })
@@ -43,46 +86,25 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
             payload: err.message
         })
     })
-}
-
-export default function reducer(state = initialData, action) {
-    switch(action.type){
-        case GET_DOMICILIOS:
-            return {...state, fetching: true}
-        case GET_DOMICILIOS_SUCCESS:
-            return {...state, fetching: false, domicilios: action.payload}
-        case GET_DOMICILIOS_ERROR:
-            return {...state, fetching: false, error: action.payload}
-        default:
-            return state
     }
 }
 
-export let switchAltaAction = (id) => (dispatch, getState) =>{
-    const url = window.document.location.pathname
-
+export let getTomorrowDomicilios = () => (dispatch, getState) => {
     dispatch({
-        type: BIT_INVERSE,
+        type: GET_TOMORROW_DOMICILIOS
     })
-
-    return axios.put(`${urlSwitchAltaDomicilio}${id}`)
+    return axios.get(urlTomorrowDomicilios)
     .then(res=>{
         dispatch({
-            type: BIT_INVERSE_SUCCESS,
+            type: GET_TOMORROW_DOMICILIOS_SUCCESS,
+            payload: Object.values(res.data).flat(),
         })
-        if (url === '/domicilios'){
-            return dispatch(getDomiciliosAction(), alert('La operación se ha realizado con éxito.'))
-        }
-        else {
-            return dispatch(getDomicilioByIdAction(id), alert('La operación se ha realizado con éxito.'))
-        }
     })
     .catch(err=>{
         dispatch({
-            type: BIT_INVERSE_ERROR,
+            type: GET_TOMORROW_DOMICILIOS_ERROR,
             payload: err.message
         })
-        alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
     })
 }
 

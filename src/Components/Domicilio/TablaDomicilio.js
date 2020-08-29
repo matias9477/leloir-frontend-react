@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
-import { getDomiciliosAction, switchAltaAction } from '../../Redux/domiciliosDuck';
+import { getDomiciliosAction } from '../../Redux/domiciliosDuck';
 import { urlAddDomicilio, urlConsultaDomicilio } from '../../Constants/NavUrl';
 import Tabla from '../Reusables/Tabla/Tabla';
 import './../styles.css';
@@ -75,6 +75,6 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{getDomiciliosAction, switchAltaAction})(TablaDomicilio)
+export default connect(mapStateToProps,{getDomiciliosAction})(TablaDomicilio)
 
 

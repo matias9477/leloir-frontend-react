@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router-dom'
 import { Button, Header, Form, Icon, Container,Grid  } from 'semantic-ui-react'
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { urlTablaDomicilio } from '../../Constants/NavUrl'
 import { checkAtributo } from '../../Services/MetodosDeValidacion';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
@@ -41,6 +43,9 @@ class AltaDomicilio extends Component {
   }
 
   render(){
+    if (!this.props.upToDateAllDomicilios) {
+      return <Redirect to={urlTablaDomicilio} />
+    }
     return (
       <div>
         <NavBar/>
@@ -175,7 +180,8 @@ class AltaDomicilio extends Component {
 const mapStateToProps = state =>({
   fetching: state.domicilios.fetching,
   patients: state.patients.patients,
+  upToDateAllDomicilios: state.domicilios.upToDateAllDomicilios,
 })
 
 
-export default connect(mapStateToProps, {getPatientsAction, addDomicilioAction})(AltaDomicilio);
+export default withRouter(connect(mapStateToProps, {getPatientsAction, addDomicilioAction})(AltaDomicilio));
