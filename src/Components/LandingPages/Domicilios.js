@@ -17,7 +17,7 @@ class Domicilios extends Component {
         {
             return null
         } else return <Table.Row>
-                    <Table.Cell>{domicilio.direccion}}</Table.Cell>
+                    <Table.Cell>{domicilio.direccion}</Table.Cell>
                     <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
                     <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
                 </Table.Row>
