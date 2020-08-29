@@ -65,3 +65,4 @@ export const urlSwitchAltaDomicilio = "/api/domicilios/switch-alta/"
 export const urlAlterDomicilio = "/api/domicilios/modificar/"
 export const urlAltaDomicilio = "/api/domicilios/add"
 export const urlDomiciliosTable = "/domicilios"
+export const urlTomorrowDomicilios = '/api/domicilios/tomorrow'

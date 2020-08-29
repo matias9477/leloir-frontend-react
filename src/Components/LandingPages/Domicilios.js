@@ -1,38 +1,22 @@
 import React, { Component } from 'react';
 import { Table, Header } from 'semantic-ui-react'
-import { getDomiciliosAction } from '../../Redux/domiciliosDuck'
+import { getTomorrowDomicilios } from '../../Redux/domiciliosDuck'
+import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux';
 import './domicilios.css';
 
 
-const domicilios = [
-    { idDomicilio: 1, direccion: "1472 Mcguire Point", descripcion: 'la casa del viejo puto', paciente: 'alberto fernandez', fecha: "mañana culia" },
-    { idDomicilio: 2, direccion: "calle falsa 123", descripcion: 'la casa del homerillo', paciente: 'null', fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: 'la casa de nisman', paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: 'la casa de nisman', paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-    { idDomicilio: 3, direccion: "calle falsa 1234", descripcion: null, paciente: null, fecha: "mañana culia" },
-]
-
 class Domicilios extends Component {
 
     componentDidMount() {
-        this.props.getDomiciliosAction()
-    }
-
-    getDomiciliosDeManana = (domicilios) =>{
-        return domicilios
+        this.props.getTomorrowDomicilios()
     }
 
     createDomicilio = (domicilio) =>{
-        return <Table.Row>
+        if(domicilio === undefined)
+        {
+            return null
+        } else return <Table.Row>
                     <Table.Cell>{domicilio.direccion}}</Table.Cell>
                     <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
                     <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
@@ -42,8 +26,11 @@ class Domicilios extends Component {
 
 
     render() {
-        const { fetching } = this.props
-        var listDomicilios = domicilios.map(this.createDomicilio)
+        const { fetching, domicilios } = this.props
+        var listDomicilios
+        if(!fetching){
+         listDomicilios = domicilios.map(this.createDomicilio)
+        }
         return (
             <div className='Domicilios'>
                 <Header as='h3'>Domicilios del día</Header>
@@ -55,10 +42,16 @@ class Domicilios extends Component {
                         <Table.HeaderCell>Paciente</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
-
-                    <Table.Body>
-                        {listDomicilios}
-                    </Table.Body>
+                    { fetching ? 
+                            <ClipLoader
+                            size={60}
+                            color={'black'}
+                            />
+                                :
+                            <Table.Body>
+                                {listDomicilios}
+                            </Table.Body>
+                    }
                 </Table>
             </div>
         );
@@ -67,10 +60,10 @@ class Domicilios extends Component {
 
 const mapStateToProps = state =>({
     fetching: state.domicilios.fetching,
-    domicilios: state.domicilios.domicilios
+    domicilios: state.domicilios.tomorrowDomicilios
 })
 
-export default connect(mapStateToProps, { getDomiciliosAction })(Domicilios)
+export default connect(mapStateToProps, { getTomorrowDomicilios })(Domicilios)
 
 
 

@@ -1,10 +1,12 @@
 import axios from 'axios';
-import {urlDomicilios, urlSwitchAltaDomicilio,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio} from './../Constants/URLs';
+import {urlDomicilios, urlSwitchAltaDomicilio,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
     domicilios: [],
     upToDateAllDomicilios: false,
+    tomorrowDomicilios: [],
+    
 }
 
 let ADD_DOMICILIO = "ADD_DOMICILIO"
@@ -28,6 +30,11 @@ let ALTER_DOMICILIO = 'ALTER_DOMICILIO'
 let ALTER_DOMICILIO_SUCCESS = 'ALTER_DOMICILIO_SUCCESS'
 let ALTER_DOMICILIO_ERROR = 'ALTER_DOMICILIO_ERROR'
 
+let GET_TOMORROW_DOMICILIOS = 'GET_TOMORROW_DOMICILIOS'
+let GET_TOMORROW_DOMICILIOS_SUCCESS = 'GET_TOMORROW_DOMICILIOS_SUCCESS'
+let GET_TOMORROW_DOMICILIOS_ERROR = 'GET_TOMORROW_DOMICILIOS_ERROR'
+
+
 export default function reducer(state = initialData, action) {
     switch(action.type){
         case GET_DOMICILIOS:
@@ -38,6 +45,12 @@ export default function reducer(state = initialData, action) {
             return {...state, fetching: false, error: action.payload}
         case GET_DOMICILIOS_FROM_STORE:
             return {...state, fetching:false, domicilios: action.payload}
+        case GET_TOMORROW_DOMICILIOS:
+            return {...state, fetching: true}
+        case GET_TOMORROW_DOMICILIOS_SUCCESS:
+            return {...state, fetching:false, tomorrowDomicilios: action.payload}
+        case GET_TOMORROW_DOMICILIOS_ERROR:
+            return {...state, fetching:false, error: action.payload}
         default:
             return state
     }
@@ -70,6 +83,25 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
         })
     })
     }
+}
+
+export let getTomorrowDomicilios = () => (dispatch, getState) => {
+    dispatch({
+        type: GET_TOMORROW_DOMICILIOS
+    })
+    return axios.get(urlTomorrowDomicilios)
+    .then(res=>{
+        dispatch({
+            type: GET_TOMORROW_DOMICILIOS_SUCCESS,
+            payload: Object.values(res.data).flat(),
+        })
+    })
+    .catch(err=>{
+        dispatch({
+            type: GET_TOMORROW_DOMICILIOS_ERROR,
+            payload: err.message
+        })
+    })
 }
 
 
