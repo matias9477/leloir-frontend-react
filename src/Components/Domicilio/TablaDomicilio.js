@@ -10,6 +10,11 @@ import './../styles.css';
 
 const columns = [
     {
+        dataField: 'fecha',
+        text: 'Fecha',
+        type: 'Date'
+    },
+    {
         dataField: 'direccion',
         text: 'Dirección',
     },
@@ -18,7 +23,7 @@ const columns = [
         text: 'Descripción',
     },
     {
-        dataField: 'paciente',
+        dataField: 'nombrePaciente',
         text: 'Paciente',
     }
 ];

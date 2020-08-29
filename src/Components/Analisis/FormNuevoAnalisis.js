@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Icon, Grid, Step, Container, Form, Segment, Table } from 'semantic-ui-react';
-import {Link, withRouter, Redirect } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 
