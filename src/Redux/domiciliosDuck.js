@@ -73,7 +73,7 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
     .then(res=>{
         dispatch({
             type: GET_DOMICILIOS_SUCCESS,
-            payload: res.data,
+            payload: Object.values(res.data).flat(),
         })
     })
     .catch(err=>{
