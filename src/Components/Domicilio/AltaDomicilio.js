@@ -94,7 +94,7 @@ class AltaDomicilio extends Component {
               value={this.state.selectedPaciente}
               onChange={this.handleChangeListPacientes}
               placeholder= "Busque un paciente..."
-              isClearable={true}
+              isClearable={false}
               options={this.props.patients}
               getOptionValue={this.getOptionValuePatient}
               getOptionLabel={this.getOptionLabelPatient}

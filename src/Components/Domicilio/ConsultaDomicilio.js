@@ -8,10 +8,11 @@ import Select from 'react-select';
 import 'react-datepicker/dist/react-datepicker.css';
 import { titleCase, checkAtributo } from '../../Services/MetodosDeValidacion';
 
-import { getFechaNacimiento, fechaAltaDateStamp, getFechaDomicilio } from './../../Services/MetodosPaciente';
+import { getFechaDomicilio } from './../../Services/MetodosPaciente';
 import NavBar from '../NavBar/NavBar';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { getDomicilioByIdAction, alterDomicilioAction } from '../../Redux/domiciliosDuck';
+import { validateRequiredStringNum, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import './domicilioStyles.css';
 
 class ConsultaDomicilio extends Component {
@@ -52,6 +53,23 @@ class ConsultaDomicilio extends Component {
   modificarDomicilio = (e) => {
     e.preventDefault()
 
+    const { direccion, fecha } = this.state;
+
+    const errorDireccion= validateRequiredStringNum(direccion);
+    const errorFecha = validateFechaNacimiento(fecha);
+
+    if (errorDireccion && errorFecha) {
+      this.datosModificacion()
+    } else {
+        alert('Verificar datos ingresados.')
+        this.setState({
+          errorDireccion,
+          errorFecha,
+        })
+    }
+  }
+
+  datosModificacion(){ 
     var data = {
       "idPaciente": this.state.paciente.id || this.state.paciente.idPaciente,
       "direccion": titleCase(this.state.direccion),
@@ -64,8 +82,7 @@ class ConsultaDomicilio extends Component {
     this.setState({
         cambios: false,
     })
-
-  }
+  }  
 
   cambioDireccion = (e) => {
     this.setState( {
@@ -135,9 +152,7 @@ class ConsultaDomicilio extends Component {
                 className= {this.state.errorDescripcion === true ? null : 'error'}
                 />
 
-              <Form.Field required 
-              // className= {this.state.errorFecha === true ? null : 'error'}
-              >
+              <Form.Field required>
                 <label>Fecha a realizarse</label>
                   <DatePicker placeholderText="Fecha"
                   selected={Date.parse(this.state.fecha)}
@@ -156,7 +171,7 @@ class ConsultaDomicilio extends Component {
                 value={this.state.paciente}
                 onChange={this.cambioPaciente}
                 placeholder= "Busque un paciente..."
-                isClearable={true}
+                isClearable={false}
                 options={this.props.patients}
                 getOptionValue={this.getOptionValuePatient}
                 getOptionLabel={this.getOptionLabelPatient}
