@@ -8,7 +8,7 @@ import Select from 'react-select';
 import 'react-datepicker/dist/react-datepicker.css';
 import { titleCase, checkAtributo } from '../../Services/MetodosDeValidacion';
 
-import { getFechaNacimientoConsulta, getFechaNacimiento, fechaAltaDateStamp } from './../../Services/MetodosPaciente';
+import { getFechaNacimiento, fechaAltaDateStamp, getFechaDomicilio } from './../../Services/MetodosPaciente';
 import NavBar from '../NavBar/NavBar';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { getDomicilioByIdAction, alterDomicilioAction } from '../../Redux/domiciliosDuck';
@@ -44,7 +44,7 @@ class ConsultaDomicilio extends Component {
       direccion: nextProps.domicilio.direccion,
       descripcion: nextProps.domicilio.descripcion,
       paciente: nextProps.domicilio.paciente,
-      fecha: getFechaNacimientoConsulta(nextProps.domicilio.fecha),
+      fecha: nextProps.domicilio.fecha,
     })
   }
 
@@ -53,10 +53,10 @@ class ConsultaDomicilio extends Component {
     e.preventDefault()
 
     var data = {
-      "idPaciente": this.state.paciente.id,
+      "idPaciente": this.state.paciente.id || this.state.paciente.idPaciente,
       "direccion": titleCase(this.state.direccion),
       "descripcion": this.state.descripcion,
-      "fechaVisita": typeof this.state.fecha === "string" ? fechaAltaDateStamp(this.state.fecha) : getFechaNacimiento(this.state.fecha),
+      "fechaVisita": getFechaDomicilio(this.state.fecha),
     }
 
     this.props.alterDomicilioAction(this.state.id, data)

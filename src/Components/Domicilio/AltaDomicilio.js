@@ -44,7 +44,6 @@ class AltaDomicilio extends Component {
   }
 
   render(){
-    console.log(this.state.fecha)
     if (!this.props.upToDateAllDomicilios) {
       return <Redirect to={urlTablaDomicilio} />
     }

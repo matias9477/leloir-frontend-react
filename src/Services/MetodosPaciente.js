@@ -32,6 +32,9 @@
   }
 
   export const getFechaDomicilio = (fecha) => {
+    if (typeof fecha === 'string'){
+      return fecha
+    }
     var año = fecha.getFullYear();
     var mes = (fecha.getMonth()+1);
     var dia = fecha.getDate();
