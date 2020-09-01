@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {urlDomicilios,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
+import {urlDomicilios,urlSwitchAltaDomicilio, urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
@@ -36,7 +36,7 @@ export default function reducer(state = initialData, action) {
         case GET_DOMICILIOS:
             return {...state, fetching: true}
         case GET_DOMICILIOS_SUCCESS:
-            return {...state, fetching: false, domicilios: action.payload, upToDateAllDomicilios:true} 
+            return {...state, fetching: false, domicilios: action.payload, upToDateAllDomicilios:true}
         case GET_DOMICILIOS_ERROR:
             return {...state, fetching: false, error: action.payload}
         case GET_DOMICILIOS_FROM_STORE:
@@ -52,14 +52,14 @@ export default function reducer(state = initialData, action) {
         case GET_DOMICILIO_BY_ID:
             return {...state, fetching: true}
         case GET_DOMICILIO_BY_ID_SUCCESS:
-            return {...state, fetching: false, domicilioById: action.payload} 
+            return {...state, fetching: false, domicilioById: action.payload}
         case GET_DOMICILIO_BY_ID_ERROR:
             return {...state, fetching: false, error: action.payload}
 
         case ALTER_DOMICILIO:
             return {...state, fetching: true}
         case ALTER_DOMICILIO_SUCCESS:
-            return {...state, fetching: false, upToDateAllDomicilios: false} 
+            return {...state, fetching: false, upToDateAllDomicilios: false}
         case ALTER_DOMICILIO_ERROR:
             return {...state, fetching: false, error: action.payload}
 
@@ -100,6 +100,7 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
             payload: err.message
         })
     })
+    }
     }
 }
 
