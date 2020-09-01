@@ -6,7 +6,7 @@ let initialData = {
     domicilios: [],
     upToDateAllDomicilios: false,
     tomorrowDomicilios: [],
-    
+    domicilioById: [],
 }
 
 let ADD_DOMICILIO = "ADD_DOMICILIO"
@@ -48,6 +48,20 @@ export default function reducer(state = initialData, action) {
             return {...state, fetching:false, upToDateAllDomicilios:false }
         case ADD_DOMICILIO_ERROR:
             return {...state, fetching:false}
+
+        case GET_DOMICILIO_BY_ID:
+            return {...state, fetching: true}
+        case GET_DOMICILIO_BY_ID_SUCCESS:
+            return {...state, fetching: false, domicilioById: action.payload} 
+        case GET_DOMICILIO_BY_ID_ERROR:
+            return {...state, fetching: false, error: action.payload}
+
+        case ALTER_DOMICILIO:
+            return {...state, fetching: true}
+        case ALTER_DOMICILIO_SUCCESS:
+            return {...state, fetching: false, upToDateAllDomicilios: false} 
+        case ALTER_DOMICILIO_ERROR:
+            return {...state, fetching: false, error: action.payload}
 
         case GET_TOMORROW_DOMICILIOS:
             return {...state, fetching: true}

@@ -52,7 +52,7 @@ class TablaDomicilio extends React.Component {
 
                         <Tabla
                             data={this.props.domicilios}
-                            param='direccion'
+                            param='idDomicilio'
                             urlAdd={urlAddDomicilio}
                             buttonTitleAdd='Nuevo Domicilio'
                             columns={columns}

@@ -7,13 +7,14 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { titleCase } from '../../Services/MetodosDeValidacion';
 import { urlTablaDomicilio } from '../../Constants/NavUrl'
 import { checkAtributo } from '../../Services/MetodosDeValidacion';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
 import NavBar from '../NavBar/NavBar';
 import { urlDomiciliosTable } from '../../Constants/URLs';
-import { getFechaNacimiento } from '../../Services/MetodosPaciente';
+import { getFechaDomicilio } from '../../Services/MetodosPaciente';
 import { validateRequiredStringNum, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import './domicilioStyles.css';
 
@@ -43,6 +44,7 @@ class AltaDomicilio extends Component {
   }
 
   render(){
+    console.log(this.state.fecha)
     if (!this.props.upToDateAllDomicilios) {
       return <Redirect to={urlTablaDomicilio} />
     }
@@ -77,10 +79,12 @@ class AltaDomicilio extends Component {
             <label>Fecha a realizarse</label>
               <DatePicker placeholderText="Fecha"
               selected={this.state.fecha} 
+              showTimeSelect
+              timeIntervals={15}
               onChange= {this.cambioFecha} 
               peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
               minDate={new Date()}
-              dateFormat="yyyy-MM-dd">
+              dateFormat="dd/MM/yyyy hh:mm aa">
               </DatePicker>
           </Form.Field>
 
@@ -112,10 +116,10 @@ class AltaDomicilio extends Component {
   
   handleUpdateClick = (api) => {
     var data = {
-      "direccion": this.state.direccion,
+      "direccion": titleCase(this.state.direccion),
       "descripcion": this.state.descripcion,
       "idPaciente": this.state.selectedPaciente.id,
-      "fechaVisita": getFechaNacimiento(this.state.fecha),
+      "fechaVisita": getFechaDomicilio(this.state.fecha),
     };
 
     this.props.addDomicilioAction(data)

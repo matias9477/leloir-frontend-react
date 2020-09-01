@@ -1,12 +1,18 @@
-import React, { Component } from 'react'
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { Button, Form, Icon, Container, Divider, Header } from 'semantic-ui-react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import Select from 'react-select';
+import 'react-datepicker/dist/react-datepicker.css';
+import { titleCase, checkAtributo } from '../../Services/MetodosDeValidacion';
 
+import { getFechaNacimientoConsulta, getFechaNacimiento, fechaAltaDateStamp } from './../../Services/MetodosPaciente';
 import NavBar from '../NavBar/NavBar';
-import { getDomicilioByIdAction, alterDomicilioAction } from '../../Redux/domiciliosDuck'
-import './domicilioStyles.css'
+import { getPatientsAction } from '../../Redux/patientsDuck';
+import { getDomicilioByIdAction, alterDomicilioAction } from '../../Redux/domiciliosDuck';
+import './domicilioStyles.css';
 
 class ConsultaDomicilio extends Component {
   constructor(props) {
@@ -18,7 +24,7 @@ class ConsultaDomicilio extends Component {
         direccion: '',
         descripcion:'',
         paciente:'',
-        bitAlta: '',
+        fecha: '',
 
         errorDireccion: true,
         errorDescripcion: true,
@@ -29,6 +35,7 @@ class ConsultaDomicilio extends Component {
 
   componentDidMount() {
     this.props.getDomicilioByIdAction(this.props.match.params.id)
+    this.props.getPatientsAction()
   }
 
   componentWillReceiveProps(nextProps){
@@ -37,30 +44,26 @@ class ConsultaDomicilio extends Component {
       direccion: nextProps.domicilio.direccion,
       descripcion: nextProps.domicilio.descripcion,
       paciente: nextProps.domicilio.paciente,
-      bitAlta: nextProps.domicilio.bitActivo,
+      fecha: getFechaNacimientoConsulta(nextProps.domicilio.fecha),
     })
   }
 
-  // alta(e){
-  //   this.props.switchAltaAction(this.state.id)
-  // }
 
   modificarDomicilio = (e) => {
     e.preventDefault()
 
-      var data = {
-          "direccion": this.state.direccion,
-          "descripcion": this.state.descripcion,
-          "paciente": this.state.paciente,
-          "bitActivo": true,
-        }
+    var data = {
+      "idPaciente": this.state.paciente.id,
+      "direccion": titleCase(this.state.direccion),
+      "descripcion": this.state.descripcion,
+      "fechaVisita": typeof this.state.fecha === "string" ? fechaAltaDateStamp(this.state.fecha) : getFechaNacimiento(this.state.fecha),
+    }
 
-      this.props.alterDomicilioAction(this.state.id, data)
+    this.props.alterDomicilioAction(this.state.id, data)
 
-      this.setState({
-          cambios: false,
-      })
-
+    this.setState({
+        cambios: false,
+    })
 
   }
 
@@ -80,17 +83,24 @@ class ConsultaDomicilio extends Component {
 
   cambioPaciente = (e) => {
     this.setState( {
-        paciente: e.target.value,
+        paciente: e,
         cambios: true,
     })
   }
 
+  cambioFecha = (e) => {
+    this.setState( {
+      fecha: e,
+      cambios: true,
+    })
+  }
+
+  
   render() {
-    console.log(this.props.match.params.id)
     return (
-      <div className='union'>
+      <div>
         <NavBar/>
-        <div className='Formularios'>
+        <div className='avoidMenu'>
 
           <Container className='btnHeader'>
             <Button className='boton' as= {Link} to='/domicilios' floated='left' icon labelPosition='left' primary size='small'>
@@ -113,42 +123,48 @@ class ConsultaDomicilio extends Component {
 
               <Form className='consulta'>
 
-              <Form.Group widths='equal'>
-
                 <Form.Field required label='Dirección' control='input'
                 value={this.state.direccion}
                 onChange={this.cambioDireccion}
                 className= {this.state.errorDireccion === true ? null : 'error'}
                 />
-              </Form.Group>
-
-              <Form.Group widths='equal'>
 
                 <Form.Field  label='Descripción' control='input'
                 value={this.state.descripcion || ''}
                 onChange={this.cambioDescripcion}
                 className= {this.state.errorDescripcion === true ? null : 'error'}
                 />
-              </Form.Group>
 
+              <Form.Field required 
+              // className= {this.state.errorFecha === true ? null : 'error'}
+              >
+                <label>Fecha a realizarse</label>
+                  <DatePicker placeholderText="Fecha"
+                  selected={Date.parse(this.state.fecha)}
+                  onChange= {this.cambioFecha} 
+                  showTimeSelect
+                  timeIntervals={15}
+                  peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+                  minDate={new Date()}
+                  dateFormat="dd/MM/yyyy hh:mm aa">
+                  </DatePicker>
+              </Form.Field>
 
-              <Form.Group widths='equal'>
-
-                <Form.Field  label='Paciente' control='input'
-                value={this.state.paciente || ''}
+              <Header as={'h5'} style={{margin: '0'}}>Paciente</Header>
+              <Select
+                name='pacientes'
+                value={this.state.paciente}
                 onChange={this.cambioPaciente}
-                className= {this.state.errorPaciente === true ? null : 'error'}
-                />
-              </Form.Group>
+                placeholder= "Busque un paciente..."
+                isClearable={true}
+                options={this.props.patients}
+                getOptionValue={this.getOptionValuePatient}
+                getOptionLabel={this.getOptionLabelPatient}
+              />
 
               <br/>
 
-              {(!this.state.bitAlta) ? <Button onClick={(e) => {
-                if (window.confirm('¿Esta seguro que quiere dar de alta el domicilio ' + this.state.direccion + '?')) {
-                  this.alta(e)
-                  } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
-
-              {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => {
+              {(this.state.cambios) ? <Button primary onClick={(e) => {
                 if (window.confirm('¿Esta seguro que quiere modificar el domicilio ' + this.state.direccion + '?')) {
                   this.modificarDomicilio(e)
                   } else {window.location.reload(true)} } }>
@@ -164,12 +180,17 @@ class ConsultaDomicilio extends Component {
     )
   }
 
+  getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`
+
+  getOptionValuePatient = option => option.id
+
 }
 
 const mapStateToProps = (state, props) => ({
-  domicilio: state.domicilios.domicilio,
+  domicilio: state.domicilios.domicilioById,
   fetching: state.domicilios.fetching,
+  patients: state.patients.patients,
 
 })
 
-export default connect(mapStateToProps, { getDomicilioByIdAction, alterDomicilioAction })(ConsultaDomicilio)
+export default connect(mapStateToProps, { getDomicilioByIdAction, alterDomicilioAction, getPatientsAction })(ConsultaDomicilio)
