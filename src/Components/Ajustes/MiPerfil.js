@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import axios from "axios";
 import { Form } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
-import { urlLoggedUser } from "../../Constants/URLs";
-import { titleCase } from '../../Services/MetodosDeValidacion';
+import { getLoggedInUserAction } from "../../Redux/userDuck";
+
 
 class MiPerfil extends Component {
     constructor(props) {
@@ -20,23 +20,8 @@ class MiPerfil extends Component {
     }
 
     componentDidMount(){
-        this.getLoggedUser();
-        
+        this.props.getLoggedInUserAction();
     }
-    
-
-    getLoggedUser = () => {
-        axios.get(urlLoggedUser).then(resolve => {
-            this.setState({
-              loggedUser: Object.values(resolve.data).flat(),
-              id: resolve.data.id,
-              username: resolve.data.username,
-              name: resolve.data.name,
-            });
-          }, (error) => {
-              console.log('Error carga usuario logeado: ', error.message);
-          })
-    };
 
 
     render() {
@@ -46,19 +31,18 @@ class MiPerfil extends Component {
                 <div className="ui divider"/>
                 <Form>
                     <Form.Group widths='equal'>
-                        <Form.Field label='id' control='input' placeholder='id' value={this.state.id}
-                        />
-                        <Form.Field label='Usuario' control='input' placeholder='Usuario' value={this.state.username}
-                        />
-                    </Form.Group>
-                   
-                    <Form.Field label='Nombre' control='input' placeholder='Nombre' value={titleCase(this.state.name)}
-                    />
-                        
+                        <Form.Field readOnly label='id' control='input' placeholder='id' value={this.props.loggedUser.id===undefined ? '' : this.props.loggedUser.id}/>
+                        <Form.Field readOnly label='Usuario' control='input' placeholder='Usuario' value={this.props.loggedUser.username===undefined ? '' : this.props.loggedUser.username}/>
+                    </Form.Group>   
                 </Form>
             </div>
         );
     }
 }
 
-export default MiPerfil;
+
+const mapStateToProps = state => ({  
+    loggedUser: state.user.loggedInUser,
+})
+
+export default connect(mapStateToProps, { getLoggedInUserAction })(MiPerfil)

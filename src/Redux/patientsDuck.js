@@ -9,7 +9,7 @@ let initialData = {
     upToDateAllPatients: false,
     upToDatePatientById: false,
     patient: '',
-     history: [],    
+    history: [],    
     patientLanding: [],
 }
 

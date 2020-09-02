@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Button, Form} from 'semantic-ui-react'
-import axios from "axios";
 import Select from 'react-select';
-import { urlSignUp } from "../../Constants/URLs";
+import { connect } from 'react-redux';
+
 import { validateRequiredCombos, validateContraseña } from './../../Services/MetodosDeValidacion';
 import { validateRequiredUser, validateRequiredMail } from '../../Services/MetodosUsuarios';
+import { addUserAction } from '../../Redux/userDuck';
 
 const roles = [
     { key: 'Secretaria', value: 'ROLE_SECRETARIA', text: 'Secretaria' },
@@ -22,9 +23,9 @@ class NuevoUsuario extends Component {
                 username: '',
                 email: '',
                 password: '',
-                nombreRol: '',
+                roleName: '',
             },
-            rol: '', //necesario para q ande el select
+            rol: '', 
             pass2: '',
 
             errorUsuario: true,
@@ -33,7 +34,6 @@ class NuevoUsuario extends Component {
             errorRol: true,
         });
     }
-
 
 
     cambioNombreUsuario = (e) => {
@@ -82,7 +82,7 @@ class NuevoUsuario extends Component {
             ...prevState,
             signUpRequest: {
                 ...prevState.signUpRequest,
-                nombreRol: nuevoRol.value
+                roleName: nuevoRol.value
             }
         }))
 
@@ -91,7 +91,7 @@ class NuevoUsuario extends Component {
 
     handleNuevoUsuarioClick = () => {
         const errorMail = validateRequiredMail(this.state.signUpRequest.email);
-        const errorRol = validateRequiredCombos(this.state.signUpRequest.nombreRol);
+        const errorRol = validateRequiredCombos(this.state.signUpRequest.roleName);
         
         const errorUsuario = validateRequiredUser(this.state.signUpRequest.username);
         
@@ -100,21 +100,15 @@ class NuevoUsuario extends Component {
         if (errorMail && errorUsuario && errorContraseña && errorRol) {
 
             let data = this.state.signUpRequest;
-            axios.post(urlSignUp, data
-            ).then((response) => {
-                alert(`Se creo el usuario correctamente.`);
-            }, (error) => {
-                alert('No se ha podido registrar el usuario.');
-            });
+
+            this.props.addUserAction(data)
 
             this.setState(prevState => ({
                 ...prevState,
                 signUpRequest: {
                     ...prevState.signUpRequest,
-                    // username: '',
-                    // email: '',
                     password: '',
-                    nombreRol: '',                
+                    roleName: '',                
                 },
 
                 rol: '', 
@@ -208,7 +202,6 @@ class NuevoUsuario extends Component {
 }
 
 const styleErrorSelect = { 
-    // singleValue: base => ({ ...base, color: '#F0A7A7' }),
 
     indicatorsContainer: base => ({
     ...base,
@@ -226,4 +219,8 @@ const styleErrorSelect = {
 }
   
 
-export default NuevoUsuario;
+const mapStateToProps = state => ({  
+    fetching: state.user.fetching,
+})
+
+export default connect(mapStateToProps, { addUserAction })(NuevoUsuario)
