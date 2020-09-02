@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {urlDomicilios,urlSwitchAltaDomicilio, urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
+import {urlDomicilios, urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
@@ -101,8 +101,8 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
         })
     })
     }
-    }
 }
+
 
 export let getTomorrowDomicilios = () => (dispatch, getState) => {
     dispatch({
