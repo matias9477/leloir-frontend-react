@@ -78,12 +78,10 @@ class AltaDomicilio extends Component {
             <label>Fecha a realizarse</label>
               <DatePicker placeholderText="Fecha"
               selected={this.state.fecha} 
-              showTimeSelect
-              timeIntervals={15}
               onChange= {this.cambioFecha} 
               peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
               minDate={new Date()}
-              dateFormat="dd/MM/yyyy hh:mm aa">
+              dateFormat="dd/MM/yyyy">
               </DatePicker>
           </Form.Field>
 

@@ -157,11 +157,9 @@ class ConsultaDomicilio extends Component {
                   <DatePicker placeholderText="Fecha"
                   selected={Date.parse(this.state.fecha)}
                   onChange= {this.cambioFecha} 
-                  showTimeSelect
-                  timeIntervals={15}
                   peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
                   minDate={new Date()}
-                  dateFormat="dd/MM/yyyy hh:mm aa">
+                  dateFormat="dd/MM/yyyy">
                   </DatePicker>
               </Form.Field>
 
