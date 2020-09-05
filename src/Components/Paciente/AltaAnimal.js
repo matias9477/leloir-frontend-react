@@ -48,7 +48,6 @@ class AltaAnimal extends Component {
   }
 
   handleUpdateClick = () => {
-    // const url = this.props.location.state.prevPath
     var data = {
         "type": "com.leloir.backend.domain.Animal",
         "bitAlta": true,

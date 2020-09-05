@@ -1,63 +1,65 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router-dom'
 import { Button, Header, Form, Icon, Container,Grid  } from 'semantic-ui-react'
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { titleCase } from '../../Services/MetodosDeValidacion';
+import { urlTablaDomicilio } from '../../Constants/NavUrl'
+import { checkAtributo } from '../../Services/MetodosDeValidacion';
+import { getPatientsAction } from '../../Redux/patientsDuck';
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
 import NavBar from '../NavBar/NavBar';
-import axios from 'axios';
-import './../styles.css';
-import {urlAltaDomicilio, urlDomicilios, urlDomiciliosTable,urlPacientesEnAlta} from '../../Constants/URLs';
-import {emptyToNull} from '../../Services/MetodosDeValidacion';
+import { urlDomiciliosTable } from '../../Constants/URLs';
+import { getFechaDomicilio } from '../../Services/MetodosPaciente';
+import { validateRequiredStringNum, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
+import './domicilioStyles.css';
+
+
 class AltaDomicilio extends Component {
   constructor(props) {
     super(props);
     this.state = ({
         direccion: '',
         descripcion:'',
-        pacientes: [],
+        fecha: '',
 
         selectedPaciente: '',
 
         errorDireccion: true,
-        errorDescripcion: true,
-        errorPaciente: true,
-
+        errorFecha: true,
       });
-
   }
-  
 
   componentDidMount(){
-    this.getAllPacientes();
+    this.props.getPatientsAction()
   }
 
-  getAllPacientes = () => {
-    axios.get(urlPacientesEnAlta).then(resolve => {
-        this.setState({
-            pacientes: Object.values(resolve.data).flat(),
-        });
-    }, (error) => {
-        console.log('Error en carga de pacientes: ', error.message);
-    })
-  };
 
   handleChangeListPacientes = selectedPaciente => {
     this.setState({ selectedPaciente })
   }
 
-  renderForm(){
+  render(){
+    if (!this.props.upToDateAllDomicilios) {
+      return <Redirect to={urlTablaDomicilio} />
+    }
     return (
-      <div className='Formularios'>
-        <Container className='btnHeader'>
-          <Button className='boton' as= {Link} to={urlDomiciliosTable} exact='true' floated='left' icon labelPosition='left' primary size='small'>
-            <Icon name='arrow alternate circle left' /> Volver
-          </Button>
+      <div>
+        <NavBar/>
+        <div className='avoidMenu'>
+          <Container className='btnHeader' style={{marginBottom: 'inherit'}}>
+            <Button className='boton' as= {Link} to={urlDomiciliosTable} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+              <Icon name='arrow alternate circle left' /> Volver
+            </Button>
 
-          <Header as='h3' dividing>Registrar nuevo domicilio</Header>
-        </Container>
+            <Header as='h3' dividing>Registrar nuevo domicilio</Header>
+          </Container>
 
-        <Form onSubmit={this.nuevoDomicilio} className='altasYConsultas'>
+          <Form onSubmit={this.nuevoDomicilio} className='altasYConsultas'>
 
           <Form.Field required label='Dirección' control='input' 
           placeholder='Dirección'
@@ -70,28 +72,40 @@ class AltaDomicilio extends Component {
           placeholder='Descripción'
           value={this.state.descripcion}
           onChange={this.cambioDescripcion}
-          className= {this.state.errorDescripcion === true ? null : 'error'}
           />
 
-          <Header as={'h5'}>Paciente:</Header>
-            <Grid.Column width={12}>
-              <Select
-                name='pacientes'
-                value={this.state.selectedPaciente}
-                onChange={this.handleChangeListPacientes}
-                placeholder= "Busque un paciente..."
-                isClearable={true}
-                options={this.state.pacientes}
-                getOptionValue={this.getOptionValuePatient}
-                getOptionLabel={this.getOptionLabelPatient}
-              />
-            </Grid.Column>
+          <Form.Field required className= {this.state.errorFecha === true ? null : 'error'}>
+            <label>Fecha a realizarse</label>
+              <DatePicker placeholderText="Fecha"
+              selected={this.state.fecha} 
+              onChange= {this.cambioFecha} 
+              peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+              minDate={new Date()}
+              dateFormat="dd/MM/yyyy">
+              </DatePicker>
+          </Form.Field>
+
+          <Header as={'h5'} style={{margin: '0'}}>Paciente</Header>
+          <Grid.Column width={12}>
+            <Select
+              name='pacientes'
+              value={this.state.selectedPaciente}
+              onChange={this.handleChangeListPacientes}
+              placeholder= "Busque un paciente..."
+              isClearable={false}
+              options={this.props.patients}
+              getOptionValue={this.getOptionValuePatient}
+              getOptionLabel={this.getOptionLabelPatient}
+            />
+          </Grid.Column>
 
           <br/>
 
           <Button as= {Link} to={urlDomiciliosTable} primary type="submit" onClick={this.nuevoDomicilio} className="boton"> Registrar Domicilio</Button >
 
         </Form>  
+          
+        </div>
       </div>
 
     );
@@ -99,31 +113,44 @@ class AltaDomicilio extends Component {
   
   handleUpdateClick = (api) => {
     var data = {
-      "direccion": this.state.direccion,
+      "direccion": titleCase(this.state.direccion),
       "descripcion": this.state.descripcion,
       "idPaciente": this.state.selectedPaciente.id,
-      "bitActivo": true
+      "fechaVisita": getFechaDomicilio(this.state.fecha),
     };
 
-      this.props.addDomicilioAction(data)
-      this.vaciadoCampos()
-  };
+    this.props.addDomicilioAction(data)
+    this.vaciadoCampos()
+  }
 
   nuevoDomicilio = (e) => {
     e.preventDefault();
 
-      this.handleUpdateClick(urlAltaDomicilio);
-     
+    const { direccion, fecha } = this.state;
+
+    const errorDireccion= validateRequiredStringNum(direccion);
+    const errorFecha = validateFechaNacimiento(fecha);
+
+    if (errorDireccion && errorFecha) {
+        this.handleUpdateClick()
+        this.vaciadoCampos()
+    } else {
+        alert('Verificar datos ingresados.')
+        this.setState({
+          errorDireccion,
+          errorFecha,
+        })
+    }
   }
 
   vaciadoCampos(){
     this.setState( {
       direccion: '',
       descripcion: '',
-      paciente: '',
+      selectedPaciente: '',
+      fecha: '',
       errorDireccion: true,
-      errorDescripcion: true,
-      errorPaciente: true,
+      errorFecha: true,
     })
   }
  
@@ -139,23 +166,23 @@ class AltaDomicilio extends Component {
     })
   }  
 
+  cambioFecha = (e) => {
+    this.setState( {
+      fecha: e
+    })
+  }  
 
-  render() {
-    return (
-      <div className='union'>
-        <NavBar/>
-        <div className="FormAlta">
-          {this.renderForm()}
-        </div>
-      </div>
-    );
-  }
+  getOptionLabelPatient = option => `${option.nombre} ${checkAtributo(option.apellido)}`
+
+  getOptionValuePatient = option => option.id
 
 }
 
 const mapStateToProps = state =>({
   fetching: state.domicilios.fetching,
+  patients: state.patients.patients,
+  upToDateAllDomicilios: state.domicilios.upToDateAllDomicilios,
 })
 
 
-export default connect(mapStateToProps,{addDomicilioAction})(AltaDomicilio);
+export default withRouter(connect(mapStateToProps, {getPatientsAction, addDomicilioAction})(AltaDomicilio));

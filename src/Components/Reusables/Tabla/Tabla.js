@@ -249,8 +249,7 @@ class Tabla extends React.Component {
                                         <Button circular icon='settings'
                                         as= {Link} 
                                         to={{pathname: `${this.props.path}${row[param]}`, state: { prevPath: window.location.pathname, type: row[dataConsulta] }}} 
-                                        exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
-                                        style={{backgroundColor: 'transparent'}}
+                                        exact='true' style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: 'transparent'}}
                                         >
                                         </Button> 
                                     : null }

@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {urlDomicilios, urlSwitchAltaDomicilio,urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
+import {urlDomicilios, urlDomicilioById, urlAltaDomicilio, urlAlterDomicilio, urlTomorrowDomicilios} from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
     domicilios: [],
     upToDateAllDomicilios: false,
     tomorrowDomicilios: [],
-    
+    domicilioById: [],
 }
 
 let ADD_DOMICILIO = "ADD_DOMICILIO"
@@ -17,10 +17,6 @@ let GET_DOMICILIOS = 'GET_DOMICILIOS'
 let GET_DOMICILIOS_SUCCESS = 'GET_DOMICILIOS_SUCCESS'
 let GET_DOMICILIOS_ERROR = 'GET_DOMICILIOS_ERROR'
 let GET_DOMICILIOS_FROM_STORE = 'GET_DOMICILIOS_FROM_STORE'
-
-let BIT_INVERSE = 'BIT_INVERSE'
-let BIT_INVERSE_SUCCESS = 'BIT_INVERSE_SUCCESS'
-let BIT_INVERSE_ERROR = 'BIT_INVERSE_ERROR'
 
 let GET_DOMICILIO_BY_ID = 'GET_DOMICILIO_BY_ID'
 let GET_DOMICILIO_BY_ID_ERROR = 'GET_DOMICILIO_BY_ID_ERROR'
@@ -40,11 +36,33 @@ export default function reducer(state = initialData, action) {
         case GET_DOMICILIOS:
             return {...state, fetching: true}
         case GET_DOMICILIOS_SUCCESS:
-            return {...state, fetching: false, domicilios: action.payload, upToDateAllDomicilios:true} 
+            return {...state, fetching: false, domicilios: action.payload, upToDateAllDomicilios:true}
         case GET_DOMICILIOS_ERROR:
             return {...state, fetching: false, error: action.payload}
         case GET_DOMICILIOS_FROM_STORE:
             return {...state, fetching:false, domicilios: action.payload}
+
+        case ADD_DOMICILIO:
+            return {...state, fetching: true}
+        case ADD_DOMICILIO_SUCCESS:
+            return {...state, fetching:false, upToDateAllDomicilios:false }
+        case ADD_DOMICILIO_ERROR:
+            return {...state, fetching:false}
+
+        case GET_DOMICILIO_BY_ID:
+            return {...state, fetching: true}
+        case GET_DOMICILIO_BY_ID_SUCCESS:
+            return {...state, fetching: false, domicilioById: action.payload}
+        case GET_DOMICILIO_BY_ID_ERROR:
+            return {...state, fetching: false, error: action.payload}
+
+        case ALTER_DOMICILIO:
+            return {...state, fetching: true}
+        case ALTER_DOMICILIO_SUCCESS:
+            return {...state, fetching: false, upToDateAllDomicilios: false}
+        case ALTER_DOMICILIO_ERROR:
+            return {...state, fetching: false, error: action.payload}
+
         case GET_TOMORROW_DOMICILIOS:
             return {...state, fetching: true}
         case GET_TOMORROW_DOMICILIOS_SUCCESS:
@@ -85,6 +103,7 @@ export let getDomiciliosAction = () => (dispatch, getState) => {
     }
 }
 
+
 export let getTomorrowDomicilios = () => (dispatch, getState) => {
     dispatch({
         type: GET_TOMORROW_DOMICILIOS
@@ -101,35 +120,6 @@ export let getTomorrowDomicilios = () => (dispatch, getState) => {
             type: GET_TOMORROW_DOMICILIOS_ERROR,
             payload: err.message
         })
-    })
-}
-
-
-export let switchAltaAction = (id) => (dispatch, getState) =>{
-    const url = window.document.location.pathname
-
-    dispatch({
-        type: BIT_INVERSE,
-    })
-
-    return axios.put(`${urlSwitchAltaDomicilio}${id}`)
-    .then(res=>{
-        dispatch({
-            type: BIT_INVERSE_SUCCESS,
-        })
-        if (url === '/domicilios'){
-            return dispatch(getDomiciliosAction(), alert('La operación se ha realizado con éxito.'))
-        }
-        else {
-            return dispatch(getDomicilioByIdAction(id), alert('La operación se ha realizado con éxito.'))
-        }
-    })
-    .catch(err=>{
-        dispatch({
-            type: BIT_INVERSE_ERROR,
-            payload: err.message
-        })
-        alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
     })
 }
 
