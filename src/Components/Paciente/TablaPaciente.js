@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -58,13 +56,11 @@ class TablaPacientes extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to={urlAddPaciente} style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='user' /> Nuevo Paciente
-                        </Button>
-
                         <Tabla
                             data={this.props.patients}
-                            param={'id'}
+                            param='id'
+                            urlAdd={urlAddPaciente}
+                            buttonTitleAdd='Nuevo Paciente'
                             columns={columns}
                             title='Pacientes'
                             options={true}

@@ -108,10 +108,10 @@ class DiarioPracticas extends Component {
                         <Card.Description textAlign='left'>
                             Determinacion
                             <List>
-                                {analisis.determinaciones.map((nombre, index) =>
+                                {analisis.determinaciones.map((det, index) =>
                                     <List.Item key={index}>
                                         <List.Icon name='lab'/>
-                                        <List.Content><strong>{nombre}</strong></List.Content>
+                                        <List.Content><strong>{det.nombreDeterminacion}</strong></List.Content>
                                     </List.Item>)}
                             </List>
                         </Card.Description>

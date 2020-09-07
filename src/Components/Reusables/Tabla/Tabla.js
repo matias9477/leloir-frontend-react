@@ -1,6 +1,6 @@
 import React from 'react';
-import { Header, Pagination, Input, Dropdown, Grid, Button, Icon } from 'semantic-ui-react';
-import {Link } from 'react-router-dom'
+import { Header, Pagination, Input, Dropdown, Grid, Button, Icon, Table } from 'semantic-ui-react';
+import { Link } from 'react-router-dom'
 
 import { nroPorPagina } from '../../../Constants/utils'
 import { getHumanDate } from '../../../Services/MetodosPaciente';
@@ -20,6 +20,7 @@ class Tabla extends React.Component {
             }, 
             filter: '',
             param: props.param,
+            row: [],
         }
       }
 
@@ -72,6 +73,33 @@ class Tabla extends React.Component {
             })
         }          
     } 
+
+    handleRowClick(row){ 
+        this.setState({
+            row,
+        })
+    }
+
+    showDetailsRow(row){
+        return <Table basic='very' className='expansibleSeccion'>
+            <Table.Header>
+                <Table.Row>
+                    {this.props.expansibleRowsContent.map((colu, index) => (
+                        <Table.HeaderCell key={index}>{colu.text}</Table.HeaderCell>
+                        ))}
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+            {row.detalleTransacciones.map((detalle, indexDetalle) => (
+                <Table.Row key={indexDetalle}>
+                    {this.props.expansibleRowsContent.map((col, index) => (
+                        <Table.Cell key={index}>{detalle[col.dataField]}</Table.Cell>
+                    ))}
+                </Table.Row>
+                    ))}
+            </Table.Body>
+        </Table>
+    }
 
     filtado(array){
         let { param } = this.state
@@ -148,7 +176,6 @@ class Tabla extends React.Component {
         }
     }
 
-
     getIconTipo(tipo){
         if (tipo === 'ANIMAL'){
             return 'paw'
@@ -161,10 +188,23 @@ class Tabla extends React.Component {
 
     render(){
         const { param, dataConsulta } = this.props
-
+        
         return <div className='tabla'>
-            
-            <Header as='h2'>{this.props.title}</Header>
+ 
+            <Grid columns={3}>
+                <Grid.Column/>
+                <Grid.Column>
+                    <Header as='h2'>{this.props.title}</Header>
+                </Grid.Column>
+                <Grid.Column>
+                    {this.props.urlAdd ?
+                    <Button as={Link}
+                    to={this.props.urlAdd} 
+                    exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                        <Icon name='user'/>{this.props.buttonTitleAdd}
+                    </Button> : null}
+                </Grid.Column>
+            </Grid>
             
             <div className='filter'>
                 <Grid>
@@ -197,32 +237,41 @@ class Tabla extends React.Component {
                 <tbody className='centerAlignment'>
                 
                     {(this.handleSearch(((this.state.activePage-1) * this.state.limit), (this.state.activePage * this.state.limit))).map( (row, index) => (
+                        
+                            [<tr key={index} value={row} className={(row.bitAlta===false) ? "listadosBaja" : null} onClick={this.props.expansibleRows ? () => this.handleRowClick(row) : null}> 
+                                {this.props.columns.map((col, index)=> (
+                                    <td key={index} data-label={col.text} className={(col.style==='importeNegativo' & row[col.dataField]<0) ? 'importeNegativo' : null}>
+                                        {col.type==='Date' ? getHumanDate(row[col.dataField]) : (col.type==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : this.checkEmptyEntry(row[col.dataField]))}
+                                    </td>
+                                ))}       
+                                {this.props.options ? <td>
+                                    {this.props.path ?
+                                        <Button circular icon='settings'
+                                        as= {Link} 
+                                        to={{pathname: `${this.props.path}${row[param]}`, state: { prevPath: window.location.pathname, type: row[dataConsulta] }}} 
+                                        exact='true' style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: 'transparent'}}
+                                        >
+                                        </Button> 
+                                    : null }
+                                </td>  : null}
+                        
+                            </tr>,
 
-                        <tr key={index} value={row}  className={(row.bitAlta===false ) ? "listadosBaja" : null}> 
-
-                            {this.props.columns.map((col, index)=> (
-                                <td key={index} data-label={col.text}>
-                                    {col.type === 'Date' ? getHumanDate(row[col.dataField]) : (col.type ==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : this.checkEmptyEntry(row[col.dataField]))}
-                                </td> 
-                            ))}
+                            ((row === this.state.row) ) ? 
+                                <tr key={index+1}>
+                                    <td style={{border: 'none'}}/>
+                                    <td style={{border: 'none'}}/>
                                     
-                            {this.props.options ? <td>
-                                {this.props.path ?
-                                    <Button circular icon='settings'
-                                    as= {Link} 
-                                    to={{pathname: `${this.props.path}${row[param]}`, state: { prevPath: window.location.pathname, type: row[dataConsulta] }}} 
-                                    exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
-                                    >
-                                    </Button> 
-                                : null }
-                            </td>  : null}
-                    
-                        </tr>
+                                    {this.showDetailsRow(row)}
+                                </tr>
+                                : null
+                            ]                       
                     ))}
                     
                 </tbody>
             
             </table>
+
             <Pagination
                 totalPages={Math.ceil(this.state.totalCount / this.state.limit)}
                 activePage={(this.state.activePage > Math.ceil(this.state.totalCount / this.state.limit) ? Math.ceil(this.state.totalCount / this.state.limit) : this.state.activePage)}
