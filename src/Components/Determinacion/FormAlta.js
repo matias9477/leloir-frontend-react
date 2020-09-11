@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
+import Select from 'react-select';
 import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
+import { urlUnidadesMedida } from '../../Constants/URLs';
 import { addDeterminacionAction } from './../../Redux/determinacionesDuck';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
@@ -59,6 +61,16 @@ class FormAlta extends Component {
             })
         }
     }
+
+    getAllUnidadesMedida = () => {
+        axios.get(urlUnidadesMedida).then(resolve => {
+            this.setState({
+                unidadesMedida: Object.values(resolve.data).flat(),
+            });
+        }, (error) => {
+            console.log('Error en carga de unidades medida: ', error.message);
+        })
+      };
 
     vaciadoCampos() {
         this.setState({
@@ -140,9 +152,30 @@ class FormAlta extends Component {
                         className={this.state.errorUnidadBioquimica ? null : 'error'}
                         />
 
-                        <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
+                        <Form>
+
+                        <Grid.Column width={12}>
+                        <Select
+                            name='unidadesMedida'
+                            value={this.state.selectedUnidadMedida}
+                            onChange={this.handleChangeListUnidadMedida}
+                            placeholder= "Unidades Medida"
+                            isClearable={true}
+                            options={this.state.unidadesMedida}
+                            getOptionValue={this.getOptionValueUnidadMedida}
+                            getOptionLabel={this.getOptionLabelUnidadMedida}
+                        />
+                        </Grid.Column>
+                        
+                        <Form.Field label='Si no encuentra la unidad de medida puede registrarla:' control='input' placeholder='Nombre'
                         value={this.state.unidadMedida}
                         onChange={this.cambioUnidadMedida}/>
+                        <Form.Field  control='input' placeholder='Unidad de medida'
+                        value={this.state.unidadMedida}
+                        onChange={this.cambioUnidadMedida}/>
+                        <Divider id='divider'/>
+                        </Form>
+                        
 
                         <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.fetchDeterminacion}> Registrar Determinacion</Button>
 
