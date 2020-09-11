@@ -21,12 +21,20 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
+            newUnidadMedida: '',
+
+            unidadesMedida: [],
 
             errorCodigoPractica: true,
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
+            errorUnidadMedida: true,
         });
     }
+
+    componentDidMount() {
+        this.comoboUnidadesDeMedida()
+      }
 
     handleUpdateClick = () => {
         var data = {
@@ -34,7 +42,8 @@ class FormAlta extends Component {
             "codigoPractica": this.state.codigoPractica,
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
             "unidadBioquimica": this.state.unidadBioquimica,
-            "unidadMedida": this.state.unidadMedida
+            "unidadMedida": this.state.unidadMedida,
+            "newUnidadMedida": this.state.newUnidadMedida
         };
 
         this.props.addDeterminacionAction(data)
@@ -62,7 +71,7 @@ class FormAlta extends Component {
         }
     }
 
-    getAllUnidadesMedida = () => {
+    comoboUnidadesDeMedida = () =>{
         axios.get(urlUnidadesMedida).then(resolve => {
             this.setState({
                 unidadesMedida: Object.values(resolve.data).flat(),
@@ -78,6 +87,7 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
+            newUnidadMedida: '',
             errorCodigoPractica: true,
             errorUnidadBioquimica: true,
             errorUnidadMedida: true,
@@ -99,6 +109,12 @@ class FormAlta extends Component {
     cambioUnidadBioquimica = (e) => {
         this.setState({
             unidadBioquimica: e.target.value
+        })
+    }
+
+    cambioNewUnidadMedida = (e) => {
+        this.setState({
+            neUnidadMedida: e.target.value
         })
     }
 
@@ -154,26 +170,28 @@ class FormAlta extends Component {
 
                         <Form>
 
-                        <Grid.Column width={12}>
-                        <Select
-                            name='unidadesMedida'
-                            value={this.state.selectedUnidadMedida}
-                            onChange={this.handleChangeListUnidadMedida}
-                            placeholder= "Unidades Medida"
-                            isClearable={true}
-                            options={this.state.unidadesMedida}
-                            getOptionValue={this.getOptionValueUnidadMedida}
-                            getOptionLabel={this.getOptionLabelUnidadMedida}
-                        />
-                        </Grid.Column>
-                        
-                        <Form.Field label='Si no encuentra la unidad de medida puede registrarla:' control='input' placeholder='Nombre'
-                        value={this.state.unidadMedida}
-                        onChange={this.cambioUnidadMedida}/>
-                        <Form.Field  control='input' placeholder='Unidad de medida'
-                        value={this.state.unidadMedida}
-                        onChange={this.cambioUnidadMedida}/>
+                        <Form.Field required label='Unidad de medida' control='select' placeholder ='Unidad Medida' width={5}
+                        value={this.state.unidadMedida} 
+                         onChange={this.cambioUnidadMedida} 
+                        className= {this.state.errorUnidadMedida ? null : 'error'} 
+                        >
+                            <option value={null}> </option>
+                            {this.state.unidadesMedida.map(item => (
+                            <option key={item.unidadDeMedidaId}>{item.unidad}</option>))}
+                        </Form.Field>
+
                         <Divider id='divider'/>
+
+                        <Form.Field label='Si no encuentra la unidad de medida puede registrarla:' control='input' placeholder='Nombre'
+                        value={this.state.newUnidadMedida}
+                        onChange={this.cambioNewUnidadMedida}/>
+
+                        <Form.Field  control='input' placeholder='Unidad de medida'
+                        value={this.state.newUnidadMedida}
+                        onChange={this.cambioNewUnidadMedida}/>
+
+                        <Divider id='divider'/>
+
                         </Form>
                         
 
