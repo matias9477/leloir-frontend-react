@@ -21,7 +21,8 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
-            newUnidadMedida: '',
+            newNombreunidadBioquimica: '',
+            newUnidadBioquimica: '',
 
             unidadesMedida: [],
 
@@ -29,6 +30,7 @@ class FormAlta extends Component {
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
             errorUnidadMedida: true,
+            nuevaUnidad: true,
         });
     }
 
@@ -37,14 +39,26 @@ class FormAlta extends Component {
       }
 
     handleUpdateClick = () => {
-        var data = {
+        var data 
+        if (this.state.unidadMedida === null || this.state.unidadMedida === '') {
+            data = {
             "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
             "unidadBioquimica": this.state.unidadBioquimica,
-            "unidadMedida": this.state.unidadMedida,
-            "newUnidadMedida": this.state.newUnidadMedida
-        };
+            "unidadMedida": {
+                nombre: this.state.newNombreunidadBioquimica,
+                unidad: this.state.newUnidadMedida
+                }
+            }
+        } else {
+            data = { "bitAlta": true,
+            "codigoPractica": this.state.codigoPractica,
+            "descripcionPractica": convertStyleString(this.state.descripcionPractica),
+            "unidadBioquimica": this.state.unidadBioquimica,
+            "unidadMedida": this.state.unidadMedida
+            }
+        }
 
         this.props.addDeterminacionAction(data)
     };
@@ -87,7 +101,8 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
-            newUnidadMedida: '',
+            newNombreunidadBioquimica: '',
+            newUnidadBioquimica: '',
             errorCodigoPractica: true,
             errorUnidadBioquimica: true,
             errorUnidadMedida: true,
@@ -112,9 +127,15 @@ class FormAlta extends Component {
         })
     }
 
-    cambioNewUnidadMedida = (e) => {
+    cambioNewNombreUnidadBioquimica = (e) => {
         this.setState({
-            neUnidadMedida: e.target.value
+            newNombreunidadBioquimica: e.target.value
+        })
+    }
+
+    cambioNewUnidadBioquimica = (e) => {
+        this.setState({
+            newUnidadBioquimica: e.target.value
         })
     }
 
@@ -122,6 +143,15 @@ class FormAlta extends Component {
         this.setState({
             unidadMedida: e.target.value
         })
+    }
+
+    cambioNuevaUnidad = (e) => {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            nuevaUnidad: value
+          });
+        
     }
 
 
@@ -181,12 +211,20 @@ class FormAlta extends Component {
                         </Form.Field>
 
                         <Divider id='divider'/>
+                        <Form.Field label='Seleccione si desea guardar una nueva unidad de medida:' control='input'
+                                name="nuevaUnidad"
+                                type="checkbox"
+                                value={this.state.nuevaUnidad}
+                                onChange={this.cambioNuevaUnidad} /> 
 
-                        <Form.Field label='Si no encuentra la unidad de medida puede registrarla:' control='input' placeholder='Nombre'
-                        value={this.state.newUnidadMedida}
-                        onChange={this.cambioNewUnidadMedida}/>
+
+                        <Form.Field control='input' placeholder='Nombre'
+                        disabled={this.state.nuevaUnidad}
+                        value={this.state.newNombreUnidadMedida}
+                        onChange={this.cambiNewNombreUnidadMedida}/>
 
                         <Form.Field  control='input' placeholder='Unidad de medida'
+                        disabled={this.state.nuevaUnidad}
                         value={this.state.newUnidadMedida}
                         onChange={this.cambioNewUnidadMedida}/>
 
