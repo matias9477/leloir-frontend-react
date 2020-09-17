@@ -16,6 +16,7 @@ export const urlPlanes = '/api/obras_sociales/planes/'
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
 export const urlAltaDeterminacion = '/api/determinaciones/add'
+export const urlAltaDeterminacionConUnidad = '/api/determinaciones/add-con-unidad'
 export const urlSwitchAltaDeterminacion = '/api/determinaciones/switch-alta/'
 export const urlGetDeterminacionById = '/api/determinaciones/id/'
 export const urlConsultaDeterminacion = '/api/determinaciones/consulta/'

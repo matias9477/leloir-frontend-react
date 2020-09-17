@@ -7,7 +7,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { urlUnidadesMedida } from '../../Constants/URLs';
-import { addDeterminacionAction } from './../../Redux/determinacionesDuck';
+import { addDeterminacionAction, addDeterminacionConUnidadAction } from './../../Redux/determinacionesDuck';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import { convertStyleString } from '../../Services/MetodosDeterminacion';
 import NavBar from '../NavBar/NavBar';
@@ -21,8 +21,8 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
-            newNombreunidadBioquimica: '',
-            newUnidadBioquimica: '',
+            newNombreUnidadMedida: '',
+            newUnidadMedida: '',
 
             unidadesMedida: [],
 
@@ -47,10 +47,11 @@ class FormAlta extends Component {
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
             "unidadBioquimica": this.state.unidadBioquimica,
             "unidadMedida": {
-                nombre: this.state.newNombreunidadBioquimica,
+                nombre: this.state.newNombreUnidadMedida,
                 unidad: this.state.newUnidadMedida
                 }
             }
+            this.props.addDeterminacionConUnidadAction(data)
         } else {
             data = { "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
@@ -58,9 +59,8 @@ class FormAlta extends Component {
             "unidadBioquimica": this.state.unidadBioquimica,
             "unidadMedida": this.state.unidadMedida
             }
+            this.props.addDeterminacionAction(data)
         }
-
-        this.props.addDeterminacionAction(data)
     };
 
     fetchDeterminacion = (e) => {
@@ -126,16 +126,16 @@ class FormAlta extends Component {
             unidadBioquimica: e.target.value
         })
     }
-
-    cambioNewNombreUnidadBioquimica = (e) => {
+    
+    cambioNewNombreUnidadMedida = (e) => {
         this.setState({
-            newNombreunidadBioquimica: e.target.value
+            newNombreUnidadMedida: e.target.value
         })
     }
 
-    cambioNewUnidadBioquimica = (e) => {
+    cambioNewUnidadMedida = (e) => {
         this.setState({
-            newUnidadBioquimica: e.target.value
+            newUnidadMedida: e.target.value
         })
     }
 
@@ -146,8 +146,7 @@ class FormAlta extends Component {
     }
 
     cambioNuevaUnidad = (e) => {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = e.target.checked === true ? false : true;
         this.setState({
             nuevaUnidad: value
           });
@@ -214,14 +213,14 @@ class FormAlta extends Component {
                         <Form.Field label='Seleccione si desea guardar una nueva unidad de medida:' control='input'
                                 name="nuevaUnidad"
                                 type="checkbox"
-                                value={this.state.nuevaUnidad}
+                                //checked={this.state.nuevaUnidad}
                                 onChange={this.cambioNuevaUnidad} /> 
 
 
                         <Form.Field control='input' placeholder='Nombre'
                         disabled={this.state.nuevaUnidad}
                         value={this.state.newNombreUnidadMedida}
-                        onChange={this.cambiNewNombreUnidadMedida}/>
+                        onChange={this.cambioNewNombreUnidadMedida}/>
 
                         <Form.Field  control='input' placeholder='Unidad de medida'
                         disabled={this.state.nuevaUnidad}
@@ -249,4 +248,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{ addDeterminacionAction })(FormAlta);
+export default connect(mapStateToProps,{ addDeterminacionAction, addDeterminacionConUnidadAction })(FormAlta);

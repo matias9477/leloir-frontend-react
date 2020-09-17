@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {urlDeterminaciones, urlAlterDeterminacion, urlAltaDeterminacion, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
+import {urlDeterminaciones, urlAlterDeterminacion, urlAltaDeterminacion, urlAltaDeterminacionConUnidad, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -17,6 +17,10 @@ let GET_DETERMINACIONES_FROM_STORE = "GET_DETERMINACIONES_FROM_STORE"
 let ADD_DETERMINACION = 'ADD_DETERMINACION'
 let ADD_DETERMINACION_SUCCESS = 'ADD_DETERMINACION_SUCCESS'
 let ADD_DETERMINACION_ERROR = 'ADD_DETERMINACION_ERROR'
+
+let ADD_DETERMINACION_CON_UNIDAD = 'ADD_DETERMINACION_CON_UNIDAD'
+let ADD_DETERMINACION_CON_UNIDAD_SUCCESS = 'ADD_DETERMINACION_CON_UNIDAD_SUCCESS'
+let ADD_DETERMINACION_CON_UNIDAD_ERROR = 'ADD_DETERMINACION_CON_UNIDAD_ERROR'
 
 let GET_DETERMINACION_BY_ID = 'GET_DETERMINACION_BY_ID'
 let GET_DETERMINACION_BY_ID_ERROR = 'GET_DETERMINACION_BY_ID_ERROR'
@@ -115,6 +119,26 @@ export let addDeterminacionAction = (data) => (dispatch, getState) =>{
     .catch(err=>{
         dispatch({
             type: ADD_DETERMINACION_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar la determinación ${data.descripcionPractica}. Por favor intente nuevamente`)
+    })
+}
+
+export let addDeterminacionConUnidadAction = (data) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_DETERMINACION_CON_UNIDAD
+    })
+    return axios.post(urlAltaDeterminacionConUnidad, data)
+    .then(res =>{
+        dispatch({
+            type: ADD_DETERMINACION_CON_UNIDAD_SUCCESS
+        })
+        alert(`Se ha registrado la determinacion ${data.descripcionPractica} con éxito`)
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_DETERMINACION_CON_UNIDAD_ERROR,
             payload: err.message
         })
         alert(`No se ha podido registrar la determinación ${data.descripcionPractica}. Por favor intente nuevamente`)
