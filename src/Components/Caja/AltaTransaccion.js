@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon, Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
 import { urlTablaCaja } from '../../Constants/NavUrl';
@@ -153,15 +153,7 @@ class FormAlta extends Component {
                             />
                         </Form.Group>
 
-                        {/* <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
-                        value={this.state.unidadBioquimica}
-                        onChange={this.cambioUnidadBioquimica}
-                        className={this.state.errorUnidadBioquimica ? null : 'error'}
-                        />
-
-                        <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                        value={this.state.unidadMedida}
-                        onChange={this.cambioUnidadMedida}/> */}
+                        <Header as='h3'>Detalles</Header>
 
                         <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Determinacion</Button>
 
