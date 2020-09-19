@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { getLoggedInUserAction } from "../../Redux/userDuck";
+import { getAllUsers } from '../../Redux/userDuck';
+import { getHumanDate } from '../../Services/MetodosPaciente';
 
 
 class UsuariosAll extends Component {
@@ -14,11 +15,12 @@ class UsuariosAll extends Component {
     }
 
     componentDidMount(){
-        this.props.getLoggedInUserAction();
+        this.props.getAllUsers();
     }
 
 
     render() {
+      console.log(this.props.allUsers)
         return (
             <div>
                 <h1>Usuarios</h1>
@@ -26,18 +28,22 @@ class UsuariosAll extends Component {
                 <Table celled fixed singleLine>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell>Name</Table.HeaderCell>
-                      <Table.HeaderCell>Status</Table.HeaderCell>
-                      <Table.HeaderCell>Description</Table.HeaderCell>
+                      <Table.HeaderCell>Id</Table.HeaderCell>
+                      <Table.HeaderCell>Fecha Alta</Table.HeaderCell>
+                      <Table.HeaderCell>Nombre de Usuario</Table.HeaderCell>
+                      <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
 
                   <Table.Body>
-                    <Table.Row>
-                      <Table.Cell>Jill</Table.Cell>
-                      <Table.Cell>Denied</Table.Cell>
-                      <Table.Cell>Shorter description</Table.Cell>
-                    </Table.Row>
+                    {this.props.allUsers.map((user, index) =>
+                      <Table.Row>
+                        <Table.Cell>{user.id}</Table.Cell>
+                        <Table.Cell>{getHumanDate(user.createdAt)}</Table.Cell>
+                        <Table.Cell>{user.username}</Table.Cell>
+                        <Table.Cell/>
+                      </Table.Row>
+                    )}
                   </Table.Body>
                 </Table>
             </div>
@@ -47,7 +53,7 @@ class UsuariosAll extends Component {
 
 
 const mapStateToProps = state => ({  
-    loggedUser: state.user.loggedInUser,
+  allUsers: state.user.allUsers,
 })
 
-export default connect(mapStateToProps, { getLoggedInUserAction })(UsuariosAll)
+export default connect(mapStateToProps, { getAllUsers })(UsuariosAll)
