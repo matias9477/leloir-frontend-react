@@ -61,7 +61,7 @@ export default function reducer(state = initialData,action){
         case ADD_USER_ERROR:
             return {...state, fetching:false, error:action.payload}
         case ADD_USER_SUCCESS:
-            return {...state, fetching:false}
+            return {...state, fetching:false, flagAllUsers:false}
 
         case GET_ALL_USERS:
             return {...state, fetching:true}

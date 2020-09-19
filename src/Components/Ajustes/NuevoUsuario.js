@@ -107,10 +107,12 @@ class NuevoUsuario extends Component {
                 ...prevState,
                 signUpRequest: {
                     ...prevState.signUpRequest,
+                    username: '',
+                    email: '',
                     password: '',
-                    roleName: '',                
+                    roleName: '',              
                 },
-
+                
                 rol: '', 
                 password: '',
                 pass2: '',
