@@ -4,7 +4,8 @@ import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux'
-
+import axios from 'axios';
+import { urlUnidadesMedida } from '../../Constants/URLs';
 import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
 import {convertStyleString } from '../../Services/MetodosDeterminacion';
@@ -20,19 +21,27 @@ class FormConsulta extends Component {
 
             codigoPractica: '',
             descripcionPractica: '',
+            metodo: '',
+            valorReferencia: '',
             unidadBioquimica: '',
             unidadMedida: '',
             bitAlta: '',
             estado:'',
 
+            unidadesMedida: [],
+
             errorCodigoPractica: true,
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
+            errorUnidadMedida: true,
+            errorMetodo: true,
+            errorValorReferencia: true,
         });
     }
 
     componentDidMount() {
         this.props.getDeterminacionByIdAction(this.props.match.params.codigoPractica)
+        this.comoboUnidadesDeMedida()
     }
 
     componentWillReceiveProps(nextProps) {
@@ -41,9 +50,21 @@ class FormConsulta extends Component {
             descripcionPractica:nextProps.determinacion.descripcionPractica,
             unidadBioquimica:nextProps.determinacion.unidadBioquimica,
             unidadMedida:nextProps.determinacion.unidadMedida,
+            metodo:nextProps.determinacion.metodo,
+            valorReferencia:nextProps.determinacion.valorReferencia,
             bitAlta:nextProps.determinacion.bitAlta,
         })
     }
+
+    comoboUnidadesDeMedida = () =>{
+        axios.get(urlUnidadesMedida).then(resolve => {
+            this.setState({
+                unidadesMedida: Object.values(resolve.data).flat(),
+            });
+        }, (error) => {
+            console.log('Error en carga de unidades medida: ', error.message);
+        })
+      };
 
     modificarDeterminacion = (e) => {
         e.preventDefault();
@@ -59,6 +80,8 @@ class FormConsulta extends Component {
             var data = {
                 "codigoPractica": this.state.codigoPractica,
                 "descripcionPractica": convertStyleString(this.state.descripcionPractica),
+                "metodo": this.state.metodo,
+                "valorReferencia": this.state.valorReferencia,
                 "unidadBioquimica": this.state.unidadBioquimica,
                 "unidadMedida": this.state.unidadMedida,
             };
@@ -94,6 +117,20 @@ class FormConsulta extends Component {
     cambioUnidadBioquimica = (e) =>{
         this.setState({
             unidadBioquimica: e.target.value,
+            cambios: true
+        })
+    }
+
+    cambioMetodo = (e) => {
+        this.setState({
+            metodo: e.target.value,
+            cambios: true
+        })
+    }
+
+    cambioValorReferencia = (e) => {
+        this.setState({
+            valorReferencia: e.target.value,
             cambios: true
         })
     }
@@ -170,16 +207,23 @@ class FormConsulta extends Component {
                                     />
                                 </Form.Group>
 
+                                <Form.Group widths='equal'>
                                 <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
                                 value={this.state.unidadBioquimica}
                                 onChange={this.cambioUnidadBioquimica}
                                 className={this.state.errorUnidadBioquimica ? null : 'error'}
                                 />
 
-                                <Form.Field label='Unidad Medida' control='input' placeholder='Unidad Medida'
-                                value={this.state.unidadMedida}
-                                onChange={this.cambioUnidadMedida}
-                                />
+                                <Form.Field required label='Unidad de medida' control='select' width={5}
+                                value={this.state.unidadMedida} 
+                                onChange={this.cambioUnidadMedida} 
+                                className= {this.state.errorUnidadMedida ? null : 'error'} 
+                                >
+                                    <option value={null}> </option>
+                                    {this.state.unidadesMedida.map(item => (
+                                    <option key={item.unidadDeMedidaId}>{item.unidad}</option>))}
+                                </Form.Field>
+                                </Form.Group>
 
                                 <Button color={this.state.bitAlta ? 'red' : 'green'}
                                     onClick={(e) => {

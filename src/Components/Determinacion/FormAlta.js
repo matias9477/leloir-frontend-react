@@ -21,6 +21,8 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
+            metodo: '',
+            valorReferencia: '',
             newNombreUnidadMedida: '',
             newUnidadMedida: '',
 
@@ -30,6 +32,8 @@ class FormAlta extends Component {
             errorDescripcionPractica: true,
             errorUnidadBioquimica: true,
             errorUnidadMedida: true,
+            errorMetodo: true,
+            errorValorReferencia: true,
             nuevaUnidad: true,
         });
     }
@@ -45,6 +49,8 @@ class FormAlta extends Component {
             "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
+            "metodo": this.state.metodo,
+            "valorReferencia": this.state.valorReferencia,
             "unidadBioquimica": this.state.unidadBioquimica,
             "unidadMedida": {
                 nombre: this.state.newNombreUnidadMedida,
@@ -57,6 +63,8 @@ class FormAlta extends Component {
             "codigoPractica": this.state.codigoPractica,
             "descripcionPractica": convertStyleString(this.state.descripcionPractica),
             "unidadBioquimica": this.state.unidadBioquimica,
+            "metodo": this.state.metodo,
+            "valorReferencia": this.state.valorReferencia,
             "unidadMedida": this.state.unidadMedida
             }
             this.props.addDeterminacionAction(data)
@@ -101,6 +109,8 @@ class FormAlta extends Component {
             descripcionPractica: '',
             unidadBioquimica: '',
             unidadMedida: '',
+            metodo: '',
+            valorReferencia: '',
             newNombreunidadBioquimica: '',
             newUnidadBioquimica: '',
             errorCodigoPractica: true,
@@ -112,6 +122,18 @@ class FormAlta extends Component {
     cambioCodigoPractica = (e) => {
         this.setState({
             codigoPractica: e.target.value
+        })
+    }
+
+    cambioMetodo = (e) => {
+        this.setState({
+            metodo: e.target.value
+        })
+    }
+
+    cambioValorReferencia = (e) => {
+        this.setState({
+            valorReferencia: e.target.value
         })
     }
 
@@ -191,13 +213,12 @@ class FormAlta extends Component {
                             className={this.state.errorDescripcionPractica ? null : 'error'}/>
                         </Form.Group>
 
+                        <Form.Group widths='equal'>
                         <Form.Field required label='Unidad Bioquímica' control='input' placeholder='Unidad Bioquímica'
                         value={this.state.unidadBioquimica}
                         onChange={this.cambioUnidadBioquimica}
                         className={this.state.errorUnidadBioquimica ? null : 'error'}
                         />
-
-                        <Form>
 
                         <Form.Field required label='Unidad de medida' control='select' placeholder ='Unidad Medida' width={5}
                         value={this.state.unidadMedida} 
@@ -208,7 +229,23 @@ class FormAlta extends Component {
                             {this.state.unidadesMedida.map(item => (
                             <option key={item.unidadDeMedidaId}>{item.unidad}</option>))}
                         </Form.Field>
+                        </Form.Group>
 
+                        <Form.Group widths='equal'>
+                        <Form.Field label='Método' control='input' placeholder='Método'
+                        value={this.state.metodo}
+                        onChange={this.cambioMetodo}
+                        className={this.state.errorMetodo ? null : 'error'}
+                        />
+
+                        <Form.Field label='Valor Referencia' control='input' placeholder='Valor Referencia'
+                        value={this.state.valorReferencia}
+                        onChange={this.cambioValorReferencia}
+                        className={this.state.errorValorReferencia ? null : 'error'}
+                        />
+                        </Form.Group>
+
+                        <Form>
                         <Divider id='divider'/>
                         <Form.Field label='Seleccione si desea guardar una nueva unidad de medida:' control='input'
                                 name="nuevaUnidad"
