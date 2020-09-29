@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import AuthenticationService from '../Services/AuthenticationService'
-import { urlLoggedUser, urlSignUp, urlAllUsers } from "../Constants/URLs";
+import { urlLoggedUser, urlSignUp, urlAllUsers, urlDeleteUser } from "../Constants/URLs";
 
 //constant
 let initialData = {
@@ -33,6 +33,10 @@ let GET_ALL_USERS = "GET_ALL_USERS"
 let GET_ALL_USERS_SUCCESS = "GET_ALL_USERS_SUCCESS"
 let GET_ALL_USERS_ERROR = "GET_ALL_USERS_ERROR"
 let GET_ALL_USERS_FROM_STORE = "GET_ALL_USERS_FROM_STORE"
+
+let DELETE_USER = "DELETE_USER"
+let DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS"
+let DELETE_USER_ERROR = "DELETE_USER_ERROR"
 
 //reducer
 export default function reducer(state = initialData,action){
@@ -71,6 +75,13 @@ export default function reducer(state = initialData,action){
             return {...state, fetching:false, error:action.payload}
         case GET_ALL_USERS_FROM_STORE:
             return {...state, fetching:false, loggedInUser: action.payload}
+
+        case DELETE_USER:
+            return {...state, fetching:true}
+        case DELETE_USER_SUCCESS:
+            return {...state, fetching:false, flagAllUsers:false}            
+        case DELETE_USER_ERROR:
+            return {...state, fetching:false, error:action.payload}
 
         default:   
             return state
@@ -198,4 +209,24 @@ export let getAllUsers = () => (dispatch, getState) =>{
             })
         })
     }
+}
+
+export let deleteUser = (username) => (dispatch, getState) => {
+    dispatch({
+        type: DELETE_USER
+    })
+    
+    return axios.delete(urlDeleteUser + username)
+    .then(res=>{
+        dispatch({
+            type: DELETE_USER_SUCCESS,
+        })
+        return dispatch(getAllUsers(), alert("Se ha eliminado el usuario " + username + " con éxito."))
+    })
+    .catch(err=>{
+        dispatch({
+            type: DELETE_USER_ERROR,
+            payload: err.message
+        })
+    })
 }

@@ -27,7 +27,7 @@ class Ajustes extends Component {
             return <MiPerfil/>
         } else if ( this.state.activeItem === 'NuevoUsuario') {
             return <NuevoUsuario/>
-        } else if ( this.state.activeItem === 'UsuariosAll') {
+        } else if ( this.state.activeItem === 'Usuarios') {
             return <UsuariosAll/>
         }
     }
@@ -53,8 +53,8 @@ class Ajustes extends Component {
                                     onClick={this.handleItemClick}
                                 />
                                 <Menu.Item
-                                    name='UsuariosAll'
-                                    active={activeItem === 'UsuariosAll'}
+                                    name='Usuarios'
+                                    active={activeItem === 'Usuarios'}
                                     onClick={this.handleItemClick}
                                 />
                             </Menu>

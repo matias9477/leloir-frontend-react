@@ -43,7 +43,8 @@ export const urlHistorial = '/api/analisis/historial/'
 export const urlSignUp = '/api/auth/signup'
 export const urlSignIn = '/api/auth/signin'
 export const urlLoggedUser = '/api/user/me'
-export const urlAllUsers = '/api//user/all'
+export const urlAllUsers = '/api/user/all'
+export const urlDeleteUser ='/api/user/delete/'
 
 //ANALISIS
 export const urlAnalisisPendientes = '/api/analisis/pendientes'
