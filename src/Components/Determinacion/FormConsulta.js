@@ -215,14 +215,28 @@ class FormConsulta extends Component {
                                 />
 
                                 <Form.Field required label='Unidad de medida' control='select' width={5}
-                                value={this.state.unidadMedida} 
-                                onChange={this.cambioUnidadMedida} 
+                                value={this.state.unidadMedida.unidad} 
+                                onChange={this.cambioUnidadMed} 
                                 className= {this.state.errorUnidadMedida ? null : 'error'} 
                                 >
                                     <option value={null}> </option>
                                     {this.state.unidadesMedida.map(item => (
                                     <option key={item.unidadDeMedidaId}>{item.unidad}</option>))}
                                 </Form.Field>
+                                </Form.Group>
+
+                                <Form.Group widths='equal'>
+                                <Form.Field label='Método' control='input' placeholder='Método'
+                                value={this.state.metodo}
+                                onChange={this.cambioMetodo}
+                                className={this.state.errorMetodo ? null : 'error'}
+                                />
+
+                                <Form.Field label='Valor Referencia' control='input' placeholder='Valor Referencia'
+                                value={this.state.valorReferencia}
+                                onChange={this.cambioValorReferencia}
+                                className={this.state.errorValorReferencia ? null : 'error'}
+                                />
                                 </Form.Group>
 
                                 <Button color={this.state.bitAlta ? 'red' : 'green'}
