@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {urlDeterminaciones, urlAlterDeterminacion, urlAltaDeterminacion, urlAltaDeterminacionConUnidad, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
+import {urlDeterminaciones,urlAlterDeterminacionConUnidad, urlAlterDeterminacion, urlAltaDeterminacion, urlAltaDeterminacionConUnidad, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -34,6 +34,9 @@ let ALTER_DETERMINACION = 'ALTER_DETERMINACION'
 let ALTER_DETERMINACION_SUCCESS = 'ALTER_DETERMINACION_SUCCESS'
 let ALTER_DETERMINACION_ERROR = 'ALTER_DETERMINACION_ERROR'
 
+let ALTER_DETERMINACION_CON_UNIDAD = 'ALTER_DETERMINACION_CON_UNIDAD'
+let ALTER_DETERMINACION_CON_UNIDAD_SUCCESS = 'ALTER_DETERMINACION_CON_UNIDAD_SUCCESS'
+let ALTER_DETERMINACION_CON_UNIDAD_ERROR = 'ALTER_DETERMINACION_CON_UNIDAD_ERROR'
 
 export default function reducer (state=initialData, action){
     switch(action.type){
@@ -145,7 +148,27 @@ export let addDeterminacionConUnidadAction = (data) => (dispatch, getState) =>{
     })
 }
 
-export let alterDeterminacionAction = (id, data) => (dispatch, getState) =>{
+export let modDeterminacionConUnidadAction = (id, data) => (dispatch, getState) =>{
+    dispatch({
+        type: ALTER_DETERMINACION_CON_UNIDAD
+    })
+    return axios.put(`${urlAlterDeterminacionConUnidad}${id}`, data)
+    .then(res=>{
+        dispatch({
+            type: ALTER_DETERMINACION_CON_UNIDAD_SUCCESS
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('Se ha modificado la determinación con éxito.'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ALTER_DETERMINACION_CON_UNIDAD_ERROR,
+            payload: err.message
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('No se ha podido modificar la determinaciónl. Por favor intente nuevamente.'))
+    })
+}
+
+export let modDeterminacionAction = (id, data) => (dispatch, getState) =>{
     dispatch({
         type: ALTER_DETERMINACION
     })

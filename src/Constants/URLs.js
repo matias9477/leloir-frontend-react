@@ -21,6 +21,7 @@ export const urlSwitchAltaDeterminacion = '/api/determinaciones/switch-alta/'
 export const urlGetDeterminacionById = '/api/determinaciones/id/'
 export const urlConsultaDeterminacion = '/api/determinaciones/consulta/'
 export const urlAlterDeterminacion = '/api/determinaciones/modificar/'
+export const urlAlterDeterminacionConUnidad = '/api/determinaciones/modificar-con-unidad/'
 export const urlUnidadesMedida = '/api/unidad_de_medida/all'
 
 //MUESTRAS
