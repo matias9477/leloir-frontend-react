@@ -3,6 +3,7 @@ export const urlDocs = '/api/tipos_documento/all'
 export const urlPaises = '/api/paises/all'
 export const urlSexos = '/api/sexo/all'
 export const urlTiposAnimales = '/api/tipos-animales/all'
+export const urlFormaDePago = '/api/forma_pago/all'
 
 //OBRAS SOCIALES
 export const urlObrasSoc = '/api/obras_sociales/all'
@@ -12,6 +13,7 @@ export const urlAlterObraSocial = '/api/obras_sociales/modificar/'
 export const urlPlanesXObra = '/api/obras_sociales/planes/'
 export const urlAltaObraSocial = '/api/obras_sociales/add'
 export const urlPlanes = '/api/obras_sociales/planes/'
+export const urlConceptos = '/api/concepto/all'
 
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
