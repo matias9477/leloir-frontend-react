@@ -81,6 +81,7 @@ class Tabla extends React.Component {
     }
 
     showDetailsRow(row){
+        var detailsValue = this.props.detailsValue
         return <Table basic='very' className='expansibleSeccion'>
             <Table.Header>
                 <Table.Row>
@@ -90,7 +91,7 @@ class Tabla extends React.Component {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-            {row.detalleTransacciones.map((detalle, indexDetalle) => (
+            {row[detailsValue].map((detalle, indexDetalle) => (
                 <Table.Row key={indexDetalle}>
                     {this.props.expansibleRowsContent.map((col, index) => (
                         <Table.Cell key={index}>{detalle[col.dataField]}</Table.Cell>

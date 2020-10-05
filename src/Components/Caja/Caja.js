@@ -35,12 +35,8 @@ const columns = [
 
 const columnsDetalle = [
   {
-    dataField: 'detalle',
-    text: 'Detalle',
-  },
-  {
-    dataField: 'observacion',
-    text: 'Observaciones',
+    dataField: 'descripcion',
+    text: 'Descripción',
   },
   {
     dataField: 'formaPago',
@@ -49,7 +45,7 @@ const columnsDetalle = [
   {
     dataField: 'importe',
     text: 'Importe',
-  },
+  }
 ];
 
 
@@ -91,6 +87,7 @@ class Caja extends Component {
                 title='Caja'
                 expansibleRows={true}
                 expansibleRowsContent={columnsDetalle}
+                detailsValue='detalleTransacciones'
             />
           </div>
         )}

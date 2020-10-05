@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Container, Form, Divider, Icon, Header } from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon, Header, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
 
 import { urlTablaCaja } from '../../Constants/NavUrl';
-import { addDeterminacionAction } from './../../Redux/determinacionesDuck';
-import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
-import { convertStyleString } from '../../Services/MetodosDeterminacion';
+import { validateRequiredCombos, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
+import { addTransaccionAction, getFormasDePagoAction, getConceptosAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar';
 import '../styles.css';
 
@@ -16,18 +16,24 @@ class FormAlta extends Component {
         super(props);
         this.state = ({
             descripcionTransaccion: '',
-            idConcepto: '',
+            concepto: '',
+            tipoTransaccion: '',
+
             bitPagado: '',
             descripcionDetalle: '',
             idAnalisis: '',
-            idFormaPago: '',
+            formaPago: '',
             importe: '',
-            tipoTransaccion: '',
 
-            // errorCodigoPractica: true,
-            // errorDescripcionPractica: true,
-            // errorUnidadBioquimica: true,
+            errorDescripcionTransaccion: true,
+            errorConcepto: true,
+            errorTipoTransaccion: true,
         });
+    }
+
+    componentDidMount(){
+        this.props.getFormasDePagoAction()
+        this.props.getConceptosAction()
     }
 
     handleUpdateClick = () => {
@@ -35,39 +41,38 @@ class FormAlta extends Component {
           "descripcion": this.state.descripcionTransaccion,
           "detallesTransaccionRequest": [
             {
-              "bitPagado": true,
+              "bitPagado": this.state.bitPagado.value,
               "descripcion": this.state.descripcionDetalle,
-              "idAnalisis": this.state.idAnalisis,
-              "idDetalleConcepto": 1,
-              "idFormaPago": this.state.idFormaPago, //1 efectivo, 2 credito
+            //   "idAnalisis": this.state.idAnalisis,
+                "idAnalisis": null,
+              "idFormaPago": this.state.formaPago.fomaPagoId, 
               "importe": this.state.importe
             }
           ],
-          "idConcepto": this.state.idConcepto, // 1 analisis, 2 CoBico ?, 3 proveedores, 4 servicios publicos, 5 impuesto
-          "tipoTransaccion": true //true creo q es una venta, false lo pone en negativo
+          "idConcepto": this.state.concepto.conceptoId,
+          "tipoTransaccion": this.state.tipoTransaccion.value 
         }
-
-        this.props.addDeterminacionAction(data)
-    };
+        this.props.addTransaccionAction(data)
+    }
 
     postTransaccion = (e) => {
         e.preventDefault();
 
-        const {codigoPractica, unidadBioquimica, descripcionPractica} = this.state;
+        const {descripcionTransaccion, concepto, tipoTransaccion} = this.state;
 
-        const errorCodigoPractica= validateOnlyNumbersRequired(codigoPractica);
-        const errorUnidadBioquimica = validateOnlyNumbersRequired(unidadBioquimica);
-        const errorDescripcionPractica = validateRequiredStringNum(descripcionPractica);
+        const errorDescripcionTransaccion= validateRequiredStringNum(descripcionTransaccion);
+        const errorConcepto = validateRequiredCombos(concepto);
+        const errorTipoTransaccion = validateRequiredCombos(tipoTransaccion);
 
-        if (errorCodigoPractica && errorUnidadBioquimica && errorDescripcionPractica) {
+        if (errorDescripcionTransaccion && errorConcepto && errorTipoTransaccion) {
             this.handleUpdateClick()
             this.vaciadoCampos()
         } else {
             alert('Verificar datos ingresados.')
             this.setState({
-                errorCodigoPractica, 
-                errorUnidadBioquimica,
-                errorDescripcionPractica,
+                errorDescripcionTransaccion, 
+                errorConcepto,
+                errorTipoTransaccion,
             })
         }
     }
@@ -78,13 +83,13 @@ class FormAlta extends Component {
             bitPagado: '',
             descripcionDetalle: '',
             idAnalisis: '',
-            idFormaPago: '',
+            formaPago: '',
             importe: '',
-            idConcepto: '',
+            concepto: '',
             tipoTransaccion: '',
 
-            errorCodigoPractica: true,
-            errorUnidadBioquimica: true,
+            errorDescripcionTransaccion: true,
+            errorConcepto: true,
             errorUnidadMedida: true,
         })
     }
@@ -97,21 +102,40 @@ class FormAlta extends Component {
 
     cambioConceptoTransaccion = (e) => {
         this.setState({
-            idConcepto: e.target.value
+            concepto: e
         })
     }
 
-    cambioUnidadBioquimica = (e) => {
+    cambioTipoTransaccion = (e) => {
         this.setState({
-            unidadBioquimica: e.target.value
+            tipoTransaccion: e
         })
     }
 
-    cambioUnidadMedida = (e) => {
+    cambioDescripcionDetalle = (e) => {
         this.setState({
-            unidadMedida: e.target.value
+            descripcionDetalle: e.target.value
         })
     }
+
+    cambioFormaDePago = (e) => {
+        this.setState({
+            formaPago: e
+        })
+    } 
+
+    cambioImporte = (e) => {
+        this.setState({
+            importe: e.target.value
+        })
+    }
+
+    cambioBitPagado = (e) => {
+        this.setState({
+            bitPagado: e
+        })
+    }
+
 
 
     render() {
@@ -130,30 +154,80 @@ class FormAlta extends Component {
                         <Form.Field control='input'
                         value='Nueva Transacción'
                         id = 'headerConsulta'
+                        readOnly
                         />
                         <Divider id='divider'/>
 
                     </Form>
 
-                    <Form onSubmit={this.postTransaccion}>
+                    <Form onSubmit={this.postTransaccion} style={{margin: '0 3rem'}}>
 
-                        <Form.Group widths='equal'>
-                            <Form.Field required label='Descripción Transacción' control='input' placeholder='Descripción Transacción' width={5}
-                            value={this.state.descripcionTransaccion}
-                            onChange={this.cambioDescripcionTransaccion}
-                            // className={this.state.errorCodigoPractica ? null : 'error'}
-                            />
+                        <Form.Field required label='Descripción Transacción' control='input' placeholder='Descripción Transacción'
+                        value={this.state.descripcionTransaccion}
+                        onChange={this.cambioDescripcionTransaccion}
+                        className={this.state.errorDescripcionTransaccion ? null : 'error'}
+                        />
 
-                          {/* TODO: poner un select con los conceptos q vengan de BACKEND */}
-                            <Form.Field required label='Concepto' control='input'
-                            placeholder='Concepto'
-                            value={this.state.idConcepto}
+                        <label className={this.state.errorConcepto ? 'labelsSelect' : 'labelsSelectError'}>Concepto <span>*</span></label>
+                        <Select
+                            name='Conceptos'
+                            value={this.state.concepto}
                             onChange={this.cambioConceptoTransaccion}
-                            // className={this.state.errorDescripcionPractica ? null : 'error'}
-                            />
-                        </Form.Group>
+                            placeholder= "Seleccione un concepto..."
+                            options={this.props.conceptos}
+                            getOptionValue={this.getOptionValueConcepto}
+                            getOptionLabel={this.getOptionLabelConcepto}
+                            className={this.errorConcepto ? null : 'error'}
+                        />
 
+                        <label className={this.state.errorTipoTransaccion ? 'labelsSelect' : 'labelsSelectError'}>Tipo Transacción <span>*</span></label>
+                        <Select
+                            name='Tipo Transacción'
+                            value={this.state.tipoTransaccion}
+                            onChange={this.cambioTipoTransaccion}
+                            placeholder= "Tipo Transacción..."
+                            options={tipoTransaccion}
+                            getOptionValue={this.getOptionValueTipoTransaccionYPago}
+                            getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
+                        />
+        
                         <Header as='h3'>Detalles</Header>
+
+                        <Segment>
+                        <Form.Field required label='Descripción Detalle' control='input' placeholder='Descripción Detalle'
+                        value={this.state.descripcionDetalle}
+                        onChange={this.cambioDescripcionDetalle}
+                        // className={this.state.errorCodigoPractica ? null : 'error'}
+                        />
+
+                        <label className='labelsSelect'>Forma de Pago <span>*</span></label>
+                        <Select
+                            name='Forma de Pago'
+                            value={this.state.formaPago}
+                            onChange={this.cambioFormaDePago}
+                            placeholder= "Tipo Transacción..."
+                            options={this.props.formasDePago}
+                            getOptionValue={this.getOptionValueFormaDePago}
+                            getOptionLabel={this.getOptionLabelFormaDePago}
+                        />
+
+                        <Form.Field required label='Importe' control='input' placeholder='Importe' 
+                        value={this.state.importe}
+                        onChange={this.cambioImporte}
+                        // className={this.state.errorCodigoPractica ? null : 'error'}
+                        />
+
+                        <label className='labelsSelect'>Estado de Pago <span>*</span></label>
+                        <Select
+                            name='Estado de Pago'
+                            value={this.state.bitPagado}
+                            onChange={this.cambioBitPagado}
+                            placeholder= "Estado Pago..."
+                            options={pagado}
+                            getOptionValue={this.getOptionValueTipoTransaccionYPago}
+                            getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
+                        />
+                        </Segment>
 
                         <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Determinacion</Button>
 
@@ -163,12 +237,50 @@ class FormAlta extends Component {
             </div>
         );
     }
+    
+    getOptionLabelConcepto = option => option.nombre
+
+    getOptionValueConcepto = option => option.conceptoId
+
+    getOptionLabelTipoTransaccionYPago = option => option.label
+
+    getOptionValueTipoTransaccionYPago = option => option.value
+
+    getOptionLabelFormaDePago = option => option.nombre
+
+    getOptionValueFormaDePago = option => option.fomaPagoId
 
 }
 
+const tipoTransaccion = [
+    {
+        value: true,
+        label: 'Venta'
+    },
+    {
+        value: false,
+        label: 'Compra'
+    }
+    
+]
+
+const pagado = [
+    {
+        value: true,
+        label: 'Pagado'
+    },
+    {
+        value: false,
+        label: 'No Pago'
+    }
+    
+]
+
 const mapStateToProps = state =>({
-    fetching: state.determinaciones.fetching,
+    fetching: state.caja.fetching,
+    formasDePago: state.caja.formasDePago,
+    conceptos: state.caja.conceptos,
 })
 
 
-export default connect(mapStateToProps,{ addDeterminacionAction })(FormAlta);
+export default connect(mapStateToProps,{ addTransaccionAction, getFormasDePagoAction, getConceptosAction })(FormAlta);
