@@ -6,6 +6,7 @@ import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
+
 import './LPSecretaria.css';
 
 let array = JSON.parse(localStorage.getItem('afluence')) || []
@@ -64,7 +65,9 @@ class Afluencia extends Component {
     }
 
     saveStorage(name, data){
-        localStorage.setItem(name, JSON.stringify(data))
+        if (data != null){
+             localStorage.setItem(name, JSON.stringify(data))
+        }
     }
 
     render() {

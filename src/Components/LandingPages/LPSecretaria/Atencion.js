@@ -12,6 +12,9 @@ import AnalisisPendientes from './AnalisisPendientesAtencion';
 import { getPatientsAction } from '../../../Redux/patientsDuck';
 import './LPSecretaria.css';
 
+let array = JSON.parse(localStorage.getItem('extraction')) || []
+
+
 class Atencion extends Component {
     constructor(props) {
         super(props);
@@ -180,6 +183,24 @@ class Atencion extends Component {
             flag: true
         })
     }
+
+    extraction = () =>{
+        // this.saveStorage('extraction', JSON.parse(localStorage.nombreCurrent))
+let array = JSON.parse(localStorage.getItem('extraction')) || []
+
+        var newExtraction = {
+            text: JSON.parse(localStorage.nombreCurrent),
+            key: Date.now()
+        }
+        
+        array.push(newExtraction)
+        this.saveStorage('extraction', array)
+        localStorage.removeItem('current')
+        localStorage.removeItem('nombreCurrent')
+        this.setState({
+            flag: true
+        })
+    }
          
 
     render() { 
@@ -200,7 +221,10 @@ class Atencion extends Component {
                                 (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
                                 JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
                                 {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                    <div>
                                     <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                    <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                    </div>
                                 : null}
                             </div>
                         }
