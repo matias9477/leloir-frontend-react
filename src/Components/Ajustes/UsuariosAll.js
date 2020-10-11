@@ -35,8 +35,10 @@ class UsuariosAll extends Component {
               <Table.Cell>{getHumanDate(user.createdAt)}</Table.Cell>
               <Table.Cell>{user.username}</Table.Cell>
               <Table.Cell>
-                <Button circular inverted icon='cancel' color='red' onClick={ () => this.props.deleteUser(user.username)}/>
-              </Table.Cell>
+                {user.rol==='ROLE_ADMIN' ? null :
+                  <Button circular inverted icon='cancel' color='red' onClick={ () => this.props.deleteUser(user.username)}/>
+                }              
+                </Table.Cell>
             </Table.Row>
           )}
           </Table.Body>
