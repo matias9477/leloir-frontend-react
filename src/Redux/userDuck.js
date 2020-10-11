@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import AuthenticationService from '../Services/AuthenticationService'
-import { urlLoggedUser, urlSignUp } from "../Constants/URLs";
+import { urlLoggedUser, urlSignUp, urlAllUsers, urlDeleteUser } from "../Constants/URLs";
 
 //constant
 let initialData = {
@@ -10,6 +10,8 @@ let initialData = {
     hasLoginFailed:false,
     loggedInUser: [],
     flagLoggedUser: false,
+    allUsers: [],
+    flagAllUsers: false,
 }
 
 let LOGIN = "LOGIN"
@@ -27,8 +29,16 @@ let ADD_USER = "ADD_USER"
 let ADD_USER_SUCCESS = "ADD_USER_SUCCESS"
 let ADD_USER_ERROR = "ADD_USER_ERROR"
 
-//reducer
+let GET_ALL_USERS = "GET_ALL_USERS"
+let GET_ALL_USERS_SUCCESS = "GET_ALL_USERS_SUCCESS"
+let GET_ALL_USERS_ERROR = "GET_ALL_USERS_ERROR"
+let GET_ALL_USERS_FROM_STORE = "GET_ALL_USERS_FROM_STORE"
 
+let DELETE_USER = "DELETE_USER"
+let DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS"
+let DELETE_USER_ERROR = "DELETE_USER_ERROR"
+
+//reducer
 export default function reducer(state = initialData,action){
     switch(action.type){
         case LOGIN:
@@ -55,7 +65,23 @@ export default function reducer(state = initialData,action){
         case ADD_USER_ERROR:
             return {...state, fetching:false, error:action.payload}
         case ADD_USER_SUCCESS:
-            return {...state, fetching:false}
+            return {...state, fetching:false, flagAllUsers:false}
+
+        case GET_ALL_USERS:
+            return {...state, fetching:true}
+        case GET_ALL_USERS_SUCCESS:
+            return {...state, fetching:false, allUsers: action.payload, flagAllUsers:true}
+        case GET_ALL_USERS_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_ALL_USERS_FROM_STORE:
+            return {...state, fetching:false, loggedInUser: action.payload}
+
+        case DELETE_USER:
+            return {...state, fetching:true}
+        case DELETE_USER_SUCCESS:
+            return {...state, fetching:false, flagAllUsers:false}            
+        case DELETE_USER_ERROR:
+            return {...state, fetching:false, error:action.payload}
 
         default:   
             return state
@@ -152,5 +178,55 @@ export let addUserAction = (data) => (dispatch, getState) =>{
         })
        
         alert(`No se ha podido registrar el usuario. Por favor intente nuevamente.`)
+    })
+}
+
+export let getAllUsers = () => (dispatch, getState) =>{
+
+    const state = getState()
+
+    if(state.user.flagAllUsers){
+        dispatch({
+            type: GET_ALL_USERS_FROM_STORE,
+            payload: state.user.loggedInUser,
+        })
+    }else{
+
+        dispatch({
+            type: GET_ALL_USERS,
+        })
+        return axios.get(urlAllUsers)
+        .then(res=>{
+            dispatch({
+                type: GET_ALL_USERS_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_ALL_USERS_ERROR,
+                payload: err.message
+            })
+        })
+    }
+}
+
+export let deleteUser = (username) => (dispatch, getState) => {
+    dispatch({
+        type: DELETE_USER
+    })
+    
+    return axios.delete(urlDeleteUser + username)
+    .then(res=>{
+        dispatch({
+            type: DELETE_USER_SUCCESS,
+        })
+        return dispatch(getAllUsers(), alert("Se ha eliminado el usuario " + username + " con éxito."))
+    })
+    .catch(err=>{
+        dispatch({
+            type: DELETE_USER_ERROR,
+            payload: err.message
+        })
     })
 }
