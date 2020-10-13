@@ -4,6 +4,7 @@ import { Grid, Menu, Segment } from 'semantic-ui-react'
 import NavBar from '../NavBar/NavBar'
 import MiPerfil from './MiPerfil';
 import NuevoUsuario from './NuevoUsuario';
+import UsuariosAll from './UsuariosAll';
 
 class Ajustes extends Component {
     constructor(props) {
@@ -26,7 +27,9 @@ class Ajustes extends Component {
             return <MiPerfil/>
         } else if ( this.state.activeItem === 'NuevoUsuario') {
             return <NuevoUsuario/>
-        } 
+        } else if ( this.state.activeItem === 'Usuarios') {
+            return <UsuariosAll/>
+        }
     }
 
     render() {
@@ -47,6 +50,11 @@ class Ajustes extends Component {
                                 <Menu.Item
                                     name='NuevoUsuario'
                                     active={activeItem === 'NuevoUsuario'}
+                                    onClick={this.handleItemClick}
+                                />
+                                <Menu.Item
+                                    name='Usuarios'
+                                    active={activeItem === 'Usuarios'}
                                     onClick={this.handleItemClick}
                                 />
                             </Menu>

@@ -6,19 +6,7 @@ import { getLoggedInUserAction } from "../../Redux/userDuck";
 
 
 class MiPerfil extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            loggedUser: [],
-            id: '',
-            username: '',
-            name: '',
-            lastName: '',
-            role: '',
-            date: '',
-        });
-    }
-
+   
     componentDidMount(){
         this.props.getLoggedInUserAction();
     }
@@ -31,8 +19,8 @@ class MiPerfil extends Component {
                 <div className="ui divider"/>
                 <Form>
                     <Form.Group widths='equal'>
-                        <Form.Field readOnly label='id' control='input' placeholder='id' value={this.props.loggedUser.id===undefined ? '' : this.props.loggedUser.id}/>
                         <Form.Field readOnly label='Usuario' control='input' placeholder='Usuario' value={this.props.loggedUser.username===undefined ? '' : this.props.loggedUser.username}/>
+                        <Form.Field readOnly label='Rol' control='input' placeholder='id' value={this.props.loggedUser.id===undefined ? '' : this.props.loggedUser.rol}/>
                     </Form.Group>   
                 </Form>
             </div>
