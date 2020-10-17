@@ -76,7 +76,7 @@ class Afluencia extends Component {
 
                 <div className="afluenciaMain">
                     <Grid stackable divided columns={2}>
-                        <Grid.Column>
+                        <Grid.Column width={6}>
                             <div className="afluenciaHeader">
                                 <Form onSubmit={this.addPatient} >
                                     <label>Nombre Paciente</label>
@@ -104,10 +104,6 @@ class Afluencia extends Component {
 
                         <Grid.Column>
                             <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
-
-                        </Grid.Column>
-                        <Grid.Column>
-
                         </Grid.Column>
                     </Grid>
 

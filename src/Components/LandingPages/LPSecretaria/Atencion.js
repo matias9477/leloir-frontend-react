@@ -93,7 +93,7 @@ class Atencion extends Component {
                     <Divider />
                     <h4>Búsque el paciente o regístrelo a continuación</h4>
                
-                    <Grid columns='equal'>
+                    <Grid columns='equal' >
                         <Grid.Column>
                             <Select
                                 name='pacientes'
@@ -207,8 +207,8 @@ class Atencion extends Component {
 
         return (
             <div>
-                <Grid columns={2}>
-                    <Grid.Column width={7}>
+                <Grid columns={2} divided>
+                    <Grid.Column>
                         <div className='atencion'>
                         {(localStorage.current !== undefined) ? 
                             <Container >
