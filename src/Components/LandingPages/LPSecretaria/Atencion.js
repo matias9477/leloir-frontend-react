@@ -208,7 +208,7 @@ class Atencion extends Component {
         return (
             <div>
                 <Grid columns={2} divided>
-                    <Grid.Column>
+                    <Grid.Column width={9}>
                         <div className='atencion'>
                         {(localStorage.current !== undefined) ? 
                             <Container >
@@ -238,7 +238,7 @@ class Atencion extends Component {
                         }
                     </div>
                     </Grid.Column>
-                    <Grid.Column>
+                    <Grid.Column width={7}>
                         <Extraction extraction={this.state.extraction}/>
                     </Grid.Column>
                 </Grid>

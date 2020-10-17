@@ -44,7 +44,7 @@ import './LPSecretaria.css';
          return (
             <div className="extractionMain">
             <label>Cola de Extracciones</label>
-            <ul className="List">
+            <ul className="Lista">
                 {this.state.extraction!==null ? this.state.extraction.map( (ex) => {
                     return(
                         <li>
