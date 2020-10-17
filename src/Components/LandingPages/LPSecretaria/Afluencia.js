@@ -73,7 +73,7 @@ class Afluencia extends Component {
 
     render() {
         return (
-            <div style={{display: 'flex', flexDirection:'row', width:'100%'  }}>
+            <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
             <div className="afluenciaMain">
                 <Grid stackable divided columns={2}>

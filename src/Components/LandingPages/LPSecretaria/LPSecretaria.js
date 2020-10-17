@@ -16,12 +16,9 @@ class LPSecretaria extends Component {
                 <NavBar/>
                 <div className='avoidMenu'>
                     <div className='LPSecre'>
-                        {/* <div style={{display: 'flex', flexDirection:'row', width:'100%'  }}> */}
                         <Afluencia/>
-                        {/* <Extraction/> */}
-                        {/* </div> */}
-                    <div className="ui divider"/>
-                    <Domicilios/>
+                         <div className="ui divider"/>
+                        <Domicilios/>
                     </div>
                 </div>
             </div>
