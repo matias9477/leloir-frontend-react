@@ -41,16 +41,16 @@ class FormAlta extends Component {
           "descripcion": this.state.descripcionTransaccion,
           "detallesTransaccionRequest": [
             {
-              "bitPagado": this.state.bitPagado.value,
-              "descripcion": this.state.descripcionDetalle,
-            //   "idAnalisis": this.state.idAnalisis,
+                "bitPagado": this.state.bitPagado.value,
+                "descripcion": this.state.descripcionDetalle,
                 "idAnalisis": null,
-              "idFormaPago": this.state.formaPago.fomaPagoId, 
-              "importe": this.state.importe
+                "idDetalleConcepto": 0,
+                "idFormaPago": this.state.formaPago.fomaPagoId, 
+                "importe": this.state.importe
             }
           ],
           "idConcepto": this.state.concepto.conceptoId,
-          "tipoTransaccion": this.state.tipoTransaccion.value 
+          "tipoTransaccion": this.state.tipoTransaccion.value //TODO: sacar esta poronga
         }
         this.props.addTransaccionAction(data)
     }
@@ -80,17 +80,17 @@ class FormAlta extends Component {
     vaciadoCampos() {
         this.setState({
             descripcionTransaccion: '',
+            concepto: '',
+
             bitPagado: '',
             descripcionDetalle: '',
             idAnalisis: '',
             formaPago: '',
             importe: '',
-            concepto: '',
-            tipoTransaccion: '',
 
             errorDescripcionTransaccion: true,
             errorConcepto: true,
-            errorUnidadMedida: true,
+            errorTipoTransaccion: true,
         })
     }
 
@@ -189,47 +189,47 @@ class FormAlta extends Component {
                             options={tipoTransaccion}
                             getOptionValue={this.getOptionValueTipoTransaccionYPago}
                             getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
-                        />
+                        /> 
         
                         <Header as='h3'>Detalles</Header>
 
                         <Segment>
-                        <Form.Field required label='Descripción Detalle' control='input' placeholder='Descripción Detalle'
-                        value={this.state.descripcionDetalle}
-                        onChange={this.cambioDescripcionDetalle}
-                        // className={this.state.errorCodigoPractica ? null : 'error'}
-                        />
+                            <Form.Field required label='Descripción Detalle' control='input' placeholder='Descripción Detalle'
+                            value={this.state.descripcionDetalle}
+                            onChange={this.cambioDescripcionDetalle}
+                            // className={this.state.errorCodigoPractica ? null : 'error'}
+                            />
 
-                        <label className='labelsSelect'>Forma de Pago <span>*</span></label>
-                        <Select
-                            name='Forma de Pago'
-                            value={this.state.formaPago}
-                            onChange={this.cambioFormaDePago}
-                            placeholder= "Tipo Transacción..."
-                            options={this.props.formasDePago}
-                            getOptionValue={this.getOptionValueFormaDePago}
-                            getOptionLabel={this.getOptionLabelFormaDePago}
-                        />
+                            <label className='labelsSelect'>Forma de Pago <span>*</span></label>
+                            <Select
+                                name='Forma de Pago'
+                                value={this.state.formaPago}
+                                onChange={this.cambioFormaDePago}
+                                placeholder= "Tipo Transacción..."
+                                options={this.props.formasDePago}
+                                getOptionValue={this.getOptionValueFormaDePago}
+                                getOptionLabel={this.getOptionLabelFormaDePago}
+                            />
 
-                        <Form.Field required label='Importe' control='input' placeholder='Importe' 
-                        value={this.state.importe}
-                        onChange={this.cambioImporte}
-                        // className={this.state.errorCodigoPractica ? null : 'error'}
-                        />
+                            <Form.Field required label='Importe' control='input' placeholder='Importe' 
+                            value={this.state.importe}
+                            onChange={this.cambioImporte}
+                            // className={this.state.errorCodigoPractica ? null : 'error'}
+                            />
 
-                        <label className='labelsSelect'>Estado de Pago <span>*</span></label>
-                        <Select
-                            name='Estado de Pago'
-                            value={this.state.bitPagado}
-                            onChange={this.cambioBitPagado}
-                            placeholder= "Estado Pago..."
-                            options={pagado}
-                            getOptionValue={this.getOptionValueTipoTransaccionYPago}
-                            getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
-                        />
+                            <label className='labelsSelect'>Estado de Pago <span>*</span></label>
+                            <Select
+                                name='Estado de Pago'
+                                value={this.state.bitPagado}
+                                onChange={this.cambioBitPagado}
+                                placeholder= "Estado Pago..."
+                                options={pagado}
+                                getOptionValue={this.getOptionValueTipoTransaccionYPago}
+                                getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
+                            />
                         </Segment>
 
-                        <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Determinacion</Button>
+                        <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Transacción</Button>
 
                     </Form>
                 </div>
