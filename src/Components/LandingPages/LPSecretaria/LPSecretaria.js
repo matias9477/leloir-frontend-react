@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import NavBar from '../../NavBar/NavBar';
 import Afluencia from './Afluencia';
 import Domicilios from '../Domicilios';
-// import Extraction from '../LPSecretaria/Extraction'
 import './../../styles.css';
 import './LPSecretaria.css';
 
