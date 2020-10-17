@@ -10,6 +10,7 @@ import { checkAtributo } from '../../../Services/MetodosDeValidacion';
 import SelectedPaciente from './PacienteEnAtencion';
 import AnalisisPendientes from './AnalisisPendientesAtencion';
 import { getPatientsAction } from '../../../Redux/patientsDuck';
+import Extraction from '../LPSecretaria/Extraction';
 import './LPSecretaria.css';
 
 
@@ -19,6 +20,7 @@ class Atencion extends Component {
         this.state = ({
             selectedPaciente: '',
             analisisPendientes:[],
+            extraction: [],
             flag: false,
         });
     }
@@ -184,7 +186,7 @@ class Atencion extends Component {
 
     extraction = () =>{
         // this.saveStorage('extraction', JSON.parse(localStorage.nombreCurrent))
-let array = JSON.parse(localStorage.getItem('extraction')) || []
+        let array = JSON.parse(localStorage.getItem('extraction')) || []
 
         var newExtraction = {
             text: JSON.parse(localStorage.nombreCurrent),
@@ -196,7 +198,8 @@ let array = JSON.parse(localStorage.getItem('extraction')) || []
         localStorage.removeItem('current')
         localStorage.removeItem('nombreCurrent')
         this.setState({
-            flag: true
+            flag: true,
+            extraction: array,
         })
     }
          
@@ -204,33 +207,36 @@ let array = JSON.parse(localStorage.getItem('extraction')) || []
     render() { 
 
         return (
-            <div className='atencion'>
-                {(localStorage.current !== undefined) ? 
-                    <Container >
-                        {this.props.fetching ?
-                            <div className='spinner'>
-                                 <ClipLoader
-                                     size={60}
-                                     color={'black'}
-                                 />
-                            </div> : 
-                            <div>
-                                {JSON.parse(localStorage.current) !== undefined ? 
-                                (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                                JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-                                {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
-                                    <div>
-                                    <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                    <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
-                                    </div>
-                                : null}
-                            </div>
-                        }
-
-                   </Container>
-                    
-                : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
-                }
+            <div>
+                <div className='atencion'>
+                    {(localStorage.current !== undefined) ? 
+                        <Container >
+                            {this.props.fetching ?
+                                <div className='spinner'>
+                                    <ClipLoader
+                                        size={60}
+                                        color={'black'}
+                                    />
+                                </div> : 
+                                <div>
+                                    {JSON.parse(localStorage.current) !== undefined ? 
+                                    (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                                    JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                                    {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                        <div>
+                                        <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                        <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                        </div>
+                                    : null}
+                                </div>
+                            }
+                        
+                        </Container>
+                        
+                        : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
+                    }
+                </div>
+                <Extraction extraction={this.state.extraction}/>
             </div>
         );
     }

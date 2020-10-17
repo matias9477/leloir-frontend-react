@@ -6,7 +6,7 @@ import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
-import Extraction from '../LPSecretaria/Extraction'
+// import Extraction from '../LPSecretaria/Extraction'
 
 import './LPSecretaria.css';
 
@@ -113,7 +113,7 @@ class Afluencia extends Component {
                 </Grid>
 
             </div>
-                        <Extraction flag={this.props.fetching}/>
+                {/* <Extraction flag={this.props.fetching}/> */}
             </div>
         );
     }

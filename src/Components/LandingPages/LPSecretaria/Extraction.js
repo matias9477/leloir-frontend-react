@@ -2,40 +2,31 @@ import React, { Component } from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import './LPSecretaria.css';
 
-let array = JSON.parse(localStorage.getItem('extraction')) || []
-
-
-
-// let extractions = JSON.parse(localStorage.getItem('extraction')) 
 
  class Extraction extends Component {
-     constructor(props) {
-         super(props);
-         this.state = ({
-             flag:false
-         })
-     }
-
-     componentDidMount() {
-        this.setState({
-            flag: true,
-        })
-     }
-
-     componentWillReceiveProps(nextProps) {
-        this.setState({
-            flag: nextProps.flag
+    constructor(props) {
+        super(props);
+        this.state = ({
+            extraction: [],
         })
     }
 
-      saveStorage = (name, data) => {
+
+    componentWillReceiveProps() {
+        this.setState({
+            extraction: JSON.parse(localStorage.getItem('extraction'))
+        })
+    }
+
+    saveStorage = (name, data) => {
         if (data != null){
              localStorage.setItem(name, JSON.stringify(data))
         }
     }
   
-    
+  
      next = () => {
+        let array = this.state.extraction
         array.shift()
         if (array === [] || array.length === 0){
             localStorage.removeItem('extraction')
@@ -43,32 +34,27 @@ let array = JSON.parse(localStorage.getItem('extraction')) || []
             this.saveStorage('extraction', array)
         }
         this.setState({
-            flag: true
+            extraction: array
         })
     }
 
-    componentDidMount() {
-        this.setState({
-            flag:true,
-        })
-    }
 
      render(){
          
          return (
-             <div className="extractionMain">
-        <label>Cola de Extracciones</label>
-        <ul className="List">
-            {array!==null ? array.map( (ex) => {
-                return(
-                    <li>
-                    {ex.text}
-                </li>)
-            }) 
-            : null}
-        </ul>
+            <div className="extractionMain">
+            <label>Cola de Extracciones</label>
+            <ul className="List">
+                {this.state.extraction!==null ? this.state.extraction.map( (ex) => {
+                    return(
+                        <li>
+                        {ex.text}
+                    </li>)
+                }) 
+                : null}
+            </ul>
 
-            {array.length>=1 ?
+            {this.state.extraction!==null&&this.state.extraction.length>=1 ?
             <Button icon labelPosition='right' size='small' onClick={() => this.next()}>
                 <Icon name='arrow alternate circle right outline' color='blue' />Siguiente
             </Button>
