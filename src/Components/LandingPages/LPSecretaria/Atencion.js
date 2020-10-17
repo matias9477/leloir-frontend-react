@@ -12,8 +12,6 @@ import AnalisisPendientes from './AnalisisPendientesAtencion';
 import { getPatientsAction } from '../../../Redux/patientsDuck';
 import './LPSecretaria.css';
 
-let array = JSON.parse(localStorage.getItem('extraction')) || []
-
 
 class Atencion extends Component {
     constructor(props) {

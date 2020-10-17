@@ -16,6 +16,18 @@ let array = JSON.parse(localStorage.getItem('extraction')) || []
          })
      }
 
+     componentDidMount() {
+        this.setState({
+            flag: true,
+        })
+     }
+
+     componentWillReceiveProps(nextProps) {
+        this.setState({
+            flag: nextProps.flag
+        })
+    }
+
       saveStorage = (name, data) => {
         if (data != null){
              localStorage.setItem(name, JSON.stringify(data))

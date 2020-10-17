@@ -6,6 +6,7 @@ import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
+import Extraction from '../LPSecretaria/Extraction'
 
 import './LPSecretaria.css';
 
@@ -72,6 +73,8 @@ class Afluencia extends Component {
 
     render() {
         return (
+            <div style={{display: 'flex', flexDirection:'row', width:'100%'  }}>
+
             <div className="afluenciaMain">
                 <Grid stackable divided columns={2}>
                     <Grid.Column>
@@ -104,8 +107,13 @@ class Afluencia extends Component {
                         <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
 
                     </Grid.Column>
+                    <Grid.Column>
+
+                    </Grid.Column>
                 </Grid>
 
+            </div>
+                        <Extraction flag={this.props.fetching}/>
             </div>
         );
     }
