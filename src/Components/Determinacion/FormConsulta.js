@@ -82,7 +82,7 @@ class FormConsulta extends Component {
         if ( errorCodigoPractica && errorDescripcionPractica && errorUnidadBioquimica) {
             var data 
         
-            if (this.state.newUnidadMedida != null || this.state.newUnidadMedida != '') {
+            if (this.state.newUnidadMedida != null && this.state.newUnidadMedida != '') {
                 data = {
                 "bitAlta": true,
                 "codigoPractica": this.state.codigoPractica,
