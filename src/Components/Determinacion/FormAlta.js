@@ -9,7 +9,7 @@ import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { urlUnidadesMedida } from '../../Constants/URLs';
 import { addDeterminacionAction, addDeterminacionConUnidadAction } from './../../Redux/determinacionesDuck';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
-import { convertStyleString } from '../../Services/MetodosDeterminacion';
+import {convertStyleString, getUnidadMedida} from '../../Services/MetodosDeterminacion';
 import NavBar from '../NavBar/NavBar';
 import '../styles.css';
 
@@ -44,7 +44,7 @@ class FormAlta extends Component {
 
     handleUpdateClick = () => {
         var data 
-        if (this.state.unidadMedida === null || this.state.unidadMedida === '') {
+        if (this.state.newUnidadMedida != null && this.state.newUnidadMedida != '') {
             data = {
             "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
@@ -65,7 +65,7 @@ class FormAlta extends Component {
             "unidadBioquimica": this.state.unidadBioquimica,
             "metodo": this.state.metodo,
             "valorReferencia": this.state.valorReferencia,
-            "unidadMedida": this.state.unidadMedida
+            "unidadMedida": getUnidadMedida(this.state.unidadMedida,this.state.unidadesMedida)
             }
             this.props.addDeterminacionAction(data)
         }

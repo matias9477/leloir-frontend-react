@@ -8,7 +8,7 @@ import axios from 'axios';
 import { urlUnidadesMedida } from '../../Constants/URLs';
 import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { validateOnlyNumbersRequired, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
-import {convertStyleString } from '../../Services/MetodosDeterminacion';
+import {convertStyleString, getUnidadMedida} from '../../Services/MetodosDeterminacion';
 import { getDeterminacionByIdAction, modDeterminacionConUnidadAction, modDeterminacionAction, switchAltaAction } from '../../Redux/determinacionesDuck'
 import NavBar from '../NavBar/NavBar';
 import '../styles.css';
@@ -157,7 +157,7 @@ class FormConsulta extends Component {
 
     cambioUnidadMedida = (e) =>{
         this.setState({
-            unidadMedida: e.target.value,
+            unidadMedida: getUnidadMedida(e.target.value,this.state.unidadesMedida),
             cambios: true,
         })
     }
