@@ -10,7 +10,9 @@ import { checkAtributo } from '../../../Services/MetodosDeValidacion';
 import SelectedPaciente from './PacienteEnAtencion';
 import AnalisisPendientes from './AnalisisPendientesAtencion';
 import { getPatientsAction } from '../../../Redux/patientsDuck';
+import Extraction from '../LPSecretaria/Extraction';
 import './LPSecretaria.css';
+
 
 class Atencion extends Component {
     constructor(props) {
@@ -18,6 +20,7 @@ class Atencion extends Component {
         this.state = ({
             selectedPaciente: '',
             analisisPendientes:[],
+            extraction: [],
             flag: false,
         });
     }
@@ -90,7 +93,7 @@ class Atencion extends Component {
                     <Divider />
                     <h4>Búsque el paciente o regístrelo a continuación</h4>
                
-                    <Grid columns='equal'>
+                    <Grid columns='equal' >
                         <Grid.Column>
                             <Select
                                 name='pacientes'
@@ -180,35 +183,67 @@ class Atencion extends Component {
             flag: true
         })
     }
+
+    extraction = () =>{
+        let array = JSON.parse(localStorage.getItem('extraction')) || []
+
+        var newExtraction = {
+            text: JSON.parse(localStorage.nombreCurrent),
+            key: Date.now()
+        }
+        
+        array.push(newExtraction)
+        this.saveStorage('extraction', array)
+        localStorage.removeItem('current')
+        localStorage.removeItem('nombreCurrent')
+        this.setState({
+            flag: true,
+            extraction: array,
+        })
+    }
          
 
     render() { 
 
         return (
-            <div className='atencion'>
-                {(localStorage.current !== undefined) ? 
-                    <Container >
-                        {this.props.fetching ?
-                            <div className='spinner'>
-                                 <ClipLoader
-                                     size={60}
-                                     color={'black'}
-                                 />
-                            </div> : 
-                            <div>
-                                {JSON.parse(localStorage.current) !== undefined ? 
-                                (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                                JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-                                {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
-                                    <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                : null}
-                            </div>
+            <div>
+                <Grid columns={2} divided>
+                    <Grid.Column width={9}>
+                        <div className='atencion'>
+                        {(localStorage.current !== undefined) ? 
+                            <Container >
+                                {this.props.fetching ?
+                                    <div className='spinner'>
+                                        <ClipLoader
+                                            size={60}
+                                            color={'black'}
+                                        />
+                                    </div> : 
+                                    <div>
+                                        {JSON.parse(localStorage.current) !== undefined ? 
+                                        (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                                        JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                                        {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                            <div>
+                                            <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                            <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                            </div>
+                                        : null}
+                                    </div>
+                                }
+                            
+                            </Container>
+                            
+                            : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
                         }
-
-                   </Container>
-                    
-                : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
-                }
+                    </div>
+                    </Grid.Column>
+                    <Grid.Column width={7}>
+                        <Extraction extraction={this.state.extraction}/>
+                    </Grid.Column>
+                </Grid>
+                
+               
             </div>
         );
     }

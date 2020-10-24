@@ -15,9 +15,9 @@ class LPSecretaria extends Component {
                 <NavBar/>
                 <div className='avoidMenu'>
                     <div className='LPSecre'>
-                    <Afluencia/>
-                    <div className="ui divider"/>
-                    <Domicilios/>
+                        <Afluencia/>
+                         <div className="ui divider"/>
+                        <Domicilios/>
                     </div>
                 </div>
             </div>

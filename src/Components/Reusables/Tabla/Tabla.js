@@ -192,20 +192,22 @@ class Tabla extends React.Component {
         
         return <div className='tabla'>
  
-            <Grid columns={3}>
-                <Grid.Column/>
-                <Grid.Column>
-                    <Header as='h2'>{this.props.title}</Header>
-                </Grid.Column>
-                <Grid.Column>
-                    {this.props.urlAdd ?
-                    <Button as={Link}
-                    to={this.props.urlAdd} 
-                    exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                        <Icon name='user'/>{this.props.buttonTitleAdd}
-                    </Button> : null}
-                </Grid.Column>
-            </Grid>
+            {this.props.title ? 
+                <Grid columns={3}>
+                    <Grid.Column/>
+                    <Grid.Column>
+                        <Header as='h2'>{this.props.title}</Header>
+                    </Grid.Column>
+                    <Grid.Column>
+                        {this.props.urlAdd ?
+                        <Button as={Link}
+                        to={this.props.urlAdd} 
+                        exact='true' floated='right' icon labelPosition='left' primary size='small'>
+                            <Icon name='user'/>{this.props.buttonTitleAdd}
+                        </Button> : null}
+                    </Grid.Column>
+                </Grid> : null 
+            }
             
             <div className='filter'>
                 <Grid>
