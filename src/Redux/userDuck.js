@@ -7,6 +7,7 @@ import { urlLoggedUser, urlSignUp, urlAllUsers, urlDeleteUser } from "../Constan
 let initialData = {
     loggedIn:false,
     fetching:false,
+    fetchingLoggedInUser:false,
     hasLoginFailed:false,
     loggedInUser: [],
     flagLoggedUser: false,
@@ -52,13 +53,13 @@ export default function reducer(state = initialData,action){
             return {...initialData}
 
         case GET_LOGGED_IN_USER:
-            return {...state, fetching:true}
+            return {...state, fetchingLoggedInUser:true}
         case GET_LOGGED_IN_USER_SUCCESS:
-            return {...state, fetching:false, loggedInUser: action.payload, flagLoggedUser:true}
+            return {...state, fetchingLoggedInUser:false, loggedInUser: action.payload, flagLoggedUser:true}
         case GET_LOGGED_IN_USER_ERROR:
-            return {...state, fetching:false, error:action.payload}
+            return {...state, fetchingLoggedInUser:false, error:action.payload}
         case GET_LOGGED_IN_USER_FROM_STORE:
-            return {...state, fetching:false, loggedInUser: action.payload}
+            return {...state, fetchingLoggedInUser:false, loggedInUser: action.payload}
 
         case ADD_USER:
             return {...state, fetching:true}
@@ -97,6 +98,7 @@ function saveStorage(name, data){
 
 //action
 export let loginAction = (username, password) => (dispatch, getState) =>{
+    localStorage.clear();
     dispatch({
         type: LOGIN
     })
@@ -106,9 +108,9 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
         dispatch({
             type: LOGIN_SUCCESS,
             payload: response.data
-        }
-    )
-    saveStorage("user", response.data)
+        })
+        saveStorage("user", response.data)
+        return dispatch(getLoggedInUserAction())
     }).catch(e=>{
         console.log(e)
         dispatch({
@@ -138,7 +140,7 @@ export let getLoggedInUserAction = () => (dispatch, getState) =>{
             type: GET_LOGGED_IN_USER_FROM_STORE,
             payload: state.user.loggedInUser,
         })
-    }else{
+    } else{
 
         dispatch({
             type: GET_LOGGED_IN_USER,
@@ -149,6 +151,7 @@ export let getLoggedInUserAction = () => (dispatch, getState) =>{
                 type: GET_LOGGED_IN_USER_SUCCESS,
                 payload: res.data,
             })
+            saveStorage("rol", res.data.rol)
         })
         .catch(err=>{
             dispatch({
