@@ -35,7 +35,7 @@ const columns = [
 
 const columnsDetalle = [
   {
-    dataField: 'descripcion',
+    dataField: 'observacion',
     text: 'Descripción',
   },
   {

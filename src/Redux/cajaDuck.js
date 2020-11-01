@@ -92,7 +92,7 @@ export let getTransaccionesAction = () => (dispatch, getState) => {
       .then((res) => {
         dispatch({
           type: GET_TRANSACCIONES_SUCCESS,
-          payload: Object.values(res.data).flat(),
+          payload: Object.values(res.data.transacciones).flat(),
         });
       })
       .catch((err) => {

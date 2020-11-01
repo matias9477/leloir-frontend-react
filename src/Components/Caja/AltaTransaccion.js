@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Select from 'react-select';
 
 import { urlTablaCaja } from '../../Constants/NavUrl';
-import { validateRequiredCombos, validateRequiredStringNum } from './../../Services/MetodosDeValidacion';
+import { validateRequiredCombos, validateRequiredStringNum, validateOnlyNumbersRequired } from './../../Services/MetodosDeValidacion';
 import { addTransaccionAction, getFormasDePagoAction, getConceptosAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar';
 import '../styles.css';
@@ -28,6 +28,10 @@ class FormAlta extends Component {
             errorDescripcionTransaccion: true,
             errorConcepto: true,
             errorTipoTransaccion: true,
+            errorDescripcionDetalle: true,
+            errorFormaPago: true,
+            errorBitPagado: true,
+            errorImporte: true,
         });
     }
 
@@ -38,33 +42,37 @@ class FormAlta extends Component {
 
     handleUpdateClick = () => {
         var data = {
-          "descripcion": this.state.descripcionTransaccion,
-          "detallesTransaccionRequest": [
-            {
-                "bitPagado": this.state.bitPagado.value,
-                "descripcion": this.state.descripcionDetalle,
-                "idAnalisis": null,
-                "idDetalleConcepto": 0,
-                "idFormaPago": this.state.formaPago.fomaPagoId, 
-                "importe": this.state.importe
-            }
-          ],
-          "idConcepto": this.state.concepto.conceptoId,
-          "tipoTransaccion": this.state.tipoTransaccion.value //TODO: sacar esta poronga
+                "concepto": this.state.concepto.nombre,
+                "descripcion": this.state.descripcionTransaccion,
+                "detallesTransaccionRequest": [
+                  {
+                    "bitPagado": this.state.bitPagado.value,
+                    "descripcion": this.state.descripcionDetalle,
+                    "formaPago": this.state.formaPago.nombre,
+                    "idAnalisis": null,
+                    "importe": this.state.importe
+                  }
+                ],
+                "ingreso": this.state.tipoTransaccion.value
         }
+        
         this.props.addTransaccionAction(data)
     }
 
     postTransaccion = (e) => {
         e.preventDefault();
 
-        const {descripcionTransaccion, concepto, tipoTransaccion} = this.state;
+        const {descripcionTransaccion, concepto, tipoTransaccion, descripcionDetalle, formaPago, bitPagado, importe} = this.state;
 
         const errorDescripcionTransaccion= validateRequiredStringNum(descripcionTransaccion);
         const errorConcepto = validateRequiredCombos(concepto);
         const errorTipoTransaccion = validateRequiredCombos(tipoTransaccion);
+        const errorDescripcionDetalle = validateRequiredStringNum(descripcionDetalle);
+        const errorFormaPago = validateRequiredCombos(formaPago);
+        const errorBitPagado = validateRequiredCombos(bitPagado);
+        const errorImporte = validateOnlyNumbersRequired(importe);
 
-        if (errorDescripcionTransaccion && errorConcepto && errorTipoTransaccion) {
+        if (errorDescripcionTransaccion && errorConcepto && errorTipoTransaccion && errorDescripcionDetalle && errorFormaPago && errorBitPagado && errorImporte) {
             this.handleUpdateClick()
             this.vaciadoCampos()
         } else {
@@ -73,6 +81,10 @@ class FormAlta extends Component {
                 errorDescripcionTransaccion, 
                 errorConcepto,
                 errorTipoTransaccion,
+                errorDescripcionDetalle,
+                errorFormaPago,
+                errorBitPagado,
+                errorImporte
             })
         }
     }
@@ -81,6 +93,7 @@ class FormAlta extends Component {
         this.setState({
             descripcionTransaccion: '',
             concepto: '',
+            tipoTransaccion: '',
 
             bitPagado: '',
             descripcionDetalle: '',
@@ -91,6 +104,10 @@ class FormAlta extends Component {
             errorDescripcionTransaccion: true,
             errorConcepto: true,
             errorTipoTransaccion: true,
+            errorDescripcionDetalle: true,
+            errorFormaPago: true,
+            errorBitPagado: true,
+            errorImporte: true,
         })
     }
 
@@ -177,7 +194,7 @@ class FormAlta extends Component {
                             options={this.props.conceptos}
                             getOptionValue={this.getOptionValueConcepto}
                             getOptionLabel={this.getOptionLabelConcepto}
-                            className={this.errorConcepto ? null : 'error'}
+                            styles={this.state.errorConcepto === true ? '' : styleErrorSelect}
                         />
 
                         <label className={this.state.errorTipoTransaccion ? 'labelsSelect' : 'labelsSelectError'}>Tipo Transacción <span>*</span></label>
@@ -189,6 +206,7 @@ class FormAlta extends Component {
                             options={tipoTransaccion}
                             getOptionValue={this.getOptionValueTipoTransaccionYPago}
                             getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
+                            styles={this.state.errorTipoTransaccion === true ? '' : styleErrorSelect}
                         /> 
         
                         <Header as='h3'>Detalles</Header>
@@ -197,10 +215,10 @@ class FormAlta extends Component {
                             <Form.Field required label='Descripción Detalle' control='input' placeholder='Descripción Detalle'
                             value={this.state.descripcionDetalle}
                             onChange={this.cambioDescripcionDetalle}
-                            // className={this.state.errorCodigoPractica ? null : 'error'}
+                            className={this.state.errorDescripcionDetalle ? null : 'error'}
                             />
 
-                            <label className='labelsSelect'>Forma de Pago <span>*</span></label>
+                            <label className={this.state.errorFormaPago ? 'labelsSelect' : 'labelsSelectError'}>Forma de Pago <span>*</span></label>
                             <Select
                                 name='Forma de Pago'
                                 value={this.state.formaPago}
@@ -209,15 +227,16 @@ class FormAlta extends Component {
                                 options={this.props.formasDePago}
                                 getOptionValue={this.getOptionValueFormaDePago}
                                 getOptionLabel={this.getOptionLabelFormaDePago}
+                                styles={this.state.errorFormaPago === true ? '' : styleErrorSelect}
                             />
 
                             <Form.Field required label='Importe' control='input' placeholder='Importe' 
                             value={this.state.importe}
                             onChange={this.cambioImporte}
-                            // className={this.state.errorCodigoPractica ? null : 'error'}
+                            className={this.state.errorImporte ? null : 'error'}
                             />
 
-                            <label className='labelsSelect'>Estado de Pago <span>*</span></label>
+                            <label className={this.state.errorBitPagado ? 'labelsSelect' : 'labelsSelectError'}>Estado de Pago <span>*</span></label>
                             <Select
                                 name='Estado de Pago'
                                 value={this.state.bitPagado}
@@ -226,6 +245,7 @@ class FormAlta extends Component {
                                 options={pagado}
                                 getOptionValue={this.getOptionValueTipoTransaccionYPago}
                                 getOptionLabel={this.getOptionLabelTipoTransaccionYPago}
+                                styles={this.state.errorBitPagado === true ? '' : styleErrorSelect}
                             />
                         </Segment>
 
@@ -255,11 +275,11 @@ class FormAlta extends Component {
 const tipoTransaccion = [
     {
         value: true,
-        label: 'Venta'
+        label: 'Ingreso'
     },
     {
         value: false,
-        label: 'Compra'
+        label: 'Egreso'
     }
     
 ]
@@ -275,6 +295,23 @@ const pagado = [
     }
     
 ]
+
+const styleErrorSelect = { 
+
+    indicatorsContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    }),
+
+    valueContainer: base => ({
+      ...base,
+      background: '#FDF1F1',
+      borderStyle: '#FBEBEB',
+      margin: 0,
+      width: '100%',
+    }),
+    //TODO: border red
+}
 
 const mapStateToProps = state =>({
     fetching: state.caja.fetching,
