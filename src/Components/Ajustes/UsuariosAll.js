@@ -2,22 +2,58 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { getAllUsers, deleteUser } from '../../Redux/userDuck';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Modal, Form } from 'semantic-ui-react';
 import { getHumanDate } from '../../Services/MetodosPaciente';
+import ModalCambioPass from './ModalCambioPass';
 
 
 class UsuariosAll extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      show: false,
+    }
+  }
  
   componentDidMount(){
     this.props.getAllUsers();
   }
 
+  hideModal = () => {
+    const {callback} = this.props
+    if (callback !== undefined) {
+        callback()
+    }
+  }
+
+  modalCambioContra(){
+    return ( 
+      <ModalCambioPass show={this.state.show}
+      callback={this.hideModalCallback}
+      />
+    )
+  }
+
+  hideModalCallback = () => {
+    this.setState({
+        show: false,
+        currentModal: null,
+    })
+}
+
+  showModal = () => {
+    this.setState({
+        show: true,
+    })
+  }
+
   render() {
+    console.log(this.state.show)
     return (
       <div>
         <h1>Usuarios</h1>
         <div className="ui divider"/>
-        
+        {this.modalCambioContra()}
         <Table celled fixed singleLine>
           <Table.Header>
             <Table.Row>
@@ -38,7 +74,12 @@ class UsuariosAll extends Component {
                 {user.rol==='ROLE_ADMIN' ? null :
                   <Button circular inverted icon='cancel' color='red' onClick={ () => this.props.deleteUser(user.username)}/>
                 }              
-                </Table.Cell>
+
+                <Button circular icon='exchange' color='blue' inverted
+                    onClick={() => this.showModal()}>
+                </Button>
+                
+              </Table.Cell>
             </Table.Row>
           )}
           </Table.Body>
