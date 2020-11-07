@@ -13,24 +13,6 @@ class LandingPages extends Component {
     this.props.getLoggedInUserAction();
   }
   
-
-  getLandingPageByRole = () => {
-    const rol = JSON.parse(localStorage.getItem("rol"))
-    switch(rol){
-      case "ROLE_ADMIN":
-        return <LPSecretaria />;
-      case "ROLE_SECRETARIA":
-        return <LPSecretaria />;
-      case "ROLE_TECNICO_LABORATORIO":
-        return <div>hola soy tecnico en lab</div>;
-      case "ROLE_BIOQUIMICO":
-        return <div>hola soy bioquimico</div>;
-
-      default:
-        return <div>hola soy la opcion por default mucho gusto!</div>;
-    }
-  }
-
   getLandingPageByRole = (rol) => {
     if (rol==="ROLE_ADMIN") {
       return <div>soy un admin</div>;
@@ -42,19 +24,6 @@ class LandingPages extends Component {
       return <div>soy un bioquimico</div>
     }
 
-    // switch(rol){
-    //   case "ROLE_ADMIN":
-    //     return <LPSecretaria />;
-    //   case "ROLE_SECRETARIA":
-    //     return <LPSecretaria />;
-    //   case "ROLE_TECNICO_LABORATORIO":
-    //     return <div>hola soy tecnico en lab</div>;
-    //   case "ROLE_BIOQUIMICO":
-    //     return <div>hola soy bioquimico</div>;
-
-    //   default:
-    //     return <div>hola soy la opcion por default mucho gusto!</div>;
-    // }
   }
 
   render() {
