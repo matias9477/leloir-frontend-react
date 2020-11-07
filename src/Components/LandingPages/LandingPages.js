@@ -2,16 +2,20 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { getLoggedInUserAction } from './../../Redux/userDuck'
 
 import LPSecretaria from './LPSecretaria/LPSecretaria';
 
 
 class LandingPages extends Component {
 
+  componentDidMount() {
+    this.props.getLoggedInUserAction();
+  }
+  
 
   getLandingPageByRole = () => {
     const rol = JSON.parse(localStorage.getItem("rol"))
-    console.log(rol)
     switch(rol){
       case "ROLE_ADMIN":
         return <LPSecretaria />;
@@ -54,19 +58,18 @@ class LandingPages extends Component {
   }
 
   render() {
-      const { fetchingLoggedInUser } = this.props;
-      const rol = JSON.parse(localStorage.getItem("rol"))
-      console.log(rol)
+      const { fetchingLoggedInUser, userRole } = this.props;
+
       return (
         <div>
-          {fetchingLoggedInUser && rol===null ?                     
+          {fetchingLoggedInUser ?                     
             <div className='spinner'>
-              <ClipLoader
-                  size={60}
-                  color={'black'}
-              />
-            </div>
-             : this.getLandingPageByRole(rol) 
+                        <ClipLoader
+                            size={60}
+                            color={'black'}
+                        />
+            </div> 
+             : this.getLandingPageByRole(userRole) 
           }
         </div>
       )
@@ -81,4 +84,4 @@ function mapStateToProps(state){
   }
 }
 
-export default withRouter(connect(mapStateToProps)(LandingPages));
+export default withRouter(connect(mapStateToProps, { getLoggedInUserAction })(LandingPages));
