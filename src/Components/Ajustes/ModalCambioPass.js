@@ -37,7 +37,7 @@ class ModalCambioPass extends Component {
 
     detalle = () => {
         return(
-            <Form>
+            <Form style={{padding: '0 5rem'}}>
                 <Form.Field required label='Contraseña' control='input'
                     className= {(this.state.errorContraseña === true) ? null : 'error'}
                     placeholder='Ingrese la contraseña.'
