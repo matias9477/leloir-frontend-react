@@ -4,6 +4,7 @@ import NavBar from '../../NavBar/NavBar';
 import AnalisisPendientes from '../LPBioquímico/AnalisisPendientes';
 import Afluencia from '../LPSecretaria/Afluencia';
 import Domicilios from '../Domicilios';
+import Charts from '../Charts';
 import './../../styles.css';
 import './LPAdmin.css';
 
@@ -21,6 +22,8 @@ class LPBioquimico extends Component {
                         <Afluencia />
                         <div className="ui divider"/>
                         <Domicilios />
+                        <div className="ui divider"/>
+                        <Charts />
                     </div>
                 </div>
             </div>
