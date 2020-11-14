@@ -6,6 +6,7 @@ import { getLoggedInUserAction } from './../../Redux/userDuck'
 
 import LPSecretaria from './LPSecretaria/LPSecretaria';
 import LPBioquimico from './LPBioquímico/LPBioquimico';
+import LPAdmin from './LPAdmin/LPAdmin';
 
 
 class LandingPages extends Component {
@@ -16,7 +17,7 @@ class LandingPages extends Component {
   
   getLandingPageByRole = (rol) => {
     if (rol==="ROLE_ADMIN") {
-      return <div>soy un admin</div>;
+      return <LPBioquimico />;
     } else if (rol==="ROLE_SECRETARIA"){
       return <LPSecretaria />;
     } else if (rol==="ROLE_TECNICO_LABORATORIO"){
@@ -33,7 +34,7 @@ class LandingPages extends Component {
       return (
         <div>
           {fetchingLoggedInUser ?                     
-            <div className='spinner'>
+            <div style={{position:'fixed',top:'50%',left:'50%'}}>
                         <ClipLoader
                             size={60}
                             color={'black'}
