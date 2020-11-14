@@ -17,7 +17,7 @@ class LandingPages extends Component {
   
   getLandingPageByRole = (rol) => {
     if (rol==="ROLE_ADMIN") {
-      return <LPBioquimico />;
+      return <LPAdmin />;
     } else if (rol==="ROLE_SECRETARIA"){
       return <LPSecretaria />;
     } else if (rol==="ROLE_TECNICO_LABORATORIO"){

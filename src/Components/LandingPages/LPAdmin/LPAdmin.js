@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 import NavBar from '../../NavBar/NavBar';
+import AnalisisPendientes from '../LPBioquímico/AnalisisPendientes';
+import Afluencia from '../LPSecretaria/Afluencia';
+import Domicilios from '../Domicilios';
 import './../../styles.css';
 import './LPAdmin.css';
 
@@ -13,8 +16,11 @@ class LPBioquimico extends Component {
                 <NavBar/>
                 <div className='avoidMenu'>
                     <div className='LPAdmin'>
-                        aca iria algo para rellenar xd xd
-                         <div className="ui divider"/>
+                        <AnalisisPendientes /> 
+                        <div className="ui divider"/>
+                        <Afluencia />
+                        <div className="ui divider"/>
+                        <Domicilios />
                     </div>
                 </div>
             </div>
