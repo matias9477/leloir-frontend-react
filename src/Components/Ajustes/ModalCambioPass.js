@@ -77,7 +77,7 @@ class ModalCambioPass extends Component {
             this.hideModal()
         } else {
             if(this.state.pass1.length<6 || this.state.pass1.length>20){
-                alert("La contraseña debe tener entre 6 y 20 caracteres.")
+                alert("Verifique los datos ingresados. La contraseña debe tener entre 6 y 20 caracteres.")
             } else {
                 alert('Verifique los datos ingresados.');
             }
