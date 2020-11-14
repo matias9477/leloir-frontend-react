@@ -5,6 +5,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { getLoggedInUserAction } from './../../Redux/userDuck'
 
 import LPSecretaria from './LPSecretaria/LPSecretaria';
+import LPBioquimico from './LPBioquímico/LPBioquimico';
 
 
 class LandingPages extends Component {
@@ -21,7 +22,7 @@ class LandingPages extends Component {
     } else if (rol==="ROLE_TECNICO_LABORATORIO"){
       return <div>soy un tecnico</div>;
     } else if (rol==="ROLE_BIOQUIMICO"){
-      return <div>soy un bioquimico</div>
+      return <LPBioquimico />
     }
 
   }
