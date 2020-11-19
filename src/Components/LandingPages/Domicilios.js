@@ -32,6 +32,8 @@ class Domicilios extends Component {
          listDomicilios = domicilios.map(this.createDomicilio)
         }
         return (
+            <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
+
             <div className='Domicilios'>
                 <Header as='h3'>Domicilios del día</Header>
                 <Table color="blue" key="blue">
@@ -53,6 +55,7 @@ class Domicilios extends Component {
                             </Table.Body>
                     }
                 </Table>
+            </div>
             </div>
         );
     }

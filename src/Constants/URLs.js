@@ -48,6 +48,7 @@ export const urlSignIn = '/api/auth/signin'
 export const urlLoggedUser = '/api/user/me'
 export const urlAllUsers = '/api/user/all'
 export const urlDeleteUser ='/api/user/delete/'
+export const urlChangePass = '/api/user/change-password'
 
 //ANALISIS
 export const urlAnalisisPendientes = '/api/analisis/pendientes'
