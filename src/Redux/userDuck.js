@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import AuthenticationService from '../Services/AuthenticationService'
-import { urlLoggedUser, urlSignUp, urlAllUsers, urlDeleteUser } from "../Constants/URLs";
+import { urlLoggedUser, urlSignUp, urlAllUsers, urlDeleteUser, urlChangePass } from "../Constants/URLs";
 
 //constant
 let initialData = {
@@ -38,6 +38,10 @@ let GET_ALL_USERS_FROM_STORE = "GET_ALL_USERS_FROM_STORE"
 let DELETE_USER = "DELETE_USER"
 let DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS"
 let DELETE_USER_ERROR = "DELETE_USER_ERROR"
+
+let CHANGE_PASSWORD = "CHANGE_PASSWORD"
+let CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS"
+let CHANGE_PASSWORD_ERROR = "CHANGE_PASSWORD_ERROR"
 
 //reducer
 export default function reducer(state = initialData,action){
@@ -82,6 +86,13 @@ export default function reducer(state = initialData,action){
         case DELETE_USER_SUCCESS:
             return {...state, fetching:false, flagAllUsers:false}            
         case DELETE_USER_ERROR:
+            return {...state, fetching:false, error:action.payload}
+
+        case CHANGE_PASSWORD:
+            return {...state, fetching:true}
+        case CHANGE_PASSWORD_SUCCESS:
+            return {...state, fetching:false, flagAllUsers:false}            
+        case CHANGE_PASSWORD_ERROR:
             return {...state, fetching:false, error:action.payload}
 
         default:   
@@ -229,6 +240,26 @@ export let deleteUser = (username) => (dispatch, getState) => {
     .catch(err=>{
         dispatch({
             type: DELETE_USER_ERROR,
+            payload: err.message
+        })
+    })
+}
+
+export let changePasswordAction = (data) => (dispatch, getState) => {
+    dispatch({
+        type: CHANGE_PASSWORD
+    })
+    
+    return axios.post(urlChangePass, data)
+    .then(res=>{
+        dispatch({
+            type: CHANGE_PASSWORD_SUCCESS,
+        })
+        return dispatch(getAllUsers(), alert("Se ha modificado la contraseña con éxito."))
+    })
+    .catch(err=>{
+        dispatch({
+            type: CHANGE_PASSWORD_ERROR,
             payload: err.message
         })
     })
