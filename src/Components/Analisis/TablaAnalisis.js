@@ -1,16 +1,18 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
 import Tabla from '../Reusables/Tabla/Tabla'
-import { urlConsultaAnalisis } from '../../Constants/NavUrl';
+import { urlConsultaAnalisis , urlAddAnalisis} from '../../Constants/NavUrl';
 import { getAnalisisAction } from '../../Redux/analisisDuck';
 import './analisisStyle.css';
 
 const columns = [
+    {
+        dataField: 'idAnalisis',
+        text: 'Núm'
+    },
     {
         dataField: 'createdAt',
         text: 'Fecha',
@@ -48,13 +50,11 @@ class TablaAnalisis extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to='/analisis/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='syringe' /> Nuevo Análisis
-                        </Button>
-
                         <Tabla
                             data={this.props.analisis}
-                            param={'idAnalisis'}
+                            param='idAnalisis'
+                            urlAdd={urlAddAnalisis}
+                            buttonTitleAdd='Nuevo Análisis'
                             columns={columns}
                             title='Analisis'
                             options={true}
@@ -69,7 +69,7 @@ class TablaAnalisis extends React.Component {
 
 }
 const mapStateToProps = state => ({
-    fetching: state.analisis.fetching,
+    fetching: state.analisis.fetchingAnalisis,
     analisis: state.analisis.analisisAll
 })
 

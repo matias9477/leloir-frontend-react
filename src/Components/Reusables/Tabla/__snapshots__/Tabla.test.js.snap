@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render the component correctly with the given mocked props 1`] = `
+<div
+  className="tabla"
+>
+  <Grid
+    columns={3}
+  >
+    <GridColumn />
+    <GridColumn>
+      <Header
+        as="h2"
+      >
+        Pacientes
+      </Header>
+    </GridColumn>
+    <GridColumn />
+  </Grid>
+  <div
+    className="filter"
+  >
+    <Grid>
+      <GridColumn
+        floated="left"
+        width={4}
+      >
+        <Input
+          icon={
+            Object {
+              "name": "search",
+            }
+          }
+          onChange={[Function]}
+          placeholder="Ingrese búsqueda..."
+          type="text"
+          value=""
+        />
+      </GridColumn>
+      <GridColumn
+        floated="right"
+      >
+        <Dropdown
+          additionLabel="Add "
+          additionPosition="top"
+          closeOnBlur={true}
+          closeOnEscape={true}
+          deburr={false}
+          icon="dropdown"
+          inline={true}
+          minCharacters={1}
+          noResultsMessage="No results found."
+          onChange={[Function]}
+          openOnFocus={true}
+          options={
+            Array [
+              Object {
+                "key": 10,
+                "text": "10",
+                "value": 10,
+              },
+              Object {
+                "key": 25,
+                "text": "25",
+                "value": 25,
+              },
+              Object {
+                "key": 50,
+                "text": "50",
+                "value": 50,
+              },
+              Object {
+                "key": 100,
+                "text": "100",
+                "value": 100,
+              },
+            ]
+          }
+          renderLabel={[Function]}
+          searchInput="text"
+          selectOnBlur={true}
+          selectOnNavigation={true}
+          value={25}
+          wrapSelection={true}
+        />
+      </GridColumn>
+    </Grid>
+  </div>
+  <table
+    className="ui single line table"
+  >
+    <thead
+      className="centerAlignment"
+    >
+      <tr>
+        <th
+          key="0"
+          onClick={[Function]}
+        >
+          Fecha Alta
+        </th>
+        <th
+          key="1"
+          onClick={[Function]}
+        >
+          Tipo
+        </th>
+        <th
+          key="2"
+          onClick={[Function]}
+        >
+          Paciente
+        </th>
+        <th
+          key="3"
+          onClick={[Function]}
+        >
+          Documento
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody
+      className="centerAlignment"
+    />
+  </table>
+  <Pagination
+    activePage={0}
+    aria-label="Pagination Navigation"
+    boundaryRange={1}
+    ellipsisItem="..."
+    firstItem={
+      Object {
+        "aria-label": "First item",
+        "content": "«",
+      }
+    }
+    lastItem={
+      Object {
+        "aria-label": "Last item",
+        "content": "»",
+      }
+    }
+    nextItem={
+      Object {
+        "aria-label": "Next item",
+        "content": "⟩",
+      }
+    }
+    onPageChange={[Function]}
+    pageItem={Object {}}
+    prevItem={
+      Object {
+        "aria-label": "Previous item",
+        "content": "⟨",
+      }
+    }
+    siblingRange={1}
+    totalPages={0}
+  />
+</div>
+`;

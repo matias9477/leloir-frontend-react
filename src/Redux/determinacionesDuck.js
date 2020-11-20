@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {urlDeterminaciones, urlAlterDeterminacion, urlAltaDeterminacion, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
+import {urlDeterminaciones,urlAlterDeterminacionConUnidad, urlAlterDeterminacion, urlAltaDeterminacion, urlAltaDeterminacionConUnidad, urlSwitchAltaDeterminacion, urlGetDeterminacionById} from '../Constants/URLs'
 
 let initialData = {
     fetching: false,
@@ -18,6 +18,10 @@ let ADD_DETERMINACION = 'ADD_DETERMINACION'
 let ADD_DETERMINACION_SUCCESS = 'ADD_DETERMINACION_SUCCESS'
 let ADD_DETERMINACION_ERROR = 'ADD_DETERMINACION_ERROR'
 
+let ADD_DETERMINACION_CON_UNIDAD = 'ADD_DETERMINACION_CON_UNIDAD'
+let ADD_DETERMINACION_CON_UNIDAD_SUCCESS = 'ADD_DETERMINACION_CON_UNIDAD_SUCCESS'
+let ADD_DETERMINACION_CON_UNIDAD_ERROR = 'ADD_DETERMINACION_CON_UNIDAD_ERROR'
+
 let GET_DETERMINACION_BY_ID = 'GET_DETERMINACION_BY_ID'
 let GET_DETERMINACION_BY_ID_ERROR = 'GET_DETERMINACION_BY_ID_ERROR'
 let GET_DETERMINACION_BY_ID_SUCCESS = 'GET_DETERMINACION_BY_ID_SUCCESS'
@@ -30,6 +34,9 @@ let ALTER_DETERMINACION = 'ALTER_DETERMINACION'
 let ALTER_DETERMINACION_SUCCESS = 'ALTER_DETERMINACION_SUCCESS'
 let ALTER_DETERMINACION_ERROR = 'ALTER_DETERMINACION_ERROR'
 
+let ALTER_DETERMINACION_CON_UNIDAD = 'ALTER_DETERMINACION_CON_UNIDAD'
+let ALTER_DETERMINACION_CON_UNIDAD_SUCCESS = 'ALTER_DETERMINACION_CON_UNIDAD_SUCCESS'
+let ALTER_DETERMINACION_CON_UNIDAD_ERROR = 'ALTER_DETERMINACION_CON_UNIDAD_ERROR'
 
 export default function reducer (state=initialData, action){
     switch(action.type){
@@ -121,7 +128,47 @@ export let addDeterminacionAction = (data) => (dispatch, getState) =>{
     })
 }
 
-export let alterDeterminacionAction = (id, data) => (dispatch, getState) =>{
+export let addDeterminacionConUnidadAction = (data) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_DETERMINACION_CON_UNIDAD
+    })
+    return axios.post(urlAltaDeterminacionConUnidad, data)
+    .then(res =>{
+        dispatch({
+            type: ADD_DETERMINACION_CON_UNIDAD_SUCCESS
+        })
+        alert(`Se ha registrado la determinacion ${data.descripcionPractica} con éxito`)
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_DETERMINACION_CON_UNIDAD_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar la determinación ${data.descripcionPractica}. Por favor intente nuevamente`)
+    })
+}
+
+export let modDeterminacionConUnidadAction = (id, data) => (dispatch, getState) =>{
+    dispatch({
+        type: ALTER_DETERMINACION_CON_UNIDAD
+    })
+    return axios.put(`${urlAlterDeterminacionConUnidad}${id}`, data)
+    .then(res=>{
+        dispatch({
+            type: ALTER_DETERMINACION_CON_UNIDAD_SUCCESS
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('Se ha modificado la determinación con éxito.'))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ALTER_DETERMINACION_CON_UNIDAD_ERROR,
+            payload: err.message
+        })
+        return dispatch(getDeterminacionByIdAction(id), alert('No se ha podido modificar la determinaciónl. Por favor intente nuevamente.'))
+    })
+}
+
+export let modDeterminacionAction = (id, data) => (dispatch, getState) =>{
     dispatch({
         type: ALTER_DETERMINACION
     })

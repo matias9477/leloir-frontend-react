@@ -6,6 +6,7 @@ import Cola from './Cola';
 import Atencion from './Atencion';
 import { titleCase } from '../../../Services/MetodosDeValidacion';
 import { getPatientByNombreAction } from '../../../Redux/patientsDuck'
+
 import './LPSecretaria.css';
 
 let array = JSON.parse(localStorage.getItem('afluence')) || []
@@ -64,48 +65,49 @@ class Afluencia extends Component {
     }
 
     saveStorage(name, data){
-        localStorage.setItem(name, JSON.stringify(data))
+        if (data != null){
+             localStorage.setItem(name, JSON.stringify(data))
+        }
     }
 
     render() {
         return (
-            <div className="afluenciaMain">
-                <Grid width='equal'>
-                    <Grid.Column width={5}>
-                        <h2>Cola de Espera</h2>
-                        <div className="afluenciaHeader">
-                    
-                            <Form onSubmit={this.addPatient} >
+            <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
-                                <label>Nombre Paciente</label>
-                                
-                                <div className='union'>
+                <div className="afluenciaMain">
+                    <Grid stackable divided columns={2}>
+                        <Grid.Column width={6}>
+                            <div className="afluenciaHeader">
+                                <Form onSubmit={this.addPatient} >
+                                    <label>Nombre Paciente</label>
+                                    
+                                    <div className='union'>
 
-                                    <input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..."/>
-                                    <Button primary icon type="submit">
-                                        <Icon name='add user'/>
-                                    </Button>
+                                        <input ref={(a) => this._inputElement = a} placeholder="Ingrese nombre..."/>
+                                        <Button primary icon type="submit">
+                                            <Icon name='add user'/>
+                                        </Button>
 
-                                </div>  
-                            </Form>
-                        </div>
+                                    </div>  
+                                </Form>
+                            </div>
 
-                        <Cola entries={this.state.patients}
-                            delete={this.deletePatient}
-                        />
+                            <Cola entries={this.state.patients}
+                                delete={this.deletePatient}
+                            />
 
-                        {this.state.patients.length > 0 ? <Button icon labelPosition='right' size='small' onClick={() => this.next()}>
-                            <Icon name='arrow alternate circle right outline' color='blue' />Siguiente
-                            </Button> : null}
+                            {this.state.patients.length > 0 ? <Button icon labelPosition='right' size='small' onClick={() => this.next()}>
+                                <Icon name='arrow alternate circle right outline' color='blue' />Siguiente
+                                </Button> : null}
 
-                    </Grid.Column>
+                        </Grid.Column>
 
-                    <Grid.Column width={11}>
-                        <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
+                        <Grid.Column style={{width: '60%', paddingRight: '0'}}>
+                            <Atencion currentPatient={this.props.patientLanding} fetching={this.props.fetching}/>
+                        </Grid.Column>
+                    </Grid>
 
-                    </Grid.Column>
-                </Grid>
-
+                </div>
             </div>
         );
     }

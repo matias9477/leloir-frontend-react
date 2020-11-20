@@ -34,7 +34,7 @@ class Historial extends Component {
                             {analisis.idAnalisis}
                         </Table.Cell>
                         <Table.Cell>
-                            {analisis.diasPendiente}
+                            {analisis.createdAt}
                         </Table.Cell>
                         <Table.Cell>
                             {analisis.determinaciones !== undefined ? analisis.determinaciones.map((deter)=>(
@@ -73,7 +73,6 @@ class Historial extends Component {
         return (
             <div>
                 <div className='historialPaciente'>
-                    <h3>Historial</h3>
                     {fetching ?  null : this.renderTable(this.props.history)}
                 </div>
                 

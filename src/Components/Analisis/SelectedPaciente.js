@@ -1,39 +1,45 @@
-import React from 'react';
-import { Header, Container } from 'semantic-ui-react';
+import React from 'react'
+import { Header, Icon, Container } from 'semantic-ui-react'
 
-import { checkAtributo, titleCase } from '../../Services/MetodosDeValidacion'; 
+import { checkAtributo, titleCase } from '../../Services/MetodosDeValidacion'
+import './analisisStyle.css'
+
 
 const SelectedPaciente = props => {
     return (
         <div>
             {(props.selected === '' || props.selected === null) ? null : 
-            <Container style={Style} text>
-                <Header as='h4' style={HeaderStyle}>Información del paciente seleccionado </Header>
-                <p> Número de paciente: {props.selected.id} <br/>
-                    Tipo Paciente: {titleCase(props.selected.tipoPaciente)} <br/>
-                    Nombre: {props.selected.nombre} {checkAtributo(props.selected.apellido)} <br/>
-                    {checkAtributo(props.selected.nroDocumento) ? `${props.selected.tipoDocumento}: ${props.selected.nroDocumento}`: null}
-                    {checkAtributo(props.selected.tipoAnimal) ? `Tipo de Animal: ${titleCase(props.selected.tipoAnimal)}` : null} <br/>
-                    {checkAtributo(props.selected.propietario) ? `Propietario: ${props.selected.propietario}`: null}
-                    {checkAtributo(props.selected.obraSocial) ? `Obra social: ${props.selected.obraSocial}`: null}
-                </p>
             
-            </Container>
-        
+            <div className='infoSelectedPaciente'>
+                <Header size='large' icon textAlign='center'>
+                    <Icon name={getIconTipo(props.selected.tipoPaciente)} circular />
+                    <Header.Content>{props.selected.nombre} {checkAtributo(props.selected.apellido)}</Header.Content>
+                </Header>
+
+                <Container textAlign='center'>Paciente {props.selected.id}</Container>
+
+                <Container textAlign='center'>{checkAtributo(props.selected.nroDocumento) ? `  ${props.selected.tipoDocumento}: ${props.selected.nroDocumento}`: null}</Container>
+
+                <Container textAlign='center'>{checkAtributo(props.selected.tipoAnimal) ? `Tipo: (${titleCase(props.selected.tipoAnimal)}) ` : null}</Container>
+
+                <Container textAlign='center'>{checkAtributo(props.selected.propietario) ? `Propietario: ${props.selected.propietario}`: null}</Container>
+
+                <Container textAlign='center'>{checkAtributo(props.selected.obraSocial) ? `Obra social ${props.selected.obraSocial}`: 'No posee obra social'} {checkAtributo(props.selected.plan) ? `, Plan ${props.selected.plan}`: null}</Container>
+
+            </div>
         }
-    </div>    
-    );
-};
-
-const Style = {
-    marginTop: '15px',
-    backgroundColor: '#e8f6ff',
-    padding: '8px',
-    fontSize: 'small',
-};
-
-const HeaderStyle = {
-    textDecorationLine: 'underline'
+        </div>    
+    )
 }
 
-export default SelectedPaciente;
+function getIconTipo(tipo){
+    if (tipo === 'ANIMAL'){
+        return 'paw'
+    } else if(tipo === 'PERSONA'){
+        return 'user'
+    } else if(tipo === 'INSTITUCION'){
+        return 'building'
+    }
+}
+
+export default SelectedPaciente

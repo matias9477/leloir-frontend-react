@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 import NavBar from '../../NavBar/NavBar';
 import Afluencia from './Afluencia';
+import Domicilios from '../Domicilios';
 import './../../styles.css';
+import './LPSecretaria.css';
 
 class LPSecretaria extends Component {
     
@@ -12,7 +14,11 @@ class LPSecretaria extends Component {
             <div>
                 <NavBar/>
                 <div className='avoidMenu'>
-                    <Afluencia/>
+                    <div className='LPSecre'>
+                        <Afluencia/>
+                         <div className="ui divider"/>
+                        <Domicilios/>
+                    </div>
                 </div>
             </div>
             

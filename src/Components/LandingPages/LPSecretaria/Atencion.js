@@ -1,17 +1,18 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import { Header, Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react'
-import Select from 'react-select'
-import { Link } from 'react-router-dom'
-import {connect} from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
+import React, { Component } from 'react';
+import { Icon, Button, Grid, Divider, List, Container } from 'semantic-ui-react';
+import Select from 'react-select';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import { urlAnalisisPendientes } from '../../../Constants/URLs'
-import { checkAtributo } from '../../../Services/MetodosDeValidacion'
-import SelectedPaciente from './PacienteEnAtencion'
-import AnalisisPendientes from './AnalisisPendientesAtencion'
-import { getPatientsAction } from '../../../Redux/patientsDuck'
-import './LPSecretaria.css'
+import { urlAddPaciente } from '../../../Constants/NavUrl';
+import { checkAtributo } from '../../../Services/MetodosDeValidacion';
+import SelectedPaciente from './PacienteEnAtencion';
+import AnalisisPendientes from './AnalisisPendientesAtencion';
+import { getPatientsAction } from '../../../Redux/patientsDuck';
+import Extraction from '../LPSecretaria/Extraction';
+import './LPSecretaria.css';
+
 
 class Atencion extends Component {
     constructor(props) {
@@ -19,6 +20,8 @@ class Atencion extends Component {
         this.state = ({
             selectedPaciente: '',
             analisisPendientes:[],
+            extraction: [],
+            flag: false,
         });
     }
 
@@ -47,19 +50,6 @@ class Atencion extends Component {
     saveStorage(name, data){
         if (data != null){
              localStorage.setItem(name, JSON.stringify(data))
-        }
-    }
-
-    getAnalisisPendientes = () =>{
-        let paciente = JSON.parse(localStorage.current)[0] || JSON.parse(localStorage.current)
-        if(paciente!==false && this.state.analisisPendientes.length === 0){
-                axios.get(urlAnalisisPendientes+"/"+paciente.id).then(resolve =>{
-                    this.setState({
-                        analisisPendientes : Object.values(resolve.data).flat(),
-                    })
-                }, (error) => {
-                    console.log('Error en la búsqueda de analisis pendientes: ',error.message);
-                })
         }
     }
 
@@ -99,13 +89,12 @@ class Atencion extends Component {
             return (
                 <div className='patientNotFound'> 
                     <h4>{JSON.parse(localStorage.nombreCurrent)}</h4>
-                    <subtitle  className='patientNotFoundMessage'> Paciente no encontrado </subtitle>
+                    <div  className='patientNotFoundMessage'> Paciente no encontrado</div>
                     <Divider />
                     <h4>Búsque el paciente o regístrelo a continuación</h4>
                
-                    <Grid columns='equal'>
+                    <Grid columns='equal' >
                         <Grid.Column>
-                            <br></br>
                             <Select
                                 name='pacientes'
                                 onChange={this.handleChangeListPacientes}
@@ -115,12 +104,10 @@ class Atencion extends Component {
                                 getOptionValue={this.getOptionValuePatient}
                                 getOptionLabel={this.getOptionLabelPatient}
                             />
-
                         </Grid.Column>
                         <Grid.Column width={5}>
-                            <br/>
-                            <Button as= {Link} to={{pathname: '/pacientes/add', state: { prevPath: window.location.pathname }}} exact='true' floated='right' icon labelPosition='left' color='twitter' size='small'>
-                                <Icon name='user' /> Nuevo Paciente
+                            <Button as= {Link} to={{pathname: {urlAddPaciente}, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                                <Icon name='user'/> 
                             </Button>
                         </Grid.Column>
                     </Grid>
@@ -132,14 +119,11 @@ class Atencion extends Component {
 
     patientFound(){
         let patient = JSON.parse(localStorage.current)[0] || JSON.parse(localStorage.current)
-        this.getAnalisisPendientes()
+        
         return(
             <div> 
                 <SelectedPaciente selected={patient} />
-            
-                {patient.bitAlta ? (this.state.analisisPendientes.length>0 ?
-                    <AnalisisPendientes pendientes={this.state.analisisPendientes}/>
-                : <h4>El paciente no posee análisis pendientes</h4>) : null}
+                <AnalisisPendientes id={patient.id} alta={patient.bitAlta}/>
                 
             </div>
         )
@@ -151,16 +135,16 @@ class Atencion extends Component {
 
             <div className='moreThanOnePatientScroll'>
             {JSON.parse(localStorage.current).map((patient, index) => (
-            <List divided verticalAlign="middle">
-                <List.Item >
-                    <List.Content floated='right'>
-                        <Button style={{marginRight: '20px'}} onClick={() => this.handleOnClickMoreThan1Patient(patient)}>Elegir</Button>
-                    </List.Content>
-                    <Icon name={this.getIconTipo(patient.tipoPaciente)}/>
-                    <List.Content>{this.checkName(patient)}</List.Content>
-                </List.Item>
-                <hr style={{margin: '0'}}/>
-            </List>
+                <List key={index} divided verticalAlign="middle">
+                    <List.Item >
+                        <List.Content floated='right'>
+                            <Button style={{marginRight: '20px'}} onClick={() => this.handleOnClickMoreThan1Patient(patient)}>Elegir</Button>
+                        </List.Content>
+                        <Icon name={this.getIconTipo(patient.tipoPaciente)}/>
+                        <List.Content>{this.checkName(patient)}</List.Content>
+                    </List.Item>
+                    <hr style={{margin: '0'}}/>
+                </List>
             ))}
             </div>
         </Container>
@@ -192,36 +176,73 @@ class Atencion extends Component {
         } 
         return name
     } 
+
+    removeCurrent = () => {
+        localStorage.removeItem("current");
+        this.setState({
+            flag: true
+        })
+    }
+
+    extraction = () =>{
+        let array = JSON.parse(localStorage.getItem('extraction')) || []
+
+        var newExtraction = {
+            text: JSON.parse(localStorage.nombreCurrent),
+            key: Date.now()
+        }
+        
+        array.push(newExtraction)
+        this.saveStorage('extraction', array)
+        localStorage.removeItem('current')
+        localStorage.removeItem('nombreCurrent')
+        this.setState({
+            flag: true,
+            extraction: array,
+        })
+    }
          
 
-    render() {
+    render() { 
+
         return (
-            <div className='atencion'>
-                <Header as='h2'>Atención</Header>
-                
-                {(localStorage.current !== undefined) ? 
-             
-                    <Container >
-                        {this.props.fetching ?
-                            <div className='spinner'>
-                                 <ClipLoader
-                                     size={60}
-                                     color={'black'}
-                                 />
-                             </div> : 
-        
-                            <div>
-                                {JSON.parse(localStorage.current) !== undefined ? 
-                                (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                                JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-                            </div>
+            <div>
+                <Grid columns={2} divided>
+                    <Grid.Column width={9}>
+                        <div className='atencion'>
+                        {(localStorage.current !== undefined) ? 
+                            <Container >
+                                {this.props.fetching ?
+                                    <div className='spinner'>
+                                        <ClipLoader
+                                            size={60}
+                                            color={'black'}
+                                        />
+                                    </div> : 
+                                    <div>
+                                        {JSON.parse(localStorage.current) !== undefined ? 
+                                        (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                                        JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                                        {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                            <div>
+                                            <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                            <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                            </div>
+                                        : null}
+                                    </div>
+                                }
+                            
+                            </Container>
+                            
+                            : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
                         }
-                        
-                        
-                    </Container>
-                    
-                : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
-                }
+                    </div>
+                    </Grid.Column>
+                    <Grid.Column width={7}>
+                        <Extraction extraction={this.state.extraction}/>
+                    </Grid.Column>
+                </Grid>
+                
                
             </div>
         );
@@ -237,4 +258,4 @@ function mapStateToProps(state){
 }
 
 
-export default connect(mapStateToProps, {getPatientsAction})(Atencion)
+export default connect(mapStateToProps, {getPatientsAction})(Atencion);

@@ -1,16 +1,19 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
+import { urlAddPaciente } from '../../Constants/NavUrl';
 import Tabla from '../Reusables/Tabla/Tabla'
 import { urlConsultaPacientes } from '../../Constants/NavUrl';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import './patientsStyle.css';
 
 const columns = [
+    {
+        dataField: 'id',
+        text: 'Número',
+    },
     {
         dataField: 'fechaAlta',
         text: 'Fecha Alta',
@@ -53,17 +56,16 @@ class TablaPacientes extends React.Component {
 
                     <div>
 
-                        <Button as= {Link} to='/pacientes/add' style={{marginRight: '6em'}}  exact='true' floated='right' icon labelPosition='left' primary size='small'>
-                            <Icon name='user' /> Nuevo Paciente
-                        </Button>
-
                         <Tabla
                             data={this.props.patients}
-                            param={'id'}
+                            param='id'
+                            urlAdd={urlAddPaciente}
+                            buttonTitleAdd='Nuevo Paciente'
                             columns={columns}
                             title='Pacientes'
                             options={true}
                             path={urlConsultaPacientes}
+                            dataConsulta={"tipoPaciente"}
                         />
                     </div>
                 }

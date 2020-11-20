@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Button, Header, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter, Redirect } from 'react-router-dom'
 
+import { urlTablaPacientes}  from '../../Constants/NavUrl';
 import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
@@ -43,10 +44,7 @@ class AltaInstitucion extends Component {
     }
 
     this.props.addPatientAction(data)
-    this.vaciadoCampos()
-
-    //TODO: redireccionamiento when success. debe redireccionar al previous path const url = this.props.location.state.prevPath;
-  }
+    }
 
   getPaciente = (e) => {
     e.preventDefault()
@@ -69,19 +67,6 @@ class AltaInstitucion extends Component {
         errorFax,
     })
     }    
-  }
-
-  vaciadoCampos(){
-    this.setState( {
-      nombre: '',
-      telefono:'',
-      mail:'',
-      fax: '',
-      errorNombre: true,
-      errorTelefono: true,
-      errorMail: true,
-      errorFax: true,
-    })
   }
  
   cambioNombre = (e) => {
@@ -110,6 +95,9 @@ class AltaInstitucion extends Component {
 
    
   render(){
+    if (!this.props.upToDateAllPatients) {
+      return <Redirect to={urlTablaPacientes} />
+    }
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nueva Institución</Header>
@@ -148,7 +136,7 @@ class AltaInstitucion extends Component {
 
           <br/>
           
-          <Button as= {Link} to={'/pacientes'} primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
+          <Button as= {Link} to={urlTablaPacientes} primary type="submit" onClick={this.getPaciente} className="boton"> Registrar Institución</Button >       
 
         </Form>  
       </div>
@@ -159,7 +147,8 @@ class AltaInstitucion extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.patients.fetching,
+  upToDateAllPatients: state.patients.upToDateAllPatients,
 })
 
 
-export default connect(mapStateToProps,{addPatientAction})(AltaInstitucion)
+export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaInstitucion))

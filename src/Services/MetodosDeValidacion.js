@@ -44,6 +44,14 @@ export function validateNombre(nombre){
   }
 }
 
+export function validateString(nombre){
+  if (hasNumbers(nombre)){
+    return false
+  } else {
+    return true
+  }
+}
+
 export function validateRequiredStringNum(nombre){
   if (nombre === ''){
     return false
@@ -129,6 +137,10 @@ export function checkAtributo(atributo){
 
 export function validateContraseña(contra1, contra2){
   if (contra1 === '' || contra2 === ''){
+    return false
+  } else if (contra1.length<6 || contra2.length<6 || contra1.length>20 || contra2.length>20) {
+    return false
+  } else if (contra1 === undefined || contra2 === undefined){
     return false
   } else if ((contra1 === contra2) && (hasNumbers(contra1) || (typeof(contra1) === 'string') || hasNumbers(contra2) || (typeof(contra2) === 'string')) ){
     return true
