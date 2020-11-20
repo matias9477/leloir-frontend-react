@@ -35,7 +35,7 @@ pipelines:
                 SERVER: 'ec2-3-128-89-230.us-east-2.compute.amazonaws.com'
                 MODE: 'script'
                 COMMAND: 'deploy-script.sh'
-    release/visita-lab:
+    master:
       - step:
           name: "Run tests"
           image: node:10.15.0
