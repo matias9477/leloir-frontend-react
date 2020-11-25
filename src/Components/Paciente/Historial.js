@@ -13,7 +13,7 @@ class Historial extends Component {
 
     renderTable = (historial) =>(
         (historial==='' || historial===[] || historial.length===0)  ?
-        <div> No se encontraron analisis para este paciente</div> :
+        <div> El paciente no posee análisis.</div> :
         <Table celled>
             <Table.Header>
                 <Table.Row>

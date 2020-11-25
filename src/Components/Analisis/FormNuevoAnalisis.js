@@ -9,7 +9,7 @@ import { urlTablaAnalisis } from './../../Constants/NavUrl';
 import { checkAtributo, validateRequiredCombos, validateString } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import SelectedDeterminaciones from './SelectedDeterminaciones';
-import { getPatientsAction } from '../../Redux/patientsDuck';
+import { getPatientsAltaAction } from '../../Redux/patientsDuck';
 import { getDeterminacionesAction } from '../../Redux/determinacionesDuck';
 import { addAnalisisAction, getPreviewRegistroAnalisis } from '../../Redux/analisisDuck';
 import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck';
@@ -41,7 +41,7 @@ class FormNuevoAnalisis extends Component {
   componentDidMount(){
     this.props.getObrasSocialesAction()
 
-    this.props.getPatientsAction()
+    this.props.getPatientsAltaAction()
     this.props.getDeterminacionesAction()
   }
 
@@ -359,7 +359,7 @@ class FormNuevoAnalisis extends Component {
 }
 
 const mapStateToProps = state => ({
-  patients: state.patients.patients,
+  patients: state.patients.patientsAlta,
   determinaciones: state.determinaciones.determinaciones,
   obrasSociales: state.obrasSociales.obrasSociales,
   upToDateAnalisisAll: state.analisis.upToDateAnalisisAll,
@@ -367,4 +367,4 @@ const mapStateToProps = state => ({
 })
 
 export default  withRouter(connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction, getPreviewRegistroAnalisis})(FormNuevoAnalisis))
+  {getPatientsAltaAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction, getPreviewRegistroAnalisis})(FormNuevoAnalisis))
