@@ -74,9 +74,15 @@ class ModificarResultados extends Component {
                                         <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
                                         <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
                                         <Table.Cell>
-                                            <Input name={index} 
-                                            value={this.state.currentAnalisis.determinaciones[index].resultado} 
-                                            placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                            {det.estadoDetalleAnalisis.nombre==="APROBADO" ? 
+                                                <Input name={index} maxLength={5} id='disabled'
+                                                value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                                placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                            :
+                                                <Input name={index} maxLength={5}
+                                                value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                                placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                            }
                                             
                                             {det.determinacion.unidadMedida===null ? '' : ' ' +
                                                 det.determinacion.unidadMedida.unidad}
