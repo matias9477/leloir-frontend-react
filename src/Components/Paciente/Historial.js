@@ -29,7 +29,6 @@ class Historial extends Component {
             <Table.Body>
                 {historial.map((analisis, index) => (
                     <Table.Row key={index}>
-                        
                         <Table.Cell>
                             {analisis.idAnalisis}
                         </Table.Cell>
@@ -38,7 +37,7 @@ class Historial extends Component {
                         </Table.Cell>
                         <Table.Cell>
                             {analisis.determinaciones !== undefined ? analisis.determinaciones.map((deter)=>(
-                                <li>{deter}</li>
+                                <li>{deter.nombreDeterminacion}</li>
                             )) : null}
                         </Table.Cell>
                         <Table.Cell>

@@ -107,6 +107,12 @@ export default function reducer(state = initialData, action){
     }
 }
 
+function saveStorage(name, data){
+    if (data != null){
+         localStorage.setItem(name, JSON.stringify(data))
+    }
+}
+
 
 //actions
 
@@ -224,6 +230,7 @@ export let getPatientByIdAction = (id) => (dispatch, getState) => {
             type: GET_PATIENT_BY_ID_SUCCESS,
             payload: res.data,
         })
+        saveStorage("patientType", res.data.type)
     })
     .catch(err=>{
         dispatch({
