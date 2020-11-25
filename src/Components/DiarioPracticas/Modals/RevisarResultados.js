@@ -79,7 +79,10 @@ class RevisarResultados extends Component {
                                     <Table.Row  key={index} value={det}>
                                         <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
                                         <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                                        <Table.Cell>{det.resultado}</Table.Cell>
+                                        {det.determinacion.unidadMedida===null ?
+                                            <Table.Cell>{det.resultado}</Table.Cell> :
+                                            <Table.Cell>{det.resultado + ' ' + det.determinacion.unidadMedida.unidad}</Table.Cell>
+                                        }
                                         <Table.Cell>
                                             <Button.Group>
                                                 <Button

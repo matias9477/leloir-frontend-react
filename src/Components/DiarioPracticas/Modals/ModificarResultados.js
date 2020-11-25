@@ -76,7 +76,10 @@ class ModificarResultados extends Component {
                                         <Table.Cell>
                                             <Input name={index} 
                                             value={this.state.currentAnalisis.determinaciones[index].resultado} 
-                                            placeholder='Ingrese resultado...' onChange={this.changeResultado}/>
+                                            placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                            
+                                            {det.determinacion.unidadMedida===null ? '' : ' ' +
+                                                det.determinacion.unidadMedida.unidad}
                                             </Table.Cell>
                                     </Table.Row>
                                 )
