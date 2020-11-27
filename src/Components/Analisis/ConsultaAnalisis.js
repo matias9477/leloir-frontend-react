@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, Table, Card, List, Label, Divider } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -310,6 +310,42 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+    renderTransaccionPago() {
+        return (
+            <div>
+                <Header>Estado de pago</Header>
+                <Card fluid raised centered>
+                    <Label as='a' attached='top'> 
+                        {this.isPagado(this.state.analisis.pagado)}
+                    </Label>
+
+                    <Card.Content>
+                        <Card.Description textAlign='left'>
+                            <List>
+                                <List.Item>
+                                    <List.Icon name='dollar sign' color='green'/>
+                                    <List.Content>{this.state.analisis.costoAnalisis}</List.Content> 
+                                </List.Item>
+                            </List>
+                        </Card.Description>
+                    </Card.Content>
+
+                    <Button color='#2185d0'>
+                        Ver Detalle
+                    </Button>
+                </Card>
+            </div>
+        )
+    }
+
+    isPagado(bool){
+        if (bool===false) {
+            return "Falta Pagar"
+        } else {
+            return "Pagado"
+        }
+    }
+
     handleModalContent() {
         switch (this.state.currentModal) {
             case 'MODIFICAR':
@@ -352,7 +388,7 @@ class ConsultaAnalisis extends Component {
             <div>
                 <NavBar/>
                 <div className='avoidMenu'>
-                    <Grid columns={3} style={{marginLeft: '0px'}}>
+                    <Grid columns={3} style={{marginLeft: '0px'}} divided>
                         <Grid.Row style={{marginLeft: '0px'}}>
                             <Button as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                                 <Icon name='arrow alternate circle left' /> Volver
@@ -374,6 +410,8 @@ class ConsultaAnalisis extends Component {
                                     {this.determinacionesRender()}
                                 </Grid.Column>
                                 <Grid.Column>
+                                    {this.renderTransaccionPago()}
+                                    <Divider/>
                                     {this.muestrasRender()}
                                 </Grid.Column>
                             </Grid.Row>
