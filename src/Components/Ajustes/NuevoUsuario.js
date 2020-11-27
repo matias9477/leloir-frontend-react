@@ -165,7 +165,7 @@ class NuevoUsuario extends Component {
                     <Form.Group>
                         <Form.Field type='password' required label='Contraseña' control='input'
                             width={8}
-                            placeholder='8 caracteres minimo'
+                            placeholder='6 caracteres minimo, 20 máximo'
                             className= {this.state.errorContraseña === true ? null : 'error'}
                             value={this.state.password}
                             onChange={this.cambioPassword}
