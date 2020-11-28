@@ -16,11 +16,11 @@ const Charts = () => {
 
     return (
         <div className="pie-charts">
-        <Header as='h3' dividing>Gráficos estadísticos de determinaciones mas pedidas</Header>
-            <PieChart width={400} height={400}>
-            <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#067ebf" label />
-            <Tooltip />
-            </PieChart>
+            <Header as='h3' dividing>Gráficos estadísticos de determinaciones mas pedidas</Header>
+                <PieChart width={400} height={400}>
+                    <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#067ebf" label />
+                    <Tooltip />
+                </PieChart>
         </div>
     )
 }

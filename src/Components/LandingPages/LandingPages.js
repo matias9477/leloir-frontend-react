@@ -21,9 +21,9 @@ class LandingPages extends Component {
     } else if (rol==="ROLE_SECRETARIA"){
       return <LPSecretaria />;
     } else if (rol==="ROLE_TECNICO_LABORATORIO"){
-      return <div>soy un tecnico</div>;
+      return <LPBioquimico />;
     } else if (rol==="ROLE_BIOQUIMICO"){
-      return <LPBioquimico />
+      return <LPBioquimico />;
     }
 
   }

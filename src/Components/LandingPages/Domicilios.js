@@ -15,14 +15,19 @@ class Domicilios extends Component {
     createDomicilio = (domicilio) =>{
         if(domicilio === undefined)
         {
-            return null
+            return null;
         } else return <Table.Row>
-                    <Table.Cell>{domicilio.direccion}</Table.Cell>
-                    <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
-                    <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
-                </Table.Row>
+                        <Table.Cell>{domicilio.direccion}</Table.Cell>
+                        <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
+                        <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
+                      </Table.Row>
     }
 
+    renderDomicilios = (listDomicilios) =>{
+        if(listDomicilios.length>0){
+            return listDomicilios;
+        } else return <Header as='h5' icon='home' textAlign='right' color='red'>No hay domicilios registrados para mañana.</Header>
+    }
 
 
     render() {
@@ -51,7 +56,7 @@ class Domicilios extends Component {
                             />
                                 :
                             <Table.Body>
-                                {listDomicilios}
+                                {this.renderDomicilios(listDomicilios)}
                             </Table.Body>
                     }
                 </Table>

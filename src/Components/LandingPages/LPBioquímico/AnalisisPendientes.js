@@ -36,7 +36,6 @@ class AnalisisPendientes extends Component {
 
     render() {
         const { analisisPendientes, fetching } = this.props;
-        console.log(analisisPendientes)
         return (
             <div className="analisis-pendientes"> 
                 {fetching ? 
