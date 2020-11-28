@@ -39,7 +39,7 @@ class UsuariosAll extends Component {
         default:
             return 
     }
-}
+  }
 
   hideModalCallback = () => {
     this.setState({

@@ -18,7 +18,7 @@ class FormConsulta extends Component {
     var type = JSON.parse(localStorage.getItem('patientType'))
 
     if (this.props.location.state!==undefined){
-      var type = this.props.location.state.type
+      type = this.props.location.state.type
     }
 
     if (type === 'ANIMAL' || this.props.patient.type==="com.leloir.backend.domain.Animal" || type==="com.leloir.backend.domain.Animal"){
@@ -62,7 +62,7 @@ class FormConsulta extends Component {
     var prevURL = urlTablaPacientes;
 
     if (this.props.location.state!==undefined) {
-      var prevURL = this.props.location.state.prevPath
+      prevURL = this.props.location.state.prevPath
     }
     
     return (

@@ -79,14 +79,14 @@ export default function reducer(state = initialData, action){
         case BIT_INVERSE_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateAllPatients: true}
         case BIT_INVERSE_SUCCESS:
-            return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false, upToDateAllPatients:false}
+            return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false}
 
         case ADD_PATIENT:
             return {...state, fetching:true}
         case ADD_PATIENT_ERROR:
             return {...state, fetching:false, error:action.payload, upToDateAllPatients:true}
         case ADD_PATIENT_SUCCESS:
-            return {...state, fetching:false, upToDateAllPatients:false, upToDateAllPatients:false}
+            return {...state, fetching:false, upToDateAllPatients:false}
 
         case GET_PATIENT_BY_ID:
             return {...state, fetching:true}
@@ -100,7 +100,7 @@ export default function reducer(state = initialData, action){
         case ALTER_PACIENTE:
             return {...state, fetching: true}
         case ALTER_PACIENTE_SUCCESS:
-            return {...state, fetching: false, upToDateAllPatients: false, upToDatePatientById: false, upToDateAllPatients:false}
+            return {...state, fetching: false, upToDateAllPatients: false, upToDatePatientById: false}
         case ALTER_PACIENTE_ERROR:
             return {...state, fetching: false, error: action.payload}
 
