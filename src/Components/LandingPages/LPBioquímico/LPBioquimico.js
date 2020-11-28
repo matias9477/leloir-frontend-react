@@ -16,8 +16,9 @@ class LPBioquimico extends Component {
                 <div className='avoidMenu'>
                     <div className='LPBio'>
                         <AnalisisPendientes />
-                        <div className="ui divider"/>
-                        <Domicilios />
+                        <div className='domicilios'>
+                            <Domicilios />
+                        </div>
                     </div>
                 </div>
             </div>

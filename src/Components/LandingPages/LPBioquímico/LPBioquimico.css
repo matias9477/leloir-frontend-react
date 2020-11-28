@@ -1,16 +1,22 @@
 .LPBio{
-    display: flexbox;
+    display: flex;
+    flex-direction: row;
     justify-content: center;
 }
 
 .analisis-pendientes{
     width: 96rem;
-    height: 15rem;
+    height: 20rem;
     padding: 3em;
     padding-bottom: 3em;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     overflow-y: auto;
     border-radius: 10px;
+}
+
+.domicilios {
+    padding-left: 2rem;
+    width: 50%;
 }
 
 @media only screen and (max-width: 600px) {
