@@ -104,7 +104,7 @@ class DiarioPracticas extends Component {
                 <Card fluid raised centered key={index}>
                     <Card.Content>
                         <Card.Header>{analisis.paciente}</Card.Header>
-                        <Card.Meta>{analisis.diasPendiente}</Card.Meta>
+                        <Card.Meta>{analisis.createdAt}</Card.Meta>
                         <Card.Description textAlign='left'>
                             Determinacion
                             <List>
