@@ -20,15 +20,15 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                     
                             <List>
                                 <List.Item>
-                                    <List.Content>Número de paciente: {selected.id}</List.Content>
-                                </List.Item>
-
-                                <List.Item>
-                                    <List.Content>Tipo Paciente: {titleCase(selected.tipoPaciente)}</List.Content>
+                                    <List.Content>Paciente {selected.id}</List.Content>
                                 </List.Item>
 
                                 <List.Item>
                                     <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
+                                </List.Item>
+
+                                <List.Item>
+                                    <List.Content>{titleCase(selected.tipoPaciente)}</List.Content>
                                 </List.Item>
 
                                 {checkAtributo(selected.nroDocumento) ? 
