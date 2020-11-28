@@ -60,7 +60,7 @@ class AnalisisPendientes extends Component {
 
 const mapStateToProps = state => ({  
     analisisPendientes: state.analisis.analisisPendientes.filter(function(analisis){
-        return analisis.estadoAnalisis == "EN_PROCESO";
+        return analisis.estadoAnalisis === "EN_PROCESO";
     }),
     fetching: state.analisis.fetchingAnalisisPendientes,
 })

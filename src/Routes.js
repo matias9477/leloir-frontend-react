@@ -42,6 +42,7 @@ import ConsultaDomicilio from './Components/Domicilio/ConsultaDomicilio';
 export default function Routes() {
     return (
         <Switch>
+            <AuthenticatedRoute exact path='/App' component={App}/>
             <AuthenticatedRoute exact path='/' component={LandingPages}/>
 
             <Route path='/login' component={LoginForm}/>
