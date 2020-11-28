@@ -212,11 +212,12 @@ class ConsultaAnimal extends Component {
               </Form.Group>
 
               <br/>
-
-              {(!this.state.bitAlta) ? <Button onClick={(e) => { 
-                if (window.confirm('¿Esta seguro que quiere dar de alta al paciente ' + this.state.nombre + '?')) {  
-                  this.alta(e)
-                } else {e.preventDefault()}} }>Dar de Alta</Button> : null}
+                <Button color={this.state.bitAlta ? 'red' : 'green'}
+                onClick={(e) => {
+                if (window.confirm('¿Esta seguro que quiere cambiar el estado del paciente ' + this.state.nombre + '?')) {
+                    this.alta(e) }
+                else {e.preventDefault()}} }
+                >{this.mensajeBtnSwitchAlta()}</Button>
                 
               {(this.state.cambios && this.state.bitAlta) ? <Button primary onClick={(e) => { 
                 if (window.confirm('¿Esta seguro que quiere modificar al paciente ' + this.state.nombre + '?')) {  
@@ -229,6 +230,15 @@ class ConsultaAnimal extends Component {
         </Container>
     </div>
     )
+  }
+
+  mensajeBtnSwitchAlta(){
+    if (this.state.bitAlta) {
+      return 'Dar de Baja'
+    }
+    else {
+      return 'Dar de Alta'
+    }
   }
 
 }

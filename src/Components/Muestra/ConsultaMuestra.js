@@ -164,7 +164,7 @@ class ConsultaMuestra extends Component {
 
                 <Button color={this.state.bitActivo ? 'red' : 'green'}
                 onClick={(e) => {
-                if (window.confirm('¿Esta seguro que quiere dar de alta la muestra?')) {
+                if (window.confirm('¿Esta seguro que quiere modificar el estado de la muestra?')) {
                     this.alta(e) }
                 else {e.preventDefault()}} }
                 >{this.mensajeBtnSwitchAlta()}</Button>

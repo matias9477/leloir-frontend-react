@@ -214,7 +214,7 @@ class ConsultaObraSocial extends Component {
 
                 <Button color={this.state.bitAlta ? 'red' : 'green'}
                   onClick={(e) => {
-                  if (window.confirm('¿Esta seguro que quiere dar de alta la obra social ' + this.state.razonSocial + '?')) {
+                  if (window.confirm('¿Esta seguro que quiere cambiar el estado la obra social ' + this.state.razonSocial + '?')) {
                     this.alta(e) }
                   else {e.preventDefault()}} }
                 >{this.mensajeBtnSwitchAlta()}</Button>
