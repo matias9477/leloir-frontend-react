@@ -204,7 +204,7 @@ class Atencion extends Component {
          
 
     render() { 
-
+        var paci = JSON.parse(localStorage.getItem("current"));
         return (
             <div>
                 <Grid columns={2} divided>
@@ -226,7 +226,9 @@ class Atencion extends Component {
                                         {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
                                             <div>
                                             <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                            <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                            {paci.bitAlta ?
+                                                <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                            : <div style={{marginTop: '1.5rem'}}>Dar de alta el paciente para pasar a cola de extracción.</div> }
                                             </div>
                                         : null}
                                     </div>
