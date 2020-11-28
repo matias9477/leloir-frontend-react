@@ -31,31 +31,33 @@ class VerAnalisis extends Component {
 
     detalleDeterminaciones = () => {
         if (this.props.analisis != null) {
-            return(
-                <Table basic='very' compact>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Código</Table.HeaderCell>
-                            <Table.HeaderCell>Determinación</Table.HeaderCell>
-                            <Table.HeaderCell>Resultado</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header> 
+            return (
+                <div className='tablaDetallePago'>
+                    <Table basic='very' compact>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Código</Table.HeaderCell>
+                                <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                <Table.HeaderCell>Resultado</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header> 
 
-                    <Table.Body>
-                        {this.props.analisis.determinaciones.map((det, index) => {
-                            return( 
-                                <Table.Row  key={index} value={det}>
-                                    <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
-                                    <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                                    {det.determinacion.unidadMedida===null ?
-                                        <Table.Cell>{det.resultado}</Table.Cell> :
-                                        <Table.Cell>{det.resultado + ' ' + det.determinacion.unidadMedida.unidad}</Table.Cell>
-                                    }
-                                </Table.Row>
-                            )
-                        })}
-                    </Table.Body>
-                </Table>
+                        <Table.Body>
+                            {this.props.analisis.determinaciones.map((det, index) => {
+                                return( 
+                                    <Table.Row  key={index} value={det}>
+                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                        {det.determinacion.unidadMedida===null ?
+                                            <Table.Cell>{det.resultado}</Table.Cell> :
+                                            <Table.Cell>{det.resultado + ' ' + det.determinacion.unidadMedida.unidad}</Table.Cell>
+                                        }
+                                    </Table.Row>
+                                )
+                            })}
+                        </Table.Body>
+                    </Table>
+                </div>
             ) 
         }
     }

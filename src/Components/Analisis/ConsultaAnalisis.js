@@ -160,11 +160,11 @@ class ConsultaAnalisis extends Component {
                                     <Icon name='plus' /> Añadir muestra
                                 </Button>
                             </div>
-                        : 
-                        <div>
-                            
-                            {(this.state.showMuestra) ? this.createMuestra() : null}
-                        </div>
+                        :  
+                            <div>
+                                No existen muestras para este análisis.
+                                {(this.state.showMuestra) ? this.createMuestra() : null}
+                            </div> 
                         }
                     </div>:
                 

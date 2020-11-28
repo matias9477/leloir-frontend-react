@@ -1,11 +1,12 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import SyncLoader from 'react-spinners/SyncLoader'
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import SyncLoader from 'react-spinners/SyncLoader';
 
-import { Button, Divider, Table, Input } from 'semantic-ui-react'
-import { Modal } from './ModalAnalysisInput'
-import { cargarResultadosAction, getAnalisisByIdAction } from '../../../Redux/analisisDuck'
+import { Button, Divider, Table, Input } from 'semantic-ui-react';
+import { Modal } from './ModalAnalysisInput';
+import { cargarResultadosAction, getAnalisisByIdAction } from '../../../Redux/analisisDuck';
+import { validateOnlyNumbers } from '../../../Services/MetodosDeValidacion';
 
 class ModificarResultados extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class ModificarResultados extends Component {
             show: false,
             currentAnalisis: null,
             cambios: false,
+            error: [],
         };
     }
 
@@ -58,40 +60,42 @@ class ModificarResultados extends Component {
         if (this.state.currentAnalisis!==null && this.state.currentAnalisis.determinaciones!==undefined && this.state.currentAnalisis.determinaciones.length>0) {
             return (
                 <div>
-                    <Table basic='very' compact='very'>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Código</Table.HeaderCell>
-                                <Table.HeaderCell>Determinación</Table.HeaderCell>
-                                <Table.HeaderCell>Resultado</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header> 
+                    <div className='tablaScrollModals'>
+                        <Table basic='very' compact='very'>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Código</Table.HeaderCell>
+                                    <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                    <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header> 
 
-                        <Table.Body>
-                            {this.props.analisis.determinaciones.map((det, index) => {
-                                return( 
-                                    <Table.Row  key={index} value={det}>
-                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
-                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                                        <Table.Cell>
-                                            {det.estadoDetalleAnalisis.nombre==="APROBADO" ? 
-                                                <Input name={index} maxLength={5} id='disabled'
-                                                value={this.state.currentAnalisis.determinaciones[index].resultado} 
-                                                placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
-                                            :
-                                                <Input name={index} maxLength={5}
-                                                value={this.state.currentAnalisis.determinaciones[index].resultado} 
-                                                placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
-                                            }
-                                            
-                                            {det.determinacion.unidadMedida===null ? '' : ' ' +
-                                                det.determinacion.unidadMedida.unidad}
-                                            </Table.Cell>
-                                    </Table.Row>
-                                )
-                            })}
-                        </Table.Body>
-                    </Table>
+                            <Table.Body>
+                                {this.props.analisis.determinaciones.map((det, index) => {
+                                    return( 
+                                        <Table.Row  key={index} value={det}>
+                                            <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                            <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                            <Table.Cell>
+                                                {det.estadoDetalleAnalisis.nombre==="APROBADO" ? 
+                                                    <Input name={index} maxLength={5} id='disabled'
+                                                    value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                                    placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                                :
+                                                    <Input name={index} maxLength={5}
+                                                    value={this.state.currentAnalisis.determinaciones[index].resultado} 
+                                                    placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
+                                                }
+                                                
+                                                {det.determinacion.unidadMedida===null ? '' : ' ' +
+                                                    det.determinacion.unidadMedida.unidad}
+                                                </Table.Cell>
+                                        </Table.Row>
+                                    )
+                                })}
+                            </Table.Body>
+                        </Table>
+                    </div>
                     <Button
                         color='green'
                         size='small'

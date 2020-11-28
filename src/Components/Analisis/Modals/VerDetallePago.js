@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Form, Table, Buttton } from 'semantic-ui-react';
+import { Button, Form, Table } from 'semantic-ui-react';
 
 import { Modal } from '../../DiarioPracticas/Modals/ModalAnalysisInput'
 
+import '../analisisStyle.css';
 
 class ModalDetallePago extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class ModalDetallePago extends Component {
 
     detalle = () => {
         return(
-            <Form style={{padding: '0 5rem'}}>
+            <Form style={{padding: '0 5rem'}} compact className='tablaDetallePago'>
                 <Table basic='very'>
                     <Table.Header>
                     <Table.Row>
@@ -77,8 +78,6 @@ class ModalDetallePago extends Component {
 
                     {this.detalle() }
 
-                    <Button color='red' onClick={this.hideModal}>Cerrar</Button>
-                    
                 </Modal>
             </div>
         )
