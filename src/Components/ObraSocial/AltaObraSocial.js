@@ -41,7 +41,6 @@ class AltaObraSocial extends Component {
     };
 
       this.props.addObraSocialAction(data)
-      //TODO: aca vaciaba si salia todo bien, si no te lo dejaba vofi como se hace ahora jeje saludos a la flia xdxdxdxd
       this.vaciadoCampos()
   }
 
