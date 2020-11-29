@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon, Form, Grid } from 'semantic-ui-react';
+import { Button, Icon, Form, Grid, Header } from 'semantic-ui-react';
 import {connect} from 'react-redux'
 
 import Cola from './Cola';
@@ -71,8 +71,10 @@ class Afluencia extends Component {
     }
 
     render() {
-        return (
+        return (<div>
+            <Header as='h3' dividing>Afluencias</Header>
             <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
+
 
                 <div className="afluenciaMain">
                     <Grid stackable divided columns={2}>
@@ -108,6 +110,7 @@ class Afluencia extends Component {
                     </Grid>
 
                 </div>
+            </div>
             </div>
         );
     }

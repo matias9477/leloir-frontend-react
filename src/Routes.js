@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import AuthenticatedRoute from './Services/AuthenticatedRoute';
 import App from './App';
 
-import LPSecretaria from './Components/LandingPages/LPSecretaria/LPSecretaria';
+import LandingPages from './Components/LandingPages/LandingPages';
 
 import LoginForm from './Components/Login/LoginLayout';
 import LogoutContainer from './Components/Logout/LogoutContainer';
@@ -43,7 +43,8 @@ import ConsultaDomicilio from './Components/Domicilio/ConsultaDomicilio';
 export default function Routes() {
     return (
         <Switch>
-            <AuthenticatedRoute exact path='/' component={LPSecretaria}/>
+            <AuthenticatedRoute exact path='/App' component={App}/>
+            <AuthenticatedRoute exact path='/' component={LandingPages}/>
 
             <Route path='/login' component={LoginForm}/>
             <AuthenticatedRoute exact path='/Logout' component={LogoutContainer}/>

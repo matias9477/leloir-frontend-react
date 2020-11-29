@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import {urlDocs, urlObrasSoc,urlPaises,urlSexos, urlPlanes } from '../../Constants/URLs'
-import { urlTablaPacientes } from '../../Constants/NavUrl'
 import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
@@ -314,7 +313,8 @@ class AltaPersona extends Component {
 
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to={urlTablaPacientes} />
+      return <Redirect to={{pathname: (this.props.location.state.prevPath
+        ), state: { prevPath: window.location.pathname }}} />
     }
     return (
       <div className='altasPacientes'>
@@ -350,7 +350,7 @@ class AltaPersona extends Component {
 
             <Form.Field required label='Número de Documento' control='input'
             maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} width={11}
-            placeholder='Número de documento' 
+            placeholder='Ingrese el número si puntos' 
             value={this.state.nroDoc} 
             onChange={this.cambioNroDoc} 
             className= {this.state.errorNroDoc === true ? null : 'error'} 

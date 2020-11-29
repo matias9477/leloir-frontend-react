@@ -183,7 +183,7 @@ class FormConsulta extends Component {
 
                                 <Button color={this.state.bitAlta ? 'red' : 'green'}
                                     onClick={(e) => {
-                                    if (window.confirm('¿Esta seguro que quiere dar de alta la determinacion ' + this.state.descripcionPractica + '?')) {
+                                    if (window.confirm('¿Esta seguro que quiere cambiar el estado la determinacion ' + this.state.descripcionPractica + '?')) {
                                         this.alta(e)
                                     } else { e.preventDefault()} }}
                                     >{this.mensajeBtnSwitchAlta()}</Button>

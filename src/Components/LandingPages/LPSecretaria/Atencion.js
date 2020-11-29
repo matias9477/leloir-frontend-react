@@ -106,7 +106,7 @@ class Atencion extends Component {
                             />
                         </Grid.Column>
                         <Grid.Column width={5}>
-                            <Button as= {Link} to={{pathname: {urlAddPaciente}, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                            <Button as= {Link} to={{pathname: urlAddPaciente, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
                                 <Icon name='user'/> 
                             </Button>
                         </Grid.Column>
@@ -124,6 +124,9 @@ class Atencion extends Component {
             <div> 
                 <SelectedPaciente selected={patient} />
                 <AnalisisPendientes id={patient.id} alta={patient.bitAlta}/>
+                {patient.bitAlta ?
+                    <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                : <div style={{marginTop: '1.5rem'}}>Dar de alta el paciente para pasar a cola de extracción.</div> }
                 
             </div>
         )
@@ -204,7 +207,6 @@ class Atencion extends Component {
          
 
     render() { 
-
         return (
             <div>
                 <Grid columns={2} divided>
@@ -226,7 +228,7 @@ class Atencion extends Component {
                                         {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
                                             <div>
                                             <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                            <Button onClick={this.extraction} size='small' basic color='black'>Pasar a cola de extracción</Button>
+                                            
                                             </div>
                                         : null}
                                     </div>

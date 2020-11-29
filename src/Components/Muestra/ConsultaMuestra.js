@@ -162,14 +162,17 @@ class ConsultaMuestra extends Component {
 
                 <br/>
 
-                <Button color={this.state.bitActivo ? 'red' : 'green'}
-                onClick={(e) => {
-                if (window.confirm('¿Esta seguro que quiere dar de alta la muestra?')) {
-                    this.alta(e) }
-                else {e.preventDefault()}} }
-                >{this.mensajeBtnSwitchAlta()}</Button>
+                {this.state.estado.nombre!=='ENTREGADO' ?
+                  <Button color={this.state.bitActivo ? 'red' : 'green'}
+                  onClick={(e) => {
+                  if (window.confirm('¿Esta seguro que quiere modificar el estado de la muestra?')) {
+                      this.alta(e) }
+                  else {e.preventDefault()}} }
+                  >{this.mensajeBtnSwitchAlta()}</Button>
+                
+                  : null }
 
-                {(this.state.cambios && this.state.bitActivo) ? <Button primary onClick={(e) => {
+                {(this.state.cambios && this.state.bitActivo && this.state.estado.nombre!=='ENTREGADO') ? <Button primary onClick={(e) => {
                 if (window.confirm('¿Esta seguro que quiere modificar la muestra?')) {
                     this.modificarMuestra(e)
                     } else {window.location.reload(true)} } }>
