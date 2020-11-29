@@ -200,7 +200,7 @@ class Tabla extends React.Component {
                     <Grid.Column>
                         {this.props.urlAdd ?
                         <Button as={Link}
-                        to={this.props.urlAdd} 
+                        to={{pathname: this.props.urlAdd, state: { prevPath: window.location.pathname }}}  
                         exact='true' floated='right' icon labelPosition='left' primary size='small'>
                             <Icon name='user'/>{this.props.buttonTitleAdd}
                         </Button> : null}

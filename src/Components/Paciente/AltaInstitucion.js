@@ -96,7 +96,8 @@ class AltaInstitucion extends Component {
    
   render(){
     if (!this.props.upToDateAllPatients) {
-      return <Redirect to={urlTablaPacientes} />
+      return <Redirect to={{pathname: (this.props.location.state.prevPath
+        ), state: { prevPath: window.location.pathname }}} />
     }
     return (
       <div className='altasPacientes'>

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Grid, Menu, Segment } from 'semantic-ui-react'
+import { connect } from 'react-redux';
 
 import NavBar from '../NavBar/NavBar'
 import MiPerfil from './MiPerfil';
@@ -32,9 +33,7 @@ class Ajustes extends Component {
         }
     }
 
-    render() {
-        const {activeItem} = this.state
-
+    renderAdmin(activeItem){
         return (
             <div>
                 <NavBar/>
@@ -70,8 +69,59 @@ class Ajustes extends Component {
             </div>
         )
     }
+
+    renderOtrosUsers(activeItem){
+        return (
+            <div>
+                <NavBar/>
+                <div className='avoidMenu'>
+                    <Grid>
+                        <Grid.Column width={4}>
+                            <Menu fluid vertical tabular>
+                                <Menu.Item
+                                    name='MiPerfil'
+                                    active={activeItem === 'MiPerfil'}
+                                    onClick={this.handleItemClick}
+                                />
+                               
+                            </Menu>
+                        </Grid.Column>
+
+                        <Grid.Column stretched width={12}>
+                            <Segment>
+                                {this.getMenuPane()}
+                            </Segment>
+                        </Grid.Column>
+                    </Grid>
+                </div>
+            </div>
+        )
+    }
+
+    getRenderByRole = (rol, activeItem) => {
+        if (rol==="ROLE_ADMIN") {
+          return this.renderAdmin(activeItem);
+        } else {
+          return this.renderOtrosUsers(activeItem);
+        }
+    
+    }
+
+    render() {
+        const {activeItem} = this.state
+
+        return (
+            this.getRenderByRole(this.props.userRole, activeItem)
+        )
+    }
 }
 
-Ajustes.propTypes = {};
 
-export default Ajustes;
+function mapStateToProps(state){
+    return {
+      userRole: state.user.loggedInUser.rol,
+      fetchingLoggedInUser: state.user.fetchingLoggedInUser,
+    }
+  }
+  
+  export default connect(mapStateToProps, {  })(Ajustes);
