@@ -5,7 +5,6 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 
 import NavBar from '../NavBar/NavBar';
-import { urlTablaAnalisis } from './../../Constants/NavUrl';
 import { checkAtributo, validateRequiredCombos, validateString } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import SelectedDeterminaciones from './SelectedDeterminaciones';
@@ -302,13 +301,14 @@ class FormNuevoAnalisis extends Component {
 
   render() {
     if (!this.props.upToDateAnalisisAll) {
-      return <Redirect to={urlTablaAnalisis} />
+      return <Redirect to={this.props.location.state.prevPath} />
     }
     return (
       <div className='union'>
         <NavBar/>
         <Container className='formAnalsis'>
-          <Button as= {Link} to={this.props.location.state.prevPath} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+          <Button as= {Link} to={{pathname: (this.props.location.state.prevPath
+          ), state: { prevPath: window.location.pathname }}} exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow left' /> Volver
           </Button>
           
