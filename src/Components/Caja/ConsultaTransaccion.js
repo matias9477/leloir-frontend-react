@@ -207,8 +207,7 @@ class ConsultaTransaccion extends Component {
 
                             
                             {
-                                this.state.analsis==='' 
-                                ?
+                                this.state.analsis==='' ?
                                 null
                                 :
                                 <Form.Field label='Analisis Id' control='input' 
