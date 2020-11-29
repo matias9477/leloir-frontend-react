@@ -1,0 +1,15 @@
+.LPAdmin{
+    display: flexbox;
+    justify-content: center;
+}
+
+.LPBio{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.domicilios {
+    padding-left: 2rem;
+    width: 50%;
+}
