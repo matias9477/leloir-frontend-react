@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
-import { Link } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
 import { urlTablaCaja } from '../../Constants/NavUrl';
@@ -120,6 +120,10 @@ class FormAlta extends Component {
 
 
     render() {
+        if (!this.props.upToDateAllTransacciones) {
+            return <Redirect to={{pathname: (this.props.location.state.prevPath
+                ), state: { prevPath: window.location.pathname }}} />
+          }
         return (
             <div>
                 <NavBar/>
@@ -245,9 +249,10 @@ const styleErrorSelect = {
 
 const mapStateToProps = state =>({
     fetching: state.caja.fetching,
+    upToDateAllTransacciones: state.caja.upToDateAllTransacciones,
     formasDePago: state.caja.formasDePago,
     conceptos: state.caja.conceptos,
 })
 
 
-export default connect(mapStateToProps,{ addTransaccionAction, getFormasDePagoAction, getConceptosAction })(FormAlta);
+export default withRouter(connect(mapStateToProps,{ addTransaccionAction, getFormasDePagoAction, getConceptosAction })(FormAlta));
