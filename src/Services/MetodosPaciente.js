@@ -84,7 +84,11 @@
   }
 
   export const getHumanDate = (date) => {
-    return date.slice(0, 10)
+    if (date===undefined){
+      return ''
+    } else {
+      return date.slice(0, 10)
+    }
   }
 
   export const getIdTipoAnimal = (tipoAnimal, tipos) => {
