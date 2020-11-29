@@ -308,7 +308,7 @@ class FormNuevoAnalisis extends Component {
       <div className='union'>
         <NavBar/>
         <Container className='formAnalsis'>
-          <Button as= {Link} to='/analisis' exact='true' floated='left' icon labelPosition='left' primary size='small'>
+          <Button as= {Link} to={this.props.location.state.prevPath} exact='true' floated='left' icon labelPosition='left' primary size='small'>
             <Icon name='arrow left' /> Volver
           </Button>
           
