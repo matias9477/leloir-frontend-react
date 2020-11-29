@@ -118,7 +118,9 @@ export let loginAction = (username, password) => (dispatch, getState) =>{
             type: LOGIN_SUCCESS,
             payload: response.data
         }
+        
     )
+    localStorage.clear();
     saveStorage("user", response.data)
     }).catch(e=>{
         console.log(e)
