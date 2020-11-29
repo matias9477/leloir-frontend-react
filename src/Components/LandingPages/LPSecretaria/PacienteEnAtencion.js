@@ -58,7 +58,7 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                             </List>
                         </Grid.Column>
                         <Grid.Column >
-                            <Button as= {Link} to={{pathname: urlConsultaPacientes + selected.id, state: { prevPath: window.location.pathname }}} primary size='small' icon>
+                            <Button as= {Link} to={{pathname: urlConsultaPacientes + selected.id, state: { prevPath: window.location.pathname, type: selected.tipoPaciente}}} primary size='small' icon>
                                 <Icon name='user'/>
                             </Button>
                             <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: urlAddAnalisis, state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
