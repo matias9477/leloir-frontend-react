@@ -1,11 +1,13 @@
 import axios from 'axios';
-import { urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos } from '../Constants/URLs';
+import { urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos, urlTransaccionById } from '../Constants/URLs';
 
 //constants
 let initialData = {
   fetching: false,
   transacciones: [],
   upToDateAllTransacciones: false,
+  upToDateTransaccionById: false,
+  transaction:'',
   formasDePago: [],
   upToDateAllFormasDePago: false,
   conceptos: [],
@@ -30,6 +32,10 @@ let GET_CONCEPTOS = "GET_CONCEPTOS";
 let GET_CONCEPTOS_SUCCESS = "GET_CONCEPTOS_SUCCESS";
 let GET_CONCEPTOS_ERROR = "GET_CONCEPTOS_ERROR";
 let GET_CONCEPTOS_FROM_STORE = "GET_CONCEPTOS_FROM_STORE";
+
+let GET_TRANSACCION_BY_ID = "GET_TRANSACCION_BY_ID"
+let GET_TRANSACCION_BY_ID_SUCCESS = "GET_TRANSACCION_BY_ID_SUCCESS"
+let GET_TRANSACCION_BY_ID_ERROR = "GET_TRANSACCION_BY_ID_ERROR"
 
 
 //reducer
@@ -68,6 +74,14 @@ export default function reducer(state = initialData, action) {
       return { ...state, fetching: false, error: action.payload, upToDateAllConceptos:false};
     case GET_CONCEPTOS_FROM_STORE:
       return { ...state, fetching: false, conceptos: action.payload };
+
+    case GET_TRANSACCION_BY_ID:
+      return {...state, fetching: true}
+    case GET_TRANSACCION_BY_ID_ERROR:
+      return {...state, fetching: false, error: action.payload}
+
+    case GET_TRANSACCION_BY_ID_SUCCESS:
+      return {...state, fetching: false, transaction: action.payload, upToDateTransaccionById: true}
 
     default:
       return state;
@@ -181,4 +195,24 @@ export let getConceptosAction = () => (dispatch, getState) => {
         });
       });
   }
+}
+
+export let getTransaccionByIdAction = (id) => (dispatch, getState) => {
+
+  dispatch({
+      type: GET_TRANSACCION_BY_ID,
+  })
+  return axios.get(`${urlTransaccionById}${id}`)
+  .then(res=>{
+      dispatch({
+          type: GET_TRANSACCION_BY_ID_SUCCESS,
+          payload: res.data,
+      })
+  })
+  .catch(err=>{
+      dispatch({
+          type: GET_TRANSACCION_BY_ID_ERROR,
+          payload: err.message
+      })
+  })
 }

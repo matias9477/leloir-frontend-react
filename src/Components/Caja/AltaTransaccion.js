@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Container, Form, Divider, Icon, Header, Segment } from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 

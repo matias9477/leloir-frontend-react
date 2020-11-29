@@ -34,6 +34,7 @@ import iFramePBI from './Components/Reportes/iFramePBI';
 
 import CajaContainer from './Components/Caja/CajaContainer';
 import AltaTransaccion from './Components/Caja/AltaTransaccion';
+import ConsultaTransaccion from './Components/Caja/ConsultaTransaccion';
 
 import TablaDomicilio from './Components/Domicilio/TablaDomicilio';
 import FormNuevoDomicilio from './Components/Domicilio/AltaDomicilio';
@@ -74,6 +75,7 @@ export default function Routes() {
             <AuthenticatedRoute exact path='/reportes' component={iFramePBI}/>
             
             <AuthenticatedRoute exact path='/caja' component={CajaContainer} />
+            <AuthenticatedRoute exact path='/caja/consulta/:id' component={ConsultaTransaccion} />
             <AuthenticatedRoute exact path='/caja/add' component={AltaTransaccion}/>
 
             <AuthenticatedRoute exact path='/domicilios' component={TablaDomicilio}/>

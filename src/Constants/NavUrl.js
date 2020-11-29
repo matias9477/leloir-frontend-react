@@ -30,3 +30,4 @@ export const urlAddDomicilio = '/domicilios/add';
 //CAJA
 export const urlTablaCaja = '/caja';
 export const urlAddTransaccion = '/caja/add';
+export const urlConsultaTransaccion = '/caja/consulta/';
