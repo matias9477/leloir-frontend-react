@@ -20,15 +20,15 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                     
                             <List>
                                 <List.Item>
-                                    <List.Content>Número de paciente: {selected.id}</List.Content>
-                                </List.Item>
-
-                                <List.Item>
-                                    <List.Content>Tipo Paciente: {titleCase(selected.tipoPaciente)}</List.Content>
+                                    <List.Content>Paciente {selected.id}</List.Content>
                                 </List.Item>
 
                                 <List.Item>
                                     <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
+                                </List.Item>
+
+                                <List.Item>
+                                    <List.Content>{titleCase(selected.tipoPaciente)}</List.Content>
                                 </List.Item>
 
                                 {checkAtributo(selected.nroDocumento) ? 
@@ -58,10 +58,10 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                             </List>
                         </Grid.Column>
                         <Grid.Column >
-                            <Button as= {Link} to={{pathname: `${urlConsultaPacientes}${selected.id}`, state: { prevPath: window.location.pathname }}} primary size='small' icon>
+                            <Button as= {Link} to={{pathname: urlConsultaPacientes + selected.id, state: { prevPath: window.location.pathname, type: selected.tipoPaciente}}} primary size='small' icon>
                                 <Icon name='user'/>
                             </Button>
-                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: {urlAddAnalisis}, state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
+                            <Button as= {Link} id='btnNuevoAnalisis' to={{pathname: urlAddAnalisis, state: { prevPath: window.location.pathname, paciente: selected }}} primary size='small' icon>
                                 <Icon name='syringe' /> 
                             </Button>
                         </Grid.Column>
