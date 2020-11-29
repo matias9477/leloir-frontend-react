@@ -52,7 +52,10 @@ class FormAlta extends Component {
           <div className='avoidMenu'>
           
           <Container className='btnHeader'>
-            <Button as= {Link} to={"/pacientes"} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+            <Button as= {Link} 
+            to={this.props.location.state.prevPath}  
+            exact='true' 
+            floated='left' icon labelPosition='left' primary size='small'>
               <Icon name='arrow alternate circle left' /> Volver
             </Button>
           </Container>

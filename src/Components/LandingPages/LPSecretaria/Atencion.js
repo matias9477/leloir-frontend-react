@@ -106,7 +106,7 @@ class Atencion extends Component {
                             />
                         </Grid.Column>
                         <Grid.Column width={5}>
-                            <Button as= {Link} to={{pathname: {urlAddPaciente}, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                            <Button as= {Link} to={{pathname: urlAddPaciente, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
                                 <Icon name='user'/> 
                             </Button>
                         </Grid.Column>
