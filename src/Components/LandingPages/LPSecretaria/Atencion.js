@@ -207,7 +207,6 @@ class Atencion extends Component {
          
 
     render() { 
-        var paci = JSON.parse(localStorage.getItem("current"));
         return (
             <div>
                 <Grid columns={2} divided>
