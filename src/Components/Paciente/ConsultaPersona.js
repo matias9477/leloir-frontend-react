@@ -115,7 +115,7 @@ class ConsultaPersona extends Component {
           documentos: Object.values(resolve.data).flat(),
       })
     }, (error) => {
-        console.log('Error combo paises', error.message)
+        console.log('Error combo docs', error.message)
     })
 
   }

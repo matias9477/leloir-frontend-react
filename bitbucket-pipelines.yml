@@ -35,6 +35,32 @@ pipelines:
                 SERVER: 'ec2-3-128-89-230.us-east-2.compute.amazonaws.com'
                 MODE: 'script'
                 COMMAND: 'deploy-script.sh'
+    master:
+      - step:
+          name: "Run tests"
+          image: node:10.15.0
+          script:
+            - npm install
+            - npm run test
+      - step:
+          name: "Build & Push Image"
+          deployment: Test
+          script:
+            - eval $(aws ecr get-login --region ${AWS_REGION} --no-include-email)
+            - docker build -t $AWS_CONTAINER_REGISTRY:release-latest .
+            - docker push $AWS_CONTAINER_REGISTRY:release-latest
+          services:
+            - docker
+      - step:
+          name: "Deploy to Test Environment"
+          trigger: manual
+          script:
+            - pipe: atlassian/ssh-run:0.2.5
+              variables:
+                SSH_USER: 'ubuntu'
+                SERVER: 'ec2-3-17-30-233.us-east-2.compute.amazonaws.com'
+                MODE: 'script'
+                COMMAND: 'deploy-script.sh'
 definitions:
   services:
     docker:
