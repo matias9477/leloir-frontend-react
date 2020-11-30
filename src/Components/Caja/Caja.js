@@ -5,6 +5,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import Tabla from '../Reusables/Tabla/Tabla';
 import { getTransaccionesAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar'
+import { urlAddTransaccion, urlConsultaTransaccion } from '../../Constants/NavUrl';
 import './cajaStyles.css';
 
 const columns = [
@@ -29,25 +30,6 @@ const columns = [
     dataField: 'efectivo',
     text: 'Efectivo',
     style: 'importeNegativo',
-  },
-];
-
-const columnsDetalle = [
-  {
-    dataField: 'detalle',
-    text: 'Detalle',
-  },
-  {
-    dataField: 'observacion',
-    text: 'Observaciones',
-  },
-  {
-    dataField: 'formaPago',
-    text: 'Forma de Pago',
-  },
-  {
-    dataField: 'importe',
-    text: 'Importe',
   },
 ];
 
@@ -84,12 +66,13 @@ class Caja extends Component {
             <Tabla
                 data={this.props.transacciones}
                 param='idTransaccion'
-                // urlAdd={''} //TODO:agregar url cuando se haga el registro de transacciones
-                // buttonTitleAdd='Nueva Transacción'
+                urlAdd={urlAddTransaccion}
+                buttonTitleAdd='Nueva Transacción'
                 columns={columns}
                 title='Caja'
-                expansibleRows={true}
-                expansibleRowsContent={columnsDetalle}
+                detailsValue='detalleTransacciones'
+                options={true}
+                path={urlConsultaTransaccion}
             />
           </div>
         )}
