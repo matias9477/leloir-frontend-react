@@ -3,6 +3,7 @@ export const urlDocs = '/api/tipos_documento/all'
 export const urlPaises = '/api/paises/all'
 export const urlSexos = '/api/sexo/all'
 export const urlTiposAnimales = '/api/tipos-animales/all'
+export const urlFormaDePago = '/api/forma_pago/all'
 
 //OBRAS SOCIALES
 export const urlObrasSoc = '/api/obras_sociales/all'
@@ -12,6 +13,7 @@ export const urlAlterObraSocial = '/api/obras_sociales/modificar/'
 export const urlPlanesXObra = '/api/obras_sociales/planes/'
 export const urlAltaObraSocial = '/api/obras_sociales/add'
 export const urlPlanes = '/api/obras_sociales/planes/'
+export const urlConceptos = '/api/concepto/all'
 
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
@@ -60,11 +62,12 @@ export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 
 //CAJA
 export const urlTransacciones = '/api/transaccion/all'
+export const urlAddTransaccion = '/api/transaccion/add'
+export const urlTransaccionById = '/api/transaccion/id/'
 
 //DOMICILIOS
-export const urlDomicilios = "/api/domicilios/all"
-export const urlDomicilioById = "/api/domicilios/id/"
-export const urlAlterDomicilio = "/api/domicilios/modificar/"
-export const urlAltaDomicilio = "/api/domicilios/add"
-export const urlDomiciliosTable = "/domicilios"
+export const urlDomicilios = '/api/domicilios/all'
+export const urlDomicilioById = '/api/domicilios/id/'
+export const urlAlterDomicilio = '/api/domicilios/modificar/'
+export const urlAltaDomicilio = '/api/domicilios/add'
 export const urlTomorrowDomicilios = '/api/domicilios/tomorrow'

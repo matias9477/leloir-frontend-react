@@ -13,7 +13,6 @@ import { checkAtributo } from '../../Services/MetodosDeValidacion';
 import { getPatientsAction } from '../../Redux/patientsDuck';
 import { addDomicilioAction } from '../../Redux/domiciliosDuck';
 import NavBar from '../NavBar/NavBar';
-import { urlDomiciliosTable } from '../../Constants/URLs';
 import { getFechaDomicilio } from '../../Services/MetodosPaciente';
 import { validateRequiredStringNum, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import './domicilioStyles.css';
@@ -52,7 +51,7 @@ class AltaDomicilio extends Component {
         <NavBar/>
         <div className='avoidMenu'>
           <Container className='btnHeader' style={{marginBottom: 'inherit'}}>
-            <Button className='boton' as= {Link} to={urlDomiciliosTable} exact='true' floated='left' icon labelPosition='left' primary size='small'>
+            <Button className='boton' as= {Link} to={urlTablaDomicilio} exact='true' floated='left' icon labelPosition='left' primary size='small'>
               <Icon name='arrow alternate circle left' /> Volver
             </Button>
 
@@ -101,7 +100,7 @@ class AltaDomicilio extends Component {
 
           <br/>
 
-          <Button as= {Link} to={urlDomiciliosTable} primary type="submit" onClick={this.nuevoDomicilio} className="boton"> Registrar Domicilio</Button >
+          <Button as= {Link} to={urlTablaDomicilio} primary type="submit" onClick={this.nuevoDomicilio} className="boton"> Registrar Domicilio</Button >
 
         </Form>  
           

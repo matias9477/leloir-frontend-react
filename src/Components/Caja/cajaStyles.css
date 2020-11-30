@@ -23,3 +23,25 @@
   background-color:  rgb(246, 246, 246);
   text-align: left;
 }
+
+/* .ui.grid>.column:not(.row), .ui.grid>.row>.column { */
+.css-2b097c-container { 
+  /* width: -webkit-fill-available; */
+  margin-bottom: 1.2rem;
+}
+
+.labelsSelect {
+  font-size: 0.94rem;
+  font-weight: 570;
+}
+
+.labelsSelectError {
+  color: #a54646;
+  font-size: 0.94rem;
+  font-weight: 570;
+}
+
+label span { 
+  color: red; 
+}
+
