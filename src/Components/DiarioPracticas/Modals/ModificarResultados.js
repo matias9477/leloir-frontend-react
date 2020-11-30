@@ -6,7 +6,6 @@ import SyncLoader from 'react-spinners/SyncLoader';
 import { Button, Divider, Table, Input } from 'semantic-ui-react';
 import { Modal } from './ModalAnalysisInput';
 import { cargarResultadosAction, getAnalisisByIdAction } from '../../../Redux/analisisDuck';
-import { validateOnlyNumbers } from '../../../Services/MetodosDeValidacion';
 
 class ModificarResultados extends Component {
     constructor(props) {

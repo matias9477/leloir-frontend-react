@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Table } from 'semantic-ui-react';
+import { Form, Table } from 'semantic-ui-react';
 
 import { Modal } from '../../DiarioPracticas/Modals/ModalAnalysisInput'
 
