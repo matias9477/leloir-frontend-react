@@ -49,7 +49,7 @@ class FormConsulta extends Component {
       },
       { 
         menuItem: 'Historial', render: () => 
-          <Tab.Pane>
+          <Tab.Pane loading={this.props.fetching}>
             <Historial match={this.props.match}/>
           </Tab.Pane> 
       },

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Icon, Table, Button } from 'semantic-ui-react'
+import ClipLoader from 'react-spinners/ClipLoader';
+
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
 import './../styles.css'
@@ -72,7 +74,10 @@ class Historial extends Component {
         return (
             <div>
                 <div className='historialPaciente'>
-                    {fetching ?  null : this.renderTable(this.props.history)}
+                    {fetching ?
+                        null
+                      :
+                      this.renderTable(this.props.history)}
                 </div>
                 
             </div>
