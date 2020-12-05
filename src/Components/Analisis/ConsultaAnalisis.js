@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Form, Icon, Grid, Table, Card, List, Label } from 'semantic-ui-react';
+import { Button, Header, Form, Icon, Grid, Table, Card, List, Label, Divider } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -14,6 +14,7 @@ import RevisarResultados from '../DiarioPracticas/Modals/RevisarResultados';
 import { getAnalisisByIdAction, emitirAnalisisAction } from '../../Redux/analisisDuck';
 import { getTiposMuestrasAction, addMuestraAction } from '../../Redux/muestrasDuck';
 import VerAnalisis from './Modals/VerAnalisisEntregado';
+import VerDetallePago from './Modals/VerDetallePago';
 import { urlConsultaMuestras } from '../../Constants/NavUrl';
 import './analisisStyle.css';
 
@@ -49,6 +50,21 @@ class ConsultaAnalisis extends Component {
         })
     }
 
+
+    handleModalContentTransaccion() {
+        switch (this.state.currentModal) {
+            case 'VER_TRANSACCION':
+                return (
+                    <VerDetallePago show={this.state.show}
+                                    callback={this.hideModalCallback}
+                                    analisis={this.state.analisis}/>
+                )
+            default:
+                return 
+        }
+    }
+   
+
     postMuestra = () =>{
         const errorTipo = validateRequiredCombos(this.state.tipo)
 
@@ -60,7 +76,11 @@ class ConsultaAnalisis extends Component {
                 'tipoMuestraId': this.state.tipo.tipoMuestraId,
             }
 
-            this.props.addMuestraAction(data)
+            this.props.addMuestraAction(data);
+
+            this.setState({
+                tipo: ''
+            })
 
         } else {
             alert('Seleccione un tipo de muestra para continuar.')
@@ -80,7 +100,8 @@ class ConsultaAnalisis extends Component {
                 <Form>
                     <Header>Paciente</Header>
                     <Form.Field readOnly={true} label='Fecha Creación' value={this.state.analisis ? getHumanDate(this.state.analisis.createdAt) : ''} control='input' />
-                    <Form.Input readOnly={true} label='Nombre' iconPosition='left' value={this.state.analisis !== undefined ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
+                    
+                    <Form.Input readOnly={true} label='Paciente' iconPosition='left' value={this.state.analisis !== undefined ? this.state.analisis.paciente.nombre + ' ' + checkAtributo(this.state.analisis.paciente.apellido) : ''}>
                         <Icon name={this.getIconTipo(this.state.analisis ? this.state.analisis.paciente.type : '')}/>
                         <input/>
                     </Form.Input>
@@ -109,11 +130,13 @@ class ConsultaAnalisis extends Component {
                     : null}
 
                     {this.state.analisis.paciente.type === 'com.leloir.backend.domain.Animal' ?
-                    <div>
-                        <Form.Field readOnly={true} label='Tipo de Animal' value={this.state.analisis ? this.state.analisis.paciente.tipoAnimal.nombre : ''} control='input' />
-                        <Form.Field readOnly={true} label='Propietario' value={this.state.analisis ? this.state.analisis.paciente.propietario : ''} control='input' />
-                    </div>
+                        <div>
+                            <Form.Field readOnly={true} label='Tipo de Animal' value={this.state.analisis ? this.state.analisis.paciente.tipoAnimal.nombre : ''} control='input' />
+                            <Form.Field readOnly={true} label='Propietario' value={this.state.analisis ? this.state.analisis.paciente.propietario : ''} control='input' style={{marginBottom: '1.1rem'}} />
+                        </div>
                     : null}
+                    
+                    <Form.Field readOnly={true} label='Medico Solicitante' value={ this.state.analisis.medico.nombre !== '' ? this.state.analisis.medico.nombre : "No especificado"} control='input'/>
                 </Form>
             )
         }
@@ -125,59 +148,67 @@ class ConsultaAnalisis extends Component {
                 <div>
                     <Header>Muestras</Header>
 
-                    {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? <div>
+                    {(this.state.analisis.muestras.length === 0 || this.state.analisis.muestras.length === undefined) ? 
+                    
+                    <div>
+                        {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
+                            <div>
+                                <div>
+                                    No existen muestras para este análisis.
+                                </div>
+                                <Button icon labelPosition='left' style={{marginTop: '1.2rem'}} primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
+                                    <Icon name='plus' /> Añadir muestra
+                                </Button>
+                            </div>
+                        :  
+                            <div>
+                                No existen muestras para este análisis.
+                                {(this.state.showMuestra) ? this.createMuestra() : null}
+                            </div> 
+                        }
+                    </div>:
+                
+                    <div> 
+                        <div className='tablaMuestras'>
+                            <Table compact>
+                                <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Id</Table.HeaderCell>
+                                    <Table.HeaderCell>Tipo</Table.HeaderCell>
+                                    <Table.HeaderCell>Estado</Table.HeaderCell>
+                                    <Table.HeaderCell></Table.HeaderCell>
+                                </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body>
+                                {this.state.analisis.muestras.map((muestra, index) => (
+                                <Table.Row key={index} value={muestra}>
+                                    <Table.Cell>{muestra.idMuestra}</Table.Cell>
+                                    <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
+                                    <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
+                                    <Table.Cell>
+                                        <Button circular icon='settings' size='mini'
+                                            as= {Link}
+                                            to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
+                                            exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
+                                            >
+                                        </Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                                ))}
+                                </Table.Body>
+
+                            </Table>
+                        </div>
 
                         {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
-                            <Button icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} className='muestras'>
-                                <Icon name='plus' /> Añadir muestra
+                            <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true})} style={{width: '-webkit-fill-available'}}>
+                                <Icon name='plus'/> Añadir muestra
                             </Button>
-                        : 'No existen muestras para este análisis.' }
-                    </div>:
+                        : (this.state.showMuestra) ? this.createMuestra() : null }
+                    </div>
+                    }                  
 
-                    <Table compact>
-                        <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Id</Table.HeaderCell>
-                            <Table.HeaderCell>Tipo</Table.HeaderCell>
-                            <Table.HeaderCell>Estado</Table.HeaderCell>
-                            <Table.HeaderCell></Table.HeaderCell>
-                        </Table.Row>
-                        </Table.Header>
-
-                        <Table.Body>
-                        {this.state.analisis.muestras.map((muestra, index) => (
-                        <Table.Row key={index} value={muestra}>
-                            <Table.Cell>{muestra.idMuestra}</Table.Cell>
-                            <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
-                            <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
-                            <Table.Cell>
-                                <Button circular icon='settings' size='mini'
-                                    as= {Link}
-                                    to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
-                                    exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
-                                    >
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
-                        ))}
-                        </Table.Body>
-
-                        <Table.Footer fullWidth>
-                            <Table.Row>
-                                <Table.HeaderCell />
-                                <Table.HeaderCell colSpan='4'>
-                                    {(!this.state.showMuestra && (this.state.analisis.estadoAnalisis.nombre !== 'ENTREGADO' && this.state.analisis.estadoAnalisis.nombre !== 'CANCELADO' && this.state.analisis.estadoAnalisis.nombre !== 'PREPARADO' )) ?
-                                        <Button floated='right' icon labelPosition='left' primary size='small' onClick={() => this.setState({showMuestra: true}) }>
-                                            <Icon name='plus'/> Añadir muestra
-                                        </Button>
-                                    : null }
-                                </Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Footer>
-                    </Table>
-                    }
-
-                    {this.state.showMuestra ? this.createMuestra() : null}
                 </div>
             )
     
@@ -187,8 +218,8 @@ class ConsultaAnalisis extends Component {
     createMuestra = () => {
         return(
             <div className={!this.state.errorTipo ? 'createMuestra' : null}>
-                <Grid width='equal'>
-                    <Grid.Column width={10}>
+                <Grid>
+                    <Grid.Column width={12} style={{paddingRight: '0'}}>
                         <Select
                             name='tipo muestra'
                             value={this.state.tipo}
@@ -202,11 +233,11 @@ class ConsultaAnalisis extends Component {
 
                     </Grid.Column>
 
-                    <Grid.Column width={6}>
+                    <Grid.Column width={4}>
                         <Button primary size='small' floated='center' onClick={this.postMuestra} >
-                            Registrar muestra
+                            Registrar
                         </Button>
-                    </Grid.Column>
+                    </Grid.Column> 
                 </Grid>
 
             </div>
@@ -223,7 +254,7 @@ class ConsultaAnalisis extends Component {
                             {this.state.analisis.estadoAnalisis.nombre}
                         </Label>
 
-                        <Card.Content>
+                        <Card.Content className='cardDeterminaciones'>
                             <Card.Description textAlign='left'>
                                 <List>
                                     {this.state.analisis.determinaciones.map((analisis, index) =>
@@ -310,6 +341,63 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+    renderTransaccionPago() {
+        return (
+            <div>
+                <Header>Estado de pago</Header>
+                <Card fluid raised centered>
+                    <Label as='a' attached='top' color={this.isPagado(this.state.analisis.pagado) === 'Pagado' ? 'green' : 'red'}> 
+                        {this.isPagado(this.state.analisis.pagado)}
+                    </Label>
+
+                    <Card.Content>
+                        <Card.Description textAlign='left'>
+                            <Table compact>
+                                <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Concepto</Table.HeaderCell>
+                                    <Table.HeaderCell style={{textAlign: 'right'}}>Valor</Table.HeaderCell>
+                                </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body>
+                                    <Table.Row>
+                                        <Table.Cell>Coseguro</Table.Cell>
+                                        <Table.Cell style={{textAlign: 'right'}}>{this.state.analisis.coseguro}</Table.Cell>
+                                    </Table.Row>
+                                    <Table.Row>
+                                        <Table.Cell>Cobertura</Table.Cell>
+                                        <Table.Cell style={{textAlign: 'right'}}>{this.state.analisis.cobertura}</Table.Cell>
+                                    </Table.Row>
+                                </Table.Body>
+                                <Table.Footer fullWidth>
+                                    <Table.HeaderCell/>
+                                    <Table.HeaderCell style={{textAlign: 'right'}}>
+                                        {this.state.analisis.costoAnalisis}
+                                    </Table.HeaderCell>
+                                </Table.Footer>
+                            </Table>
+                        </Card.Description>
+                        
+                        <Button  basic color='black' style={{width: '-webkit-fill-available'}}  onClick={() => this.showModal('VER_TRANSACCION')}>
+                            Ver Detalle
+                        </Button>
+                    </Card.Content>
+
+                   
+                </Card>
+            </div>
+        )
+    }
+
+    isPagado(bool){
+        if (bool===false) {
+            return ("Falta pagar $" + this.state.analisis.faltantePago)
+        } else {
+            return "Pagado"
+        }
+    }
+
     handleModalContent() {
         switch (this.state.currentModal) {
             case 'MODIFICAR':
@@ -345,14 +433,13 @@ class ConsultaAnalisis extends Component {
         }
     }
 
-
     render() {
         var prevURL = this.setPrevPath()
         return (
             <div>
                 <NavBar/>
                 <div className='avoidMenu'>
-                    <Grid columns={3} style={{marginLeft: '0px'}}>
+                    <Grid columns={2} style={{marginLeft: '0px'}}>
                         <Grid.Row style={{marginLeft: '0px'}}>
                             <Button as= {Link} to={prevURL} exact='true' floated='left' icon labelPosition='left' primary size='small'>
                                 <Icon name='arrow alternate circle left' /> Volver
@@ -365,22 +452,28 @@ class ConsultaAnalisis extends Component {
                                 color={'black'}
                             />
                             </div> :
-            
+        
+
                             <Grid.Row>
-                                <Grid.Column>
+                                <Grid.Column width={5}>
                                     {this.patientRender()}
                                 </Grid.Column>
-                                <Grid.Column>
+                                <Grid.Column width={7}>
                                     {this.determinacionesRender()}
-                                </Grid.Column>
-                                <Grid.Column>
+                                    <Divider/>  
                                     {this.muestrasRender()}
                                 </Grid.Column>
+                                <Grid.Column width={4}>
+                                    {this.renderTransaccionPago()}
+                                </Grid.Column>
                             </Grid.Row>
+
+                            
                         }
                     </Grid>
                     
                     {this.handleModalContent()}
+                    {this.handleModalContentTransaccion()}
                 </div>
             </div>
         )
@@ -395,7 +488,6 @@ class ConsultaAnalisis extends Component {
         this.setState({
             show: true,
             currentModal: modal
-
         })
     }
 

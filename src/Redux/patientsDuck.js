@@ -1,12 +1,14 @@
 import axios from 'axios'
-import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre, urlHistorial  } from '../Constants/URLs'
+import { urlPacientes, urlSwitchAltaPaciente, urlAltaPaciente, urlGetPacienteById, urlAlterPaciente, urlPacienteByNombre, urlHistorial, urlPacientesEnAlta  } from '../Constants/URLs'
 
 
 //constants
 let initialData = {
     fetching: false,
     patients: [],
+    patientsAlta: [],
     upToDateAllPatients: false,
+    upToDateAllPatientsAlta: false,
     upToDatePatientById: false,
     patient: '',
     history: [],    
@@ -18,6 +20,11 @@ let GET_PATIENTS = "GET_PATIENTS"
 let GET_PATIENTS_SUCCESS = "GET_PATIENTS_SUCCESS"
 let GET_PATIENTS_ERROR = "GET_PATIENTS_ERROR"
 let GET_PATIENTS_FROM_STORE = "GET_PATIENTS_FROM_STORE"
+
+let GET_PATIENTS_EN_ALTA = "GET_PATIENTS_EN_ALTA"
+let GET_PATIENTS_EN_ALTA_SUCCESS = "GET_PATIENTS_EN_ALTA_SUCCESS"
+let GET_PATIENTS_EN_ALTA_ERROR = "GET_PATIENTS_EN_ALTA_ERROR"
+let GET_PATIENTS_EN_ALTA_FROM_STORE = "GET_PATIENTS_EN_ALTA_FROM_STORE"
 
 let GET_PATIENT_HISTORY = "GET_PATIENT_HISTORY"
 let GET_PATIENT_HISTORY_SUCCESS = "GET_PATIENT_HISTORY_SUCCESS"
@@ -58,10 +65,19 @@ export default function reducer(state = initialData, action){
         case GET_PATIENTS_FROM_STORE:
             return {...state, fetching: false, patients: action.payload}
 
+        case GET_PATIENTS_EN_ALTA:
+            return {...state, fetching:true}
+        case GET_PATIENTS_EN_ALTA_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case GET_PATIENTS_EN_ALTA_SUCCESS:
+            return {...state, fetching:false, patientsAlta: action.payload, upToDateAllPatients:true}
+        case GET_PATIENTS_EN_ALTA_FROM_STORE:
+            return {...state, fetching: false, patientsAlta: action.payload}
+
         case BIT_INVERSE:
             return {...state, fetching:true}
         case BIT_INVERSE_ERROR:
-            return {...state, fetching:false, error:action.payload, upToDateAllPatients: false}
+            return {...state, fetching:false, error:action.payload, upToDateAllPatients: true}
         case BIT_INVERSE_SUCCESS:
             return {...state, fetching:false, upToDateAllPatients:false, upToDatePatientById:false}
 
@@ -107,6 +123,12 @@ export default function reducer(state = initialData, action){
     }
 }
 
+function saveStorage(name, data){
+    if (data != null){
+         localStorage.setItem(name, JSON.stringify(data))
+    }
+}
+
 
 //actions
 
@@ -139,6 +161,35 @@ export let getPatientsAction = () => (dispatch, getState) =>{
     }
 }
 
+export let getPatientsAltaAction = () => (dispatch, getState) =>{
+    //HOW TO usar el estado para poner una condición para las httprequest
+    const state = getState()
+
+    if(state.patients.upToDateAllPatientsAlta){
+        dispatch({
+            type: GET_PATIENTS_EN_ALTA_FROM_STORE,
+            payload: state.patients.patientsAlta,
+        })
+    } else{
+        dispatch({
+            type: GET_PATIENTS_EN_ALTA,
+        })
+        return axios.get(urlPacientesEnAlta)
+        .then(res=>{
+            dispatch({
+                type: GET_PATIENTS_EN_ALTA_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_PATIENTS_EN_ALTA_ERROR,
+                payload: err.message
+            })
+        })
+    }
+}
+
 export let getPatientHistoryAction = (id) => (dispatch, getState) =>{
         dispatch({
             type: GET_PATIENT_HISTORY,
@@ -158,7 +209,7 @@ export let getPatientHistoryAction = (id) => (dispatch, getState) =>{
                 payload: err.message
             })
         })
-    }
+}
 
 export let switchAltaAction = (id) => (dispatch, getState) =>{
     const url = window.document.location.pathname
@@ -224,6 +275,7 @@ export let getPatientByIdAction = (id) => (dispatch, getState) => {
             type: GET_PATIENT_BY_ID_SUCCESS,
             payload: res.data,
         })
+        saveStorage("patientType", res.data.type)
     })
     .catch(err=>{
         dispatch({

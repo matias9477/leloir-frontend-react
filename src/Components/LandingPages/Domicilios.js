@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Header } from 'semantic-ui-react'
-import { getTomorrowDomicilios } from '../../Redux/domiciliosDuck'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux';
+
+import { getTomorrowDomicilios } from '../../Redux/domiciliosDuck'
 import './domicilios.css';
 
 
@@ -23,10 +24,11 @@ class Domicilios extends Component {
                       </Table.Row>
     }
 
-    renderDomicilios = (listDomicilios) =>{
-        if(listDomicilios.length>0){
-            return listDomicilios;
-        } else return <Header as='h5' icon='home' textAlign='right' color='red'>No hay domicilios registrados para mañana.</Header>
+
+    messageNoDomicilios = (listDomicilios) =>{
+        if(listDomicilios===undefined || listDomicilios.length>0 ){
+            return null;
+        } else return <Header as='h5' icon='home' textAlign='center' color='red'>No hay domicilios registrados para mañana.</Header>
     }
 
 
@@ -66,6 +68,7 @@ class Domicilios extends Component {
                             </Table.Body>
                     }
                 </Table>
+                {this.messageNoDomicilios(listDomicilios)}
             </div>
             </div>
         );
