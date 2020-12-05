@@ -63,45 +63,50 @@ class RevisarResultados extends Component {
         if (this.state.currentAnalisis!==null && this.state.currentAnalisis.determinaciones!==undefined && this.state.currentAnalisis.determinaciones.length>0) {
             return (
                 <div>
-                    <Table basic='very' compact='very'>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Código</Table.HeaderCell>
-                                <Table.HeaderCell>Determinación</Table.HeaderCell>
-                                <Table.HeaderCell>Resultado</Table.HeaderCell>
-                                <Table.HeaderCell>Confirmación</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header> 
+                    <div className='tablaScrollModals'>
+                        <Table basic='very' compact='very'>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Código</Table.HeaderCell>
+                                    <Table.HeaderCell>Determinación</Table.HeaderCell>
+                                    <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                    <Table.HeaderCell>Confirmación</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header> 
 
-                        <Table.Body>
-                            {this.props.analisis.determinaciones.map((det, index) => {
-                                return( 
-                                    <Table.Row  key={index} value={det}>
-                                        <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
-                                        <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                                        <Table.Cell>{det.resultado}</Table.Cell>
-                                        <Table.Cell>
-                                            <Button.Group>
-                                                <Button
-                                                    active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR }
-                                                    color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR ? 'red' : null}
-                                                    onClick={() => this.changeResult(index, estadosDeterminaciones.REPETIR, 4)}>
-                                                    Repetir
-                                                </Button>
-                                                <Button.Or text='o'/>
-                                                <Button
-                                                    active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO }
-                                                    color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO ? 'green' : null}
-                                                    onClick={() => this.changeResult(index, estadosDeterminaciones.APROBADO, 3)}>
-                                                    Aprobar
-                                                </Button>
-                                            </Button.Group>
-                                        </Table.Cell>
-                                    </Table.Row>
-                                )
-                            })}
-                        </Table.Body>
-                    </Table>
+                            <Table.Body>
+                                {this.props.analisis.determinaciones.map((det, index) => {
+                                    return( 
+                                        <Table.Row  key={index} value={det}>
+                                            <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
+                                            <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
+                                            {det.determinacion.unidadMedida===null ?
+                                                <Table.Cell>{det.resultado}</Table.Cell> :
+                                                <Table.Cell>{det.resultado + ' ' + det.determinacion.unidadMedida.unidad}</Table.Cell>
+                                            }
+                                            <Table.Cell>
+                                                <Button.Group>
+                                                    <Button
+                                                        active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR }
+                                                        color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.REPETIR ? 'red' : null}
+                                                        onClick={() => this.changeResult(index, estadosDeterminaciones.REPETIR, 4)}>
+                                                        Repetir
+                                                    </Button>
+                                                    <Button.Or text='o'/>
+                                                    <Button
+                                                        active={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO }
+                                                        color={this.state.currentAnalisis.determinaciones[index].estadoDetalleAnalisis.nombre === estadosDeterminaciones.APROBADO ? 'green' : null}
+                                                        onClick={() => this.changeResult(index, estadosDeterminaciones.APROBADO, 3)}>
+                                                        Aprobar
+                                                    </Button>
+                                                </Button.Group>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    )
+                                })}
+                            </Table.Body>
+                        </Table>
+                    </div>
                     <Button
                         basic color='blue'
                         size='small'

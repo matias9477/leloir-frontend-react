@@ -38,15 +38,15 @@ class AnalisisPendientes extends Component {
         const { analisisPendientes, fetching } = this.props;
         return (
             <div className="analisis-pendientes"> 
+                <Header as='h3' dividing>Análisis para revisar</Header>
                 {fetching ? 
-                    <div className='spinner'>
+                    <div>
                         <ClipLoader
-                            size={60}
+                            size={100}
                             color={'black'}
                         />
                     </div> :
                     <div>
-                        <Header as='h3' dividing>Análisis para revisar</Header>
 
                         {this.renderList(analisisPendientes)}
                     </div>
