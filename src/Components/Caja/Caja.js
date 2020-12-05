@@ -25,12 +25,7 @@ const columns = [
     dataField: 'importe',
     text: 'Importe',
     style: 'importeNegativo',
-  },
-  {
-    dataField: 'efectivo',
-    text: 'Efectivo',
-    style: 'importeNegativo',
-  },
+  }
 ];
 
 

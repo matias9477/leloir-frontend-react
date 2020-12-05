@@ -114,7 +114,7 @@ class AltaDomicilio extends Component {
     var data = {
       "direccion": titleCase(this.state.direccion),
       "descripcion": this.state.descripcion,
-      "idPaciente": this.state.selectedPaciente.id,
+      "idPaciente": this.state.selectedPaciente.id || null,
       "fechaVisita": getFechaDomicilio(this.state.fecha),
     };
 
