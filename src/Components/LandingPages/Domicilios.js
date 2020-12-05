@@ -36,11 +36,17 @@ class Domicilios extends Component {
         if(!fetching){
          listDomicilios = domicilios.map(this.createDomicilio)
         }
+
+        var date = new Date()
+
+        console.log(date.getDate()+1)
+        console.log(date.getMonth()+1)
+
         return (
             <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
             <div className='Domicilios'>
-                <Header as='h3'>Domicilios del día</Header>
+            <Header as='h3'>Domicilios del día {date.getDate()+1}/{date.getMonth()+1}/{date.getFullYear()}</Header>
                 <Table color="blue" key="blue">
                     <Table.Header>
                         <Table.Row>
