@@ -10,6 +10,10 @@ import { urlConsultaMuestras } from '../../Constants/NavUrl';
 
 const columns = [
     {
+        dataField: 'idMuestra',
+        text: 'Id Muestra',
+    },
+    {
         dataField: 'paciente',
         text: 'Paciente',
     },
