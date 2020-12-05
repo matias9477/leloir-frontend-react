@@ -64,7 +64,7 @@ class Domicilios extends Component {
                             />
                                 :
                             <Table.Body>
-                                {this.renderDomicilios(listDomicilios)}
+                                {listDomicilios}
                             </Table.Body>
                     }
                 </Table>
