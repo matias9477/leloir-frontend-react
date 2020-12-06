@@ -37,6 +37,7 @@ class Charts extends Component {
                     
                     <div>
                         <PieChart width={400} height={400}>
+                            {/* TODO: acá donde está data={data} debería ir la data que llega desde el store, sería this.props.ranking */}
                             <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#067ebf" label />
                             <Tooltip />
                         </PieChart>
