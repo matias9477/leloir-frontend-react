@@ -34,6 +34,9 @@ class ConsultaAnalisis extends Component {
 
             show: false,
             currentModal: null,
+
+            fetching: false,
+            upToDateAllTransacciones: true,
           })
     }
 
@@ -47,9 +50,9 @@ class ConsultaAnalisis extends Component {
             tipos: nextProp.tiposMuestras,
             analisis: nextProp.analisis,
             fetching: nextProp.fetching,
+            upToDateAllTransacciones: nextProp.upToDateAllTransacciones,
         })
     }
-
 
     handleModalContentTransaccion() {
         switch (this.state.currentModal) {
@@ -64,7 +67,6 @@ class ConsultaAnalisis extends Component {
         }
     }
    
-
     postMuestra = () =>{
         const errorTipo = validateRequiredCombos(this.state.tipo)
 
@@ -182,19 +184,19 @@ class ConsultaAnalisis extends Component {
 
                                 <Table.Body>
                                 {this.state.analisis.muestras.map((muestra, index) => (
-                                <Table.Row key={index} value={muestra}>
-                                    <Table.Cell>{muestra.idMuestra}</Table.Cell>
-                                    <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
-                                    <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
-                                    <Table.Cell>
-                                        <Button circular icon='settings' size='mini'
-                                            as= {Link}
-                                            to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
-                                            exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
-                                            >
-                                        </Button>
-                                    </Table.Cell>
-                                </Table.Row>
+                                    <Table.Row key={index} value={muestra}>
+                                        <Table.Cell>{muestra.idMuestra}</Table.Cell>
+                                        <Table.Cell>{muestra.tipoMuestra.nombre}</Table.Cell>
+                                        <Table.Cell>{muestra.estadoMuestra.nombre}</Table.Cell>
+                                        <Table.Cell>
+                                            <Button circular icon='settings' size='mini'
+                                                as= {Link}
+                                                to={{pathname: `${urlConsultaMuestras}${muestra.idMuestra}`, state: { prevPath: window.location.pathname }}}
+                                                exact='true' style={{marginLeft: 'auto', marginRight: 'auto'}}
+                                                >
+                                            </Button>
+                                        </Table.Cell>
+                                    </Table.Row>
                                 ))}
                                 </Table.Body>
 
@@ -342,52 +344,59 @@ class ConsultaAnalisis extends Component {
     }
 
     renderTransaccionPago() {
-        return (
-            <div>
-                <Header>Estado de pago</Header>
-                <Card fluid raised centered>
-                    <Label as='a' attached='top' color={this.isPagado(this.state.analisis.pagado) === 'Pagado' ? 'green' : 'red'}> 
-                        {this.isPagado(this.state.analisis.pagado)}
-                    </Label>
+        if(this.state.analisis){ 
+            return (
+                <div>
+                    <Header>Estado de pago</Header>
+                    <Card fluid raised centered>
+                        <Label as='a' attached='top' color={this.isPagado(this.state.analisis.pagado) === 'Pagado' ? 'green' : 'red'}> 
+                            {this.isPagado(this.state.analisis.pagado)}
+                        </Label>
 
-                    <Card.Content>
-                        <Card.Description textAlign='left'>
-                            <Table compact>
-                                <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>Concepto</Table.HeaderCell>
-                                    <Table.HeaderCell style={{textAlign: 'right'}}>Valor</Table.HeaderCell>
-                                </Table.Row>
-                                </Table.Header>
-
-                                <Table.Body>
+                        <Card.Content>
+                            <Card.Description textAlign='left'>
+                                <Table compact>
+                                    <Table.Header>
                                     <Table.Row>
-                                        <Table.Cell>Coseguro</Table.Cell>
-                                        <Table.Cell style={{textAlign: 'right'}}>{this.state.analisis.coseguro}</Table.Cell>
+                                        <Table.HeaderCell>Fecha</Table.HeaderCell>
+                                        <Table.HeaderCell>Forma de Pago</Table.HeaderCell>
+                                        <Table.HeaderCell style={{textAlign: 'right'}}>Monto</Table.HeaderCell>
                                     </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell>Cobertura</Table.Cell>
-                                        <Table.Cell style={{textAlign: 'right'}}>{this.state.analisis.cobertura}</Table.Cell>
-                                    </Table.Row>
-                                </Table.Body>
-                                <Table.Footer fullWidth>
-                                    <Table.HeaderCell/>
-                                    <Table.HeaderCell style={{textAlign: 'right'}}>
-                                        {this.state.analisis.costoAnalisis}
-                                    </Table.HeaderCell>
-                                </Table.Footer>
-                            </Table>
-                        </Card.Description>
-                        
-                        <Button  basic color='black' style={{width: '-webkit-fill-available'}}  onClick={() => this.showModal('VER_TRANSACCION')}>
-                            Ver Detalle
-                        </Button>
-                    </Card.Content>
+                                    </Table.Header>
 
-                   
-                </Card>
-            </div>
-        )
+                                    <Table.Body>
+                                        {this.state.analisis.transacciones.map((transaccion, index) => ( 
+                                            <Table.Row key={index}>
+                                                <Table.Cell>{transaccion.fecha}</Table.Cell>
+                                                <Table.Cell>{transaccion.formaPago}</Table.Cell>
+                                                <Table.Cell style={{textAlign: 'right'}}>${transaccion.importe}</Table.Cell>
+                                            </Table.Row>
+                                        ))}
+                                    </Table.Body>
+                                </Table>
+                                {this.state.analisis.transacciones.length>0 ? 
+                                    <div>
+                                        <label style={{right: '1rem', position: 'absolute'}}>Total coseguro: ${this.state.analisis.coseguro}</label> 
+                                        <br/>
+                                    </div>
+                                    : 
+                                    <div>
+                                        <label>No hay transacciones registradas</label>
+                                    </div>
+                                }
+                            </Card.Description>
+                            {this.state.analisis.pagado ? null:
+                                <Button basic color='black' style={{width: '-webkit-fill-available'}}  onClick={() => this.showModal('VER_TRANSACCION')}>
+                                    Agregar Pago
+                                </Button>
+                            }
+                        </Card.Content>
+
+                    
+                    </Card>
+                </div>
+            )
+        }
     }
 
     isPagado(bool){
@@ -433,8 +442,20 @@ class ConsultaAnalisis extends Component {
         }
     }
 
+    reFetch(){
+        if(this.props.upToDateAllTransacciones){
+            this.props.getAnalisisByIdAction(this.state.idAnalisis)
+            this.setState({
+                upToDateAllTransacciones: true
+            })
+        }
+        
+    }
+
     render() {
+        this.reFetch()
         var prevURL = this.setPrevPath()
+        
         return (
             <div>
                 <NavBar/>
@@ -518,6 +539,7 @@ const mapStateToProps = state => ({
     fetching: state.analisis.fetchingAnalisisById,
     tiposMuestras: state.muestras.tiposMuestras,
     analisis: state.analisis.analisisById,
+    upToDateAllTransacciones: state.caja.upToDateAllTransacciones,
 })
 
 export default connect(mapStateToProps, 

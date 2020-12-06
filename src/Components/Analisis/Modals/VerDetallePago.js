@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Table } from 'semantic-ui-react';
+import { connect } from 'react-redux'
+import { Button, Form, Label } from 'semantic-ui-react';
+import Select from 'react-select';
 
-import { Modal } from '../../DiarioPracticas/Modals/ModalAnalysisInput'
-
+import { Modal } from '../../DiarioPracticas/Modals/ModalAnalysisInput';
+import { validateRequiredCombos, validateMenorA } from './../../../Services/MetodosDeValidacion';
+import { addTransaccionAction, getFormasDePagoAction } from '../../../Redux/cajaDuck';
 import '../analisisStyle.css';
 
 class ModalDetallePago extends Component {
@@ -10,11 +13,18 @@ class ModalDetallePago extends Component {
         super(props)
         this.state = {
             show: false,
+
+            formaPago: '',
+            importe: '',
+
+            errorFormaPago: true,
+            errorImporte: true,
         }
     }
 
     componentDidMount() {
         this.showModal()
+        this.props.getFormasDePagoAction()
     }
 
     showModal = () => {
@@ -30,43 +40,97 @@ class ModalDetallePago extends Component {
         }
     }
 
-    detalle = () => {
-        return(
-            <Form style={{padding: '0 5rem'}} compact className='tablaDetallePago'>
-                <Table basic='very'>
-                    <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Código</Table.HeaderCell>
-                        <Table.HeaderCell>Nombre</Table.HeaderCell>
-                        <Table.HeaderCell>Cobertura</Table.HeaderCell>
-                        <Table.HeaderCell>Coseguro</Table.HeaderCell>
-                        <Table.HeaderCell>Precio Final</Table.HeaderCell>
-                    </Table.Row>
-                    </Table.Header>
-
-                    <Table.Body>
-                    {this.props.analisis.determinaciones!==undefined ? this.props.analisis.determinaciones.map((det, index) => (
-                        <Table.Row key={index} textAlign='right'>
-                            <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
-                            <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
-                            <Table.Cell>{det.cobertura}</Table.Cell>
-                            <Table.Cell>{det.coseguro}</Table.Cell>
-                            <Table.Cell>{det.costoDeterminacion}</Table.Cell>
-                        </Table.Row>
-                      
-                    )) : null}
-                        <Table.Row>
-                            <Table.Cell>Total</Table.Cell>
-                            <Table.Cell/>
-                            <Table.Cell textAlign='right'>{this.props.analisis.cobertura}</Table.Cell>
-                            <Table.Cell textAlign='right'>{this.props.analisis.coseguro}</Table.Cell>
-                            <Table.Cell textAlign='right'>{this.props.analisis.costoAnalisis}</Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
-            </Form>
-        ) 
+    handleUpdateClick = () => {
+        var data = {
+                "concepto": "AnÃ¡lisis", //TODO: tener en cuenta si cambia, capaz con id seria mejor
+                "descripcion": "Pago Análisis",
+                "formaPago": this.state.formaPago.nombre,
+                "idAnalisis": this.props.analisis.analisisId,
+                "importe": this.state.importe,
+                "ingreso": true
+        }
+        
+        this.props.addTransaccionAction(data)
     }
+
+    postTransaccion = (e) => {
+        e.preventDefault();
+
+        const { formaPago, importe } = this.state;
+
+        const errorFormaPago = validateRequiredCombos(formaPago);
+        const errorImporte = validateMenorA(importe, this.props.analisis.faltantePago);
+
+        if ( errorFormaPago && errorImporte && this.state.importe<=this.props.analisis.faltantePago) {
+            this.handleUpdateClick()
+            this.vaciadoCampos()
+            setTimeout(() => {  this.hideModal(); }, 1000);
+        } else {
+            alert('Verificar datos ingresados.')
+            this.setState({
+                errorFormaPago,
+                errorImporte
+            })
+        }
+    }
+
+    vaciadoCampos() {
+        this.setState({
+            formaPago: '',
+            importe: '',
+
+            errorFormaPago: true,
+            errorImporte: true,
+        })
+    }
+
+    cambioFormaDePago = (e) => {
+        this.setState({
+            formaPago: e
+        })
+    } 
+
+    cambioImporte = (e) => {
+        this.setState({
+            importe: e.target.value
+        })
+    }
+
+    detalle = () => {
+        return <div>
+            <Form onSubmit={this.postTransaccion} style={{margin: '0 3rem'}}>
+
+                <label className={this.state.errorFormaPago ? 'labelsSelect' : 'labelsSelectError'}>Forma de Pago <span>*</span></label>
+                <Select
+                    name='Forma de Pago'
+                    value={this.state.formaPago}
+                    onChange={this.cambioFormaDePago}
+                    placeholder= "Selecciones forma de pago..."
+                    options={this.props.formasDePago}
+                    getOptionValue={this.getOptionValueFormaDePago}
+                    getOptionLabel={this.getOptionLabelFormaDePago}
+                    styles={this.state.errorFormaPago === true ? '' : styleErrorSelect}
+                />
+
+                <Form.Field required label='Importe' control='input' placeholder='Ingrese importe' 
+                value={this.state.importe}
+                onChange={this.cambioImporte}
+                className={this.state.errorImporte ? null : 'error'}
+                />
+                <Label as='a' basic color='red' pointing className='labelFaltantePago'>
+                    Falta pagar ${this.props.analisis.faltantePago}
+                </Label>
+                <br/>
+                <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Transacción</Button>
+
+            </Form>
+        </div> 
+    }
+
+
+    getOptionLabelFormaDePago = option => option.nombre
+
+    getOptionValueFormaDePago = option => option.fomaPagoId
 
 
     render() {
@@ -85,4 +149,29 @@ class ModalDetallePago extends Component {
 }
 
 
-export default ModalDetallePago
+
+const styleErrorSelect = { 
+
+    indicatorsContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    }),
+
+    valueContainer: base => ({
+      ...base,
+      background: '#FDF1F1',
+      borderStyle: '#FBEBEB',
+      margin: 0,
+      width: '100%',
+    }),
+}
+
+
+const mapStateToProps = state =>({
+    fetching: state.caja.fetching,
+    upToDateAllTransacciones: state.caja.upToDateAllTransacciones,
+    formasDePago: state.caja.formasDePago,
+})
+
+
+export default connect(mapStateToProps,{ addTransaccionAction, getFormasDePagoAction })(ModalDetallePago);

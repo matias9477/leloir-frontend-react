@@ -82,6 +82,16 @@ export function validateOnlyNumbersRequired(valor){
   }
 }
 
+export function validateMenorA(valor1, valor2){
+  if (valor1 === '' || valor1 === null){
+    return false
+  } else if (isFinite(String(valor1)) && valor1<=valor2){
+    return true
+  } else {
+    return false
+  }
+}
+
 export function validateMail(mail){
   const validMail = /\S+@\S+\.\S+/;
   

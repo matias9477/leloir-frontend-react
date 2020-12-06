@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';

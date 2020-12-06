@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos, urlTransaccionById } from '../Constants/URLs';
+import { getAnalisisByIdAction } from './analisisDuck';
 
 //constants
 let initialData = {
@@ -128,6 +129,9 @@ export let addTransaccionAction = (data) => (dispatch, getState) => {
           type: ADD_TRANSACCION_SUCCESS,
       })
       alert(`Se ha registrado la transacción con éxito.`)
+      if(data.idAnalisis){
+        return(dispatch(getAnalisisByIdAction(data.idAnalisis)))
+      }
   })
   .catch(error=>{
       dispatch({
@@ -140,14 +144,6 @@ export let addTransaccionAction = (data) => (dispatch, getState) => {
 }
 
 export let getFormasDePagoAction = () => (dispatch, getState) => {
-  const state = getState();
-
-  if (state.caja.upToDateAllFormasDePago) {
-    dispatch({
-      type: GET_FORMAS_DE_PAGO_FROM_STORE,
-      payload: state.caja.transacciones,
-    });
-  } else {
     dispatch({
       type: GET_FORMAS_DE_PAGO,
     });
@@ -165,7 +161,6 @@ export let getFormasDePagoAction = () => (dispatch, getState) => {
           payload: err.message,
         });
       });
-  }
 }
 
 export let getConceptosAction = () => (dispatch, getState) => {
