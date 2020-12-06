@@ -20,7 +20,7 @@ class Domicilios extends Component {
         } else return <Table.Row>
                         <Table.Cell>{domicilio.direccion}</Table.Cell>
                         <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
-                        <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
+                        <Table.Cell>{domicilio.nombrePaciente ? domicilio.nombrePaciente : 'No registrado'}</Table.Cell>
                       </Table.Row>
     }
 
@@ -38,32 +38,35 @@ class Domicilios extends Component {
         if(!fetching){
          listDomicilios = domicilios.map(this.createDomicilio)
         }
+
+        var date = new Date()
+
         return (
             <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
-                <div className='Domicilios'>
-                    <Header as='h3'>Domicilios del día</Header>
-                    <Table color="blue" key="blue">
-                        <Table.Header>
-                            <Table.Row>
-                            <Table.HeaderCell>Dirección</Table.HeaderCell>
-                            <Table.HeaderCell>Descripción</Table.HeaderCell>
-                            <Table.HeaderCell>Paciente</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-                        { fetching ? 
-                                <ClipLoader
-                                size={60}
-                                color={'black'}
-                                />
-                                    :
-                                <Table.Body>
-                                    {listDomicilios}
-                                </Table.Body>
-                        }
-                    </Table>
-                        {this.messageNoDomicilios(listDomicilios)}
-                </div>
+            <div className='Domicilios'>
+            <Header as='h3'>Domicilios del día {date.getDate()+1}/{date.getMonth()+1}/{date.getFullYear()}</Header>
+                <Table color="blue" key="blue">
+                    <Table.Header>
+                        <Table.Row>
+                        <Table.HeaderCell>Dirección</Table.HeaderCell>
+                        <Table.HeaderCell>Descripción</Table.HeaderCell>
+                        <Table.HeaderCell>Paciente</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    { fetching ? 
+                            <ClipLoader
+                            size={60}
+                            color={'black'}
+                            />
+                                :
+                            <Table.Body>
+                                {listDomicilios}
+                            </Table.Body>
+                    }
+                </Table>
+                {this.messageNoDomicilios(listDomicilios)}
+            </div>
             </div>
         );
     }
