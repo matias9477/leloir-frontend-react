@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Header } from 'semantic-ui-react'
-import { getTomorrowDomicilios } from '../../Redux/domiciliosDuck'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { connect } from 'react-redux';
+
+import { getTomorrowDomicilios } from '../../Redux/domiciliosDuck'
 import './domicilios.css';
 
 
@@ -19,14 +20,15 @@ class Domicilios extends Component {
         } else return <Table.Row>
                         <Table.Cell>{domicilio.direccion}</Table.Cell>
                         <Table.Cell>{domicilio.descripcion ? domicilio.descripcion : 'No disponible'}</Table.Cell>
-                        <Table.Cell>{domicilio.paciente ? domicilio.paciente : 'No registrado'}</Table.Cell>
+                        <Table.Cell>{domicilio.nombrePaciente ? domicilio.nombrePaciente : 'No registrado'}</Table.Cell>
                       </Table.Row>
     }
 
-    renderDomicilios = (listDomicilios) =>{
-        if(listDomicilios.length>0){
-            return listDomicilios;
-        } else return <Header as='h5' icon='home' textAlign='right' color='red'>No hay domicilios registrados para mañana.</Header>
+
+    messageNoDomicilios = (listDomicilios) =>{
+        if(listDomicilios===undefined || listDomicilios.length>0 ){
+            return null;
+        } else return <Header as='h5' icon='home' textAlign='center' color='red'>No hay domicilios registrados para mañana.</Header>
     }
 
 
@@ -36,11 +38,14 @@ class Domicilios extends Component {
         if(!fetching){
          listDomicilios = domicilios.map(this.createDomicilio)
         }
+
+        var date = new Date()
+
         return (
             <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
             <div className='Domicilios'>
-                <Header as='h3'>Domicilios del día</Header>
+            <Header as='h3'>Domicilios del día {date.getDate()+1}/{date.getMonth()+1}/{date.getFullYear()}</Header>
                 <Table color="blue" key="blue">
                     <Table.Header>
                         <Table.Row>
@@ -56,10 +61,11 @@ class Domicilios extends Component {
                             />
                                 :
                             <Table.Body>
-                                {this.renderDomicilios(listDomicilios)}
+                                {listDomicilios}
                             </Table.Body>
                     }
                 </Table>
+                {this.messageNoDomicilios(listDomicilios)}
             </div>
             </div>
         );

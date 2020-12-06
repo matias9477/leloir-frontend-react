@@ -15,11 +15,17 @@ import './patientsStyle.css';
 class FormConsulta extends Component {
   
   renderConsulta(){
-    if (this.props.location.state.type === 'ANIMAL'){
+    var type = JSON.parse(localStorage.getItem('patientType'))
+
+    if (this.props.location.state!==undefined){
+      type = this.props.location.state.type
+    }
+
+    if (type === 'ANIMAL' || this.props.patient.type==="com.leloir.backend.domain.Animal" || type==="com.leloir.backend.domain.Animal"){
       return <ConsultaAnimal patientId={this.props.match.params.id}/>
-    } else if (this.props.location.state.type === 'PERSONA'){
+    } else if (type === 'PERSONA' || this.props.patient.type==="com.leloir.backend.domain.Persona" || type==="com.leloir.backend.domain.Persona"){
       return <ConsultaPersona patientId={this.props.match.params.id}/>
-    } else if (this.props.location.state.type === 'INSTITUCION'){
+    } else if (type === 'INSTITUCION' || this.props.patient.type==="com.leloir.backend.domain.Institucion" || type==="com.leloir.backend.domain.Institucion"){
       return <ConsultaInstitucion patientId={this.props.match.params.id}/>
     }
   }
@@ -43,7 +49,7 @@ class FormConsulta extends Component {
       },
       { 
         menuItem: 'Historial', render: () => 
-          <Tab.Pane>
+          <Tab.Pane loading={this.props.fetching}>
             <Historial match={this.props.match}/>
           </Tab.Pane> 
       },
@@ -53,7 +59,11 @@ class FormConsulta extends Component {
   }
   
   render() {
-    var prevURL = this.props.location.state.prevPath || urlTablaPacientes
+    var prevURL = urlTablaPacientes;
+
+    if (this.props.location.state!==undefined) {
+      prevURL = this.props.location.state.prevPath
+    }
     
     return (
       <div>

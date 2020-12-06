@@ -62,10 +62,10 @@ export function validateRequiredStringNum(nombre){
   }
 }
 
-export function validateOnlyNumbers(telefono){
-  if (telefono === '' || telefono === null){
+export function validateOnlyNumbers(num){
+  if (num === '' || num === null){
     return true
-  } else if (isFinite(String(telefono))){
+  } else if (isFinite(String(num))){
     return true
   } else {
     return false

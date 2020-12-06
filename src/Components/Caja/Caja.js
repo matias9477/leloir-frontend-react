@@ -27,10 +27,9 @@ const columns = [
     style: 'importeNegativo',
   },
   {
-    dataField: 'efectivo',
-    text: 'Efectivo',
-    style: 'importeNegativo',
-  },
+    dataField: 'formaPago',
+    text: 'Forma de Pago',
+  }
 ];
 
 

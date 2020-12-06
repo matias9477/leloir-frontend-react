@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Icon, Table, Button } from 'semantic-ui-react'
+
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'
 import './../styles.css'
@@ -13,7 +14,7 @@ class Historial extends Component {
 
     renderTable = (historial) =>(
         (historial==='' || historial===[] || historial.length===0)  ?
-        <div> No se encontraron analisis para este paciente</div> :
+        <div> El paciente no posee análisis.</div> :
         <Table celled>
             <Table.Header>
                 <Table.Row>
@@ -29,7 +30,6 @@ class Historial extends Component {
             <Table.Body>
                 {historial.map((analisis, index) => (
                     <Table.Row key={index}>
-                        
                         <Table.Cell>
                             {analisis.idAnalisis}
                         </Table.Cell>
@@ -38,7 +38,7 @@ class Historial extends Component {
                         </Table.Cell>
                         <Table.Cell>
                             {analisis.determinaciones !== undefined ? analisis.determinaciones.map((deter)=>(
-                                <li>{deter}</li>
+                                <li>{deter.nombreDeterminacion}</li>
                             )) : null}
                         </Table.Cell>
                         <Table.Cell>
@@ -73,7 +73,10 @@ class Historial extends Component {
         return (
             <div>
                 <div className='historialPaciente'>
-                    {fetching ?  null : this.renderTable(this.props.history)}
+                    {fetching ?
+                        null
+                      :
+                      this.renderTable(this.props.history)}
                 </div>
                 
             </div>

@@ -8,7 +8,7 @@ import NavBar from '../NavBar/NavBar';
 import { checkAtributo, validateRequiredCombos, validateString } from '../../Services/MetodosDeValidacion';
 import SelectedPaciente from './SelectedPaciente';
 import SelectedDeterminaciones from './SelectedDeterminaciones';
-import { getPatientsAction } from '../../Redux/patientsDuck';
+import { getPatientsAltaAction } from '../../Redux/patientsDuck';
 import { getDeterminacionesAction } from '../../Redux/determinacionesDuck';
 import { addAnalisisAction, getPreviewRegistroAnalisis } from '../../Redux/analisisDuck';
 import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck';
@@ -40,7 +40,7 @@ class FormNuevoAnalisis extends Component {
   componentDidMount(){
     this.props.getObrasSocialesAction()
 
-    this.props.getPatientsAction()
+    this.props.getPatientsAltaAction()
     this.props.getDeterminacionesAction()
   }
 
@@ -194,7 +194,7 @@ class FormNuevoAnalisis extends Component {
          
           <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
           
-          {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={this.handleSeleccionDeterminaciones} /> : null}
+          {(this.state.selectedDeterminaciones.length>0 || this.state.selectedDeterminaciones===null) ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={this.handleSeleccionDeterminaciones} /> : null}
             
         </div>
     )
@@ -332,6 +332,9 @@ class FormNuevoAnalisis extends Component {
   }
 
   handleChangeListDeterminaciones = selectedDeterminaciones => {
+    if (selectedDeterminaciones===null) {
+      selectedDeterminaciones=[]
+    }
     this.setState({ selectedDeterminaciones })
     if(this.state.mod === false){
       this.setState({
@@ -359,7 +362,7 @@ class FormNuevoAnalisis extends Component {
 }
 
 const mapStateToProps = state => ({
-  patients: state.patients.patients,
+  patients: state.patients.patientsAlta,
   determinaciones: state.determinaciones.determinaciones,
   obrasSociales: state.obrasSociales.obrasSociales,
   upToDateAnalisisAll: state.analisis.upToDateAnalisisAll,
@@ -367,4 +370,4 @@ const mapStateToProps = state => ({
 })
 
 export default  withRouter(connect(mapStateToProps, 
-  {getPatientsAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction, getPreviewRegistroAnalisis})(FormNuevoAnalisis))
+  {getPatientsAltaAction, getDeterminacionesAction, addAnalisisAction, getObrasSocialesAction, getPreviewRegistroAnalisis})(FormNuevoAnalisis))
