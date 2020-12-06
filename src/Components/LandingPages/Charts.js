@@ -8,13 +8,9 @@ import { getRankingAction } from '../../Redux/reportesDuck';
 import './LandingPages.css';
 
 
-    const data =[
-        {name: "Analisis de orina", value: 200},
-        {name: "Glucemia", value:100},
-        {name: "analisis genérico", value:52},
 
-        {name: "analisis generico 2", value:12},
-    ]
+
+    //name:descripcion_practica, value: count
 
 class Charts extends Component {
 
@@ -23,28 +19,42 @@ class Charts extends Component {
     }
 
     render(){
+        // const data =[
+        //     {"name":"PROTEINAS TOTALES","value":33},
+        //     {"name":"URGENCIAS","value":3},
+        //     {"name":"ESPERMOGRAMA  STRES TEST","value":3},
+        //     {"name":"ANTIGENO PROSTATICO ESPECIFICO TOTAL   -   PSA-T","value":3},
+        //     {"name":"CHLAMYDIA PSITACCI  AC. IGG   ANTI-","value":5},
+        //     {"name":"ERITROBLASTOS  PORCENTAJE DE","value":3},
+        //     {"name":"CHOLERAE VIBRIO  CULTIVO","value":7}
+        // ]
+
         const { fetching } = this.props;
         return (
-        <div className="pie-charts">
-            <Header as='h3' dividing>Gráficos estadísticos de determinaciones mas pedidas</Header>
-            {   fetching ? 
-                    <div className='spinner'>
-                        <ClipLoader
-                            size={60}
-                            color={'black'}/>
+            <div className="chart">
+
+                <Header as='h3' dividing>Gráfico estadístico de determinaciones mas pedidas por semana</Header>
+                    <div className="pie-charts">
+                                <div>
+                                {   fetching ? 
+                                        <div className='spinner'>
+                                            <ClipLoader
+                                                size={60}
+                                                color={'black'}/>
+                                        </div>
+                                        :
+                                        
+                                        <div>
+                                            <PieChart width={400} height={400}>
+                                                {/* TODO: acá donde está data={data} debería ir la data que llega desde el store, sería this.props.ranking */}
+                                                <Pie dataKey="value" isAnimationActive={true} data={this.props.ranking} cx={200} cy={200} outerRadius={80} fill="#067ebf" label />
+                                                <Tooltip />
+                                            </PieChart>
+                                        </div>                
+                                }
+                                </div>      
                     </div>
-                    :
-                    
-                    <div>
-                        <PieChart width={400} height={400}>
-                            {/* TODO: acá donde está data={data} debería ir la data que llega desde el store, sería this.props.ranking */}
-                            <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#067ebf" label />
-                            <Tooltip />
-                        </PieChart>
-                    </div>                
-            }
-            
-        </div>
+            </div>
         )
 }
 }
