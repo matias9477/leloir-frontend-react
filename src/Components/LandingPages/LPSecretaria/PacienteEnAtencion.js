@@ -24,7 +24,7 @@ const SelectedPaciente = ({selected, switchAltaAction, getPatientByNombreAction}
                                 </List.Item>
 
                                 <List.Item>
-                                    <List.Content>Nombre: {selected.nombre} {checkAtributo(selected.apellido)}</List.Content>
+                                    <List.Content>Nombre: <b>{selected.nombre} {checkAtributo(selected.apellido)}</b></List.Content>
                                 </List.Item>
 
                                 <List.Item>

@@ -194,7 +194,7 @@ class FormNuevoAnalisis extends Component {
          
           <Button floated='left' circular icon='arrow left' size='big' primary inverted onClick={e=>(this.setState({ flagProceso: 'seleccionPacientes'}))} /> 
           
-          {this.state.selectedDeterminaciones.length>0 ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={this.handleSeleccionDeterminaciones} /> : null}
+          {(this.state.selectedDeterminaciones.length>0 || this.state.selectedDeterminaciones===null) ? <Button floated='right' circular icon='arrow right' size='big' primary inverted onClick={this.handleSeleccionDeterminaciones} /> : null}
             
         </div>
     )
@@ -332,6 +332,9 @@ class FormNuevoAnalisis extends Component {
   }
 
   handleChangeListDeterminaciones = selectedDeterminaciones => {
+    if (selectedDeterminaciones===null) {
+      selectedDeterminaciones=[]
+    }
     this.setState({ selectedDeterminaciones })
     if(this.state.mod === false){
       this.setState({

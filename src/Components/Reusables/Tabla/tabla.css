@@ -36,6 +36,11 @@
 
 .importeNegativo {
     color: red;
+    text-align: right;
+}
+
+.importePositivo {
+    text-align: right;
 }
 
 .expansibleSeccion {

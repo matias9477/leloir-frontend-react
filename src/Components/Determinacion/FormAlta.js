@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css';
-import { Button, Container, Form, Divider, Icon, Grid } from 'semantic-ui-react'
+import { Button, Container, Form, Divider, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Select from 'react-select';
+
 import { urlTablaDeterminaciones } from '../../Constants/NavUrl';
 import { urlUnidadesMedida } from '../../Constants/URLs';
 import { addDeterminacionAction, addDeterminacionConUnidadAction } from './../../Redux/determinacionesDuck';
@@ -44,7 +44,7 @@ class FormAlta extends Component {
 
     handleUpdateClick = () => {
         var data 
-        if (this.state.newUnidadMedida != null && this.state.newUnidadMedida != '') {
+        if (this.state.newUnidadMedida !== null && this.state.newUnidadMedida !== '') {
             data = {
             "bitAlta": true,
             "codigoPractica": this.state.codigoPractica,
