@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let urlRanking = 'acá va la URL para pegarle al servicio de python'
+let urlRanking = '/report/ranking-determinaciones'
 
 let initialData = {
     fetching: false,
@@ -19,7 +19,9 @@ export default function reducer(state = initialData, action){
         case GET_RANKING_ERROR:
             return {...state, fetching: false, error: action.payload}
         case GET_RANKING_SUCCESS:
-            return {...state, fetching: false, ranking: action.payload}            
+            return {...state, fetching: false, ranking: action.payload}
+        default:
+            return state
     }
 }
 
