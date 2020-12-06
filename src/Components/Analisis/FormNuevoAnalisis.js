@@ -169,7 +169,7 @@ class FormNuevoAnalisis extends Component {
 
           <Form>
             <Form.Field label='Médico Solicitante' control='input' 
-            placeholder='Ingrese médico solicitante...' value={this.state.medico} 
+            placeholder='Opcionalmente ingrese médico solicitante.' value={this.state.medico} 
             onChange={this.cambioMedico} 
             className= {this.state.errorMedico === true ? null : 'error'} 
             />  
