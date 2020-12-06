@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Icon, Table, Button } from 'semantic-ui-react'
-import ClipLoader from 'react-spinners/ClipLoader';
 
 import { Link } from 'react-router-dom'
 import { getPatientHistoryAction } from './../../Redux/patientsDuck'

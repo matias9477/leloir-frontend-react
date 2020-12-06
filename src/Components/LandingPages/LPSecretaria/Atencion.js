@@ -22,6 +22,7 @@ class Atencion extends Component {
             analisisPendientes:[],
             extraction: [],
             flag: false,
+            modificado: false,
         });
     }
 
@@ -44,7 +45,7 @@ class Atencion extends Component {
             this.saveStorage('nombreCurrent', selectedPaciente.nombre + ' ' + selectedPaciente.apellido)
         }  
 
-        this.setState({ selectedPaciente })
+        this.setState({ selectedPaciente, modificado: false })
     }
 
     saveStorage(name, data){
@@ -122,6 +123,8 @@ class Atencion extends Component {
         
         return(
             <div> 
+                <Button circular icon='settings' onClick={ () => this.modificar()} className='buttonModificarPacienteAtencion'></Button>
+                
                 <SelectedPaciente selected={patient} />
                 <AnalisisPendientes id={patient.id} alta={patient.bitAlta}/>
                 {patient.bitAlta ?
@@ -134,6 +137,8 @@ class Atencion extends Component {
 
     moreThan1Patient(){
         return <Container className='moreThanOnePatient'>
+        <Button circular icon='settings' onClick={ () => this.modificar()} className='buttonModificarPacienteAtencion'></Button> 
+ 
             <h4 style={{marginBottom: '30px'}}>Para la búsqueda ingresada se encontraron {JSON.parse(localStorage.current).length} opciones:</h4>
 
             <div className='moreThanOnePatientScroll'>
@@ -204,15 +209,114 @@ class Atencion extends Component {
             extraction: array,
         })
     }
+
+    modificarSelected(){
+            this.vaciadoAnalisisPendientes();
+            return (
+                <div> 
+                    <h4>Búsque el paciente o regístrelo a continuación</h4>
+               
+                    <Grid columns='equal' >
+                        <Grid.Column>
+                            <Select
+                                name='pacientes'
+                                onChange={this.handleChangeListPacientes}
+                                placeholder= "Busque un paciente..."
+                                isClearable={false}
+                                options={this.props.patients}
+                                getOptionValue={this.getOptionValuePatient}
+                                getOptionLabel={this.getOptionLabelPatient}
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={5}>
+                            <Button as= {Link} to={{pathname: urlAddPaciente, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                                <Icon name='user'/> 
+                            </Button>
+                        </Grid.Column>
+                    </Grid>
+                </div>
+            )
+        
+    }
+
+    modificar(){
+        this.removeCurrent()
+        localStorage.removeItem("nombreCurrent");
+        this.setState({
+            modificado: true
+        })
+    }
+
+    renderModules(){
+        if(localStorage.current !== undefined && this.state.modificado===false){
+            return( 
+                <Container >
+                    {this.props.fetching ?
+                        <div className='spinner'>
+                            <ClipLoader
+                                size={60}
+                                color={'black'}
+                            />
+                        </div> : 
+                        <div>
+                            {JSON.parse(localStorage.current) !== undefined ? 
+                            (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
+                            JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
+                            {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
+                                <div>
+                                    <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                </div>
+                            : null}
+                        </div>
+                    }
+                
+                </Container>
+            )
+        } else if(localStorage.current === undefined && this.state.modificado===false){
+            return(
+                <div> Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender</div> 
+            )
+        } else if(localStorage.current === undefined && this.state.modificado===true){
+            this.vaciadoAnalisisPendientes();
+            return (
+                <div> 
+                    <h4>Búsque el paciente o regístrelo a continuación</h4>
+               
+                    <Grid columns='equal' >
+                        <Grid.Column>
+                            <Select
+                                name='pacientes'
+                                onChange={this.handleChangeListPacientes}
+                                placeholder= "Busque un paciente..."
+                                isClearable={false}
+                                options={this.props.patients}
+                                getOptionValue={this.getOptionValuePatient}
+                                getOptionLabel={this.getOptionLabelPatient}
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={5}>
+                            <Button as= {Link} to={{pathname: urlAddPaciente, state: { prevPath: window.location.pathname }}} icon color='twitter' size='small'>
+                                <Icon name='user'/> 
+                            </Button>
+                        </Grid.Column>
+                    </Grid>
+                </div>
+            )
+
+        }
+    }
          
 
     render() { 
+        console.log(localStorage.current === undefined)
+        console.log("pa modificar? " + this.state.modificado)
         return (
             <div>
                 <Grid columns={2} divided>
                     <Grid.Column width={9}>
                         <div className='atencion'>
-                        {(localStorage.current !== undefined) ? 
+                            {this.renderModules()}
+                        {/* {(localStorage.current !== undefined && this.state.modificado===false) ? 
                             <Container >
                                 {this.props.fetching ?
                                     <div className='spinner'>
@@ -227,8 +331,8 @@ class Atencion extends Component {
                                         JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
                                         {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
                                             <div>
-                                            <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                            
+                                                <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
+                                                <Button onClick={ () => this.modificar()}>Modificar paciente seleccionado</Button>
                                             </div>
                                         : null}
                                     </div>
@@ -236,8 +340,10 @@ class Atencion extends Component {
                             
                             </Container>
                             
-                            : <div> {'Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender' }</div>
-                        }
+                            : (localStorage.current === undefined && this.state.modificado===false ? 
+                                <div> Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender</div> 
+                            : (localStorage.current === undefined && this.state.modificado===true) ? this.modificarSelected() : null) 
+                        } */}
                     </div>
                     </Grid.Column>
                     <Grid.Column width={7}>
