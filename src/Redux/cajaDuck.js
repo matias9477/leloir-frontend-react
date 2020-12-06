@@ -144,14 +144,6 @@ export let addTransaccionAction = (data) => (dispatch, getState) => {
 }
 
 export let getFormasDePagoAction = () => (dispatch, getState) => {
-  const state = getState();
-
-  if (state.caja.upToDateAllFormasDePago) {
-    dispatch({
-      type: GET_FORMAS_DE_PAGO_FROM_STORE,
-      payload: state.caja.transacciones,
-    });
-  } else {
     dispatch({
       type: GET_FORMAS_DE_PAGO,
     });
@@ -169,7 +161,6 @@ export let getFormasDePagoAction = () => (dispatch, getState) => {
           payload: err.message,
         });
       });
-  }
 }
 
 export let getConceptosAction = () => (dispatch, getState) => {
