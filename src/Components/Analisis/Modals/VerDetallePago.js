@@ -116,7 +116,7 @@ class ModalDetallePago extends Component {
                 onChange={this.cambioImporte}
                 className={this.state.errorImporte ? null : 'error'}
                 />
-                <Label as='a' basic color='red' pointing>
+                <Label as='a' basic color='red' pointing className='labelFaltantePago'>
                     Falta pagar {this.props.analisis.faltantePago}
                 </Label>
                 <br/>

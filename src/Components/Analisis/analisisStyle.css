@@ -110,3 +110,9 @@
     margin-bottom: 2rem;
     margin-top: 2rem;
 }
+
+.labelFaltantePago {
+    position: absolute !important;
+    left: 0;
+    bottom: 4rem;
+}
