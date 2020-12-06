@@ -45,6 +45,8 @@ class AltaPersona extends Component {
         errorFechaNac: true,
         errorMail: true,
         errorTelefono: true,
+        errorPlan: true,
+        errorObraSocial: true,
         modObraSocial: true,
 
       })
@@ -211,7 +213,7 @@ class AltaPersona extends Component {
   getPaciente = (e) => {
     e.preventDefault()
     
-    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad, mail, telefono } = this.state
+    const { nombre, apellido, tipoDoc, nroDoc, fechaNacimiento, sexo, nacionalidad, mail, telefono, obraSocial, plan } = this.state
 
     const errorNombre = validateNombre(nombre)
     const errorApellido = validateNombre(apellido)
@@ -222,8 +224,10 @@ class AltaPersona extends Component {
     const errorNac = validateRequiredCombos(nacionalidad)
     const errorMail = validateMail(mail)
     const errorTelefono = validateOnlyNumbers(telefono)
+    const errorObraSocial = validateRequiredCombos(obraSocial)
+    const errorPlan = validateRequiredCombos(plan)
 
-    if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono ) {
+    if ( errorNombre && errorApellido && errorTipoDoc && errorNroDoc && errorFechaNac && errorSexo && errorNac && errorMail && errorTelefono && errorObraSocial && errorPlan ) {
       this.handleUpdateClick()
     } else {
       alert('Verifique los datos ingresados.')
@@ -237,6 +241,8 @@ class AltaPersona extends Component {
         errorNac,
         errorMail,
         errorTelefono,
+        errorObraSocial,
+        errorPlan,
       })
     }    
   }
@@ -409,9 +415,10 @@ class AltaPersona extends Component {
             />
           </Form.Group>
           <Form.Group widths='equal'>
-          <Form.Field label='Obra Social' control='select' 
+          <Form.Field required label='Obra Social' control='select' 
           placeholder = 'Obra Social' 
-          value={this.state.obraSocial} 
+          value={this.state.obraSocial}
+          className = {this.state.errorObraSocial === true ? null : 'error'} 
           onChange={this.cambioObraSocial} >
             <option key={null}>  </option>
               {this.state.obrasSociales.map(item => (
@@ -420,7 +427,8 @@ class AltaPersona extends Component {
           <Form.Field required label='Plan' control='select'
           disabled = {this.state.modObraSocial}
           placeholder = 'Plan' 
-          value={this.state.plan} 
+          value={this.state.plan}
+          className= {this.state.errorPlan === true ? null : 'error'} 
           onChange={this.cambioPlan} >
             <option key={null}>  </option>
               {this.state.planes.map(item => (
