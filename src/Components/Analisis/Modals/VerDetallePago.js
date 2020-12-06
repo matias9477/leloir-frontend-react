@@ -59,11 +59,12 @@ class ModalDetallePago extends Component {
         const { formaPago, importe } = this.state;
 
         const errorFormaPago = validateRequiredCombos(formaPago);
-        const errorImporte = validateMenorA(importe);
+        const errorImporte = validateMenorA(importe, this.props.analisis.faltantePago);
 
         if ( errorFormaPago && errorImporte && this.state.importe<this.props.analisis.faltantePago) {
             this.handleUpdateClick()
             this.vaciadoCampos()
+            setTimeout(() => {  this.hideModal(); }, 2000);
         } else {
             alert('Verificar datos ingresados.')
             this.setState({
@@ -117,7 +118,7 @@ class ModalDetallePago extends Component {
                 className={this.state.errorImporte ? null : 'error'}
                 />
                 <Label as='a' basic color='red' pointing className='labelFaltantePago'>
-                    Falta pagar {this.props.analisis.faltantePago}
+                    Falta pagar ${this.props.analisis.faltantePago}
                 </Label>
                 <br/>
                 <Button style={{marginTop: '2rem'}} primary type="submit" onClick={this.postTransaccion}> Registrar Transacción</Button>

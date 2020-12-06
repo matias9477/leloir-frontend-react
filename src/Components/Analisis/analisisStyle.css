@@ -115,4 +115,5 @@
     position: absolute !important;
     left: 0;
     bottom: 4rem;
+    z-index: 0;
 }

@@ -373,19 +373,23 @@ class ConsultaAnalisis extends Component {
                                             </Table.Row>
                                         ))}
                                     </Table.Body>
-                                    <Table.Footer fullWidth>
-                                        <Table.HeaderCell/>
-                                        <Table.HeaderCell>Total</Table.HeaderCell>
-                                        <Table.HeaderCell style={{textAlign: 'right'}}>
-                                            {this.state.analisis.costoAnalisis}
-                                        </Table.HeaderCell>
-                                    </Table.Footer>
                                 </Table>
+                                {this.state.analisis.transacciones.length>0 ? 
+                                    <div>
+                                        <label style={{right: '1rem', position: 'absolute'}}>Total coseguro: ${this.state.analisis.coseguro}</label> 
+                                        <br/>
+                                    </div>
+                                    : 
+                                    <div>
+                                        <label>No hay transacciones registradas</label>
+                                    </div>
+                                }
                             </Card.Description>
-                            
-                            <Button  basic color='black' style={{width: '-webkit-fill-available'}}  onClick={() => this.showModal('VER_TRANSACCION')}>
-                                Agregar Pago
-                            </Button>
+                            {this.state.analisis.pagado ? null:
+                                <Button basic color='black' style={{width: '-webkit-fill-available'}}  onClick={() => this.showModal('VER_TRANSACCION')}>
+                                    Agregar Pago
+                                </Button>
+                            }
                         </Card.Content>
 
                     
