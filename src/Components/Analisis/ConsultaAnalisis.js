@@ -369,7 +369,7 @@ class ConsultaAnalisis extends Component {
                                             <Table.Row key={index}>
                                                 <Table.Cell>{transaccion.fecha}</Table.Cell>
                                                 <Table.Cell>{transaccion.formaPago}</Table.Cell>
-                                                <Table.Cell style={{textAlign: 'right'}}>{transaccion.importe}</Table.Cell>
+                                                <Table.Cell style={{textAlign: 'right'}}>${transaccion.importe}</Table.Cell>
                                             </Table.Row>
                                         ))}
                                     </Table.Body>

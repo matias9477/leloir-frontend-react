@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos, urlTransaccionById } from '../Constants/URLs';
+import { getAnalisisByIdAction } from './analisisDuck';
 
 //constants
 let initialData = {
@@ -128,6 +129,9 @@ export let addTransaccionAction = (data) => (dispatch, getState) => {
           type: ADD_TRANSACCION_SUCCESS,
       })
       alert(`Se ha registrado la transacción con éxito.`)
+      if(data.idAnalisis){
+        return(dispatch(getAnalisisByIdAction(data.idAnalisis)))
+      }
   })
   .catch(error=>{
       dispatch({

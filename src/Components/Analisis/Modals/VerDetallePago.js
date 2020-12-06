@@ -61,10 +61,10 @@ class ModalDetallePago extends Component {
         const errorFormaPago = validateRequiredCombos(formaPago);
         const errorImporte = validateMenorA(importe, this.props.analisis.faltantePago);
 
-        if ( errorFormaPago && errorImporte && this.state.importe<this.props.analisis.faltantePago) {
+        if ( errorFormaPago && errorImporte && this.state.importe<=this.props.analisis.faltantePago) {
             this.handleUpdateClick()
             this.vaciadoCampos()
-            setTimeout(() => {  this.hideModal(); }, 2000);
+            setTimeout(() => {  this.hideModal(); }, 1000);
         } else {
             alert('Verificar datos ingresados.')
             this.setState({
