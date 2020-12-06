@@ -41,9 +41,6 @@ class Domicilios extends Component {
 
         var date = new Date()
 
-        console.log(date.getDate()+1)
-        console.log(date.getMonth()+1)
-
         return (
             <div style={{display: 'flex', flexDirection:'row', width:'100%'}}>
 
