@@ -308,42 +308,12 @@ class Atencion extends Component {
          
 
     render() { 
-        console.log(localStorage.current === undefined)
-        console.log("pa modificar? " + this.state.modificado)
         return (
             <div>
                 <Grid columns={2} divided>
                     <Grid.Column width={9}>
                         <div className='atencion'>
                             {this.renderModules()}
-                        {/* {(localStorage.current !== undefined && this.state.modificado===false) ? 
-                            <Container >
-                                {this.props.fetching ?
-                                    <div className='spinner'>
-                                        <ClipLoader
-                                            size={60}
-                                            color={'black'}
-                                        />
-                                    </div> : 
-                                    <div>
-                                        {JSON.parse(localStorage.current) !== undefined ? 
-                                        (JSON.parse(localStorage.current).length > 1) ? this.moreThan1Patient() : 
-                                        JSON.parse(localStorage.current).length === 0 ? this.patientNotFound() : this.patientFound() : null}
-                                        {JSON.parse(localStorage.current).length === 1 || JSON.parse(localStorage.current).length === 0 ?
-                                            <div>
-                                                <Button onClick={this.removeCurrent} size='small' basic color='black'>Finalizar atención</Button>
-                                                <Button onClick={ () => this.modificar()}>Modificar paciente seleccionado</Button>
-                                            </div>
-                                        : null}
-                                    </div>
-                                }
-                            
-                            </Container>
-                            
-                            : (localStorage.current === undefined && this.state.modificado===false ? 
-                                <div> Agrega pacientes a la cola y pulsa el botón siguiente para comenzar a atender</div> 
-                            : (localStorage.current === undefined && this.state.modificado===true) ? this.modificarSelected() : null) 
-                        } */}
                     </div>
                     </Grid.Column>
                     <Grid.Column width={7}>

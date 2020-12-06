@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon, Grid, Step, Container, Form, Segment, Table } from 'semantic-ui-react';
+import { Button, Icon, Grid, Step, Container, Form, Segment, Table, Divider } from 'semantic-ui-react';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -233,13 +233,14 @@ class FormNuevoAnalisis extends Component {
           <Segment raised>
             <Form>
               <h2>{this.props.previewRegistroAnalisis.paciente} </h2>
-          
+              <Divider/>
+
               <Table basic='very'>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Código</Table.HeaderCell>
                     <Table.HeaderCell>Nombre</Table.HeaderCell>
-                    <Table.HeaderCell>Precio Final</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='right'>Precio Final</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
@@ -248,7 +249,7 @@ class FormNuevoAnalisis extends Component {
                     <Table.Row key={index}>
                       <Table.Cell>{det.codigoPractica}</Table.Cell>
                       <Table.Cell>{det.nombreDeterminacion}</Table.Cell>
-                      <Table.Cell>{det.coseguro}</Table.Cell>
+                      <Table.Cell textAlign='right'>${det.coseguro}</Table.Cell>
                     </Table.Row>
                   )) : null}
                 </Table.Body>
@@ -257,7 +258,7 @@ class FormNuevoAnalisis extends Component {
                 <Table.Row>
                   <Table.HeaderCell/>
                   <Table.HeaderCell/>
-                  <Table.HeaderCell>
+                  <Table.HeaderCell textAlign='right'>
                     <Icon name='dollar sign' color='green'/>
                     {this.props.previewRegistroAnalisis.coseguro}
                   </Table.HeaderCell>
