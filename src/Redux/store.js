@@ -6,7 +6,8 @@ import determinacionesReducer from './determinacionesDuck';
 import analisisReducer from './analisisDuck';
 import muestrasReducer from './muestrasDuck';
 import cajaReducer from './cajaDuck';
-import domiciliosReducer from './domiciliosDuck'
+import domiciliosReducer from './domiciliosDuck';
+import reportesReducer from './reportesDuck';
 
 import thunk from 'redux-thunk';
 
@@ -20,6 +21,7 @@ let rootReducer = combineReducers({
   muestras: muestrasReducer,
   caja: cajaReducer,
   domicilios: domiciliosReducer,
+  reportes: reportesReducer,
 });
 
 //agregamos las devtools para usar en chrome
