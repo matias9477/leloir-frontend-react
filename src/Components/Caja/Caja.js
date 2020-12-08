@@ -22,13 +22,13 @@ const columns = [
     text: 'Descripción',
   },
   {
+    dataField: 'formaPago',
+    text: 'Forma de Pago',
+  },
+  {
     dataField: 'importe',
     text: 'Importe',
     style: 'importeNegativo',
-  },
-  {
-    dataField: 'formaPago',
-    text: 'Forma de Pago',
   }
 ];
 
