@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes } from './../Constants/URLs'
 
 
 let initialData = {
@@ -8,6 +8,7 @@ let initialData = {
     upToDateObrasSociales: false,
     obraSocial: '',
     upToDateObraSocialById: false,
+    tiposPlanes: [],
 }
 
 let GET_OBRAS_SOCIALES = "GET_OBRAS_SOCIALES"
@@ -31,7 +32,10 @@ let GET_OBRA_SOCIAL_BY_ID = 'GET_OBRA_SOCIAL_BY_ID'
 let GET_OBRA_SOCIAL_BY_ID_ERROR = 'GET_OBRA_SOCIAL_BY_ID_ERROR'
 let GET_OBRA_SOCIAL_BY_ID_SUCCESS = 'GET_OBRA_SOCIAL_BY_ID_SUCCESS'
 
-
+let TIPOS_PLANES = "TIPOS_PLANES"
+let TIPOS_PLANES_SUCCESS = "TIPOS_PLANES_SUCCESS"
+let TIPOS_PLANES_ERROR = "TIPOS_PLANES_ERROR"
+let TIPOS_PLANES_FROM_STORE = "TIPOS_PLANES_FROM_STORE"
 
 
 export default function reducer(state = initialData, action){
@@ -72,6 +76,15 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateObrasSociales:false, upToDateObraSocialById:false}
         case ALTER_OBRA_SOCIAL_ERROR:
             return {...state, fetching:false, error:action.payload}
+
+        case TIPOS_PLANES:
+            return {...state, fetching: true}
+        case TIPOS_PLANES_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case TIPOS_PLANES_SUCCESS:
+            return {...state, fetching:false, tiposPlanes: action.payload}
+        case TIPOS_PLANES_FROM_STORE:
+            return {...state, fetching: false, tiposPlanes: action.payload}
 
         default:
             return state
@@ -197,4 +210,32 @@ export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
             })
             return dispatch(getObraSocialByIdAction(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
         })
+}
+
+export let getTiposPlanesAction = () => (dispatch, getState) =>{
+    const state = getState()
+
+    if(state.obrasSociales.upToDateObrasSociales){
+        dispatch({
+            type: TIPOS_PLANES_FROM_STORE,
+            payload: state.obrasSociales.obrasSociales,
+        })
+    }else{
+        dispatch({
+            type: TIPOS_PLANES,
+        })
+        return axios.get(urlTiposPlanes)
+        .then(res=>{
+            dispatch({
+                type: TIPOS_PLANES_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: TIPOS_PLANES_ERROR,
+                payload: err.message
+            })
+        })
+    }
 }

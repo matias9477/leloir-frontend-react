@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Button, Form, Icon, Container, Divider, Tab } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ClipLoader from 'react-spinners/ClipLoader';
+import Select from 'react-select';
 
 import NavBar from '../NavBar/NavBar';
 import { urlTablaObrasSociales } from '../../Constants/NavUrl';
-import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
+import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction, getTiposPlanesAction } from '../../Redux/obrasSocialesDuck';
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
 import '../styles.css';
 
@@ -23,6 +23,7 @@ class ConsultaObraSocial extends Component {
         cuit:'',
         valorUb:'',
         bitAlta: '',
+        planes: [],
 
         errorRazonSocial: true,
         errorCuit: true,
@@ -35,6 +36,7 @@ class ConsultaObraSocial extends Component {
 
   componentDidMount() {
     this.props.getObraSocialByIdAction(this.props.match.params.id)
+    this.props.getTiposPlanesAction()
   }
 
   componentWillReceiveProps(nextProps){
@@ -46,6 +48,7 @@ class ConsultaObraSocial extends Component {
       cuit: nextProps.obraSocial.cuit,
       valorUb: nextProps.obraSocial.valorUb,
       bitAlta: nextProps.obraSocial.bitActivo,
+      planes: nextProps.obraSocial.planes,
     })
   }
 
@@ -140,35 +143,20 @@ class ConsultaObraSocial extends Component {
   }
 
 
-  render() {
-    return (
-      <div>
-        <NavBar/>
-        <div className='avoidMenu'>
-
-          <Container className='btnHeader'>
-            <Button as= {Link} to={urlTablaObrasSociales} floated='left' icon labelPosition='left' primary size='small'>
-              <Icon name='arrow alternate circle left' /> Volver
-            </Button>
-          </Container>
-
-          {this.props.fetching ? <div className='spinner'>
-              <ClipLoader
-                  size={60}
-                  color={'black'}
-              />
-            </div> :
-
+  tabs(){
+    const panes = [
+      {
+        menuItem: 'Información de la Obra Social', render: () => 
+          <Tab.Pane loading={this.props.fetching}>
             <Container>
-              <Form size='huge'>                
+               <Form size='huge'>                
                 <Form.Field control='input' 
-                value={this.state.razonSocial} 
-                id = 'headerConsulta'
-                className= {this.state.errorRazonSocial === true ? null : 'error'} 
-                />
-                <Divider id='divider'/>
-                
-              </Form>
+                  value={this.state.razonSocial} 
+                  id = 'headerConsulta'
+                  className= {this.state.errorRazonSocial === true ? null : 'error'} 
+                  />
+                  <Divider id='divider'/>
+                </Form>
 
               <Form>
 
@@ -228,19 +216,96 @@ class ConsultaObraSocial extends Component {
 
               </Form>
             </Container>
-          }
+          </Tab.Pane>,
+      },
+      { 
+        menuItem: 'Planes', render: () => 
+          <Tab.Pane loading={this.props.fetching}>
+
+            <Form size='huge'>                
+              <Form.Field control='input' 
+              value={"Planes de la Obra Social " + this.state.razonSocial} 
+              id = 'headerConsulta'
+              className= {this.state.errorRazonSocial === true ? null : 'error'} 
+              />
+              <Divider id='divider'/>
+            </Form>
+
+            
+
+              {this.state.planes.map((plan, index) => (
+                <Form>
+
+                <Form.Group>
+                  <Form.Field required label='Id' control='input'
+                  id='disabled'
+                  value={plan.planId} 
+                  width={3}
+                  />
+
+                  <Form.Field required label='Nombre' control='input'
+                  value={plan.nombre}
+                  // onChange={this.cambioNombre}
+                  width={13}
+                  />
+                </Form.Group>
+
+                  <label width='250px' 
+                  // className={this.state.errorConcepto ? 'labelsSelect' : 'labelsSelectError'}
+                  >Tipo Plan <span>*</span></label>
+                  <Select
+                      value={plan.tipoPlan.nombre}
+                      // onChange={this.cambioConceptoTransaccion}
+                      placeholder= "Seleccione tipo de plan..."
+                      options={this.props.tiposPlanes}
+                      getOptionValue={this.getOptionValueTipoPlan}
+                      getOptionLabel={this.getOptionLabelTipoPlan}
+                      // styles={this.state.errorConcepto === true ? '' : styleErrorSelect}
+                  />
+
+                  <Divider style={{margin: '3rem 0'}}/>
+                </Form>
+              ))}
+                
+           
+          </Tab.Pane> 
+      },
+    ]
+
+    return panes
+  }
+
+
+  render() {
+    return (
+      <div>
+        <NavBar/>
+        <div className='avoidMenu'>
+
+          <Container className='btnHeader'>
+            <Button as= {Link} to={urlTablaObrasSociales} floated='left' icon labelPosition='left' primary size='small'>
+              <Icon name='arrow alternate circle left' /> Volver
+            </Button>
+          </Container>
+
+          <Tab panes={this.tabs()} />
+          
         </div>
 
     </div>
     )
   }
 
+  getOptionLabelTipoPlan = option => option.nombre
+
+  getOptionValueTipoPlan = option => option.planId
+
 }
 
 const mapStateToProps = (state, props) => ({
   obraSocial: state.obrasSociales.obraSocial,
   fetching: state.obrasSociales.fetching,
-
+  tiposPlanes: state.obrasSociales.tiposPlanes,
 })
 
-export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction })(ConsultaObraSocial)
+export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction, getTiposPlanesAction })(ConsultaObraSocial)
