@@ -8,7 +8,7 @@ class iFramePBI extends Component {
             <div>
                 <NavBar/>
                 <div className='avoidMenu'>
-                    <iframe title="Data" width='933' height='700' src='https://app.powerbi.com/view?r=eyJrIjoiMzFhMTdlMmEtZTQxMC00NjBlLTkwZGItNWI4ZTFmOGU4YTk5IiwidCI6ImI5NzNlNjljLTYzYzItNGY0MS1iMzU2LTgyZDY5Yjc4NjRjMiJ9' frameborder='0' allowFullScreen='true'></iframe>              
+                    <iframe width="1140" height="700" src="https://app.powerbi.com/reportEmbed?reportId=444126c9-dfb9-4f35-8a86-164e7806a845&autoAuth=true&ctid=82dcaed7-6bb5-4354-8298-b43eb4e0e4ca&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLWVhc3QyLWItcHJpbWFyeS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>              
                 </div>
             </div>
         );
