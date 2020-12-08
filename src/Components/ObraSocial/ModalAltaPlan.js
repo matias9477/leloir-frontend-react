@@ -4,7 +4,7 @@ import { Button, Form } from 'semantic-ui-react';
 import Select from 'react-select';
 
 import { Modal } from '../DiarioPracticas/Modals/ModalAnalysisInput';
-import { getTiposPlanesAction, switchAltaPlanAction, alterPlanAction } from '../../Redux/obrasSocialesDuck';
+import { addPlanAction, getTiposPlanesAction } from '../../Redux/obrasSocialesDuck';
 import { validateRequiredCombos, validateRequiredString } from '../../Services/MetodosDeValidacion';
 import './obraSocial.css';
 
@@ -15,11 +15,8 @@ class ModalDetallePago extends Component {
             show: false,
 
             nombre: '',
-            planId: '',
             tipoPlan: '',
             bitActivo: '',
-
-            cambios: false,
 
             errorNombre: true,
             errorTipoPlan: true,
@@ -29,17 +26,6 @@ class ModalDetallePago extends Component {
     componentDidMount() {
         this.showModal()
         this.props.getTiposPlanesAction()
-    }
-
-    componentWillReceiveProps(nextProps){
-        if (this.props.plan!==undefined) { 
-            this.setState({
-            nombre: nextProps.plan.nombre,
-            planId: nextProps.plan.planId,
-            tipoPlan: nextProps.plan.tipoPlan,
-            bitActivo: nextProps.plan.bitActivo,
-            })
-        }
     }
 
     showModal = () => {
@@ -58,36 +44,28 @@ class ModalDetallePago extends Component {
     vaciadoCampos() {
         this.setState({
             nombre: '',
-            planId: '',
             tipoPlan: [],
             bitActivo: '',
 
             errorNombre: true,
             errorTipoPlan: true,
-
-            cambios: false,
         })
     }
 
     cambioNombre = (e) => {
         this.setState({
             nombre: e.target.value,
-            cambios: true,
         })
     } 
 
     cambioTipoPlan = tipo => {
         this.setState({
             tipoPlan: tipo,
-            cambios: true,
         })
     }
 
-    alta(e){
-        this.props.switchAltaPlanAction(this.state.planId, this.props.idObraSocial)
-    }
 
-    modificarPlan = (e) => {
+    addPlan = (e) => {
         e.preventDefault()
     
         const { nombre, tipoPlan } = this.state;
@@ -102,7 +80,7 @@ class ModalDetallePago extends Component {
                 "tipo_plan": this.state.tipoPlan.tipoPlanId
             }
             
-            this.props.alterPlanAction(this.state.planId, data, this.props.idObraSocial)
+            this.props.addPlanAction(data, this.props.idObraSocial)
    
             this.vaciadoCampos()
             setTimeout(() => {  this.hideModal(); }, 1000);
@@ -120,61 +98,37 @@ class ModalDetallePago extends Component {
     detalle = () => {
         return <div>
             <Form>
-                <Form.Group>
-                    <Form.Field required label='Id' control='input'
-                    id='disabled'
-                    value={this.state.planId} 
-                    width={3}
-                    />
-
-                    <Form.Field required label='Nombre' control='input'
-                    value={this.state.nombre}
-                    onChange={this.cambioNombre}
-                    width={13}
-                    className={this.state.errorNombre ? '' : 'error'}
-                    />
-                </Form.Group>
+                <Form.Field required label='Nombre' control='input'
+                placeholder='Ingrese nombre del plan.'
+                value={this.state.nombre}
+                onChange={this.cambioNombre}
+                className={this.state.errorNombre ? '' : 'error'}
+                />
 
                 <label width='250px' className={this.state.errorTipoPlan ? 'labelsSelect' : 'labelsSelectError'}>Tipo Plan <span>*</span></label>
                 <Select
                     name='Tipos de planes'
                     value={this.state.tipoPlan}
                     onChange={this.cambioTipoPlan}
-                    placeholder= "Seleccione tipo de plan..."
+                    placeholder= "Seleccione tipo de plan."
                     options={this.props.tiposPlanes}
                     getOptionValue={this.getOptionValueTipoPlan}
                     getOptionLabel={this.getOptionLabelTipoPlan}
                     styles={this.state.errorTipoPlan === true ? '' : styleErrorSelect}
                 />
 
-                <Button color={this.state.bitActivo ? 'red' : 'green'}
-                    onClick={(e) => {
-                    if (window.confirm('¿Esta seguro que quiere cambiar el estado del plan ' + this.state.nombre + '?')) {
-                        this.alta(e);
-                        this.hideModal();
-                    } else { e.preventDefault()} }}
-                    >{this.mensajeBtnSwitchAlta()}</Button>
-
-                {(this.state.cambios && this.state.bitActivo) ? <Button primary onClick={(e) => {
-                    if (window.confirm('¿Esta seguro que quiere modificar el plan ' + this.state.nombre + '?')) {
-                        this.modificarPlan(e)
+                <Button primary onClick={(e) => {
+                    if (window.confirm('¿Esta seguro que quiere registrar el plan ' + this.state.nombre + '?')) {
+                        this.addPlan(e)
                     } else { window.location.reload(true) }
                 }}>
-                    Modificar Plan
-                </Button> : null}
+                    Registrar Plan
+                </Button> 
 
             </Form>
         </div> 
     }
 
-    mensajeBtnSwitchAlta(){
-        if (this.state.bitActivo) {
-          return 'Dar de Baja'
-        }
-        else {
-          return 'Dar de Alta'
-        }
-    }
 
     getOptionLabelTipoPlan = option => option.nombre
 
@@ -185,14 +139,11 @@ class ModalDetallePago extends Component {
         return (
             <div className='modalVerDetalle'>
                 <Modal show={this.state.show} handleClose={this.hideModal}>
-                    {this.props.plan!==undefined ? 
-                        <div>
-                            <h2>Detalle Plan {this.state.nombre}</h2>
+                    
+                    <h2>Registrar Plan</h2>
 
-                            {this.detalle()}
-                        </div>
-                       
-                    : null}
+                    {this.detalle() }
+
                 </Modal>
             </div>
         )
@@ -224,4 +175,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default connect(mapStateToProps,{ getTiposPlanesAction, switchAltaPlanAction, alterPlanAction })(ModalDetallePago);
+export default connect(mapStateToProps,{ getTiposPlanesAction, addPlanAction })(ModalDetallePago);

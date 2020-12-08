@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan, urlAddPlan } from './../Constants/URLs'
 
 
 let initialData = {
@@ -44,6 +44,10 @@ let BIT_INVERSE_PLAN_ERROR = 'BIT_INVERSE_PLAN_ERROR'
 let ALTER_PLAN = 'ALTER_PLAN'
 let ALTER_PLAN_SUCCESS = 'ALTER_PLAN_SUCCESS'
 let ALTER_PLAN_ERROR = 'ALTER_PLAN_ERROR'
+
+let ADD_PLAN = "ADD_PLAN"
+let ADD_PLAN_SUCCESS = "ADD_PLAN_SUCCESS"
+let ADD_PLAN_ERROR = "ADD_PLAN_ERROR"
 
 
 export default function reducer(state = initialData, action){
@@ -102,11 +106,18 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateObraSocialById:false }
 
         case ALTER_PLAN:
-            return {...state, fetching:true}
+            return {...state, fetching:true }
         case ALTER_PLAN_SUCCESS:
-            return {...state, fetching:false, upToDateObraSocialById:false}
+            return {...state, fetching:false, upToDateObraSocialById:false }
         case ALTER_PLAN_ERROR:
-            return {...state, fetching:false, error:action.payload}
+            return {...state, fetching:false, error:action.payload }
+
+        case ADD_PLAN:
+            return {...state, fetching:true }
+        case ADD_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false }
+        case ADD_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload }
 
         default:
             return state
@@ -192,7 +203,6 @@ export let addObraSocialAction = (data) => (dispatch, getState) =>{
     })
 
 }
-
 
 export let getObraSocialByIdAction = (id) => (dispatch, getState) => {
 
@@ -303,4 +313,27 @@ export let alterPlanAction = (idPlan, data, idOS) =>(dispatch, getState) =>{
                 payload: err.message
             })
         })
+}
+
+export let addPlanAction = (data, idOS) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_PLAN,
+    })
+    return axios.put(urlAddPlan + idOS, data)
+    .then(res =>{
+        dispatch({
+            type: ADD_PLAN_SUCCESS,
+
+        })
+        return dispatch(getObraSocialByIdAction(idOS), alert(`Se ha registrado el plan ${data.nombre} con exito`))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_PLAN_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar el plan ${data.nombre}. Por favor intente nuevamente.`)
+
+    })
+
 }

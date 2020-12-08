@@ -8,6 +8,7 @@ import { urlTablaObrasSociales } from '../../Constants/NavUrl';
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
 import ModalModificarPlan from './ModalModificarPlan';
+import ModalAltaPlan from './ModalAltaPlan';
 import '../styles.css';
 import './obraSocial.css'
 
@@ -62,14 +63,22 @@ class ConsultaObraSocial extends Component {
 
   handleModalContentTransaccion() {
     switch (this.state.currentModal) {
-        case 'MODIFICAR_PLAN':
-            return (
-                <ModalModificarPlan show={this.state.show}
-                                    callback={this.hideModalCallback}
-                                    plan={this.state.plan}
-                                    idObraSocial={this.state.id}
-                                    />
-            )
+      case 'MODIFICAR_PLAN':
+          return (
+              <ModalModificarPlan show={this.state.show}
+                                  callback={this.hideModalCallback}
+                                  plan={this.state.plan}
+                                  idObraSocial={this.state.id}
+                                  />
+          )
+        case 'REGISTRAR_PLAN':
+          return (
+              <ModalAltaPlan  show={this.state.show}
+                              callback={this.hideModalCallback}
+                              idObraSocial={this.state.id}
+                              />
+          )
+              
         default:
             return 
     }
@@ -263,16 +272,17 @@ class ConsultaObraSocial extends Component {
       { 
         menuItem: 'Planes', render: () => 
           <Tab.Pane loading={this.props.fetching}>
-            <Container className='consultaPlanes'>
 
-              <Form size='huge'>                
-                <Form.Field control='input' 
-                value={"Planes de la Obra Social " + this.state.razonSocial} 
-                id = 'headerConsulta'
-                className= {this.state.errorRazonSocial === true ? null : 'error'} 
-                />
-                <Divider id='divider'/>
-              </Form>
+            <Form size='huge'>                
+              <Form.Field control='input' 
+              value={"Planes de la Obra Social " + this.state.razonSocial} 
+              id = 'headerConsulta'
+              className= {this.state.errorRazonSocial === true ? null : 'error'} 
+              />
+              <Divider id='divider'/>
+            </Form>
+            
+            <Container className='consultaPlanes'>
 
               {this.state.planes.length===0 ? <div>La Obra Social {this.state.razonSocial} no tiene planes registrados.</div> : 
 
@@ -312,7 +322,7 @@ class ConsultaObraSocial extends Component {
               }
             </Container>
             
-            <Button style={{margin: '2rem 0px'}} primary onClick={() => console.log('holis falta aun')}>
+            <Button style={{margin: '2rem 0px'}} primary onClick={() => this.showModal('REGISTRAR_PLAN')}>
               Registrar Plan
             </Button>
           </Tab.Pane> 
@@ -324,6 +334,7 @@ class ConsultaObraSocial extends Component {
 
 
   render() {
+    
     return (
       <div>
         <NavBar/>
