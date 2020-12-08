@@ -44,7 +44,7 @@ class LoginComponent extends Component {
         return (
             <div>
                 {fetching === true ?
-                    <div className='spinner'>
+                    <div className='login'>
                         <ClipLoader
                             size={60}
                             color={'black'}
