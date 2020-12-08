@@ -11,6 +11,11 @@ import './LPSecretaria.css';
         })
     }
 
+    componentDidMount() {
+        this.setState({
+            extraction: JSON.parse(localStorage.getItem('extraction'))
+        })
+    }
 
     componentWillReceiveProps() {
         this.setState({
