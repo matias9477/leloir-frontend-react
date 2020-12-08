@@ -16,7 +16,7 @@ class ModalDetallePago extends Component {
 
             nombre: '',
             planId: '',
-            tipoPlan: [],
+            tipoPlan: '',
             bitActivo: '',
 
             cambios: false,
@@ -53,40 +53,6 @@ class ModalDetallePago extends Component {
         }
     }
 
-    handleUpdateClick = () => {
-        var data = {
-            // "concepto": "AnÃ¡lisis", //TODO: tener en cuenta si cambia, capaz con id seria mejor
-            // "descripcion": "Pago Análisis",
-            // "formaPago": this.state.formaPago.nombre,
-            // "idAnalisis": this.props.analisis.analisisId,
-            // "importe": this.state.importe,
-            // "ingreso": true
-        }
-        
-        // this.props.addTransaccionAction(data)
-    }
-
-    postTransaccion = (e) => {
-        e.preventDefault();
-
-        const { nombre, tipoPlan } = this.state;
-
-        const errorNombre = validateRequiredString(nombre);
-        const errorTipoPlan = validateRequiredCombos(tipoPlan);
-
-        if ( errorNombre && errorTipoPlan ) {
-            // this.handleUpdateClick()
-            this.vaciadoCampos()
-            setTimeout(() => {  this.hideModal(); }, 1000);
-        } else {
-            alert('Verificar datos ingresados.')
-            this.setState({
-                errorNombre,
-                errorTipoPlan
-            })
-        }
-    }
-
     vaciadoCampos() {
         this.setState({
             nombre: '',
@@ -96,6 +62,8 @@ class ModalDetallePago extends Component {
 
             errorNombre: true,
             errorTipoPlan: true,
+
+            cambios: false,
         })
     }
 
@@ -106,9 +74,9 @@ class ModalDetallePago extends Component {
         })
     } 
 
-    cambioTipoPlan = (e) => {
+    cambioTipoPlan = tipo => {
         this.setState({
-            importe: e,
+            tipoPlan: tipo,
             cambios: true,
         })
     }
@@ -116,6 +84,36 @@ class ModalDetallePago extends Component {
     alta(e){
         this.props.switchAltaPlanAction(this.state.planId, this.props.idObraSocial)
     }
+
+    modificarPlan = (e) => {
+        e.preventDefault()
+    
+        const { nombre, tipoPlan } = this.state;
+
+        const errorNombre = validateRequiredString(nombre);
+        const errorTipoPlan = validateRequiredCombos(tipoPlan);
+    
+  
+        if ( errorNombre && errorTipoPlan ) {
+            var data = {
+                "nombre": this.state.nombre,
+                "tipo_plan": this.state.tipoPlan.tipoPlanId
+            }
+            
+            this.props.alterPlanAction(this.state.planId, data, this.props.idObraSocial)
+   
+            this.vaciadoCampos()
+            setTimeout(() => {  this.hideModal(); }, 1000);
+        } else {
+
+            alert("Verificar los datos ingresados.")
+            this.setState({
+                errorNombre,
+                errorTipoPlan
+            })
+        }
+    }
+
 
     detalle = () => {
         return <div>
@@ -135,17 +133,16 @@ class ModalDetallePago extends Component {
                     />
                 </Form.Group>
 
-                <label width='250px' 
-                // className={this.state.errorTipoPlan ? 'labelsSelect' : 'labelsSelectError'}
-                >Tipo Plan <span>*</span></label>
+                <label width='250px' className={this.state.errorTipoPlan ? 'labelsSelect' : 'labelsSelectError'}>Tipo Plan <span>*</span></label>
                 <Select
+                    name='Tipos de planes'
                     value={this.state.tipoPlan}
                     onChange={this.cambioTipoPlan}
                     placeholder= "Seleccione tipo de plan..."
                     options={this.props.tiposPlanes}
                     getOptionValue={this.getOptionValueTipoPlan}
                     getOptionLabel={this.getOptionLabelTipoPlan}
-                    // styles={this.state.errorTipoPlan === true ? '' : styleErrorSelect}
+                    styles={this.state.errorTipoPlan === true ? '' : styleErrorSelect}
                 />
 
                 <Button color={this.state.bitActivo ? 'red' : 'green'}
@@ -158,7 +155,7 @@ class ModalDetallePago extends Component {
 
                 {(this.state.cambios && this.state.bitActivo) ? <Button primary onClick={(e) => {
                     if (window.confirm('¿Esta seguro que quiere modificar el plan ' + this.state.nombre + '?')) {
-                        // this.modificarDeterminacion(e)
+                        this.modificarPlan(e)
                     } else { window.location.reload(true) }
                 }}>
                     Modificar Plan
@@ -179,7 +176,7 @@ class ModalDetallePago extends Component {
 
     getOptionLabelTipoPlan = option => option.nombre
 
-    getOptionValueTipoPlan = option => option.planId
+    getOptionValueTipoPlan = option => option.tipoPlanId
 
 
     render() {

@@ -53,7 +53,7 @@ export function validateString(nombre){
 }
 
 export function validateRequiredString(nombre){
-  if (typeof(nombre) === 'string' && nombre!==''){
+  if (typeof(nombre) === 'string' && nombre!==''&& hasNumbers(nombre)===false){
     return true
   } else {
     return false
