@@ -35,7 +35,6 @@ let GET_OBRA_SOCIAL_BY_ID_SUCCESS = 'GET_OBRA_SOCIAL_BY_ID_SUCCESS'
 let TIPOS_PLANES = "TIPOS_PLANES"
 let TIPOS_PLANES_SUCCESS = "TIPOS_PLANES_SUCCESS"
 let TIPOS_PLANES_ERROR = "TIPOS_PLANES_ERROR"
-let TIPOS_PLANES_FROM_STORE = "TIPOS_PLANES_FROM_STORE"
 
 let BIT_INVERSE_PLAN = 'BIT_INVERSE_PLAN'
 let BIT_INVERSE_PLAN_SUCCESS = 'BIT_INVERSE_PLAN_SUCCESS'
@@ -95,8 +94,6 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, error:action.payload}
         case TIPOS_PLANES_SUCCESS:
             return {...state, fetching:false, tiposPlanes: action.payload}
-        case TIPOS_PLANES_FROM_STORE:
-            return {...state, fetching: false, tiposPlanes: action.payload}
 
         case BIT_INVERSE_PLAN:
             return {...state, fetching:true}
@@ -245,31 +242,24 @@ export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
 }
 
 export let getTiposPlanesAction = () => (dispatch, getState) =>{
-    const state = getState()
 
-    if(state.obrasSociales.upToDateObrasSociales){
+    dispatch({
+        type: TIPOS_PLANES,
+    })
+    return axios.get(urlTiposPlanes)
+    .then(res=>{
         dispatch({
-            type: TIPOS_PLANES_FROM_STORE,
-            payload: state.obrasSociales.obrasSociales,
+            type: TIPOS_PLANES_SUCCESS,
+            payload: Object.values(res.data).flat(),
         })
-    }else{
+    })
+    .catch(err=>{
         dispatch({
-            type: TIPOS_PLANES,
+            type: TIPOS_PLANES_ERROR,
+            payload: err.message
         })
-        return axios.get(urlTiposPlanes)
-        .then(res=>{
-            dispatch({
-                type: TIPOS_PLANES_SUCCESS,
-                payload: Object.values(res.data).flat(),
-            })
-        })
-        .catch(err=>{
-            dispatch({
-                type: TIPOS_PLANES_ERROR,
-                payload: err.message
-            })
-        })
-    }
+    })
+    
 }
 
 export let switchAltaPlanAction = (idPlan, idOS) => (dispatch, getState) =>{

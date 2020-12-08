@@ -5,7 +5,7 @@ import Select from 'react-select';
 
 import { Modal } from '../DiarioPracticas/Modals/ModalAnalysisInput';
 import { addPlanAction, getTiposPlanesAction } from '../../Redux/obrasSocialesDuck';
-import { validateRequiredCombos, validateRequiredString } from '../../Services/MetodosDeValidacion';
+import { validateRequiredCombos, validateRequiredString, titleCase } from '../../Services/MetodosDeValidacion';
 import './obraSocial.css';
 
 class ModalDetallePago extends Component {
@@ -76,7 +76,7 @@ class ModalDetallePago extends Component {
   
         if ( errorNombre && errorTipoPlan ) {
             var data = {
-                "nombre": this.state.nombre,
+                "nombre": titleCase(this.state.nombre),
                 "tipo_plan": this.state.tipoPlan.tipoPlanId
             }
             
