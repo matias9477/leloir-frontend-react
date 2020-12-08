@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan } from './../Constants/URLs'
 
 
 let initialData = {
@@ -36,6 +36,14 @@ let TIPOS_PLANES = "TIPOS_PLANES"
 let TIPOS_PLANES_SUCCESS = "TIPOS_PLANES_SUCCESS"
 let TIPOS_PLANES_ERROR = "TIPOS_PLANES_ERROR"
 let TIPOS_PLANES_FROM_STORE = "TIPOS_PLANES_FROM_STORE"
+
+let BIT_INVERSE_PLAN = 'BIT_INVERSE_PLAN'
+let BIT_INVERSE_PLAN_SUCCESS = 'BIT_INVERSE_PLAN_SUCCESS'
+let BIT_INVERSE_PLAN_ERROR = 'BIT_INVERSE_PLAN_ERROR'
+
+let ALTER_PLAN = 'ALTER_PLAN'
+let ALTER_PLAN_SUCCESS = 'ALTER_PLAN_SUCCESS'
+let ALTER_PLAN_ERROR = 'ALTER_PLAN_ERROR'
 
 
 export default function reducer(state = initialData, action){
@@ -85,6 +93,20 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, tiposPlanes: action.payload}
         case TIPOS_PLANES_FROM_STORE:
             return {...state, fetching: false, tiposPlanes: action.payload}
+
+        case BIT_INVERSE_PLAN:
+            return {...state, fetching:true}
+        case BIT_INVERSE_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload }
+        case BIT_INVERSE_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false }
+
+        case ALTER_PLAN:
+            return {...state, fetching:true}
+        case ALTER_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false}
+        case ALTER_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload}
 
         default:
             return state
@@ -238,4 +260,47 @@ export let getTiposPlanesAction = () => (dispatch, getState) =>{
             })
         })
     }
+}
+
+export let switchAltaPlanAction = (idPlan, idOS) => (dispatch, getState) =>{
+
+    dispatch({
+        type: BIT_INVERSE_PLAN,
+    })
+
+    return axios.put(`${urlSwichAltaPlan}${idPlan}`)
+    .then(res=>{
+        dispatch({
+            type: BIT_INVERSE_PLAN_SUCCESS,
+        })
+        
+        return dispatch(getObraSocialByIdAction(idOS), alert('La operación se ha realizado con éxito.'))
+        
+    })
+    .catch(err=>{
+        dispatch({
+            type: BIT_INVERSE_PLAN_ERROR,
+            payload: err.message
+        })
+        alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
+    })
+}
+
+export let alterPlanAction = (idPlan, data, idOS) =>(dispatch, getState) =>{
+    dispatch({
+        type: ALTER_PLAN,
+    })
+    return axios.put(`${urlAlterPlan}${idPlan}`, data)
+        .then(res=>{
+            dispatch({
+                type: ALTER_PLAN_SUCCESS
+            })
+            return dispatch(getObraSocialByIdAction(idOS), alert('Se ha modificado el plan con éxito.'))
+        })
+        .catch(err=>{
+            dispatch({
+                type: ALTER_PLAN_ERROR,
+                payload: err.message
+            })
+        })
 }

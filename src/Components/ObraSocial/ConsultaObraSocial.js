@@ -66,7 +66,9 @@ class ConsultaObraSocial extends Component {
             return (
                 <ModalModificarPlan show={this.state.show}
                                     callback={this.hideModalCallback}
-                                    plan={this.state.plan}/>
+                                    plan={this.state.plan}
+                                    idObraSocial={this.state.id}
+                                    />
             )
         default:
             return 
