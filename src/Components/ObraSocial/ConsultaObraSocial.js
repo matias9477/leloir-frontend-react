@@ -7,6 +7,7 @@ import NavBar from '../NavBar/NavBar';
 import { urlTablaObrasSociales } from '../../Constants/NavUrl';
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
+import ModalModificarPlan from './ModalModificarPlan';
 import '../styles.css';
 import './obraSocial.css'
 
@@ -31,6 +32,10 @@ class ConsultaObraSocial extends Component {
         errorMail: true,
         errorValorUb:true,
 
+        show: false,
+        currentModal: null,
+        plan: '',
+
     })
   }
 
@@ -53,6 +58,34 @@ class ConsultaObraSocial extends Component {
 
   alta(e){
     this.props.switchAltaAction(this.state.id)
+  }
+
+  handleModalContentTransaccion() {
+    switch (this.state.currentModal) {
+        case 'MODIFICAR_PLAN':
+            return (
+                <ModalModificarPlan show={this.state.show}
+                                    callback={this.hideModalCallback}
+                                    plan={this.state.plan}/>
+            )
+        default:
+            return 
+    }
+  }
+
+  showModal = (modal, plan) => {
+    this.setState({
+        show: true,
+        currentModal: modal,
+        plan,
+    })
+  }
+
+  hideModalCallback = () => {
+    this.setState({
+        show: false,
+        currentModal: null,
+    });
   }
 
   modificarObraSocial = (e) => {
@@ -138,6 +171,14 @@ class ConsultaObraSocial extends Component {
     }
     else {
       return 'Dar de Alta'
+    }
+  }
+
+  getEstado(bit){
+    if (bit===true) {
+      return "En Alta"
+    } else {
+      return "De Baja"
     }
   }
 
@@ -239,6 +280,7 @@ class ConsultaObraSocial extends Component {
                       <Table.HeaderCell>Número</Table.HeaderCell>
                       <Table.HeaderCell>Nombre</Table.HeaderCell>
                       <Table.HeaderCell>Tipo Plan</Table.HeaderCell>
+                      <Table.HeaderCell>Estado</Table.HeaderCell>
                       <Table.HeaderCell>Modificar</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
@@ -251,8 +293,13 @@ class ConsultaObraSocial extends Component {
                       <Table.Cell>{plan.planId}</Table.Cell>
                       <Table.Cell>{plan.nombre}</Table.Cell>
                       <Table.Cell>{plan.tipoPlan.nombre}</Table.Cell>
+                      <Table.Cell>{this.getEstado(plan.bitActivo)}</Table.Cell>
                       <Table.Cell>
-                        <Button>Modificar</Button>
+                        <Button circular icon='settings'
+                        exact='true' style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: 'transparent'}}
+                        onClick={() => this.showModal('MODIFICAR_PLAN', plan)}
+                        >
+                        </Button> 
                       </Table.Cell>
                     </Table.Row>
                   
@@ -263,7 +310,7 @@ class ConsultaObraSocial extends Component {
               }
             </Container>
             
-            <Button style={{margin: '2rem 0px'}} primary onClick={(e) => console.log('HOLA') }>
+            <Button style={{margin: '2rem 0px'}} primary onClick={() => console.log('holis falta aun')}>
               Registrar Plan
             </Button>
           </Tab.Pane> 
@@ -287,9 +334,8 @@ class ConsultaObraSocial extends Component {
           </Container>
 
           <Tab panes={this.tabs()} />
-          
+          {this.handleModalContentTransaccion()}
         </div>
-
     </div>
     )
   }
