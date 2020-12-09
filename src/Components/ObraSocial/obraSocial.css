@@ -1,0 +1,21 @@
+.consultaPlanes {
+    max-height: 25rem;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.labelsSelect {
+    font-size: 0.94rem;
+    font-weight: 570;
+}
+  
+.labelsSelectError {
+color: #a54646;
+font-size: 0.94rem;
+font-weight: 570;
+}
+
+.error{
+    border-color: red;
+}

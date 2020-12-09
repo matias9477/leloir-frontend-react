@@ -42,12 +42,12 @@ class ModalDetallePago extends Component {
 
     handleUpdateClick = () => {
         var data = {
-                "concepto": "AnÃ¡lisis", //TODO: tener en cuenta si cambia, capaz con id seria mejor
-                "descripcion": "Pago Análisis",
-                "formaPago": this.state.formaPago.nombre,
-                "idAnalisis": this.props.analisis.analisisId,
-                "importe": this.state.importe,
-                "ingreso": true
+            "concepto": "ANALISIS",
+            "descripcion": "Pago Análisis",
+            "formaPago": this.state.formaPago.nombre,
+            "idAnalisis": this.props.analisis.analisisId,
+            "importe": this.state.importe,
+            "ingreso": true
         }
         
         this.props.addTransaccionAction(data)
