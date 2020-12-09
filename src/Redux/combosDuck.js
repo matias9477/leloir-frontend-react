@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { urlDocs, urlPaises, urlSexos, urlPlanes } from './../Constants/URLs';
+import { urlDocs, urlPaises, urlSexos, urlPlanes, urlTiposAnimales } from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
@@ -10,6 +10,8 @@ let initialData = {
     paises: [],
     upToDateAllPaises: false,
     planes: [],
+    tiposAnimales: [],
+    upToDateAllAnimales: false,
 }
 
 
@@ -31,6 +33,11 @@ let GET_PAISES_FROM_STORE = 'GET_PAISES_FROM_STORE'
 let GET_PLANES = 'GET_PLANES'
 let GET_PLANES_SUCCESS = 'GET_PLANES_SUCCESS'
 let GET_PLANES_ERROR = 'GET_PLANES_ERROR'
+
+let GET_TIPOS_ANIMALES = 'GET_TIPOS_ANIMALES'
+let GET_TIPOS_ANIMALES_SUCCESS = 'GET_TIPOS_ANIMALES_SUCCESS'
+let GET_TIPOS_ANIMALES_ERROR = 'GET_TIPOS_ANIMALES_ERROR'
+let GET_TIPOS_ANIMALES_FROM_STORE = 'GET_TIPOS_ANIMALES_FROM_STORE'
 
 
 export default function reducer(state = initialData, action) {
@@ -68,6 +75,15 @@ export default function reducer(state = initialData, action) {
             return {...state, fetching: false, planes: action.payload, upToDateAllPlanes:true }
         case GET_PLANES_ERROR:
             return {...state, fetching: false, error: action.payload}
+
+        case GET_TIPOS_ANIMALES:
+            return {...state, fetching: true}
+        case GET_TIPOS_ANIMALES_SUCCESS:
+            return {...state, fetching: false, tiposAnimales: action.payload, upToDateAllAnimales:true }
+        case GET_TIPOS_ANIMALES_ERROR:
+            return {...state, fetching: false, error: action.payload}
+        case GET_TIPOS_ANIMALES_FROM_STORE:
+            return {...state, fetching:false, tiposAnimales: action.payload}
 
         default:
             return state
@@ -175,4 +191,32 @@ export let getPlanesAction = (id) => (dispatch, getState) => {
             payload: err.message
         })
     })
+}
+
+export let getTiposAnimalesAction = () => (dispatch, getState) => {
+    const state = getState()
+
+    if(state.combos.upToDateAllAnimales){
+        dispatch({
+            type: GET_TIPOS_ANIMALES_FROM_STORE,
+            payload: state.combos.tiposAnimales,
+        })
+    } else{
+    dispatch({
+        type: GET_TIPOS_ANIMALES,
+    })
+    return axios.get(urlTiposAnimales)
+    .then(res=>{
+        dispatch({
+            type: GET_TIPOS_ANIMALES_SUCCESS,
+            payload: Object.values(res.data).flat(),
+        })
+    })
+    .catch(err=>{
+        dispatch({
+            type: GET_TIPOS_ANIMALES_ERROR,
+            payload: err.message
+        })
+    })
+    }
 }
