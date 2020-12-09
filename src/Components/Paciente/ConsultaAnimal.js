@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Button,  Form, Container } from 'semantic-ui-react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos  } from './../../Services/MetodosDeValidacion';
-import { urlTiposAnimales } from './../../Constants/URLs';
 import { getHumanDate } from '../../Services/MetodosPaciente';
-import { getIdTipoAnimal } from '../../Services/MetodosPaciente';
 import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
 import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
 import { getTiposAnimalesAction } from '../../Redux/combosDuck'

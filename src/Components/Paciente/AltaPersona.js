@@ -48,7 +48,6 @@ class AltaPersona extends Component {
         errorTelefono: true,
         errorPlan: true,
         errorObraSocial: true,
-        modObraSocial: true,
 
       })
   }
@@ -245,7 +244,6 @@ class AltaPersona extends Component {
     this.setState( {
         obraSocial: e,
         plan: '',
-        modObraSocial: false
     })
 
     this.props.getPlanesAction(e.idObraSocial)
@@ -300,37 +298,36 @@ class AltaPersona extends Component {
         <Form>
           <Form.Field required label='Número de Documento' control='input'
           maxLength={this.state.tipoDoc.nombre === "Documento Nacional de Identidad" ? "8" : '11'}
-          placeholder='Ingrese el número si puntos' 
+          placeholder='Ingrese el número sin puntos' 
           value={this.state.nroDoc} 
           onChange={this.cambioNroDoc} 
           className= {this.state.errorNroDoc === true ? null : 'error'} 
           />
         </Form>
 
-          <label className={this.state.errorSexo ? 'labelsSelect' : 'labelsSelectError'}>Sexo <span>*</span></label>
-          <Select
-            name='Sexo'
-            styles={this.state.errorSexo === true ? '' : styleErrorSelect}
-            value={this.state.sexo}
-            onChange={this.cambioSexo}
-            placeholder= "Seleccione el sexo"
-            options={this.state.sexos}
-            getOptionValue={this.getOptionValueSexos}
-            getOptionLabel={this.getOptionLabelSexos}
-          /> 
-          
+        <label className={this.state.errorSexo ? 'labelsSelect' : 'labelsSelectError'}>Sexo <span>*</span></label>
+        <Select
+          name='Sexo'
+          styles={this.state.errorSexo === true ? '' : styleErrorSelect}
+          value={this.state.sexo}
+          onChange={this.cambioSexo}
+          placeholder= "Seleccione el sexo"
+          options={this.state.sexos}
+          getOptionValue={this.getOptionValueSexos}
+          getOptionLabel={this.getOptionLabelSexos}
+        /> 
         
-          <label className={this.state.errorNac ? 'labelsSelect' : 'labelsSelectError'}>Nacionalidad <span>*</span></label>
-          <Select
-            name='Nacionalidad'
-            styles={this.state.errorNac === true ? '' : styleErrorSelect}
-            value={this.state.nacionalidad}
-            onChange={this.cambioNacionalidad}
-            placeholder= "Seleccione nacionalidad"
-            options={this.state.paises}
-            getOptionValue={this.getOptionValuePaises}
-            getOptionLabel={this.getOptionLabelPaises}
-          /> 
+        <label className={this.state.errorNac ? 'labelsSelect' : 'labelsSelectError'}>Nacionalidad <span>*</span></label>
+        <Select
+          name='Nacionalidad'
+          styles={this.state.errorNac === true ? '' : styleErrorSelect}
+          value={this.state.nacionalidad}
+          onChange={this.cambioNacionalidad}
+          placeholder= "Seleccione nacionalidad"
+          options={this.state.paises}
+          getOptionValue={this.getOptionValuePaises}
+          getOptionLabel={this.getOptionLabelPaises}
+        /> 
 
         <Form>
           <Form.Field required className= {this.state.errorFechaNac === true ? null : 'error'}>

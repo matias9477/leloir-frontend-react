@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select';
 
-import { getCurrentDate, getIdTipoAnimal } from '../../Services/MetodosPaciente'
+import { getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
 import { getTiposAnimalesAction } from '../../Redux/combosDuck'

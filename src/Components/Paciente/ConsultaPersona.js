@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
-import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { Button, Form, Container, Grid } from 'semantic-ui-react';
+import Select from 'react-select';
 import { connect } from 'react-redux';
 
-import { urlPlanes } from '../../Constants/URLs'
-import { verificarExistenciaPlan,getFechaNacimientoConsulta, verificarExistenciaObraSocial, getHumanDate, getIdPlan} from './../../Services/MetodosPaciente';
-import { getIdTipoDoc, getFechaNacimiento, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial, fechaAltaDateStamp, getAge  } from './../../Services/MetodosPaciente';
-import { urlDocs, urlObrasSoc, urlPaises, urlSexos } from '../../Constants/URLs';
+import { getFechaNacimientoConsulta, getHumanDate } from './../../Services/MetodosPaciente';
+import { getFechaNacimiento, fechaAltaDateStamp, getAge  } from './../../Services/MetodosPaciente';
 import { emptyToNull, titleCase,  validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
+import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck'
+import { getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction } from '../../Redux/combosDuck'
 import './patientsStyle.css';
 
 class ConsultaPersona extends Component {
@@ -56,76 +56,12 @@ class ConsultaPersona extends Component {
     })
   }
 
-  fillCombos = () =>{
-    this.comboObrasSociales()
-    this.comboTiposDocs()
-    this.comboSexos()
-    this.comboPaises()
-    this.comboPlanes()
-  }  
-  
-  comboSexos = () =>{
-    axios.get(urlSexos).then(resolve => {
-      this.setState({
-          sexos: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo sexo', error.message)
-    })
-
-  }
-
-  comboPaises = () =>{
-    axios.get(urlPaises).then(resolve => {
-      this.setState({
-          paises: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo paises', error.message)
-    })
-
-  }
-
-  comboObrasSociales = () =>{
-    axios.get(urlObrasSoc).then(resolve => {
-      this.setState({
-          obrasSociales: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo obras sociales: ', error.message)
-    })
-
-  }
-
-  comboPlanes = () =>{
-    if(this.state.planes.length === 0){
-    axios.get(urlPlanes + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
-         this.setState({
-           planes: Object.values(resolve.data).flat(),
-         })
-        }, (error) => {
-            console.log('Error combo planes: ', error.message)
-        })
-      }
-  }
-
-  comboTiposDocs = () =>{
-    axios.get(urlDocs).then(resolve => {
-      this.setState({
-          documentos: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo docs', error.message)
-    })
-
-  }
-
-  componentDidUpdate(){
-    this.comboPlanes()
-  }
 
   componentDidMount() {
-    this.fillCombos()
+    this.props.getDocumentosAction() 
+    this.props.getSexosAction() 
+    this.props.getPaisesAction() 
+    this.props.getObrasSocialesAction()
     this.props.getPatientByIdAction(this.props.patientId)
   }
 
@@ -134,19 +70,25 @@ class ConsultaPersona extends Component {
       id: nextProps.patient.idPaciente,
       nombre: nextProps.patient.nombre,
       apellido:  nextProps.patient.apellido,
-      tipoDoc: nextProps.patient.tipoDocumento.nombre,
+      tipoDoc: nextProps.patient.tipoDocumento,
       nroDoc: nextProps.patient.nroDocumento,
       fechaNacimiento: getFechaNacimientoConsulta(nextProps.patient.fechaNacimiento),
-      sexo: nextProps.patient.sexo.nombre,
-      nacionalidad: nextProps.patient.nacionalidad.nombreBonito,
-      obraSocial: verificarExistenciaObraSocial(nextProps.patient.obraSocial),
-      plan: verificarExistenciaPlan(nextProps.patient.plan),
+      sexo: nextProps.patient.sexo,
+      nacionalidad: nextProps.patient.nacionalidad,
+      obraSocial: nextProps.patient.obraSocial,
+      plan: nextProps.patient.plan,
       telefono: nextProps.patient.telefono,
       mail: nextProps.patient.mail,
       bitAlta: nextProps.patient.bitAlta,
       fechaAlta: getHumanDate( nextProps.patient.fechaAlta),
 
       cambios: false,
+
+      obrasSociales: nextProps.obrasSociales,
+      documentos: nextProps.documentos,
+      sexos: nextProps.sexos,
+      paises: nextProps.paises,
+      planes: nextProps.planes,
     })
  }
 
@@ -162,7 +104,7 @@ class ConsultaPersona extends Component {
     const errorNombre = validateNombre(nombre)
     const errorApellido = validateNombre(apellido)
     const errorTipoDoc = validateRequiredCombos(tipoDoc)
-    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc)
+    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc.nombre)
     const errorFechaNac = validateFechaNacimiento(fechaNacimiento)
     const errorSexo = validateRequiredCombos(sexo)
     const errorNac = validateRequiredCombos(nacionalidad)
@@ -194,25 +136,25 @@ class ConsultaPersona extends Component {
           "idPaciente": this.state.id,
           "mail": emptyToNull(this.state.mail),
           "nacionalidad": {
-            "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
-            "iso": getIso(this.state.nacionalidad, this.state.paises),
-            "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
-            "nombreBonito": this.state.nacionalidad,
-            "iso3": getIso3(this.state.nacionalidad, this.state.paises),
-            "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+            "idPais": this.state.nacionalidad.idPais,
+            "iso": this.state.nacionalidad.iso,
+            "nombre": this.state.nacionalidad.nombre,
+            "nombreBonito": this.state.nacionalidad.nombreBonito,
+            "iso3": this.state.nacionalidad.iso3,
+            "codigoTelefono": this.state.nacionalidad.codigoTelefono,
           },
           "nombre": titleCase(this.state.nombre),
           "nroDocumento": this.state.nroDoc,
           "obraSocial": null,
           "plan":null,
           "sexo": {
-            "sexoId": getSexoId(this.state.sexo, this.state.sexos),
-            "nombre": this.state.sexo,
+            "sexoId": this.state.sexo.sexoId,
+            "nombre": this.state.sexo.nombre,
           },
           "telefono": emptyToNull(this.state.telefono),
           "tipoDocumento": {
-            "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
-            "nombre": this.state.tipoDoc
+            "idTipoDocumento": this.state.tipoDoc.idTipoDocumento,
+            "nombre": this.state.tipoDoc.nombre
           }
         }
       } else {
@@ -226,36 +168,35 @@ class ConsultaPersona extends Component {
             "idPaciente": this.state.id,
             "mail": emptyToNull(this.state.mail),
             "nacionalidad": {
-              "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
-              "iso": getIso(this.state.nacionalidad, this.state.paises),
-              "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
-              "nombreBonito": this.state.nacionalidad,
-              "iso3": getIso3(this.state.nacionalidad, this.state.paises),
-              "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+              "idPais": this.state.nacionalidad.idPais,
+              "iso": this.state.nacionalidad.iso,
+              "nombre": this.state.nacionalidad.nombre,
+              "nombreBonito": this.state.nacionalidad.nombreBonito,
+              "iso3": this.state.nacionalidad.iso3,
+              "codigoTelefono": this.state.nacionalidad.codigoTelefono,
             },
             "nombre": titleCase(this.state.nombre),
             "nroDocumento": this.state.nroDoc,
             "obraSocial": {
-              "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
-              "razonSocial": this.state.obraSocial,
-              "cuit": getCuitObraSocial(this.state.obraSocial, this.state.obrasSociales),
-              "domicilio": getDomicilioObraSocial(this.state.obraSocial, this.state.obrasSociales),
-              "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
-              "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
+              "idObraSocial": this.state.obraSocial.idObraSocial,
+              "razonSocial": this.state.obraSocial.razonSocial,
+              "domicilio": '',
+              "telefono": this.state.obraSocial.telefono,
+              "email": '', //TODO: VER
             },
             "plan":{
-              "planId":getIdPlan(this.state.plan,this.state.planes),
-              "nombre":this.state.plan,
+              "planId": this.state.plan.planId,
+              "nombre":this.state.plan.nombre,
               "bitActivo": true,
-          },
+            },
             "sexo": {
-              "sexoId": getSexoId(this.state.sexo, this.state.sexos),
-              "nombre": this.state.sexo,
+              "sexoId": this.state.sexo.sexoId,
+              "nombre": this.state.sexo.nombre,
             },
             "telefono": emptyToNull(this.state.telefono),
             "tipoDocumento": {
-              "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
-              "nombre": this.state.tipoDoc
+              "idTipoDocumento": this.state.tipoDoc.idTipoDocumento,
+              "nombre": this.state.tipoDoc.nombre
             }
       }
       }
@@ -288,7 +229,7 @@ class ConsultaPersona extends Component {
 
   cambioTipoDoc = (e) => {
     this.setState( {
-        tipoDoc: e.target.value,
+        tipoDoc: e,
         cambios: true,
     })
   }
@@ -309,14 +250,14 @@ class ConsultaPersona extends Component {
 
   cambioSexo = (e) =>{
     this.setState( {
-        sexo: e.target.value,
+        sexo: e,
         cambios: true,
     })
   }
 
   cambioNacionalidad = (e) => {
     this.setState( {
-        nacionalidad: e.target.value,
+        nacionalidad: e,
         cambios: true,
     })
   }
@@ -337,15 +278,18 @@ class ConsultaPersona extends Component {
 
   cambioObraSocial = (e) => {
     this.setState( {
-        obraSocial: e.target.value,
-        planes: [],
+        obraSocial: e,
+        plan: '',
         cambios: true,
-      })
+    })
+
+    this.props.getPlanesAction(e.idObraSocial)
   }  
 
   cambioPlan = (e) => {
     this.setState({
-      plan: e.target.value
+        cambios: true,
+        plan: e,
     })
   }
 
@@ -355,7 +299,6 @@ class ConsultaPersona extends Component {
     })
   }
 
-  
   render() { 
 
     return (
@@ -384,44 +327,49 @@ class ConsultaPersona extends Component {
                 />
               </Form.Group>
               
-              <Form.Group>
-                <Form.Field required label='Tipo documento' control='select' width={5}
-                value={this.state.tipoDoc} 
-                onChange={this.cambioTipoDoc} 
-                className= {this.state.errorTipoDoc === true ? null : 'error'} 
-                >
-                  <option value={null}> </option>
-                  {this.state.documentos.map(item => (
-                  <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-                </Form.Field>
+              <label className={this.state.errorTipoDoc ? 'labelsSelect' : 'labelsSelectError'}>Tipo Documento <span>*</span></label>
+              <Select
+                name='Tipo Documento'
+                styles={this.state.errorTipoDoc === true ? '' : styleErrorSelect}
+                value={this.state.tipoDoc}
+                onChange={this.cambioTipoDoc}
+                placeholder= "Seleccione tipo de documento"
+                options={this.state.documentos}
+                getOptionValue={this.getOptionValueTipoDoc}
+                getOptionLabel={this.getOptionLabelTipoDoc}
+              />
 
-                <Form.Field required label='Número de documento' control='input' width={11}
-                maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} 
-                value={this.state.nroDoc} 
-                onChange={this.cambioNroDoc} 
-                className= {this.state.errorNroDoc === true ? null : 'error'}
-                />
-              </Form.Group>
+              <Form.Field required label='Número de Documento' control='input'
+              maxLength={this.state.tipoDoc ? (this.state.tipoDoc.nombre === "Documento Nacional de Identidad" ? "8" : '11') : ''}
+              placeholder='Ingrese el número sin puntos' 
+              value={this.state.nroDoc} 
+              onChange={this.cambioNroDoc} 
+              className= {this.state.errorNroDoc === true ? null : 'error'} 
+              />
+ 
+              <label className={this.state.errorSexo ? 'labelsSelect' : 'labelsSelectError'}>Sexo <span>*</span></label>
+              <Select
+                name='Sexo'
+                styles={this.state.errorSexo === true ? '' : styleErrorSelect}
+                value={this.state.sexo}
+                onChange={this.cambioSexo}
+                placeholder= "Seleccione el sexo"
+                options={this.state.sexos}
+                getOptionValue={this.getOptionValueSexos}
+                getOptionLabel={this.getOptionLabelSexos}
+              /> 
 
-              <Form.Field required label='Sexo' control='select' 
-              value={this.state.sexo} 
-              onChange={this.cambioSexo} 
-              className= {this.state.errorSexo === true ? null : 'error'} 
-              >
-                <option value={null}>  </option>
-                {this.state.sexos.map(item => (
-                <option key={item.sexoId}>{item.nombre}</option>))}
-              </Form.Field>
-
-              <Form.Field required label='Nacionalidad' control='select' 
-              value={this.state.nacionalidad} 
-              onChange={this.cambioNacionalidad} 
-              className= {this.state.errorNac === true ? null : 'error'}
-              >
-                <option value={null}>  </option>
-                {this.state.paises.map(item => (
-                <option key={item.idPais}>{item.nombreBonito}</option>))}
-              </Form.Field> 
+              <label className={this.state.errorNac ? 'labelsSelect' : 'labelsSelectError'}>Nacionalidad <span>*</span></label>
+              <Select
+                name='Nacionalidad'
+                styles={this.state.errorNac === true ? '' : styleErrorSelect}
+                value={this.state.nacionalidad}
+                onChange={this.cambioNacionalidad}
+                placeholder= "Seleccione nacionalidad"
+                options={this.state.paises}
+                getOptionValue={this.getOptionValuePaises}
+                getOptionLabel={this.getOptionLabelPaises}
+              /> 
               
               <Grid columns={2}>
                 <Grid.Column>
@@ -441,6 +389,7 @@ class ConsultaPersona extends Component {
                 </Grid.Column>
               </Grid>
 
+              <br/>
               <Form.Group widths='equal'>
                 <Form.Field  label='Telefono' control='input'
                 value={this.state.telefono || ''} 
@@ -455,26 +404,29 @@ class ConsultaPersona extends Component {
                 />
               </Form.Group>
 
-              <Form.Group widths='equal'> 
-                <Form.Field  label='Obra Social' control='select' 
-                value={this.state.obraSocial} 
-                onChange={this.cambioObraSocial} 
-                className= {this.state.errorObraSocial === true ? null : 'error'} 
-                >
-                  <option value={null}>  </option>
-                  {this.state.obrasSociales.map(item => (
-                  <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-                </Form.Field>
+              <label className={this.state.errorObraSocial ? 'labelsSelect' : 'labelsSelectError'}>Obra Social <span>*</span></label>
+              <Select
+                name='Obras Sociales'
+                styles={this.state.errorObraSocial === true ? '' : styleErrorSelect}
+                value={this.state.obraSocial}
+                onChange={this.cambioObraSocial}
+                placeholder= "Seleccione obra social"
+                options={this.state.obrasSociales}
+                getOptionValue={this.getOptionValueOS}
+                getOptionLabel={this.getOptionLabelOS}
+              />
 
-                <Form.Field  label='Plan' control='select' 
-                value={this.state.plan} 
-                onChange={this.cambioPlan}  
-                >
-                  <option value={null}>  </option>
-                  {this.state.planes.map(item => (
-                  <option key={item.planId}>{item.nombre}</option>))}
-                </Form.Field> 
-              </Form.Group>
+              <label className={this.state.errorPlan ? 'labelsSelect' : 'labelsSelectError'}>Plan <span>*</span></label>
+              <Select
+                name='Planes'
+                styles={this.state.errorPlan === true ? '' : styleErrorSelect}
+                value={this.state.plan}
+                onChange={this.cambioPlan}
+                placeholder= "Seleccione plan"
+                options={this.state.planes}
+                getOptionValue={this.getOptionValuePlanes}
+                getOptionLabel={this.getOptionLabelPlanes}
+              />
               <br/>
 
               <Button color={this.state.bitAlta ? 'red' : 'green'}
@@ -497,6 +449,22 @@ class ConsultaPersona extends Component {
     )
   }
 
+  getOptionLabelTipoDoc = option => option.nombre;
+  getOptionValueTipoDoc= option => option.idTipoDocumento;
+
+  getOptionLabelSexos = option => option.nombre;
+  getOptionValueSexos= option => option.sexoId;
+
+  getOptionLabelPaises = option => option.nombre;
+  getOptionValuePaises = option => option.idPais;
+
+  getOptionLabelOS = option => option.razonSocial;
+  getOptionValueOS = option => option.idObraSocial;
+
+  getOptionLabelPlanes = option => option.nombre;
+  getOptionValuePlanes = option => option.planId;
+
+
   mensajeBtnSwitchAlta(){
     if (this.state.bitAlta) {
       return 'Dar de Baja'
@@ -508,9 +476,32 @@ class ConsultaPersona extends Component {
 
 }
 
+const styleErrorSelect = { 
+
+  indicatorsContainer: base => ({
+  ...base,
+  background: '#FDF1F1',
+  }),
+
+  valueContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    borderStyle: '#FBEBEB',
+    margin: 0,
+    width: '100%',
+  }),
+}
+
 const mapStateToProps = (state, props) =>({
   patient: state.patients.patient,
+
+  fetching: state.combos.fetching,
+  obrasSociales: state.obrasSociales.obrasSociales,
+  documentos: state.combos.documentos,
+  sexos: state.combos.sexos,
+  paises: state.combos.paises,
+  planes: state.combos.planes,
 })
   
-export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction})(ConsultaPersona)
+export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAction})(ConsultaPersona)
   
