@@ -117,8 +117,7 @@ class AltaObraSocial extends Component {
 
   render() {
     if (!this.props.upToDateObrasSociales) {
-      return <Redirect to={{pathname: (this.props.location.state.prevPath
-          ), state: { prevPath: window.location.pathname }}} />
+      return <Redirect to={this.props.location.state.prevPath} />
     }
     return (
       <div>
@@ -150,7 +149,7 @@ class AltaObraSocial extends Component {
               />
 
               <Form.Field label='Cuit' maxLength={11} control='input'
-                placeholder='Cuit'
+                placeholder='Ingrese cuit sin guiones'
                 value={this.state.cuit}
                 onChange={this.cambioCuit}
                 className= {this.state.errorCuit === true ? null : 'error'}

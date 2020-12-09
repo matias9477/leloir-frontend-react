@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
+import { Button, Form, Icon, Container, Divider, Tab, Table } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ClipLoader from 'react-spinners/ClipLoader';
 
 import NavBar from '../NavBar/NavBar';
 import { urlTablaObrasSociales } from '../../Constants/NavUrl';
 import { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction } from '../../Redux/obrasSocialesDuck';
 import { titleCase, emptyToNull, validateNombre, validateOnlyNumbers, validateMail } from '../../Services/MetodosDeValidacion';
+import ModalModificarPlan from './ModalModificarPlan';
+import ModalAltaPlan from './ModalAltaPlan';
 import '../styles.css';
+import './obraSocial.css'
 
 class ConsultaObraSocial extends Component {
   constructor(props) {
@@ -23,12 +25,17 @@ class ConsultaObraSocial extends Component {
         cuit:'',
         valorUb:'',
         bitAlta: '',
+        planes: [],
 
         errorRazonSocial: true,
         errorCuit: true,
         errorTelefono: true,
         errorMail: true,
         errorValorUb:true,
+
+        show: false,
+        currentModal: null,
+        plan: '',
 
     })
   }
@@ -46,11 +53,50 @@ class ConsultaObraSocial extends Component {
       cuit: nextProps.obraSocial.cuit,
       valorUb: nextProps.obraSocial.valorUb,
       bitAlta: nextProps.obraSocial.bitActivo,
+      planes: nextProps.obraSocial.planes,
     })
   }
 
   alta(e){
     this.props.switchAltaAction(this.state.id)
+  }
+
+  handleModalContentTransaccion() {
+    switch (this.state.currentModal) {
+      case 'MODIFICAR_PLAN':
+          return (
+              <ModalModificarPlan show={this.state.show}
+                                  callback={this.hideModalCallback}
+                                  plan={this.state.plan}
+                                  idObraSocial={this.state.id}
+                                  />
+          )
+        case 'REGISTRAR_PLAN':
+          return (
+              <ModalAltaPlan  show={this.state.show}
+                              callback={this.hideModalCallback}
+                              idObraSocial={this.state.id}
+                              />
+          )
+              
+        default:
+            return 
+    }
+  }
+
+  showModal = (modal, plan) => {
+    this.setState({
+        show: true,
+        currentModal: modal,
+        plan,
+    })
+  }
+
+  hideModalCallback = () => {
+    this.setState({
+        show: false,
+        currentModal: null,
+    });
   }
 
   modificarObraSocial = (e) => {
@@ -139,36 +185,29 @@ class ConsultaObraSocial extends Component {
     }
   }
 
+  getEstado(bit){
+    if (bit===true) {
+      return "En Alta"
+    } else {
+      return "De Baja"
+    }
+  }
 
-  render() {
-    return (
-      <div>
-        <NavBar/>
-        <div className='avoidMenu'>
 
-          <Container className='btnHeader'>
-            <Button as= {Link} to={urlTablaObrasSociales} floated='left' icon labelPosition='left' primary size='small'>
-              <Icon name='arrow alternate circle left' /> Volver
-            </Button>
-          </Container>
-
-          {this.props.fetching ? <div className='spinner'>
-              <ClipLoader
-                  size={60}
-                  color={'black'}
-              />
-            </div> :
-
+  tabs(){
+    const panes = [
+      {
+        menuItem: 'Información de la Obra Social', render: () => 
+          <Tab.Pane loading={this.props.fetching}>
             <Container>
-              <Form size='huge'>                
+               <Form size='huge'>                
                 <Form.Field control='input' 
-                value={this.state.razonSocial} 
-                id = 'headerConsulta'
-                className= {this.state.errorRazonSocial === true ? null : 'error'} 
-                />
-                <Divider id='divider'/>
-                
-              </Form>
+                  value={this.state.razonSocial} 
+                  id = 'headerConsulta'
+                  className= {this.state.errorRazonSocial === true ? null : 'error'} 
+                  />
+                  <Divider id='divider'/>
+                </Form>
 
               <Form>
 
@@ -228,19 +267,100 @@ class ConsultaObraSocial extends Component {
 
               </Form>
             </Container>
-          }
-        </div>
+          </Tab.Pane>,
+      },
+      { 
+        menuItem: 'Planes', render: () => 
+          <Tab.Pane loading={this.props.fetching}>
 
+            <Form size='huge'>                
+              <Form.Field control='input' 
+              value={"Planes de la Obra Social " + this.state.razonSocial} 
+              id = 'headerConsulta'
+              className= {this.state.errorRazonSocial === true ? null : 'error'} 
+              />
+              <Divider id='divider'/>
+            </Form>
+            
+            <Container className='consultaPlanes'>
+
+              {this.state.planes.length===0 ? <div>La Obra Social {this.state.razonSocial} no tiene planes registrados.</div> : 
+
+                <Table celled fixed singleLine>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Número</Table.HeaderCell>
+                      <Table.HeaderCell>Nombre</Table.HeaderCell>
+                      <Table.HeaderCell>Tipo Plan</Table.HeaderCell>
+                      <Table.HeaderCell>Estado</Table.HeaderCell>
+                      <Table.HeaderCell>Modificar</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+              
+                  <Table.Body>
+
+                  {this.state.planes.map((plan, index) => (
+                  
+                    <Table.Row>
+                      <Table.Cell>{plan.planId}</Table.Cell>
+                      <Table.Cell>{plan.nombre}</Table.Cell>
+                      <Table.Cell>{plan.tipoPlan.nombre}</Table.Cell>
+                      <Table.Cell>{this.getEstado(plan.bitActivo)}</Table.Cell>
+                      <Table.Cell>
+                        <Button circular icon='settings'
+                        exact='true' style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: 'transparent'}}
+                        onClick={() => this.showModal('MODIFICAR_PLAN', plan)}
+                        >
+                        </Button> 
+                      </Table.Cell>
+                    </Table.Row>
+                  
+                ))}
+
+                  </Table.Body>
+                </Table>
+              }
+            </Container>
+            
+            <Button style={{margin: '2rem 0px'}} primary onClick={() => this.showModal('REGISTRAR_PLAN')}>
+              Registrar Plan
+            </Button>
+          </Tab.Pane> 
+      },
+    ]
+
+    return panes
+  }
+
+
+  render() {
+    
+    return (
+      <div>
+        <NavBar/>
+        <div className='avoidMenu'>
+
+          <Container className='btnHeader'>
+            <Button as= {Link} to={urlTablaObrasSociales} floated='left' icon labelPosition='left' primary size='small'>
+              <Icon name='arrow alternate circle left' /> Volver
+            </Button>
+          </Container>
+
+          <Tab panes={this.tabs()} />
+          {this.handleModalContentTransaccion()}
+        </div>
     </div>
     )
   }
+
+
 
 }
 
 const mapStateToProps = (state, props) => ({
   obraSocial: state.obrasSociales.obraSocial,
   fetching: state.obrasSociales.fetching,
-
+  tiposPlanes: state.obrasSociales.tiposPlanes,
 })
 
 export default connect(mapStateToProps, { getObraSocialByIdAction, switchAltaAction, alterObraSocialAction })(ConsultaObraSocial)

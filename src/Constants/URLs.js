@@ -17,6 +17,12 @@ export const urlPlanes = '/api/obras_sociales/planes/'
 export const urlPlanesEnAlta = '/api/obras_sociales/planes-en-alta/'
 export const urlConceptos = '/api/concepto/all'
 
+//PLANES
+export const urlTiposPlanes = '/api/tipos-planes/all'
+export const urlAlterPlan = '/api/plan/modificar/'
+export const urlSwichAltaPlan = '/api/plan/switch-alta/'
+export const urlAddPlan = '/api/obras_sociales/add-plan/'
+
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
 export const urlAltaDeterminacion = '/api/determinaciones/add'
@@ -69,6 +75,7 @@ export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 export const urlTransacciones = '/api/transaccion/all'
 export const urlAddTransaccion = '/api/transaccion/add'
 export const urlTransaccionById = '/api/transaccion/id/'
+export const urlCierre = '/api/transaccion/cierre'
 
 //DOMICILIOS
 export const urlDomicilios = '/api/domicilios/all'

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlObrasSocAlta } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan, urlAddPlan, urlObrasSocAlta } from './../Constants/URLs'
 
 
 let initialData = {
@@ -8,6 +8,7 @@ let initialData = {
     upToDateObrasSociales: false,
     obraSocial: '',
     upToDateObraSocialById: false,
+    tiposPlanes: [],
     obrasSocialesAlta: [],
     upToDateObrasSocialesAlta: false,
 }
@@ -32,6 +33,22 @@ let ALTER_OBRA_SOCIAL_ERROR = 'ALTER_OBRA_SOCIAL_ERROR'
 let GET_OBRA_SOCIAL_BY_ID = 'GET_OBRA_SOCIAL_BY_ID'
 let GET_OBRA_SOCIAL_BY_ID_ERROR = 'GET_OBRA_SOCIAL_BY_ID_ERROR'
 let GET_OBRA_SOCIAL_BY_ID_SUCCESS = 'GET_OBRA_SOCIAL_BY_ID_SUCCESS'
+
+let TIPOS_PLANES = "TIPOS_PLANES"
+let TIPOS_PLANES_SUCCESS = "TIPOS_PLANES_SUCCESS"
+let TIPOS_PLANES_ERROR = "TIPOS_PLANES_ERROR"
+
+let BIT_INVERSE_PLAN = 'BIT_INVERSE_PLAN'
+let BIT_INVERSE_PLAN_SUCCESS = 'BIT_INVERSE_PLAN_SUCCESS'
+let BIT_INVERSE_PLAN_ERROR = 'BIT_INVERSE_PLAN_ERROR'
+
+let ALTER_PLAN = 'ALTER_PLAN'
+let ALTER_PLAN_SUCCESS = 'ALTER_PLAN_SUCCESS'
+let ALTER_PLAN_ERROR = 'ALTER_PLAN_ERROR'
+
+let ADD_PLAN = "ADD_PLAN"
+let ADD_PLAN_SUCCESS = "ADD_PLAN_SUCCESS"
+let ADD_PLAN_ERROR = "ADD_PLAN_ERROR"
 
 let GET_OBRAS_SOCIALES_ALTA = "GET_OBRAS_SOCIALES_ALTA"
 let GET_OBRAS_SOCIALES_ALTA_SUCCESS = "GET_OBRAS_SOCIALES_ALTA_SUCCESS"
@@ -77,6 +94,34 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateObrasSociales:false, upToDateObraSocialById:false}
         case ALTER_OBRA_SOCIAL_ERROR:
             return {...state, fetching:false, error:action.payload}
+
+        case TIPOS_PLANES:
+            return {...state, fetching: true}
+        case TIPOS_PLANES_ERROR:
+            return {...state, fetching:false, error:action.payload}
+        case TIPOS_PLANES_SUCCESS:
+            return {...state, fetching:false, tiposPlanes: action.payload}
+
+        case BIT_INVERSE_PLAN:
+            return {...state, fetching:true}
+        case BIT_INVERSE_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload }
+        case BIT_INVERSE_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false }
+
+        case ALTER_PLAN:
+            return {...state, fetching:true }
+        case ALTER_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false }
+        case ALTER_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload }
+
+        case ADD_PLAN:
+            return {...state, fetching:true }
+        case ADD_PLAN_SUCCESS:
+            return {...state, fetching:false, upToDateObraSocialById:false }
+        case ADD_PLAN_ERROR:
+            return {...state, fetching:false, error:action.payload }
 
         case GET_OBRAS_SOCIALES_ALTA:
             return {...state, fetching: true}
@@ -172,7 +217,6 @@ export let addObraSocialAction = (data) => (dispatch, getState) =>{
 
 }
 
-
 export let getObraSocialByIdAction = (id) => (dispatch, getState) => {
 
     dispatch({
@@ -239,4 +283,91 @@ export let getObrasSocialesAltaAction = () => (dispatch, getState) =>{
             })
         })
     }
+}
+
+export let getTiposPlanesAction = () => (dispatch, getState) =>{
+
+    dispatch({
+        type: TIPOS_PLANES,
+    })
+    return axios.get(urlTiposPlanes)
+    .then(res=>{
+        dispatch({
+            type: TIPOS_PLANES_SUCCESS,
+            payload: Object.values(res.data).flat(),
+        })
+    })
+    .catch(err=>{
+        dispatch({
+            type: TIPOS_PLANES_ERROR,
+            payload: err.message
+        })
+    })
+
+}
+
+export let switchAltaPlanAction = (idPlan, idOS) => (dispatch, getState) =>{
+
+    dispatch({
+        type: BIT_INVERSE_PLAN,
+    })
+
+    return axios.put(`${urlSwichAltaPlan}${idPlan}`)
+    .then(res=>{
+        dispatch({
+            type: BIT_INVERSE_PLAN_SUCCESS,
+        })
+
+        return dispatch(getObraSocialByIdAction(idOS), alert('La operación se ha realizado con éxito.'))
+
+    })
+    .catch(err=>{
+        dispatch({
+            type: BIT_INVERSE_PLAN_ERROR,
+            payload: err.message
+        })
+        alert('No se ha podido realizar la operación. Por favor intente nuevamente.')
+    })
+}
+
+export let alterPlanAction = (idPlan, data, idOS) =>(dispatch, getState) =>{
+    dispatch({
+        type: ALTER_PLAN,
+    })
+    return axios.put(`${urlAlterPlan}${idPlan}`, data)
+        .then(res=>{
+            dispatch({
+                type: ALTER_PLAN_SUCCESS
+            })
+            return dispatch(getObraSocialByIdAction(idOS), alert('Se ha modificado el plan con éxito.'))
+        })
+        .catch(err=>{
+            dispatch({
+                type: ALTER_PLAN_ERROR,
+                payload: err.message
+            })
+        })
+}
+
+export let addPlanAction = (data, idOS) => (dispatch, getState) =>{
+    dispatch({
+        type: ADD_PLAN,
+    })
+    return axios.put(urlAddPlan + idOS, data)
+    .then(res =>{
+        dispatch({
+            type: ADD_PLAN_SUCCESS,
+
+        })
+        return dispatch(getObraSocialByIdAction(idOS), alert(`Se ha registrado el plan ${data.nombre} con exito`))
+    })
+    .catch(err=>{
+        dispatch({
+            type: ADD_PLAN_ERROR,
+            payload: err.message
+        })
+        alert(`No se ha podido registrar el plan ${data.nombre}. Por favor intente nuevamente.`)
+
+    })
+
 }
