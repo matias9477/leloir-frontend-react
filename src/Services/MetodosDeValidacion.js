@@ -52,6 +52,14 @@ export function validateString(nombre){
   }
 }
 
+export function validateRequiredString(nombre){
+  if (typeof(nombre) === 'string' && nombre!==''){
+    return true
+  } else {
+    return false
+  }
+}
+
 export function validateRequiredStringNum(nombre){
   if (nombre === ''){
     return false

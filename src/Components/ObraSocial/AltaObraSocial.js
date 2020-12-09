@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 
@@ -116,6 +116,9 @@ class AltaObraSocial extends Component {
 
 
   render() {
+    if (!this.props.upToDateObrasSociales) {
+      return <Redirect to={this.props.location.state.prevPath} />
+    }
     return (
       <div>
         <NavBar/>
@@ -146,7 +149,7 @@ class AltaObraSocial extends Component {
               />
 
               <Form.Field label='Cuit' maxLength={11} control='input'
-                placeholder='Cuit'
+                placeholder='Ingrese cuit sin guiones'
                 value={this.state.cuit}
                 onChange={this.cambioCuit}
                 className= {this.state.errorCuit === true ? null : 'error'}
@@ -186,7 +189,8 @@ class AltaObraSocial extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.obrasSociales.fetching,
+  upToDateObrasSociales: state.obrasSociales.upToDateObrasSociales,
 })
 
 
-export default connect(mapStateToProps,{addObraSocialAction})(AltaObraSocial);
+export default withRouter(connect(mapStateToProps,{addObraSocialAction})(AltaObraSocial));
