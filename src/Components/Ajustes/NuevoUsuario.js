@@ -136,7 +136,7 @@ class NuevoUsuario extends Component {
 
     getOptionLabelRol = option => option.text;
 
-    getOptionRol = option => option.value;
+    getOptionValueRol = option => option.value;
 
     render() {
         return (
