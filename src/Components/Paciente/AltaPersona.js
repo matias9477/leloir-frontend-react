@@ -356,7 +356,7 @@ class AltaPersona extends Component {
 
             <Form.Field required label='Número de Documento' control='input'
             maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} width={11}
-            placeholder='Ingrese el número si puntos' 
+            placeholder='Ingrese el número sin puntos' 
             value={this.state.nroDoc} 
             onChange={this.cambioNroDoc} 
             className= {this.state.errorNroDoc === true ? null : 'error'} 
