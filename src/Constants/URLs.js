@@ -73,6 +73,7 @@ export const urlGetPreviewRegistroAnalisis = '/api/analisis/preview'
 export const urlTransacciones = '/api/transaccion/all'
 export const urlAddTransaccion = '/api/transaccion/add'
 export const urlTransaccionById = '/api/transaccion/id/'
+export const urlCierre = '/api/transaccion/cierre'
 
 //DOMICILIOS
 export const urlDomicilios = '/api/domicilios/all'

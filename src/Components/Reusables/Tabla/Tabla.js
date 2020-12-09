@@ -243,7 +243,7 @@ class Tabla extends React.Component {
                         
                             [<tr key={index} value={row} className={(row.bitAlta===false) ? "listadosBaja" : null} onClick={this.props.expansibleRows ? () => this.handleRowClick(row) : null}> 
                                 {this.props.columns.map((col, index)=> (
-                                    <td key={index} data-label={col.text} className={(col.style==='importeNegativo' & row[col.dataField]<0) ? 'importeNegativo' : 'importePositivo'}>
+                                    <td key={index} data-label={col.text} className={((col.style==='importeNegativo' & row[col.dataField]<0) | (col.dataField==='concepto' & row[col.dataField]==='CIERRE')) ? ((col.dataField==='concepto' & row[col.dataField]==='CIERRE') ? 'cierreCaja' : 'importeNegativo') : 'importePositivo'}>
                                         {col.type==='Date' ? getHumanDate(row[col.dataField]) : (col.type==='icon' ?  <Icon name={this.getIconTipo(row[col.dataField])}/> : col.style==='importeNegativo' ? ('$' + this.checkEmptyEntry(row[col.dataField])) : this.checkEmptyEntry(row[col.dataField]))}
                                     </td>
                                 ))}       

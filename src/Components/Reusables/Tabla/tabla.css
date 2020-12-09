@@ -39,6 +39,11 @@
     text-align: right;
 }
 
+.cierreCaja {
+    color: blue;
+    font-weight: 400;
+}
+
 .importePositivo {
     text-align: right;
 }
