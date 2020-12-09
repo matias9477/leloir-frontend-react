@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos, urlTransaccionById } from '../Constants/URLs';
+import { urlCierre, urlTransacciones, urlAddTransaccion, urlFormaDePago, urlConceptos, urlTransaccionById } from '../Constants/URLs';
 import { getAnalisisByIdAction } from './analisisDuck';
 
 //constants
@@ -23,6 +23,10 @@ let GET_TRANSACCIONES_FROM_STORE = "GET_TRANSACCIONES_FROM_STORE";
 let ADD_TRANSACCION = "ADD_TRANSACCION"
 let ADD_TRANSACCION_SUCCESS = "ADD_TRANSACCION_SUCCESS"
 let ADD_TRANSACCION_ERROR = "ADD_TRANSACCION_ERROR"
+
+let ADD_CIERRE = "ADD_CIERRE"
+let ADD_CIERRE_SUCCESS = "ADD_CIERRE_SUCCESS"
+let ADD_CIERRE_ERROR = "ADD_CIERRE_ERROR"
 
 let GET_FORMAS_DE_PAGO = "GET_FORMAS_DE_PAGO";
 let GET_FORMAS_DE_PAGO_SUCCESS = "GET_FORMAS_DE_PAGO_SUCCESS";
@@ -56,6 +60,13 @@ export default function reducer(state = initialData, action) {
     case ADD_TRANSACCION_SUCCESS:
       return {...state, fetching:false, upToDateAllTransacciones: false }
     case ADD_TRANSACCION_ERROR:
+      return {...state, fetching:false, error:action.payload, upToDateAllTransacciones: true }
+
+    case ADD_CIERRE:
+      return {...state, fetching:true}
+    case ADD_CIERRE_SUCCESS:
+      return {...state, fetching:false, upToDateAllTransacciones: false }
+    case ADD_CIERRE_ERROR:
       return {...state, fetching:false, error:action.payload, upToDateAllTransacciones: true }
 
     case GET_FORMAS_DE_PAGO:
@@ -139,6 +150,30 @@ export let addTransaccionAction = (data) => (dispatch, getState) => {
           payload: error.message
       })
       alert(`No se ha podido registrar la transacción. Por favor intente nuevamente.`)
+  })
+  
+}
+
+export let addCierre = (data) => (dispatch, getState) => {
+  dispatch({
+      type: ADD_CIERRE,
+  })
+  return axios.post(urlCierre, data)
+  .then(res=>{
+      dispatch({
+          type: ADD_CIERRE_SUCCESS,
+      })
+      alert(`Se ha registrado el cierre de caja con éxito.`)
+      if(data.idAnalisis){
+        return(dispatch(getAnalisisByIdAction(data.idAnalisis)))
+      }
+  })
+  .catch(error=>{
+      dispatch({
+          type: ADD_CIERRE_ERROR,
+          payload: error.message
+      })
+      alert(`No se ha podido registrar el cierre de caja. Por favor intente nuevamente.`)
   })
   
 }

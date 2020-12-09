@@ -6,7 +6,7 @@ import Select from 'react-select';
 
 import { urlTablaCaja } from '../../Constants/NavUrl';
 import { validateRequiredCombos, validateRequiredStringNum, validateOnlyNumbersRequired } from './../../Services/MetodosDeValidacion';
-import { addTransaccionAction, getFormasDePagoAction, getConceptosAction } from '../../Redux/cajaDuck';
+import { addCierre, addTransaccionAction, getFormasDePagoAction, getConceptosAction } from '../../Redux/cajaDuck';
 import NavBar from '../NavBar/NavBar';
 import '../styles.css';
 
@@ -43,6 +43,17 @@ class FormAlta extends Component {
         }
         
         this.props.addTransaccionAction(data)
+    }
+
+    postCierre = (e) => {
+        e.preventDefault();
+        var data = {
+        "conceptoId": 5,
+        "nombre": "CIERRE",
+        "descripcion": "cierre de caja"
+        }
+    
+        this.props.addCierre(data)
     }
 
     postTransaccion = (e) => {
@@ -131,6 +142,10 @@ class FormAlta extends Component {
                         <Button as={Link} to={urlTablaCaja} exact='true' floated='left' icon
                                 labelPosition='left' primary size='small'>
                             <Icon name='arrow alternate circle left'/> Volver
+                        </Button>
+                        <Button as={Link} to={urlTablaCaja} exact='true' floated='right' icon
+                                labelPosition='right' primary size='small' onClick={this.postCierre}>
+                            <Icon name='arrow alternate circle right'/> Cerrar Caja
                         </Button>
                     </Container>
 
@@ -254,4 +269,4 @@ const mapStateToProps = state =>({
 })
 
 
-export default withRouter(connect(mapStateToProps,{ addTransaccionAction, getFormasDePagoAction, getConceptosAction })(FormAlta));
+export default withRouter(connect(mapStateToProps,{ addCierre, addTransaccionAction, getFormasDePagoAction, getConceptosAction })(FormAlta));
