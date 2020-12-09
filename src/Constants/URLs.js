@@ -15,6 +15,12 @@ export const urlAltaObraSocial = '/api/obras_sociales/add'
 export const urlPlanes = '/api/obras_sociales/planes/'
 export const urlConceptos = '/api/concepto/all'
 
+//PLANES
+export const urlTiposPlanes = '/api/tipos-planes/all'
+export const urlAlterPlan = '/api/plan/modificar/'
+export const urlSwichAltaPlan = '/api/plan/switch-alta/'
+export const urlAddPlan = '/api/obras_sociales/add-plan/'
+
 //DETERMINACIONES
 export const urlDeterminaciones = '/api/determinaciones/all'
 export const urlAltaDeterminacion = '/api/determinaciones/add'
