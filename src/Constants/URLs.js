@@ -7,12 +7,14 @@ export const urlFormaDePago = '/api/forma_pago/all'
 
 //OBRAS SOCIALES
 export const urlObrasSoc = '/api/obras_sociales/all'
+export const urlObrasSocAlta = '/api/obras_sociales/all-en-alta'
 export const urlObraSocialById = '/api/obras_sociales/id/'
 export const urlSwitchAltaObraSocial = '/api/obras_sociales/switch-alta/'
 export const urlAlterObraSocial = '/api/obras_sociales/modificar/'
 export const urlPlanesXObra = '/api/obras_sociales/planes/'
 export const urlAltaObraSocial = '/api/obras_sociales/add'
 export const urlPlanes = '/api/obras_sociales/planes/'
+export const urlPlanesEnAlta = '/api/obras_sociales/planes-en-alta/'
 export const urlConceptos = '/api/concepto/all'
 
 //DETERMINACIONES

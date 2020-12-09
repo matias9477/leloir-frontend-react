@@ -10,7 +10,7 @@ import Select from 'react-select';
 import { getFechaNacimiento, getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
-import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck'
+import { getObrasSocialesAltaAction } from '../../Redux/obrasSocialesDuck'
 import { getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction } from '../../Redux/combosDuck'
 import './patientsStyle.css'
 
@@ -67,7 +67,7 @@ class AltaPersona extends Component {
     this.props.getDocumentosAction() 
     this.props.getSexosAction() 
     this.props.getPaisesAction() 
-    this.props.getObrasSocialesAction()
+    this.props.getObrasSocialesAltaAction()
 
   }
 
@@ -429,11 +429,11 @@ const styleErrorSelect = {
 const mapStateToProps = state =>({
   fetching: state.combos.fetching,
   upToDateAllPatients: state.patients.upToDateAllPatients,
-  obrasSociales: state.obrasSociales.obrasSociales,
+  obrasSociales: state.obrasSociales.obrasSocialesAlta,
   documentos: state.combos.documentos,
   sexos: state.combos.sexos,
   paises: state.combos.paises,
   planes: state.combos.planes,
 })
 
-export default withRouter(connect(mapStateToProps,{ addPatientAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAction })(AltaPersona))
+export default withRouter(connect(mapStateToProps,{ addPatientAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAltaAction })(AltaPersona))

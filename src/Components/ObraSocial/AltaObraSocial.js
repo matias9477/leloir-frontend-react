@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form, Icon, Container, Divider } from 'semantic-ui-react';
 
@@ -116,6 +116,10 @@ class AltaObraSocial extends Component {
 
 
   render() {
+    if (!this.props.upToDateObrasSociales) {
+      return <Redirect to={{pathname: (this.props.location.state.prevPath
+          ), state: { prevPath: window.location.pathname }}} />
+    }
     return (
       <div>
         <NavBar/>
@@ -186,7 +190,8 @@ class AltaObraSocial extends Component {
 
 const mapStateToProps = state =>({
   fetching: state.obrasSociales.fetching,
+  upToDateObrasSociales: state.obrasSociales.upToDateObrasSociales,
 })
 
 
-export default connect(mapStateToProps,{addObraSocialAction})(AltaObraSocial);
+export default withRouter(connect(mapStateToProps,{addObraSocialAction})(AltaObraSocial));

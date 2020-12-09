@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlObrasSocAlta } from './../Constants/URLs'
 
 
 let initialData = {
@@ -8,6 +8,8 @@ let initialData = {
     upToDateObrasSociales: false,
     obraSocial: '',
     upToDateObraSocialById: false,
+    obrasSocialesAlta: [],
+    upToDateObrasSocialesAlta: false,
 }
 
 let GET_OBRAS_SOCIALES = "GET_OBRAS_SOCIALES"
@@ -31,7 +33,10 @@ let GET_OBRA_SOCIAL_BY_ID = 'GET_OBRA_SOCIAL_BY_ID'
 let GET_OBRA_SOCIAL_BY_ID_ERROR = 'GET_OBRA_SOCIAL_BY_ID_ERROR'
 let GET_OBRA_SOCIAL_BY_ID_SUCCESS = 'GET_OBRA_SOCIAL_BY_ID_SUCCESS'
 
-
+let GET_OBRAS_SOCIALES_ALTA = "GET_OBRAS_SOCIALES_ALTA"
+let GET_OBRAS_SOCIALES_ALTA_SUCCESS = "GET_OBRAS_SOCIALES_ALTA_SUCCESS"
+let GET_OBRAS_SOCIALES_ALTA_ERROR = "GET_OBRAS_SOCIALES_ALTA_ERROR"
+let GET_OBRAS_SOCIALES_ALTA_FROM_STORE = "GET_OBRAS_SOCIALES_ALTA_FROM_STORE"
 
 
 export default function reducer(state = initialData, action){
@@ -72,6 +77,15 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateObrasSociales:false, upToDateObraSocialById:false}
         case ALTER_OBRA_SOCIAL_ERROR:
             return {...state, fetching:false, error:action.payload}
+
+        case GET_OBRAS_SOCIALES_ALTA:
+            return {...state, fetching: true}
+        case GET_OBRAS_SOCIALES_ALTA_ERROR:
+            return {...state, fetching:false, error:action.payload, upToDateObrasSocialesAlta:false}
+        case GET_OBRAS_SOCIALES_ALTA_SUCCESS:
+            return {...state, fetching:false, obrasSocialesAlta: action.payload, upToDateObrasSocialesAlta:true}
+        case GET_OBRAS_SOCIALES_ALTA_FROM_STORE:
+            return {...state, fetching: false, obrasSocialesAlta: action.payload}
 
         default:
             return state
@@ -197,4 +211,32 @@ export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
             })
             return dispatch(getObraSocialByIdAction(id), alert('No se ha podido modificar la obra social. Por favor intente nuevamente.'))
         })
+}
+
+export let getObrasSocialesAltaAction = () => (dispatch, getState) =>{
+    const state = getState()
+
+    if(state.obrasSociales.upToDateObrasSocialesAlta){
+        dispatch({
+            type: GET_OBRAS_SOCIALES_ALTA_FROM_STORE,
+            payload: state.obrasSociales.obrasSocialesAlta,
+        })
+    }else{
+        dispatch({
+            type: GET_OBRAS_SOCIALES_ALTA,
+        })
+        return axios.get(urlObrasSocAlta)
+        .then(res=>{
+            dispatch({
+                type: GET_OBRAS_SOCIALES_ALTA_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_OBRAS_SOCIALES_ALTA_ERROR,
+                payload: err.message
+            })
+        })
+    }
 }

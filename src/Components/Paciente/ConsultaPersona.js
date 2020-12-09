@@ -10,7 +10,7 @@ import { getFechaNacimientoConsulta, getHumanDate } from './../../Services/Metod
 import { getFechaNacimiento, fechaAltaDateStamp, getAge  } from './../../Services/MetodosPaciente';
 import { emptyToNull, titleCase,  validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion';
 import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
-import { getObrasSocialesAction } from '../../Redux/obrasSocialesDuck'
+import { getObrasSocialesAltaAction } from '../../Redux/obrasSocialesDuck'
 import { getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction } from '../../Redux/combosDuck'
 import './patientsStyle.css';
 
@@ -61,7 +61,7 @@ class ConsultaPersona extends Component {
     this.props.getDocumentosAction() 
     this.props.getSexosAction() 
     this.props.getPaisesAction() 
-    this.props.getObrasSocialesAction()
+    this.props.getObrasSocialesAltaAction()
     this.props.getPatientByIdAction(this.props.patientId)
   }
 
@@ -496,12 +496,12 @@ const mapStateToProps = (state, props) =>({
   patient: state.patients.patient,
 
   fetching: state.combos.fetching,
-  obrasSociales: state.obrasSociales.obrasSociales,
+  obrasSociales: state.obrasSociales.obrasSocialesAlta,
   documentos: state.combos.documentos,
   sexos: state.combos.sexos,
   paises: state.combos.paises,
   planes: state.combos.planes,
 })
   
-export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAction})(ConsultaPersona)
+export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAltaAction})(ConsultaPersona)
   

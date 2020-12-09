@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { urlDocs, urlPaises, urlSexos, urlPlanes, urlTiposAnimales } from './../Constants/URLs';
+import { urlDocs, urlPaises, urlSexos, urlPlanesEnAlta, urlTiposAnimales } from './../Constants/URLs';
 
 let initialData = {
     fetching: false,
@@ -178,7 +178,7 @@ export let getPlanesAction = (id) => (dispatch, getState) => {
     dispatch({
         type: GET_PLANES,
     })
-    return axios.get(urlPlanes + id)
+    return axios.get(urlPlanesEnAlta + id)
     .then(res=>{
         dispatch({
             type: GET_PLANES_SUCCESS,
