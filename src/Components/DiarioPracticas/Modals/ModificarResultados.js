@@ -66,6 +66,7 @@ class ModificarResultados extends Component {
                                     <Table.HeaderCell>Código</Table.HeaderCell>
                                     <Table.HeaderCell>Determinación</Table.HeaderCell>
                                     <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                    <Table.HeaderCell>Valor de Referencia</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header> 
 
@@ -76,7 +77,7 @@ class ModificarResultados extends Component {
                                             <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
                                             <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
                                             <Table.Cell>
-                                                {det.estadoDetalleAnalisis.nombre==="APROBADO" ? 
+                                                {(det.estadoDetalleAnalisis.nombre==="APROBADO" && this.props.analisis.estadoAnalisis.estadoId !==3) ? 
                                                     <Input name={index} maxLength={5} id='disabled'
                                                     value={this.state.currentAnalisis.determinaciones[index].resultado} 
                                                     placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
@@ -88,7 +89,11 @@ class ModificarResultados extends Component {
                                                 
                                                 {det.determinacion.unidadMedida===null ? '' : ' ' +
                                                     det.determinacion.unidadMedida.unidad}
-                                                </Table.Cell>
+                                            </Table.Cell>
+                                            {det.determinacion.valorReferencia!==null ?
+                                                <Table.Cell>{det.determinacion.valorReferencia}</Table.Cell> :
+                                                <Table.Cell>Rango no especificado</Table.Cell>
+                                            }
                                         </Table.Row>
                                     )
                                 })}

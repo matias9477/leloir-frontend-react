@@ -70,6 +70,7 @@ class RevisarResultados extends Component {
                                     <Table.HeaderCell>Código</Table.HeaderCell>
                                     <Table.HeaderCell>Determinación</Table.HeaderCell>
                                     <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                    <Table.HeaderCell>Valor de Referencia</Table.HeaderCell>
                                     <Table.HeaderCell>Confirmación</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header> 
@@ -83,6 +84,10 @@ class RevisarResultados extends Component {
                                             {det.determinacion.unidadMedida===null ?
                                                 <Table.Cell>{det.resultado}</Table.Cell> :
                                                 <Table.Cell>{det.resultado + ' ' + det.determinacion.unidadMedida.unidad}</Table.Cell>
+                                            }
+                                            {det.determinacion.valorReferencia!==null ?
+                                                <Table.Cell>{det.determinacion.valorReferencia}</Table.Cell> :
+                                                <Table.Cell>Rango no especificado</Table.Cell>
                                             }
                                             <Table.Cell>
                                                 <Button.Group>
