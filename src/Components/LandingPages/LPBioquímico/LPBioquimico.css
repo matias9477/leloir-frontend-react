@@ -29,3 +29,8 @@
     margin: 0px;
     padding: 0px;
 }
+
+.charts{
+    display: grid;
+    place-items: center;
+}
