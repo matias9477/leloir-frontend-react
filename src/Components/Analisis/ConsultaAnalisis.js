@@ -138,7 +138,7 @@ class ConsultaAnalisis extends Component {
                         </div>
                     : null}
                     
-                    <Form.Field readOnly={true} label='Medico Solicitante' value={ this.state.analisis.medico.nombre !== '' ? this.state.analisis.medico.nombre : "No especificado"} control='input'/>
+                    <Form.Field readOnly={true} label='Medico Solicitante' value={ this.state.analisis.medico !== '' ? this.state.analisis.medico : "No especificado"} control='input'/>
                 </Form>
             )
         }
