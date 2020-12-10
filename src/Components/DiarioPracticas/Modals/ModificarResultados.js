@@ -66,6 +66,7 @@ class ModificarResultados extends Component {
                                     <Table.HeaderCell>Código</Table.HeaderCell>
                                     <Table.HeaderCell>Determinación</Table.HeaderCell>
                                     <Table.HeaderCell>Resultado</Table.HeaderCell>
+                                    <Table.HeaderCell>Valor de Referencia</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header> 
 
@@ -88,7 +89,11 @@ class ModificarResultados extends Component {
                                                 
                                                 {det.determinacion.unidadMedida===null ? '' : ' ' +
                                                     det.determinacion.unidadMedida.unidad}
-                                                </Table.Cell>
+                                            </Table.Cell>
+                                            {det.determinacion.valorReferencia!==null ?
+                                                <Table.Cell>{det.determinacion.valorReferencia}</Table.Cell> :
+                                                <Table.Cell>Rango no especificado</Table.Cell>
+                                            }
                                         </Table.Row>
                                     )
                                 })}
