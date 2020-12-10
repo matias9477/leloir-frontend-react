@@ -204,7 +204,7 @@ export let getConceptosAction = () => (dispatch, getState) => {
   if (state.caja.upToDateAllConceptos) {
     dispatch({
       type: GET_CONCEPTOS_FROM_STORE,
-      payload: state.caja.transacciones,
+      payload: state.caja.conceptos,
     });
   } else {
     dispatch({
