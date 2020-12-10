@@ -146,14 +146,14 @@ class NuevoUsuario extends Component {
 
                 <Form>
                     <Form.Group>
-                        <Form.Field required label='Nombre Usuario' control='input'
+                        <Form.Field  label='Nombre Usuario' control='input'
                             width={6}
                             className= {(this.state.errorUsuario === true) ? null : 'error'}
                             placeholder='No debe contener espacios'
                             value={this.state.signUpRequest.username}
                             onChange={this.cambioNombreUsuario}
                         />
-                        <Form.Field required label='Email' control='input'
+                        <Form.Field  label='Email' control='input'
                             width={10}
                             className= {(this.state.errorMail === true) ? null : 'error'}
                             placeholder='ejemplo@leloir.com'
@@ -163,7 +163,7 @@ class NuevoUsuario extends Component {
                     </Form.Group>
 
                     <Form.Group>
-                        <Form.Field type='password' required label='Contraseña' control='input'
+                        <Form.Field type='password'  label='Contraseña' control='input'
                             width={8}
                             placeholder='6 caracteres minimo, 20 máximo'
                             className= {this.state.errorContraseña === true ? null : 'error'}
@@ -171,7 +171,7 @@ class NuevoUsuario extends Component {
                             onChange={this.cambioPassword}
                         />
 
-                        <Form.Field type='password' required label='Repita Contraseña' control='input'
+                        <Form.Field type='password'  label='Repita Contraseña' control='input'
                             width={8}
                             className= {this.state.errorContraseña === true ? null : 'error'}
                             value={this.state.pass2}
@@ -179,7 +179,7 @@ class NuevoUsuario extends Component {
                         />
                     </Form.Group>
                     
-                    <Form.Field required label='Rol' className= {this.state.errorRol === true ? null : 'error'}/>
+                    <Form.Field label='Rol' className= {this.state.errorRol === true ? null : 'error'}/>
                 
                     <Select
                         name='roles'
