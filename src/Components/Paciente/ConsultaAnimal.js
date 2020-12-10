@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Button,  Form, Container } from 'semantic-ui-react';
+import Select from 'react-select';
 import { connect } from 'react-redux';
 
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos  } from './../../Services/MetodosDeValidacion';
-import { urlTiposAnimales } from './../../Constants/URLs';
 import { getHumanDate } from '../../Services/MetodosPaciente';
-import { getIdTipoAnimal } from '../../Services/MetodosPaciente';
 import { fechaAltaDateStamp  } from './../../Services/MetodosPaciente';
 import { switchAltaAction, alterPatientAction, getPatientByIdAction } from '../../Redux/patientsDuck';
+import { getTiposAnimalesAction } from '../../Redux/combosDuck'
 import './patientsStyle.css';
 
 class ConsultaAnimal extends Component {
@@ -36,19 +35,8 @@ class ConsultaAnimal extends Component {
     })
   }
 
-  comboTipos = () =>{ //TODO: pasa combos a redux
-    axios.get(urlTiposAnimales).then(resolve => {
-      this.setState({
-        tipos: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo animales', error.message)
-    })
-
-  }
-
   componentDidMount() {
-    this.comboTipos()
+    this.props.getTiposAnimalesAction()
     this.props.getPatientByIdAction(this.props.patientId)
   }
 
@@ -57,7 +45,7 @@ class ConsultaAnimal extends Component {
       id: nextProps.patient.idPaciente,
       nombre: nextProps.patient.nombre,
       propietario: nextProps.patient.propietario,
-      tipo: nextProps.patient.tipoAnimal.nombre,
+      tipo: nextProps.patient.tipoAnimal,
       telefono: nextProps.patient.telefono,
       mail: nextProps.patient.mail,
       bitAlta: nextProps.patient.bitAlta,
@@ -102,8 +90,8 @@ class ConsultaAnimal extends Component {
             "telefono": emptyToNull(this.state.telefono),
             "fechaAlta": fechaAltaDateStamp(this.state.fechaAlta),
             "tipoAnimal": {
-                "nombre": this.state.tipo,
-                "tipoAnimalId": getIdTipoAnimal(this.state.tipo, this.state.tipos)
+                "nombre": this.state.tipo.nombre,
+                "tipoAnimalId": this.state.tipo.tipoAnimalId
             },
       }
 
@@ -128,7 +116,7 @@ class ConsultaAnimal extends Component {
 
   cambioTipo = (e) => {
     this.setState( {
-      tipo: e.target.value,
+      tipo: e,
       cambios: true,
     })
   }  
@@ -180,22 +168,24 @@ class ConsultaAnimal extends Component {
                 className= {this.state.errorNombre === true ? null : 'error'} 
                 />
                   
-                  <Form.Field required label='Tipo Animal' control='select' 
-                  value={this.state.tipo} 
-                  onChange={this.cambioTipo} 
-                  className= {this.state.errorTipo === true ? null : 'error'} 
-                  >
-                    <option value={null}>  </option>
-                    {this.state.tipos.map(item => (
-                    <option key={item.tipoAnimalId}>{item.nombre}</option>))}
-                  </Form.Field>
-                </Form.Group>
-
-                <Form.Field required label='Propietario' control='input' 
+                  <Form.Field required label='Propietario' control='input' 
                 value={this.state.propietario} 
                 onChange={this.cambioPropietario} 
                 className= {this.state.errorPropietario === true ? null : 'error'} 
                 />
+              </Form.Group>
+
+              <label className={this.state.errorTipo ? 'labelsSelect' : 'labelsSelectError'}>Tipo Animal <span>*</span></label>
+              <Select
+                name='Tipo Animal'
+                styles={this.state.errorTipo === true ? '' : styleErrorSelect}
+                value={this.state.tipo}
+                onChange={this.cambioTipo}
+                placeholder= "Seleccione tipo animal"
+                options={this.props.tiposAnimales}
+                getOptionValue={this.getOptionValueTipos}
+                getOptionLabel={this.getOptionLabelTipos}
+              />          
 
               <Form.Group widths='equal'>
                 <Form.Field  label='Telefono' control='input' 
@@ -232,6 +222,9 @@ class ConsultaAnimal extends Component {
     )
   }
 
+  getOptionLabelTipos = option => option.nombre;
+  getOptionValueTipos = option => option.tipoAnimalId;
+
   mensajeBtnSwitchAlta(){
     if (this.state.bitAlta) {
       return 'Dar de Baja'
@@ -243,9 +236,27 @@ class ConsultaAnimal extends Component {
 
 }
 
+const styleErrorSelect = { 
+
+  indicatorsContainer: base => ({
+  ...base,
+  background: '#FDF1F1',
+  }),
+
+  valueContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    borderStyle: '#FBEBEB',
+    margin: 0,
+    width: '100%',
+  }),
+} 
+
 const mapStateToProps = (state) =>({
   patient: state.patients.patient,
+  tiposAnimales: state.combos.tiposAnimales,
+  fetchingCombos: state.combos.fetching,
 })
 
 
-export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction})(ConsultaAnimal)
+export default connect(mapStateToProps,{switchAltaAction, alterPatientAction, getPatientByIdAction, getTiposAnimalesAction})(ConsultaAnimal)

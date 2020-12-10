@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import { addDays } from 'date-fns'
 import { withRouter, Redirect } from 'react-router-dom'
 import { Button, Form, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
+import Select from 'react-select';
 
-import {urlDocs, urlObrasSoc,urlPaises,urlSexos, urlPlanes } from '../../Constants/URLs'
-import { getIdPlan, getIdTipoDoc, getFechaNacimiento, getCurrentDate, getSexoId, getIdPais, getIso, getNombrePais, getIso3, getCodigoTelefono, getIdObraSocial, getCuitObraSocial, getDomicilioObraSocial, getTelefonoObraSocial, getEmailObraSocial } from '../../Services/MetodosPaciente'
+import { getFechaNacimiento, getCurrentDate } from '../../Services/MetodosPaciente'
 import { emptyToNull, titleCase, validateNombre, validateOnlyNumbers, validateMail, validateRequiredCombos, validateNroDocumento, validateFechaNacimiento } from './../../Services/MetodosDeValidacion'
 import { addPatientAction } from '../../Redux/patientsDuck'
+import { getObrasSocialesAltaAction } from '../../Redux/obrasSocialesDuck'
+import { getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction } from '../../Redux/combosDuck'
 import './patientsStyle.css'
 
 class AltaPersona extends Component {
@@ -47,85 +48,30 @@ class AltaPersona extends Component {
         errorTelefono: true,
         errorPlan: true,
         errorObraSocial: true,
-        modObraSocial: true,
 
       })
   }
-  
-  fillCombos = () =>{
-    this.comboObrasSociales()
-    this.comboTiposDocs()
-    this.comboSexos()
-    this.comboPaises()
-    this.comboPlanes()
-  }  
 
-  comboSexos = () =>{
-    axios.get(urlSexos).then(resolve => {
-      this.setState({
-          sexos: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo sexo', error.message)
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      obrasSociales: nextProps.obrasSociales,
+      documentos: nextProps.documentos,
+      sexos: nextProps.sexos,
+      paises: nextProps.paises,
+      planes: nextProps.planes,
+      nacionalidad: nextProps.paises[9]
     })
-
-  }
-
-  comboPaises = () =>{
-    axios.get(urlPaises).then(resolve => {
-      this.setState({
-          paises: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo paises', error.message)
-    })
-
-  }
-
-  comboObrasSociales = () =>{
-    axios.get(urlObrasSoc).then(resolve => {
-      this.setState({
-          obrasSociales: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo obras sociales: ', error.message)
-    })
-
-  }
-
-  comboPlanes = () =>{
-    if(this.state.planes.length === 0 && this.state.obraSocial !== ''){
-    axios.get(urlPlanes + getIdObraSocial(this.state.obraSocial,this.state.obrasSociales)).then(resolve => {
-         this.setState({
-           planes: Object.values(resolve.data).flat(),
-         })
-        }, (error) => {
-            console.log('Error combo planes: ', error.message)
-        })
-      }
-  }
-
-  comboTiposDocs = () =>{
-    axios.get(urlDocs).then(resolve => {
-      this.setState({
-          documentos: Object.values(resolve.data).flat(),
-      })
-    }, (error) => {
-        console.log('Error combo tipo documentos', error.message)
-    })
-
-  }
-
-  componentDidUpdate(){
-    this.comboPlanes()
   }
 
   componentDidMount() {
-    this.fillCombos()
+    this.props.getDocumentosAction() 
+    this.props.getSexosAction() 
+    this.props.getPaisesAction() 
+    this.props.getObrasSocialesAltaAction()
 
   }
 
-  handleUpdateClick = (api) => {
+  handleUpdateClick = () => {
     var data
     if (this.state.obraSocial === null || this.state.obraSocial === ''){
       data = {
@@ -134,22 +80,22 @@ class AltaPersona extends Component {
         "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
-          "nombre": this.state.tipoDoc
+          "idTipoDocumento": this.state.tipoDoc.idTipoDocumento,
+          "nombre": this.state.tipoDoc.nombre
         },
         "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
         "fechaAlta": getCurrentDate(),
         "sexo": {
-          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
-          "nombre": this.state.sexo,
+          "sexoId": this.state.sexo.sexoId,
+          "nombre": this.state.sexo.nombre,
         },
         "nacionalidad": {
-          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
-          "iso": getIso(this.state.nacionalidad, this.state.paises),
-          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
-          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+          "idPais": this.state.nacionalidad.idPais,
+          "iso": this.state.nacionalidad.iso,
+          "nombre": this.state.nacionalidad.nombre,
+          "nombreBonito": this.state.nacionalidad.nombreBonito,
+          "iso3": this.state.nacionalidad.iso3,
+          "codigoTelefono": this.state.nacionalidad.codigoTelefono,
         },
         "telefono": emptyToNull(this.state.telefono),
         "mail": emptyToNull(this.state.mail),
@@ -165,36 +111,35 @@ class AltaPersona extends Component {
         "apellido": titleCase(this.state.apellido),
         "nroDocumento": this.state.nroDoc,
         "tipoDocumento": {
-          "idTipoDocumento": getIdTipoDoc(this.state.tipoDoc, this.state.documentos),
-          "nombre": this.state.tipoDoc
+          "idTipoDocumento": this.state.tipoDoc.idTipoDocumento,
+          "nombre": this.state.tipoDoc.nombre
         },
         "fechaNacimiento": getFechaNacimiento(this.state.fechaNacimiento),
         "fechaAlta": getCurrentDate(),
         "sexo": {
-          "sexoId": getSexoId(this.state.sexo, this.state.sexos),
-          "nombre": this.state.sexo,
+          "sexoId": this.state.sexo.sexoId,
+          "nombre": this.state.sexo.nombre,
         },
         "nacionalidad": {
-          "idPais": getIdPais(this.state.nacionalidad, this.state.paises),
-          "iso": getIso(this.state.nacionalidad, this.state.paises),
-          "nombre": getNombrePais(this.state.nacionalidad, this.state.paises),
-          "nombreBonito": this.state.nacionalidad,
-          "iso3": getIso3(this.state.nacionalidad, this.state.paises),
-          "codigoTelefono": getCodigoTelefono(this.state.nacionalidad, this.state.paises),
+          "idPais": this.state.nacionalidad.idPais,
+          "iso": this.state.nacionalidad.iso,
+          "nombre": this.state.nacionalidad.nombre,
+          "nombreBonito": this.state.nacionalidad.nombreBonito,
+          "iso3": this.state.nacionalidad.iso3,
+          "codigoTelefono": this.state.nacionalidad.codigoTelefono,
         },
         "telefono": emptyToNull(this.state.telefono),
         "mail": emptyToNull(this.state.mail),
         "obraSocial": {
-          "idObraSocial": getIdObraSocial(this.state.obraSocial, this.state.obrasSociales),
-          "razonSocial": this.state.obraSocial,
-          "cuit": getCuitObraSocial(this.state.obraSocial, this.state.obrasSociales),
-          "domicilio": getDomicilioObraSocial(this.state.obraSocial, this.state.obrasSociales),
-          "telefono": getTelefonoObraSocial(this.state.obraSocial, this.state.obrasSociales),
-          "email": getEmailObraSocial(this.state.obraSocial, this.state.obrasSociales),
+          "idObraSocial": this.state.obraSocial.idObraSocial,
+          "razonSocial": this.state.obraSocial.razonSocial,
+          "domicilio": '',
+          "telefono": this.state.obraSocial.telefono,
+          "email": '', //TODO: VER
         },
         "plan":{
-            "planId":getIdPlan(this.state.plan,this.state.planes),
-            "nombre":this.state.plan,
+            "planId": this.state.plan.planId,
+            "nombre":this.state.plan.nombre,
             "bitActivo": true,
         },
         "historial": null,
@@ -204,12 +149,6 @@ class AltaPersona extends Component {
        this.props.addPatientAction(data)
   }
 
-  
-
-
-
-
-
   getPaciente = (e) => {
     e.preventDefault()
     
@@ -218,7 +157,7 @@ class AltaPersona extends Component {
     const errorNombre = validateNombre(nombre)
     const errorApellido = validateNombre(apellido)
     const errorTipoDoc = validateRequiredCombos(tipoDoc)
-    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc)
+    const errorNroDoc = validateNroDocumento(nroDoc, tipoDoc.nombre)
     const errorFechaNac = validateFechaNacimiento(fechaNacimiento)
     const errorSexo = validateRequiredCombos(sexo)
     const errorNac = validateRequiredCombos(nacionalidad)
@@ -246,8 +185,6 @@ class AltaPersona extends Component {
       })
     }    
   }
-
-
  
   cambioNombre = (e) => {
     this.setState( {
@@ -263,7 +200,7 @@ class AltaPersona extends Component {
 
   cambioTipoDoc = (e) => {
     this.setState( {
-        tipoDoc: e.target.value
+        tipoDoc: e
     })
   } 
 
@@ -280,15 +217,15 @@ class AltaPersona extends Component {
   }
 
   cambioSexo = (e) =>{
-      this.setState( {
-          sexo: e.target.value
-      })
+    this.setState( {
+        sexo: e
+    })
   }
 
   cambioNacionalidad = (e) => {
-      this.setState( {
-          nacionalidad: e.target.value
-      })
+    this.setState( {
+        nacionalidad: e
+    })
   }
 
   cambioTelefono = (e) => {
@@ -304,16 +241,17 @@ class AltaPersona extends Component {
   }
 
   cambioObraSocial = (e) => {
-      this.setState( {
-          obraSocial: e.target.value,
-          planes: [],
-          modObraSocial: false
-        })
+    this.setState( {
+        obraSocial: e,
+        plan: '',
+    })
+
+    this.props.getPlanesAction(e.idObraSocial)
   }  
   
   cambioPlan = (e) => {
     this.setState({
-      plan: e.target.value
+      plan: e
     })
   }
 
@@ -325,6 +263,7 @@ class AltaPersona extends Component {
     return (
       <div className='altasPacientes'>
         <Header as='h3' dividing>Registrar nuevo Paciente</Header>
+
 
         <Form>
           <Form.Group widths='equal'>
@@ -342,62 +281,65 @@ class AltaPersona extends Component {
             className= {this.state.errorApellido === true ? null : 'error' } 
             />
           </Form.Group>
+        </Form>
 
-          <Form.Group>
-            <Form.Field required label='Tipo documento' control='select' placeholder ='Tipo documento' width={5}
-            value={this.state.tipoDoc} 
-            onChange={this.cambioTipoDoc} 
-            className= {this.state.errorTipoDoc === true ? null : 'error'} 
-            >
-                <option value={null}> </option>
-                {this.state.documentos.map(item => (
-                <option key={item.idTipoDocumento}>{item.nombre}</option>))}
-            </Form.Field>
+        <label className={this.state.errorTipoDoc ? 'labelsSelect' : 'labelsSelectError'}>Tipo Documento <span>*</span></label>
+        <Select
+          name='Tipo Documento'
+          styles={this.state.errorTipoDoc === true ? '' : styleErrorSelect}
+          value={this.state.tipoDoc}
+          onChange={this.cambioTipoDoc}
+          placeholder= "Seleccione tipo de documento"
+          options={this.state.documentos}
+          getOptionValue={this.getOptionValueTipoDoc}
+          getOptionLabel={this.getOptionLabelTipoDoc}
+        />
+        
+        <Form>
+          <Form.Field required label='Número de Documento' control='input'
+          maxLength={this.state.tipoDoc.nombre === "Documento Nacional de Identidad" ? "8" : '11'}
+          placeholder='Ingrese el número sin puntos' 
+          value={this.state.nroDoc} 
+          onChange={this.cambioNroDoc} 
+          className= {this.state.errorNroDoc === true ? null : 'error'} 
+          />
+        </Form>
 
-            <Form.Field required label='Número de Documento' control='input'
-            maxLength={this.state.tipoDoc === "Documento Nacional de Identidad" ? "8" : '11'} width={11}
-            placeholder='Ingrese el número sin puntos' 
-            value={this.state.nroDoc} 
-            onChange={this.cambioNroDoc} 
-            className= {this.state.errorNroDoc === true ? null : 'error'} 
-            />
-          </Form.Group>
+        <label className={this.state.errorSexo ? 'labelsSelect' : 'labelsSelectError'}>Sexo <span>*</span></label>
+        <Select
+          name='Sexo'
+          styles={this.state.errorSexo === true ? '' : styleErrorSelect}
+          value={this.state.sexo}
+          onChange={this.cambioSexo}
+          placeholder= "Seleccione el sexo"
+          options={this.state.sexos}
+          getOptionValue={this.getOptionValueSexos}
+          getOptionLabel={this.getOptionLabelSexos}
+        /> 
+        
+        <label className={this.state.errorNac ? 'labelsSelect' : 'labelsSelectError'}>Nacionalidad <span>*</span></label>
+        <Select
+          name='Nacionalidad'
+          styles={this.state.errorNac === true ? '' : styleErrorSelect}
+          value={this.state.nacionalidad}
+          onChange={this.cambioNacionalidad}
+          placeholder= "Seleccione nacionalidad"
+          options={this.state.paises}
+          getOptionValue={this.getOptionValuePaises}
+          getOptionLabel={this.getOptionLabelPaises}
+        /> 
 
-            <Form.Field required label='Sexo' control='select' 
-            placeholder = 'Sexo'
-            value={this.state.sexo} 
-            onChange={this.cambioSexo} 
-            className= {this.state.errorSexo === true ? null : 'error'} 
-            >
-              <option value={null}>  </option>
-              {this.state.sexos.map(item => (
-              <option key={item.sexoId}>{item.nombre}</option>))}
-            </Form.Field>
-
-            <Form.Field required label='Nacionalidad' control='select' 
-            placeholder = 'Nacionalidad' 
-            value={this.state.nacionalidad} 
-            onChange={this.cambioNacionalidad} 
-            className= {this.state.errorNac === true ? null : 'error'} 
-            >
-              <option value={null}>  </option>
-                {this.state.paises.map(item => (
-              <option key={item.idPais}>{item.nombreBonito}</option>))}
-            </Form.Field>
-         
-
-            <Form.Field required 
-            className= {this.state.errorFechaNac === true ? null : 'error'}
-            >
-              <label>Fecha de Nacimiento</label>
-                <DatePicker placeholderText="Fecha de Nacimiento"
-                selected={this.state.fechaNacimiento} 
-                onChange= {this.cambioFechaNacimiento} 
-                peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
-                maxDate={addDays(new Date(), 0)} 
-                dateFormat="yyyy-MM-dd">
-                </DatePicker>
-            </Form.Field>
+        <Form>
+          <Form.Field required className= {this.state.errorFechaNac === true ? null : 'error'}>
+            <label>Fecha de Nacimiento</label>
+            <DatePicker placeholderText="Fecha de Nacimiento"
+            selected={this.state.fechaNacimiento} 
+            onChange= {this.cambioFechaNacimiento} 
+            peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" 
+            maxDate={addDays(new Date(), 0)} 
+            dateFormat="yyyy-MM-dd">
+            </DatePicker>
+          </Form.Field>
 
           <Form.Group widths='equal'>
             <Form.Field label='Telefono' control='input' 
@@ -414,42 +356,84 @@ class AltaPersona extends Component {
             className= {this.state.errorMail === true ? null : 'error'} 
             />
           </Form.Group>
-          <Form.Group widths='equal'>
-          <Form.Field required label='Obra Social' control='select' 
-          placeholder = 'Obra Social' 
-          value={this.state.obraSocial}
-          className = {this.state.errorObraSocial === true ? null : 'error'} 
-          onChange={this.cambioObraSocial} >
-            <option key={null}>  </option>
-              {this.state.obrasSociales.map(item => (
-            <option key={item.idObraSocial}>{item.razonSocial}</option>))}
-          </Form.Field>
-          <Form.Field required label='Plan' control='select'
-          disabled = {this.state.modObraSocial}
-          placeholder = 'Plan' 
-          value={this.state.plan}
-          className= {this.state.errorPlan === true ? null : 'error'} 
-          onChange={this.cambioPlan} >
-            <option key={null}>  </option>
-              {this.state.planes.map(item => (
-            <option key={item.planId}>{item.nombre}</option>))}
-          </Form.Field>
-          </Form.Group>
-          <br/>
-
-          <Button primary type="submit" onClick={this.getPaciente} className="boton" > Registrar Paciente</Button >
 
         </Form>
+
+          <label className={this.state.errorObraSocial ? 'labelsSelect' : 'labelsSelectError'}>Obra Social <span>*</span></label>
+          <Select
+            name='Obras Sociales'
+            styles={this.state.errorObraSocial === true ? '' : styleErrorSelect}
+            value={this.state.obraSocial}
+            onChange={this.cambioObraSocial}
+            placeholder= "Seleccione obra social"
+            options={this.state.obrasSociales}
+            getOptionValue={this.getOptionValueOS}
+            getOptionLabel={this.getOptionLabelOS}
+          />
+
+          <label className={this.state.errorPlan ? 'labelsSelect' : 'labelsSelectError'}>Plan <span>*</span></label>
+          <Select
+            name='Planes'
+            styles={this.state.errorPlan === true ? '' : styleErrorSelect}
+            value={this.state.plan}
+            onChange={this.cambioPlan}
+            placeholder= "Seleccione plan"
+            options={this.state.planes}
+            getOptionValue={this.getOptionValuePlanes}
+            getOptionLabel={this.getOptionLabelPlanes}
+          />
+          
+          <br/>
+
+          <Button primary onClick={this.getPaciente} className="boton" > Registrar Paciente</Button >
+
       </div>
 
     )
   }
 
+  getOptionLabelTipoDoc = option => option.nombre;
+  getOptionValueTipoDoc= option => option.idTipoDocumento;
+
+  getOptionLabelSexos = option => option.nombre;
+  getOptionValueSexos= option => option.sexoId;
+
+  getOptionLabelPaises = option => option.nombre;
+  getOptionValuePaises = option => option.idPais;
+
+  getOptionLabelOS = option => option.razonSocial;
+  getOptionValueOS = option => option.idObraSocial;
+
+  getOptionLabelPlanes = option => option.nombre;
+  getOptionValuePlanes = option => option.planId;
+
 }
 
+const styleErrorSelect = { 
+
+  indicatorsContainer: base => ({
+  ...base,
+  background: '#FDF1F1',
+  }),
+
+  valueContainer: base => ({
+    ...base,
+    background: '#FDF1F1',
+    borderStyle: '#FBEBEB',
+    margin: 0,
+    width: '100%',
+  }),
+}
+
+
 const mapStateToProps = state =>({
-  fetching: state.patients.fetching,
+  fetching: state.combos.fetching,
   upToDateAllPatients: state.patients.upToDateAllPatients,
+  obrasSociales: state.obrasSociales.obrasSocialesAlta,
+  documentos: state.combos.documentos,
+  sexos: state.combos.sexos,
+  paises: state.combos.paises,
+  planes: state.combos.planes,
 })
 
-export default withRouter(connect(mapStateToProps,{addPatientAction})(AltaPersona))
+export default withRouter(connect(mapStateToProps,{ addPatientAction, getDocumentosAction, getSexosAction, getPaisesAction, getPlanesAction, getObrasSocialesAltaAction })(AltaPersona))

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan, urlAddPlan } from './../Constants/URLs'
+import { urlObrasSoc, urlSwitchAltaObraSocial, urlAltaObraSocial, urlAlterObraSocial, urlObraSocialById, urlTiposPlanes, urlAlterPlan, urlSwichAltaPlan, urlAddPlan, urlObrasSocAlta } from './../Constants/URLs'
 
 
 let initialData = {
@@ -9,6 +9,8 @@ let initialData = {
     obraSocial: '',
     upToDateObraSocialById: false,
     tiposPlanes: [],
+    obrasSocialesAlta: [],
+    upToDateObrasSocialesAlta: false,
 }
 
 let GET_OBRAS_SOCIALES = "GET_OBRAS_SOCIALES"
@@ -47,6 +49,11 @@ let ALTER_PLAN_ERROR = 'ALTER_PLAN_ERROR'
 let ADD_PLAN = "ADD_PLAN"
 let ADD_PLAN_SUCCESS = "ADD_PLAN_SUCCESS"
 let ADD_PLAN_ERROR = "ADD_PLAN_ERROR"
+
+let GET_OBRAS_SOCIALES_ALTA = "GET_OBRAS_SOCIALES_ALTA"
+let GET_OBRAS_SOCIALES_ALTA_SUCCESS = "GET_OBRAS_SOCIALES_ALTA_SUCCESS"
+let GET_OBRAS_SOCIALES_ALTA_ERROR = "GET_OBRAS_SOCIALES_ALTA_ERROR"
+let GET_OBRAS_SOCIALES_ALTA_FROM_STORE = "GET_OBRAS_SOCIALES_ALTA_FROM_STORE"
 
 
 export default function reducer(state = initialData, action){
@@ -115,6 +122,15 @@ export default function reducer(state = initialData, action){
             return {...state, fetching:false, upToDateObraSocialById:false }
         case ADD_PLAN_ERROR:
             return {...state, fetching:false, error:action.payload }
+
+        case GET_OBRAS_SOCIALES_ALTA:
+            return {...state, fetching: true}
+        case GET_OBRAS_SOCIALES_ALTA_ERROR:
+            return {...state, fetching:false, error:action.payload, upToDateObrasSocialesAlta:false}
+        case GET_OBRAS_SOCIALES_ALTA_SUCCESS:
+            return {...state, fetching:false, obrasSocialesAlta: action.payload, upToDateObrasSocialesAlta:true}
+        case GET_OBRAS_SOCIALES_ALTA_FROM_STORE:
+            return {...state, fetching: false, obrasSocialesAlta: action.payload}
 
         default:
             return state
@@ -241,6 +257,34 @@ export let alterObraSocialAction = (id, data) =>(dispatch, getState) =>{
         })
 }
 
+export let getObrasSocialesAltaAction = () => (dispatch, getState) =>{
+    const state = getState()
+
+    if(state.obrasSociales.upToDateObrasSocialesAlta){
+        dispatch({
+            type: GET_OBRAS_SOCIALES_ALTA_FROM_STORE,
+            payload: state.obrasSociales.obrasSocialesAlta,
+        })
+    }else{
+        dispatch({
+            type: GET_OBRAS_SOCIALES_ALTA,
+        })
+        return axios.get(urlObrasSocAlta)
+        .then(res=>{
+            dispatch({
+                type: GET_OBRAS_SOCIALES_ALTA_SUCCESS,
+                payload: Object.values(res.data).flat(),
+            })
+        })
+        .catch(err=>{
+            dispatch({
+                type: GET_OBRAS_SOCIALES_ALTA_ERROR,
+                payload: err.message
+            })
+        })
+    }
+}
+
 export let getTiposPlanesAction = () => (dispatch, getState) =>{
 
     dispatch({
@@ -259,7 +303,7 @@ export let getTiposPlanesAction = () => (dispatch, getState) =>{
             payload: err.message
         })
     })
-    
+
 }
 
 export let switchAltaPlanAction = (idPlan, idOS) => (dispatch, getState) =>{
@@ -273,9 +317,9 @@ export let switchAltaPlanAction = (idPlan, idOS) => (dispatch, getState) =>{
         dispatch({
             type: BIT_INVERSE_PLAN_SUCCESS,
         })
-        
+
         return dispatch(getObraSocialByIdAction(idOS), alert('La operación se ha realizado con éxito.'))
-        
+
     })
     .catch(err=>{
         dispatch({

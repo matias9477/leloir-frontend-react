@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form, Icon, Container } from 'semantic-ui-react'
+import { Button, Icon, Container } from 'semantic-ui-react'
 import NavBar from '../NavBar/NavBar'
+import Select from 'react-select';
 import { Link } from 'react-router-dom';
 
 import AltaPersona from './AltaPersona';
@@ -27,18 +28,18 @@ class FormAlta extends Component {
   }
 
   getForm(){
-    if(this.state.tipo === 'Persona'){
+    if(this.state.tipo.value === 'Persona'){
       return <AltaPersona/>
-    } else if ( this.state.tipo === 'Animal') {
+    } else if ( this.state.tipo.value === 'Animal') {
       return <AltaAnimal/>
-    } else if ( this.state.tipo === 'Institución') {
+    } else if ( this.state.tipo.value === 'Institución') {
       return <AltaInstitucion/>
     }
   }
 
   cambioTipo = (e) => {
     this.setState( {
-        tipo: e.target.value
+      tipo: e
     })
   }
 
@@ -61,13 +62,17 @@ class FormAlta extends Component {
             </Button>
           </Container>
 
-          <Form style={{width: '80%', marginLeft: 'auto', marginRight: 'auto'}}>
-            <Form.Field required label='Tipo de paciente a registrar' control='select' placeholder = 'Tipo de paciene' value={this.state.tipo} onChange={this.cambioTipo}>
-              <option value={null}>  </option>
-              {this.state.opciones.map(item => (
-                <option key={item.key}>{item.value}</option>))}
-            </Form.Field>
-          </Form>  
+          <label className='labelsSelect'>Tipo Paciente <span>*</span></label>
+
+            <Select
+              name='Tipo Paciente'
+              value={this.state.tipo}
+              onChange={this.cambioTipo}
+              placeholder= "Seleccione tipo de paciente"
+              options={this.state.opciones}
+              getOptionValue={this.getOptionValueTipoPac}
+              getOptionLabel={this.getOptionLabelTipoPac}
+            />
 
           {this.getForm()}
           
@@ -76,6 +81,9 @@ class FormAlta extends Component {
       </div>
     );
   }
+
+  getOptionLabelTipoPac = option => option.value;
+  getOptionValueTipoPac = option => option.key;
 
 }
 
