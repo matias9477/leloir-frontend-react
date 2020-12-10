@@ -77,7 +77,7 @@ class ModificarResultados extends Component {
                                             <Table.Cell>{det.determinacion.codigoPractica}</Table.Cell>
                                             <Table.Cell>{det.determinacion.descripcionPractica}</Table.Cell>
                                             <Table.Cell>
-                                                {det.estadoDetalleAnalisis.nombre==="APROBADO" ? 
+                                                {(det.estadoDetalleAnalisis.nombre==="APROBADO" && this.props.analisis.estadoAnalisis.estadoId !==3) ? 
                                                     <Input name={index} maxLength={5} id='disabled'
                                                     value={this.state.currentAnalisis.determinaciones[index].resultado} 
                                                     placeholder='Ingrese resultado...' onChange={this.changeResultado}/> 
