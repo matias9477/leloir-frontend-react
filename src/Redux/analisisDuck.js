@@ -69,7 +69,7 @@ export default function reducer(state = initialData, action){
         case ADD_NUEVO_ANALISIS:
             return { ...state, fetchingAnalisis: true }
         case ADD_NUEVO_ANALISIS_SUCCESS:
-            return { ...state, fetchingAnalisis: false, registroAnalisis:action.payload, upToDateAnalisisAll: false }
+            return { ...state, fetchingAnalisis: false, registroAnalisis:action.payload, upToDateAnalisisAll: false, upToDatePendientes:false }
         case ADD_NUEVO_ANALISIS_ERROR:
             return { ...state, fetchingAnalisis: false, error: action.payload, upToDateAnalisisAll: true }
 
